@@ -142,7 +142,8 @@
 
 
 
-  /* Battle prototype v0.4: 4 active + 6 reserve */
+
+  /* Battle prototype v0.5: playable turn battle */
   #battleScreen{
     padding-top:6px;
     padding-bottom:max(6px,var(--safe-bottom));
@@ -151,29 +152,34 @@
   }
   .battle-shell{
     width:100%;height:100%;min-height:0;
-    display:grid;grid-template-rows:minmax(0,1fr) 94px;gap:6px;
+    display:grid;grid-template-rows:minmax(0,1fr) 100px;gap:6px;
   }
   .battle-upper{
     min-height:0;display:grid;
-    grid-template-columns:146px minmax(0,1fr) 156px;gap:6px;
+    grid-template-columns:178px minmax(0,1fr) 156px;gap:6px;
   }
   .battle-focus,.battle-field,.battle-commands,.battle-status-card{
     background:rgba(15,27,39,.94);border:1px solid #3a5369;border-radius:14px;
     box-shadow:0 7px 20px rgba(0,0,0,.24);
   }
 
+  /* Larger acting-character portrait */
   .battle-focus{padding:7px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
   .battle-focus-title{font-size:9px;color:#9fb0c4;font-weight:800;letter-spacing:.08em}
-  .battle-focus-name{font-size:15px;font-weight:900;margin:2px 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .battle-focus-name{font-size:16px;font-weight:900;margin:2px 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .battle-focus-portrait{
     flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
     border-radius:10px;background:
-      radial-gradient(circle at 50% 44%,rgba(83,129,150,.32),transparent 48%),
+      radial-gradient(circle at 50% 44%,rgba(83,129,150,.35),transparent 53%),
       linear-gradient(#14283a,#0b1722);
     border:1px solid #2e4960;overflow:hidden;position:relative;
   }
-  .battle-focus-portrait img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 9px 9px rgba(0,0,0,.36))}
-  .hero-placeholder{font-size:52px;opacity:.78}
+  .battle-focus-portrait img{
+    width:100%;height:100%;object-fit:contain;
+    transform-origin:center center;
+    filter:drop-shadow(0 9px 9px rgba(0,0,0,.36));
+  }
+  .hero-placeholder{font-size:58px;opacity:.78}
   .battle-focus-caption{
     margin-top:4px;padding:4px 6px;border-radius:8px;background:#0c1722;
     font-size:9px;color:#c7d3df;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
@@ -212,7 +218,7 @@
   }
 
   .enemy-stage{
-    position:absolute;left:3%;right:3%;top:16%;bottom:13%;
+    position:absolute;left:3%;right:3%;top:15%;bottom:15%;
     display:flex;align-items:flex-end;justify-content:center;gap:clamp(2px,.9vw,12px);
   }
   .enemy{
@@ -221,15 +227,32 @@
   }
   .enemy img{width:100%;height:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 9px 6px rgba(0,0,0,.42))}
   .enemy .enemy-name{
-    position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);
+    position:absolute;left:50%;bottom:11px;transform:translateX(-50%);
     max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    background:rgba(7,14,20,.8);border:1px solid rgba(105,133,153,.65);
+    background:rgba(7,14,20,.83);border:1px solid rgba(105,133,153,.65);
     border-radius:999px;padding:2px 6px;font-size:8px;font-weight:800;
+  }
+  .enemy-hp-wrap{
+    position:absolute;left:8%;right:8%;bottom:0;height:8px;border-radius:999px;
+    background:rgba(12,20,28,.92);border:1px solid rgba(154,178,196,.45);overflow:hidden;
+  }
+  .enemy-hp{display:block;height:100%;background:linear-gradient(90deg,#cf5252,#ef7b6d);transition:.18s}
+  .enemy-hp-num{
+    position:absolute;left:50%;bottom:23px;transform:translateX(-50%);
+    color:#fff;font-size:8px;font-weight:900;text-shadow:0 1px 3px #000;white-space:nowrap;
   }
   .enemy.selected{filter:drop-shadow(0 0 8px rgba(255,224,121,.82))}
   .enemy.selected:after{
     content:"▼";position:absolute;top:-3px;left:50%;transform:translateX(-50%);
     color:#ffe079;font-size:15px;text-shadow:0 2px 4px #000;
+  }
+  .enemy.ko{opacity:.12;filter:grayscale(1);pointer-events:none}
+  .enemy.damage{animation:enemyHit .22s ease}
+  @keyframes enemyHit{
+    0%{transform:translateX(0)}
+    30%{transform:translateX(-7px)}
+    65%{transform:translateX(7px)}
+    100%{transform:translateX(0)}
   }
   .enemy-stage[data-count="1"] .enemy{width:48%}
   .enemy-stage[data-count="2"] .enemy{width:36%}
@@ -240,9 +263,9 @@
 
   .battle-message{
     position:absolute;z-index:6;left:7px;right:7px;bottom:5px;
-    min-height:26px;padding:5px 8px;border-radius:8px;
-    background:rgba(5,13,20,.88);border:1px solid #3d5a72;
-    font-size:9px;color:#e2ebf2;display:flex;align-items:center;
+    min-height:27px;padding:5px 8px;border-radius:8px;
+    background:rgba(5,13,20,.9);border:1px solid #3d5a72;
+    font-size:10px;color:#e2ebf2;display:flex;align-items:center;
   }
 
   .battle-commands{padding:6px;display:flex;flex-direction:column;gap:4px;min-height:0;overflow:auto}
@@ -254,23 +277,36 @@
   }
   .cmd strong{display:block;font-size:14px;line-height:1.05}
   .cmd:active{transform:translateY(1px)}
+  .cmd:disabled{opacity:.38;cursor:not-allowed;filter:grayscale(.35)}
   .swap-cmd{border-color:#6c6898;background:linear-gradient(#3f4068,#272946)}
   .win-btn{
     margin-top:auto;border-color:#7b6940;background:linear-gradient(#66531f,#3b3118);color:#fff2b5;
     min-height:30px;
   }
 
+  /* Bigger HP / MP text */
   .battle-party-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;min-height:0}
   .battle-status-card{
     padding:6px 7px;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:5px;
     align-content:center;cursor:pointer;position:relative;overflow:hidden;text-align:left;color:inherit;
   }
   .battle-status-card.active{border-color:#ead271;box-shadow:inset 0 0 0 2px rgba(234,210,113,.28)}
-  .battle-status-card .status-name{font-weight:900;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .battle-status-card .status-turn{font-size:7px;color:#e9d47e;align-self:center;white-space:nowrap}
-  .mini-bars{grid-column:1/-1;display:grid;grid-template-columns:23px 1fr auto;gap:4px;align-items:center;margin-top:3px;font-size:7px;color:#aebdca}
+  .battle-status-card.ko{opacity:.48;filter:grayscale(.55)}
+  .battle-status-card.defending:after{
+    content:"DEF";position:absolute;right:4px;bottom:3px;color:#93c9ff;font-size:8px;font-weight:900;
+  }
+  .battle-status-card .status-name{font-weight:900;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .battle-status-card .status-turn{font-size:8px;color:#e9d47e;align-self:center;white-space:nowrap}
+  .mini-bars{
+    grid-column:1/-1;display:grid;grid-template-columns:24px 1fr 58px;gap:5px;
+    align-items:center;margin-top:3px;font-size:9px;color:#bdcad6;
+  }
+  .mini-bars b{font-size:9px}
+  .mini-bars > span:last-child{
+    text-align:right;font-size:11px;font-weight:900;color:#f2f6fa;letter-spacing:.01em;
+  }
   .mini-bar{height:5px;background:#263746;border-radius:999px;overflow:hidden}
-  .mini-bar i{display:block;height:100%;background:linear-gradient(90deg,#48b972,#79df9a)}
+  .mini-bar i{display:block;height:100%;background:linear-gradient(90deg,#48b972,#79df9a);transition:.18s}
   .mini-bar.mp i{background:linear-gradient(90deg,#4c78c7,#6ba1f0)}
 
   .reserve-chip{
@@ -303,18 +339,19 @@
     border:1px solid #3b5870;background:#111f2d;border-radius:11px;padding:6px;cursor:pointer;color:inherit;text-align:left;
   }
   .reserve-card:hover{border-color:#d9c46e}
+  .reserve-card.ko{opacity:.45;filter:grayscale(.8);cursor:not-allowed}
   .reserve-thumb{width:60px;height:72px;border-radius:8px;background:#0b1620;border:1px solid #29445a;overflow:hidden;display:flex;align-items:center;justify-content:center}
   .reserve-thumb img{width:100%;height:100%;object-fit:contain}
   .reserve-info{min-width:0;display:flex;flex-direction:column;justify-content:center}
   .reserve-name{font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .reserve-info small{font-size:8px;color:#aebdca;margin-top:3px}
+  .reserve-info small{font-size:9px;color:#aebdca;margin-top:3px}
   .swap-note{margin-top:8px;color:#9fb0c4;font-size:9px;text-align:center}
 
   @media (max-height:520px){
-    .battle-shell{grid-template-rows:minmax(0,1fr) 80px;gap:5px}
-    .battle-upper{grid-template-columns:126px minmax(0,1fr) 138px;gap:5px}
+    .battle-shell{grid-template-rows:minmax(0,1fr) 86px;gap:5px}
+    .battle-upper{grid-template-columns:156px minmax(0,1fr) 138px;gap:5px}
     .battle-focus,.battle-commands{padding:5px}
-    .battle-focus-name{font-size:12px}
+    .battle-focus-name{font-size:13px}
     .battle-focus-caption{font-size:8px;padding:3px 5px}
     .battle-focus-title,.battle-commands h3{font-size:8px}
     .command-grid{gap:3px}
@@ -322,26 +359,28 @@
     .cmd strong{font-size:11px}
     .win-btn{min-height:25px}
     .battle-status-card{padding:4px 5px}
-    .battle-status-card .status-name{font-size:9px}
-    .mini-bars{margin-top:2px;font-size:6px;grid-template-columns:18px 1fr auto;gap:3px}
+    .battle-status-card .status-name{font-size:10px}
+    .mini-bars{margin-top:2px;font-size:8px;grid-template-columns:20px 1fr 54px;gap:3px}
+    .mini-bars > span:last-child{font-size:10px}
     .mini-bar{height:4px}
-    .enemy-stage{top:18%;bottom:14%}
+    .enemy-stage{top:18%;bottom:15%}
     .reserve-card{height:72px;grid-template-columns:48px minmax(0,1fr)}
     .reserve-thumb{width:48px;height:58px}
     .swap-panel{padding:9px}
   }
   @media (max-height:430px){
-    .battle-shell{grid-template-rows:minmax(0,1fr) 67px}
-    .battle-upper{grid-template-columns:106px minmax(0,1fr) 122px}
-    .battle-focus-name{font-size:10px}
+    .battle-shell{grid-template-rows:minmax(0,1fr) 72px}
+    .battle-upper{grid-template-columns:132px minmax(0,1fr) 122px}
+    .battle-focus-name{font-size:11px}
     .battle-focus-caption{display:none}
     .battle-focus-portrait{border-radius:8px}
     .cmd{min-height:25px;font-size:7px}
     .cmd strong{font-size:9px}
     .battle-status-card{padding:3px 4px}
-    .battle-status-card .status-name{font-size:8px}
-    .battle-status-card .status-turn{font-size:6px}
-    .mini-bars{font-size:5.5px;grid-template-columns:16px 1fr auto;gap:2px;margin-top:1px}
+    .battle-status-card .status-name{font-size:9px}
+    .battle-status-card .status-turn{font-size:7px}
+    .mini-bars{font-size:7px;grid-template-columns:18px 1fr 49px;gap:2px;margin-top:1px}
+    .mini-bars > span:last-child{font-size:9px}
     .battle-test-tools select{max-width:82px}
     .battle-message{font-size:8px;min-height:23px}
     .swap-head h2{font-size:15px}
@@ -422,7 +461,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋4人編成戦闘試作 v0.4</div>
+      <div class="subtitle" id="topSubtitle">探索＋ターン制戦闘試作 v0.5</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -438,7 +477,7 @@
         <button class="menu-btn" id="dummyParty"><span class="icon">👥</span>編成・育成</button>
         <button class="menu-btn" id="dummyTalk"><span class="icon">💬</span>会話</button>
       </div>
-      <button class="small-btn" id="battleTestBtn" style="margin-top:12px;width:100%">⚔ 4人編成＋敵編成を直接テスト</button>
+      <button class="small-btn" id="battleTestBtn" style="margin-top:12px;width:100%">⚔ ターン制戦闘を直接テスト</button>
     </section>
   </main>
 
@@ -550,7 +589,7 @@
             <button class="cmd swap-cmd" id="swapBtn"><strong>↔</strong>交代</button>
             <button class="cmd" id="battleAutoBtn"><strong>▶</strong>オート</button>
           </div>
-          <button class="cmd win-btn" id="battleWinBtn">✓ 仮勝利して戻る</button>
+          <button class="cmd win-btn" id="battleWinBtn">↩ 戦闘テスト終了</button>
         </aside>
       </div>
 
@@ -596,7 +635,13 @@
     battleFormationArea: "plains",
     battleFormationIndex: 0,
     battleActive: ["hero","slime","dog","fairy"],
-    battleReserve: ["slug","slimebes","poison","harpy","momo","arachne"]
+    battleReserve: ["slug","slimebes","poison","harpy","momo","arachne"],
+    battleEnemies: [],
+    battleRound: 1,
+    battleTurnSlot: 0,
+    battlePhase: "player",
+    battleEnded: false,
+    battleDirectTest: false
   };
 
   const IMG = {
@@ -653,31 +698,36 @@
 
   $("dummyParty").onclick=()=>modal("編成・育成","想定編成は【バトルメンバー4人＋控え6人】です。\n今回は戦闘画面側で交代UIを試せます。");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋4人編成戦闘試作 v0.4"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋ターン制戦闘試作 v0.5"; updateWorld(); showScreen("worldScreen"); };
   $("backHome").onclick=()=>showScreen("homeScreen");
   $("battleTestBtn").onclick=()=>openBattle(false, "plains");
 
 
 
+
   const roster = {
-    hero:     {id:"hero",name:"主人公",img:null,hp:100,hpMax:100,mp:32,mpMax:40,caption:"主人公画像は後で追加予定"},
-    slime:    {id:"slime",name:"スライム娘",img:IMG.slime,hp:43,hpMax:50,mp:18,mpMax:25,caption:"スライム娘の行動を選択"},
-    dog:      {id:"dog",name:"犬娘",img:IMG.dog,hp:55,hpMax:60,mp:12,mpMax:20,caption:"犬娘の行動を選択"},
-    fairy:    {id:"fairy",name:"フェアリー",img:IMG.fairy,hp:35,hpMax:40,mp:34,mpMax:40,caption:"フェアリーの行動を選択"},
-    slug:     {id:"slug",name:"ナメクジ娘",img:IMG.slug,hp:62,hpMax:70,mp:10,mpMax:18,caption:"ナメクジ娘の行動を選択"},
-    slimebes: {id:"slimebes",name:"スライムベス",img:IMG.slimebes,hp:48,hpMax:55,mp:16,mpMax:22,caption:"スライムベスの行動を選択"},
-    poison:   {id:"poison",name:"ポイズンスライム",img:IMG.poison,hp:46,hpMax:52,mp:25,mpMax:30,caption:"ポイズンスライムの行動を選択"},
-    harpy:    {id:"harpy",name:"ハーピー",img:IMG.harpy,hp:51,hpMax:58,mp:20,mpMax:27,caption:"ハーピーの行動を選択"},
-    momo:     {id:"momo",name:"モモイロナメクジ",img:IMG.momo,hp:73,hpMax:78,mp:26,mpMax:32,caption:"モモイロナメクジの行動を選択"},
-    arachne:  {id:"arachne",name:"アラクネ",img:IMG.arachne,hp:80,hpMax:85,mp:29,mpMax:36,caption:"アラクネの行動を選択"}
+    hero:     {id:"hero",name:"主人公",img:null,hp:100,hpMax:100,mp:32,mpMax:40,atk:18,def:8,caption:"主人公画像は後で追加予定",portrait:{scale:1, x:0, y:0}},
+    slime:    {id:"slime",name:"スライム娘",img:IMG.slime,hp:50,hpMax:50,mp:25,mpMax:25,atk:13,def:5,caption:"スライム娘の行動を選択",portrait:{scale:1.28,x:0,y:4}},
+    dog:      {id:"dog",name:"犬娘",img:IMG.dog,hp:60,hpMax:60,mp:20,mpMax:20,atk:16,def:7,caption:"犬娘の行動を選択",portrait:{scale:1.12,x:0,y:1}},
+    fairy:    {id:"fairy",name:"フェアリー",img:IMG.fairy,hp:40,hpMax:40,mp:40,mpMax:40,atk:11,def:4,caption:"フェアリーの行動を選択",portrait:{scale:1.23,x:0,y:2}},
+    slug:     {id:"slug",name:"ナメクジ娘",img:IMG.slug,hp:70,hpMax:70,mp:18,mpMax:18,atk:14,def:10,caption:"ナメクジ娘の行動を選択",portrait:{scale:1.08,x:0,y:1}},
+    slimebes: {id:"slimebes",name:"スライムベス",img:IMG.slimebes,hp:55,hpMax:55,mp:22,mpMax:22,atk:14,def:6,caption:"スライムベスの行動を選択",portrait:{scale:1.25,x:0,y:4}},
+    poison:   {id:"poison",name:"ポイズンスライム",img:IMG.poison,hp:52,hpMax:52,mp:30,mpMax:30,atk:15,def:6,caption:"ポイズンスライムの行動を選択",portrait:{scale:1.22,x:0,y:3}},
+    harpy:    {id:"harpy",name:"ハーピー",img:IMG.harpy,hp:58,hpMax:58,mp:27,mpMax:27,atk:17,def:5,caption:"ハーピーの行動を選択",portrait:{scale:1.10,x:0,y:1}},
+    momo:     {id:"momo",name:"モモイロナメクジ",img:IMG.momo,hp:78,hpMax:78,mp:32,mpMax:32,atk:16,def:11,caption:"モモイロナメクジの行動を選択",portrait:{scale:1.06,x:0,y:1}},
+    arachne:  {id:"arachne",name:"アラクネ",img:IMG.arachne,hp:85,hpMax:85,mp:36,mpMax:36,atk:19,def:9,caption:"アラクネの行動を選択",portrait:{scale:1.06,x:0,y:1}}
   };
 
+  const initialStats = Object.fromEntries(
+    Object.entries(roster).map(([id,c])=>[id,{hp:c.hpMax,mp:c.mpMax}])
+  );
+
   const enemyData = {
-    slime:{name:"スライム娘",img:IMG.slime},
-    dog:{name:"犬娘",img:IMG.dog},
-    slug:{name:"ナメクジ娘",img:IMG.slug},
-    fairy:{name:"フェアリー",img:IMG.fairy},
-    momo:{name:"モモイロナメクジ",img:IMG.momo}
+    slime:{name:"スライム娘",img:IMG.slime,hp:34,atk:10,def:4},
+    dog:{name:"犬娘",img:IMG.dog,hp:46,atk:13,def:6},
+    slug:{name:"ナメクジ娘",img:IMG.slug,hp:58,atk:12,def:9},
+    fairy:{name:"フェアリー",img:IMG.fairy,hp:31,atk:11,def:3},
+    momo:{name:"モモイロナメクジ",img:IMG.momo,hp:82,atk:16,def:10}
   };
 
   const battleFormations = {
@@ -720,6 +770,30 @@
 
   function hpPct(c){ return Math.max(0,Math.min(100,Math.round(c.hp/c.hpMax*100))); }
   function mpPct(c){ return Math.max(0,Math.min(100,Math.round(c.mp/c.mpMax*100))); }
+  function livingActiveSlots(){ return state.battleActive.map((id,i)=>({id,i,c:roster[id]})).filter(x=>x.c.hp>0); }
+  function livingReserveIds(){ return state.battleReserve.filter(id=>roster[id].hp>0); }
+  function livingEnemies(){ return state.battleEnemies.filter(e=>e.hp>0); }
+  function selectedEnemy(){
+    const sel=$("enemyStage").querySelector(".enemy.selected");
+    if(sel){
+      const idx=Number(sel.dataset.enemyIndex);
+      const e=state.battleEnemies[idx];
+      if(e && e.hp>0) return {e,idx};
+    }
+    const idx=state.battleEnemies.findIndex(e=>e.hp>0);
+    return idx>=0 ? {e:state.battleEnemies[idx],idx} : null;
+  }
+  function setMessage(text){ $("battleMessage").textContent=text; }
+
+  function resetRosterForDirectTest(){
+    Object.entries(roster).forEach(([id,c])=>{
+      c.hp=initialStats[id].hp;
+      c.mp=initialStats[id].mp;
+      c.defending=false;
+    });
+    state.battleActive=["hero","slime","dog","fairy"];
+    state.battleReserve=["slug","slimebes","poison","harpy","momo","arachne"];
+  }
 
   function renderBattleParty(){
     const row=$("battlePartyRow");
@@ -727,66 +801,108 @@
     state.battleActive.forEach((id,slot)=>{
       const c=roster[id];
       const btn=document.createElement("button");
-      btn.className="battle-status-card"+(slot===state.battleActorSlot?" active":"");
+      btn.className="battle-status-card";
+      if(slot===state.battleActorSlot && state.battlePhase==="player" && !state.battleEnded) btn.classList.add("active");
+      if(c.hp<=0) btn.classList.add("ko");
+      if(c.defending) btn.classList.add("defending");
       btn.dataset.slot=String(slot);
+      const turnText = c.hp<=0 ? "戦闘不能" :
+        (slot===state.battleActorSlot && state.battlePhase==="player" && !state.battleEnded ? (id==="hero"?"行動中":"行動中") : "");
       btn.innerHTML=`
         <span class="status-name">${c.name}</span>
-        <span class="status-turn">${slot===state.battleActorSlot ? (id==="hero"?"未画像":"行動中") : ""}</span>
+        <span class="status-turn">${turnText}</span>
         <span class="mini-bars"><b>HP</b><span class="mini-bar"><i style="width:${hpPct(c)}%"></i></span><span>${c.hp}/${c.hpMax}</span></span>
         <span class="mini-bars"><b>MP</b><span class="mini-bar mp"><i style="width:${mpPct(c)}%"></i></span><span>${c.mp}/${c.mpMax}</span></span>`;
-      btn.onclick=()=>setBattleActorSlot(slot);
+      btn.onclick=()=>{
+        // Inspect portraits freely only outside player's turn; during turn, acting slot is fixed.
+        if(state.battlePhase!=="player" || state.battleEnded){
+          state.battleActorSlot=slot;
+          updateActorPortrait();
+          renderBattleParty();
+        }
+      };
       row.appendChild(btn);
     });
   }
 
-  function setBattleActorSlot(slot){
-    state.battleActorSlot=Math.max(0,Math.min(3,Number(slot)||0));
+  function updateActorPortrait(){
     const id=state.battleActive[state.battleActorSlot];
     const c=roster[id];
     $("battleActorName").textContent=c.name;
-    $("battleActorCaption").textContent=c.caption;
+    $("battleActorCaption").textContent=state.battleEnded ? "戦闘終了" : c.caption;
     const box=$("battleActorPortrait");
     box.innerHTML="";
     if(c.img){
-      const img=document.createElement("img"); img.src=c.img; img.alt=c.name; box.appendChild(img);
+      const img=document.createElement("img");
+      img.src=c.img; img.alt=c.name;
+      const p=c.portrait||{scale:1,x:0,y:0};
+      img.style.transform=`translate(${p.x||0}px,${p.y||0}px) scale(${p.scale||1})`;
+      box.appendChild(img);
     }else{
       const ph=document.createElement("div"); ph.className="hero-placeholder"; ph.textContent="👤"; box.appendChild(ph);
     }
+  }
+
+  function setBattleActorSlot(slot){
+    state.battleActorSlot=Math.max(0,Math.min(3,Number(slot)||0));
+    updateActorPortrait();
     renderBattleParty();
   }
 
-  function renderFormation(area=state.battleFormationArea,index=state.battleFormationIndex){
+  function renderFormation(area=state.battleFormationArea,index=state.battleFormationIndex, fresh=true){
     if(!battleFormations[area]) area="plains";
     const pack=battleFormations[area];
     index=((index % pack.formations.length)+pack.formations.length)%pack.formations.length;
     state.battleFormationArea=area;
     state.battleFormationIndex=index;
 
-    const ids=pack.formations[index];
+    if(fresh){
+      const ids=pack.formations[index];
+      state.battleEnemies=ids.map((id,i)=>{
+        const base=enemyData[id];
+        return {
+          uid:`${id}_${i}_${Date.now()}`,
+          id,name:base.name,img:base.img,
+          hp:base.hp,hpMax:base.hp,atk:base.atk,def:base.def
+        };
+      });
+    }
+
     const stage=$("enemyStage");
-    stage.dataset.count=String(ids.length);
+    stage.dataset.count=String(state.battleEnemies.length);
     stage.innerHTML="";
-    ids.forEach((id,i)=>{
-      const e=enemyData[id];
+    state.battleEnemies.forEach((e,i)=>{
       const div=document.createElement("div");
-      div.className="enemy"+(i===0?" selected":"");
+      div.className="enemy"+(e.hp<=0?" ko":"");
       div.dataset.enemyIndex=String(i);
+
       const img=document.createElement("img"); img.src=e.img; img.alt=e.name;
       const name=document.createElement("span"); name.className="enemy-name"; name.textContent=e.name;
-      div.append(img,name);
-      div.onclick=()=>{
-        stage.querySelectorAll(".enemy").forEach(x=>x.classList.remove("selected"));
-        div.classList.add("selected");
-        $("battleMessage").textContent=`対象：${e.name}。コマンドを選択してください。`;
-      };
+      const hpNum=document.createElement("span"); hpNum.className="enemy-hp-num"; hpNum.textContent=`${e.hp}/${e.hpMax}`;
+      const hpWrap=document.createElement("span"); hpWrap.className="enemy-hp-wrap";
+      const hp=document.createElement("i"); hp.className="enemy-hp"; hp.style.width=`${Math.max(0,Math.round(e.hp/e.hpMax*100))}%`;
+      hpWrap.appendChild(hp);
+      div.append(img,name,hpNum,hpWrap);
+
+      if(e.hp>0){
+        div.onclick=()=>{
+          stage.querySelectorAll(".enemy").forEach(x=>x.classList.remove("selected"));
+          div.classList.add("selected");
+          if(state.battlePhase==="player" && !state.battleEnded){
+            setMessage(`対象：${e.name}。${roster[state.battleActive[state.battleActorSlot]].name} の行動を選択。`);
+          }
+        };
+      }
       stage.appendChild(div);
     });
+
+    // Auto select first living enemy
+    const firstLiving=[...stage.querySelectorAll(".enemy")].find((el,i)=>state.battleEnemies[i].hp>0);
+    if(firstLiving) firstLiving.classList.add("selected");
 
     $("battleAreaLabel").textContent=pack.label;
     $("formationAreaSelect").value=area;
     $("formationNum").textContent=`${index+1} / ${pack.formations.length}`;
-    const names=ids.map(id=>enemyData[id].name).join("＋");
-    $("battleMessage").textContent=`${names} が現れた！ （${ids.length}体編成）`;
   }
 
   function randomFormation(area="plains"){
@@ -794,56 +910,251 @@
     return Math.floor(Math.random()*pack.formations.length);
   }
 
-  function openBattle(fromRun=false, area="plains"){
-    state.battleFromRun=fromRun;
-    state.battleReturn=fromRun ? "exploreScreen" : "homeScreen";
-    state.battleFormationArea=area;
-    state.battleFormationIndex=randomFormation(area);
-    $("topSubtitle").textContent="4人編成戦闘画面試作 v0.4";
-    $("battleTestTools").style.display=fromRun ? "none" : "flex";
-    showScreen("battleScreen");
-    setBattleActorSlot(1);
-    renderFormation(area,state.battleFormationIndex);
+  function setCommandsEnabled(enabled){
+    document.querySelectorAll(".cmd[data-command], #swapBtn, #battleAutoBtn").forEach(b=>{
+      b.disabled=!enabled;
+    });
   }
 
-  function closeBattleAsWin(){
-    if(state.battleFromRun && state.run){
-      const gain=12+rand(19);
-      state.gold+=gain;
-      state.run.runGold+=gain;
-      updateRunHud();
-      showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋4人編成戦闘試作 v0.4";
-      toast(`${gain}G を獲得して探索へ戻った`);
-    }else{
-      showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋4人編成戦闘試作 v0.4";
-      toast("戦闘画面テストを終了");
+  function startPlayerPhase(){
+    if(state.battleEnded) return;
+    state.battlePhase="player";
+    state.battleActive.forEach(id=>roster[id].defending=false);
+    state.battleTurnSlot=0;
+    chooseNextLivingActor(0);
+  }
+
+  function chooseNextLivingActor(startSlot){
+    if(state.battleEnded) return;
+    for(let slot=startSlot;slot<state.battleActive.length;slot++){
+      const c=roster[state.battleActive[slot]];
+      if(c.hp>0){
+        state.battleTurnSlot=slot;
+        state.battleActorSlot=slot;
+        updateActorPortrait();
+        renderBattleParty();
+        setCommandsEnabled(true);
+        setMessage(`ROUND ${state.battleRound}：${c.name} の行動。敵を選び、コマンドを入力してください。`);
+        return;
+      }
     }
-    state.battleFromRun=false;
+    enemyPhase();
+  }
+
+  function advancePlayerTurn(){
+    chooseNextLivingActor(state.battleTurnSlot+1);
+  }
+
+  function playerAttack(){
+    if(state.battlePhase!=="player" || state.battleEnded) return;
+    const actor=roster[state.battleActive[state.battleTurnSlot]];
+    if(actor.hp<=0){ advancePlayerTurn(); return; }
+    const target=selectedEnemy();
+    if(!target) return;
+
+    setCommandsEnabled(false);
+    const variance=rand(5)-2;
+    const dmg=Math.max(1, actor.atk - Math.floor(target.e.def/2) + variance);
+    target.e.hp=Math.max(0,target.e.hp-dmg);
+
+    const targetEl=$("enemyStage").querySelector(`.enemy[data-enemy-index="${target.idx}"]`);
+    if(targetEl){
+      targetEl.classList.add("damage");
+      setTimeout(()=>targetEl.classList.remove("damage"),250);
+    }
+
+    renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+    setMessage(`${actor.name} の攻撃！ ${target.e.name} に ${dmg} ダメージ。`);
+
+    if(target.e.hp<=0){
+      setMessage(`${actor.name} の攻撃！ ${target.e.name} に ${dmg} ダメージ。${target.e.name} を倒した！`);
+    }
+
+    setTimeout(()=>{
+      if(livingEnemies().length===0){ winBattle(); }
+      else advancePlayerTurn();
+    },430);
+  }
+
+  function playerDefend(){
+    if(state.battlePhase!=="player" || state.battleEnded) return;
+    const actor=roster[state.battleActive[state.battleTurnSlot]];
+    actor.defending=true;
+    renderBattleParty();
+    setCommandsEnabled(false);
+    setMessage(`${actor.name} は身を守っている。このラウンド中、受けるダメージを半減。`);
+    setTimeout(advancePlayerTurn,320);
+  }
+
+  function placeholderCommand(name){
+    if(state.battlePhase!=="player" || state.battleEnded) return;
+    const actor=roster[state.battleActive[state.battleTurnSlot]];
+    setMessage(`${actor.name}：${name} はまだ仮ボタンです。今回は「攻撃」「防御」「交代」を試せます。`);
+  }
+
+  async function enemyPhase(){
+    if(state.battleEnded) return;
+    state.battlePhase="enemy";
+    setCommandsEnabled(false);
+    renderBattleParty();
+
+    const enemies=state.battleEnemies.filter(e=>e.hp>0);
+    for(const enemy of enemies){
+      if(state.battleEnded) return;
+      await new Promise(r=>setTimeout(r,420));
+
+      const possible=livingActiveSlots();
+      if(possible.length===0){
+        if(!autoDeployReserves()){
+          loseBattle();
+          return;
+        }
+      }
+      const targets=livingActiveSlots();
+      if(targets.length===0){ loseBattle(); return; }
+
+      const target=choose(targets);
+      const c=target.c;
+      const raw=Math.max(1, enemy.atk - Math.floor(c.def/2) + (rand(5)-2));
+      const dmg=Math.max(1, c.defending ? Math.ceil(raw/2) : raw);
+      c.hp=Math.max(0,c.hp-dmg);
+
+      renderBattleParty();
+      updateActorPortrait();
+      setMessage(`${enemy.name} の攻撃！ ${c.name} に ${dmg} ダメージ。${c.defending?"（防御で軽減）":""}`);
+
+      if(c.hp<=0){
+        await new Promise(r=>setTimeout(r,300));
+        const replaced=autoReplaceSlot(target.i);
+        renderBattleParty();
+        if(replaced){
+          setMessage(`${c.name} は戦闘不能。控えの ${roster[state.battleActive[target.i]].name} が戦線に入った。`);
+        }else if(livingActiveSlots().length===0){
+          loseBattle();
+          return;
+        }
+      }
+    }
+
+    if(!state.battleEnded){
+      state.battleRound++;
+      setTimeout(startPlayerPhase,450);
+    }
+  }
+
+  function autoReplaceSlot(slot){
+    const reserveIndex=state.battleReserve.findIndex(id=>roster[id].hp>0);
+    if(reserveIndex<0) return false;
+    const outgoing=state.battleActive[slot];
+    const incoming=state.battleReserve[reserveIndex];
+    state.battleActive[slot]=incoming;
+    state.battleReserve[reserveIndex]=outgoing;
+    return true;
+  }
+
+  function autoDeployReserves(){
+    let changed=false;
+    state.battleActive.forEach((id,slot)=>{
+      if(roster[id].hp<=0 && autoReplaceSlot(slot)) changed=true;
+    });
+    return changed || livingActiveSlots().length>0;
+  }
+
+  function winBattle(){
+    if(state.battleEnded) return;
+    state.battleEnded=true;
+    state.battlePhase="ended";
+    setCommandsEnabled(false);
+    renderBattleParty();
+    $("battleActorCaption").textContent="VICTORY";
+    setMessage("勝利！ 敵をすべて倒した。");
+    setTimeout(()=>{
+      if(state.battleFromRun){
+        const gain=12+rand(19);
+        state.gold+=gain;
+        state.run.runGold+=gain;
+        updateRunHud();
+        showScreen("exploreScreen");
+        $("topSubtitle").textContent="探索＋ターン制戦闘試作 v0.5";
+        toast(`${gain}G を獲得して探索へ戻った`);
+        state.battleFromRun=false;
+      }
+    },900);
+  }
+
+  function loseBattle(){
+    if(state.battleEnded) return;
+    state.battleEnded=true;
+    state.battlePhase="ended";
+    setCommandsEnabled(false);
+    renderBattleParty();
+    $("battleActorCaption").textContent="DEFEAT";
+    setMessage("パーティは力尽きた……。今回はテストなのでミレスタへ戻ります。");
+    setTimeout(()=>{
+      showScreen("homeScreen");
+      $("topSubtitle").textContent="探索＋ターン制戦闘試作 v0.5";
+      state.battleFromRun=false;
+    },1300);
+  }
+
+  function openBattle(fromRun=false, area="plains"){
+    state.battleFromRun=fromRun;
+    state.battleDirectTest=!fromRun;
+    state.battleReturn=fromRun ? "exploreScreen" : "homeScreen";
+    if(!fromRun) resetRosterForDirectTest();
+
+    state.battleFormationArea=area;
+    state.battleFormationIndex=randomFormation(area);
+    state.battleRound=1;
+    state.battleTurnSlot=0;
+    state.battleEnded=false;
+
+    $("topSubtitle").textContent="ターン制戦闘試作 v0.5";
+    $("battleTestTools").style.display=fromRun ? "none" : "flex";
+    showScreen("battleScreen");
+
+    renderFormation(area,state.battleFormationIndex,true);
+    startPlayerPhase();
+  }
+
+  function closeBattleTest(){
+    if(state.battleFromRun){
+      setMessage("探索中の戦闘からは、勝利するまで戻れません。");
+      return;
+    }
+    state.battleEnded=true;
+    showScreen("homeScreen");
+    $("topSubtitle").textContent="探索＋ターン制戦闘試作 v0.5";
+    toast("戦闘テストを終了");
   }
 
   function openSwap(){
-    const active=roster[state.battleActive[state.battleActorSlot]];
-    $("swapLead").textContent=`${active.name} と交代する控えメンバーを選択`;
+    if(state.battlePhase!=="player" || state.battleEnded) return;
+    const activeSlot=state.battleTurnSlot;
+    const active=roster[state.battleActive[activeSlot]];
+    $("swapLead").textContent=`${active.name} と交代する控えメンバーを選択（ターン消費なし）`;
     const grid=$("reserveGrid");
     grid.innerHTML="";
+
     state.battleReserve.forEach((id,reserveIndex)=>{
       const c=roster[id];
       const card=document.createElement("button");
-      card.className="reserve-card";
+      card.className="reserve-card"+(c.hp<=0?" ko":"");
+      card.disabled=c.hp<=0;
       const thumb=c.img
         ? `<span class="reserve-thumb"><img src="${c.img}" alt="${c.name}"></span>`
         : `<span class="reserve-thumb"><span class="hero-placeholder">👤</span></span>`;
       card.innerHTML=`${thumb}<span class="reserve-info"><span class="reserve-name">${c.name}</span><small>HP ${c.hp}/${c.hpMax}</small><small>MP ${c.mp}/${c.mpMax}</small></span>`;
       card.onclick=()=>{
-        const activeSlot=state.battleActorSlot;
+        if(c.hp<=0) return;
         const outgoing=state.battleActive[activeSlot];
         state.battleActive[activeSlot]=id;
         state.battleReserve[reserveIndex]=outgoing;
         $("swapModal").classList.remove("show");
-        setBattleActorSlot(activeSlot);
-        $("battleMessage").textContent=`${roster[outgoing].name} → ${c.name} に交代。（v0.4ではターン消費なしのUI確認）`;
+        state.battleActorSlot=activeSlot;
+        updateActorPortrait();
+        renderBattleParty();
+        setMessage(`${roster[outgoing].name} → ${c.name} に交代。交代ではターンを消費しません。${c.name} がこのまま行動できます。`);
       };
       grid.appendChild(card);
     });
@@ -854,26 +1165,42 @@
   $("swapModal").addEventListener("click",e=>{ if(e.target===$("swapModal")) $("swapModal").classList.remove("show"); });
   $("swapBtn").onclick=openSwap;
   $("exploreReserveBtn").onclick=()=>{
-    modal("探索パーティ","想定はバトルメンバー4人＋控え6人、合計10人で探索です。\n戦闘中は「交代」コマンドから控えを呼び出す形を試作しています。");
+    modal("探索パーティ","想定はバトルメンバー4人＋控え6人、合計10人で探索です。\n戦闘中の交代はv0.5ではターン消費なしで実装しています。");
   };
 
   $("formationAreaSelect").onchange=e=>{
+    if(state.battlePhase==="enemy") return;
     state.battleFormationIndex=0;
-    renderFormation(e.target.value,0);
+    state.battleRound=1;
+    state.battleEnded=false;
+    renderFormation(e.target.value,0,true);
+    startPlayerPhase();
   };
-  $("formationPrevBtn").onclick=()=>renderFormation(state.battleFormationArea,state.battleFormationIndex-1);
-  $("formationNextBtn").onclick=()=>renderFormation(state.battleFormationArea,state.battleFormationIndex+1);
+  $("formationPrevBtn").onclick=()=>{
+    if(state.battlePhase==="enemy") return;
+    state.battleRound=1;
+    state.battleEnded=false;
+    renderFormation(state.battleFormationArea,state.battleFormationIndex-1,true);
+    startPlayerPhase();
+  };
+  $("formationNextBtn").onclick=()=>{
+    if(state.battlePhase==="enemy") return;
+    state.battleRound=1;
+    state.battleEnded=false;
+    renderFormation(state.battleFormationArea,state.battleFormationIndex+1,true);
+    startPlayerPhase();
+  };
 
   document.querySelectorAll(".cmd[data-command]").forEach(btn=>{
     btn.onclick=()=>{
-      const c=roster[state.battleActive[state.battleActorSlot]];
-      const target=$("enemyStage").querySelector(".enemy.selected .enemy-name");
-      const targetName=target ? target.textContent : "敵";
-      $("battleMessage").textContent=`${c.name}：${btn.dataset.command} を選択。対象は ${targetName}。（今回は演出のみ）`;
+      const cmd=btn.dataset.command;
+      if(cmd==="攻撃") playerAttack();
+      else if(cmd==="防御") playerDefend();
+      else placeholderCommand(cmd);
     };
   });
-  $("battleAutoBtn").onclick=()=>{$("battleMessage").textContent="オートは候補として残しています。今回はUI確認のみです。";};
-  $("battleWinBtn").onclick=closeBattleAsWin;
+  $("battleAutoBtn").onclick=()=>placeholderCommand("オート");
+  $("battleWinBtn").onclick=closeBattleTest;
 
 
   function updateWorld(){
