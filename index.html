@@ -101,12 +101,23 @@
   #exploreScreen{padding-top:10px;padding-bottom:max(10px,var(--safe-bottom));padding-left:calc(10px + var(--safe-left));padding-right:calc(10px + var(--safe-right));gap:10px}
   .party-panel{width:205px;flex:0 0 205px;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
   .party-title{font-size:13px;color:var(--muted);font-weight:700}
-  .member{padding:10px;border-radius:12px;background:#111d2a;border:1px solid #2f485d}
-  .member .name{font-weight:800;margin-bottom:5px}
-  .bar{height:10px;border-radius:999px;background:#263746;overflow:hidden}
+  .party-list{display:flex;flex-direction:column;gap:7px}
+  .member{padding:8px 9px;border-radius:12px;background:#111d2a;border:1px solid #2f485d}
+  .member-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px}
+  .member .name{font-weight:800;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lv-tag{flex:0 0 auto;padding:1px 5px;border-radius:999px;background:#27384b;color:#e8d88d;font-size:9px;font-weight:900}
+  .resource-line{display:grid;grid-template-columns:20px minmax(0,1fr) 62px;gap:4px;align-items:center;margin-top:3px}
+  .resource-line b{font-size:8px;color:#aab9c8}
+  .resource-line span:last-child{text-align:right;font-size:9px;color:#dbe5ee;font-weight:800}
+  .bar{height:7px;border-radius:999px;background:#263746;overflow:hidden}
   .bar>i{display:block;height:100%;background:linear-gradient(90deg,#48b972,#79df9a)}
-  .member small{display:block;color:#aab9c8;margin-top:4px}
-  .run-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:auto}
+  .bar.mp>i{background:linear-gradient(90deg,#4c78c7,#6ba1f0)}
+  .bar.exp>i{background:linear-gradient(90deg,#b79b45,#e6cf6b)}
+  .exp-line{margin-top:3px;display:grid;grid-template-columns:20px minmax(0,1fr) 62px;gap:4px;align-items:center}
+  .exp-line b{font-size:8px;color:#9faebd}
+  .exp-line span:last-child{text-align:right;font-size:8px;color:#c6b86d;font-weight:800}
+  .member.ko{border-color:#663f46;opacity:.72}
+  .run-info{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:auto}
   .statbox{padding:8px;border-radius:10px;background:#0c1722;border:1px solid #2a4256;text-align:center;font-size:12px}
   .statbox strong{display:block;font-size:17px;color:var(--gold)}
   .return-btn{border-color:#754646;background:linear-gradient(#623437,#3a2024);flex:0 0 auto}
@@ -627,10 +638,16 @@
     #exploreScreen{padding-top:7px;padding-bottom:max(7px,var(--safe-bottom));gap:7px}
     .party-panel{width:168px;flex-basis:168px;padding:7px;gap:5px}
     .party-title{display:none}
-    .member{padding:6px 7px;border-radius:9px}
-    .member .name{font-size:14px;margin-bottom:3px}
-    .bar{height:6px}
-    .member small{font-size:10px;margin-top:2px}
+    .party-list{gap:4px}
+    .member{padding:5px 6px;border-radius:9px}
+    .member-head{margin-bottom:2px}
+    .member .name{font-size:11px}
+    .lv-tag{font-size:7px;padding:1px 4px}
+    .resource-line,.exp-line{grid-template-columns:16px minmax(0,1fr) 49px;gap:2px;margin-top:2px}
+    .resource-line b,.exp-line b{font-size:7px}
+    .resource-line span:last-child{font-size:8px}
+    .exp-line span:last-child{font-size:7px}
+    .bar{height:4px}
     .run-info{gap:4px;margin-top:0}
     .statbox{padding:4px 3px;font-size:9px;border-radius:8px}
     .statbox strong{font-size:13px}
@@ -647,10 +664,12 @@
     .topbar{height:42px;flex-basis:42px}
     .subtitle{display:none}
     .party-panel{width:154px;flex-basis:154px;padding:5px;gap:4px}
-    .member{padding:4px 6px}
-    .member .name{font-size:12px;margin-bottom:2px}
-    .member small{font-size:9px}
-    .bar{height:5px}
+    .member{padding:3px 5px}
+    .member .name{font-size:10px}
+    .resource-line,.exp-line{grid-template-columns:14px minmax(0,1fr) 44px}
+    .resource-line span:last-child{font-size:7px}
+    .exp-line span:last-child{font-size:6px}
+    .bar{height:3px}
     .statbox{padding:3px 2px}
     .statbox strong{font-size:12px}
     .return-btn{padding:5px 5px;font-size:10px}
@@ -670,7 +689,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋オート戦闘試作 v0.9</div>
+      <div class="subtitle" id="topSubtitle">探索＋成長・消耗試作 v0.10</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -686,7 +705,7 @@
         <button class="menu-btn" id="dummyParty"><span class="icon">👥</span>編成・育成</button>
         <button class="menu-btn" id="dummyTalk"><span class="icon">💬</span>会話</button>
       </div>
-      <button class="small-btn" id="battleTestBtn" style="margin-top:12px;width:100%">⚔ オート戦闘を直接テスト</button>
+      <button class="small-btn" id="battleTestBtn" style="margin-top:12px;width:100%">⚔ 戦闘を直接テスト</button>
     </section>
   </main>
 
@@ -720,30 +739,12 @@
   <main id="exploreScreen" class="screen">
     <aside class="party-panel">
       <div class="party-title">BATTLE MEMBER 4 / RESERVE 6</div>
-      <div class="member">
-        <div class="name">主人公</div>
-        <div class="bar"><i style="width:100%"></i></div>
-        <small>HP 100 / 100</small>
-      </div>
-      <div class="member">
-        <div class="name">スライム娘</div>
-        <div class="bar"><i style="width:86%"></i></div>
-        <small>HP 43 / 50</small>
-      </div>
-      <div class="member">
-        <div class="name">犬娘</div>
-        <div class="bar"><i style="width:92%"></i></div>
-        <small>HP 55 / 60</small>
-      </div>
-      <div class="member">
-        <div class="name">フェアリー</div>
-        <div class="bar"><i style="width:88%"></i></div>
-        <small>HP 35 / 40</small>
-      </div>
+      <div class="party-list" id="explorePartyList"></div>
       <button class="reserve-chip" id="exploreReserveBtn">控えメンバー 6人</button>
       <div class="run-info">
         <div class="statbox">進行<strong id="floorText">入口</strong></div>
         <div class="statbox">獲得G<strong id="runGoldText">0</strong></div>
+        <div class="statbox">獲得EXP<strong id="runExpText">0</strong></div>
       </div>
       <button class="small-btn return-btn" id="returnBtn">🏠 ミレスタへ帰還</button>
     </aside>
@@ -830,7 +831,7 @@
       <button class="swap-close" id="swapCloseBtn">閉じる</button>
     </div>
     <div class="reserve-grid" id="reserveGrid"></div>
-    <div class="swap-note">※ v0.9でも交代はターン消費なし。交代後の仲間がそのまま行動を選べます。</div>
+    <div class="swap-note">※ v0.10でも交代はターン消費なし。交代後の仲間がそのまま行動を選べます。</div>
   </div>
 </div>
 
@@ -868,7 +869,8 @@
     battleTargetMode: null,
     battleSpeed: 1,
     battleAutoContinuous: false,
-    battleAutoStartTimer: null
+    battleAutoStartTimer: null,
+    battleTestSnapshot: null
   };
 
   const IMG = {
@@ -923,9 +925,9 @@
   }
   function closeModal(){ $("modal").classList.remove("show"); }
 
-  $("dummyParty").onclick=()=>modal("編成・育成","想定編成は【バトルメンバー4人＋控え6人】です。\n今回は戦闘画面側で交代UIを試せます。");
+  $("dummyParty").onclick=()=>modal("編成・育成","想定編成は【バトルメンバー4人＋控え6人】です。\n現在はEXP・レベル・各種ステータス成長まで試作しています。");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋オート戦闘試作 v0.9"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋成長・消耗試作 v0.10"; updateWorld(); showScreen("worldScreen"); };
   $("backHome").onclick=()=>showScreen("homeScreen");
   $("battleTestBtn").onclick=()=>openBattle(false, "plains");
 
@@ -936,7 +938,7 @@
 
 
   /*
-    v0.9 internal organization:
+    v0.10 internal organization:
     - Character combat stats are grouped in stats {}
     - learnedSkills is an array, so characters can later hold 5-8+ skills
     - Skill definitions are separated from characters
@@ -1028,12 +1030,123 @@
     Object.entries(roster).map(([id,c])=>[id,{...c.stats}])
   );
 
+  // Temporary v0.10 growth values. These are data-driven so they can be tuned later.
+  const characterGrowth = {
+    hero:    {hp:8,mp:3,atk:2,def:2,magic:2,mdef:1,spd:1},
+    slime:   {hp:7,mp:2,atk:2,def:1,magic:1,mdef:1,spd:1},
+    dog:     {hp:8,mp:2,atk:2,def:2,magic:1,mdef:1,spd:2},
+    fairy:   {hp:5,mp:4,atk:1,def:1,magic:3,mdef:2,spd:2},
+    slug:    {hp:9,mp:2,atk:2,def:2,magic:1,mdef:2,spd:1},
+    slimebes:{hp:7,mp:2,atk:2,def:1,magic:1,mdef:1,spd:1},
+    poison:  {hp:6,mp:3,atk:2,def:1,magic:2,mdef:2,spd:1},
+    harpy:   {hp:6,mp:3,atk:2,def:1,magic:1,mdef:1,spd:2},
+    momo:    {hp:9,mp:3,atk:2,def:2,magic:2,mdef:2,spd:1},
+    arachne: {hp:8,mp:3,atk:2,def:2,magic:2,mdef:2,spd:1}
+  };
+
+  Object.values(roster).forEach(c=>{
+    c.level=1;
+    c.exp=0;
+    c.growth=characterGrowth[c.id] || {hp:7,mp:2,atk:2,def:1,magic:1,mdef:1,spd:1};
+  });
+
+  function expNeeded(level){
+    return 30 + Math.max(0,level-1)*20;
+  }
+
+  function levelUpCharacter(c){
+    if(c.level>=99) return;
+    c.level++;
+    const g=c.growth;
+    const st=S(c);
+    st.hpMax+=g.hp; st.hp=Math.min(st.hpMax,st.hp+g.hp);
+    st.mpMax+=g.mp; st.mp=Math.min(st.mpMax,st.mp+g.mp);
+    st.atk+=g.atk; st.def+=g.def; st.magic+=g.magic; st.mdef+=g.mdef; st.spd+=g.spd;
+  }
+
+  function travelPartyIds(){
+    return [...new Set([...state.battleActive,...state.battleReserve])];
+  }
+
+  function awardExperience(amount){
+    const leveled=[];
+    if(amount<=0) return leveled;
+    travelPartyIds().forEach(id=>{
+      const c=roster[id];
+      if(!c) return;
+      c.exp+=amount;
+      let gains=0;
+      while(c.level<99 && c.exp>=expNeeded(c.level)){
+        c.exp-=expNeeded(c.level);
+        levelUpCharacter(c);
+        gains++;
+      }
+      if(gains) leveled.push({id,name:c.name,level:c.level,gains});
+    });
+    return leveled;
+  }
+
+  function restorePartyFull(){
+    Object.values(roster).forEach(c=>{
+      const st=S(c);
+      st.hp=st.hpMax;
+      st.mp=st.mpMax;
+      c.defending=false;
+      c.atkBuff=1;
+      c.atkBuffRounds=0;
+    });
+  }
+
+  function recoverTravelParty(hpRate=.50,mpRate=.40){
+    let hpGain=0,mpGain=0;
+    travelPartyIds().forEach(id=>{
+      const c=roster[id],st=S(c);
+      const oldHp=st.hp,oldMp=st.mp;
+      st.hp=Math.min(st.hpMax,st.hp+Math.ceil(st.hpMax*hpRate));
+      st.mp=Math.min(st.mpMax,st.mp+Math.ceil(st.mpMax*mpRate));
+      hpGain+=st.hp-oldHp;
+      mpGain+=st.mp-oldMp;
+    });
+    return {hpGain,mpGain};
+  }
+
+  function snapshotPartyState(){
+    return {
+      active:[...state.battleActive],
+      reserve:[...state.battleReserve],
+      roster:Object.fromEntries(Object.entries(roster).map(([id,c])=>[id,{
+        stats:{...c.stats},
+        level:c.level,
+        exp:c.exp,
+        atkBuff:c.atkBuff,
+        atkBuffRounds:c.atkBuffRounds,
+        defending:!!c.defending
+      }]))
+    };
+  }
+
+  function restorePartySnapshot(snapshot){
+    if(!snapshot) return;
+    state.battleActive=[...snapshot.active];
+    state.battleReserve=[...snapshot.reserve];
+    Object.entries(snapshot.roster).forEach(([id,s])=>{
+      const c=roster[id];
+      if(!c) return;
+      c.stats={...s.stats};
+      c.level=s.level;
+      c.exp=s.exp;
+      c.atkBuff=s.atkBuff;
+      c.atkBuffRounds=s.atkBuffRounds;
+      c.defending=s.defending;
+    });
+  }
+
   const enemyData = {
-    slime:{name:"スライム娘",img:IMG.slime,stats:{hp:34,atk:10,def:4,mdef:3,spd:7}},
-    dog:{name:"犬娘",img:IMG.dog,stats:{hp:46,atk:13,def:6,mdef:4,spd:11}},
-    slug:{name:"ナメクジ娘",img:IMG.slug,stats:{hp:58,atk:12,def:9,mdef:6,spd:4}},
-    fairy:{name:"フェアリー",img:IMG.fairy,stats:{hp:31,atk:11,def:3,mdef:7,spd:14}},
-    momo:{name:"モモイロナメクジ",img:IMG.momo,stats:{hp:82,atk:16,def:10,mdef:8,spd:5}}
+    slime:{name:"スライム娘",img:IMG.slime,exp:10,stats:{hp:34,atk:10,def:4,mdef:3,spd:7}},
+    dog:{name:"犬娘",img:IMG.dog,exp:14,stats:{hp:46,atk:13,def:6,mdef:4,spd:11}},
+    slug:{name:"ナメクジ娘",img:IMG.slug,exp:17,stats:{hp:58,atk:12,def:9,mdef:6,spd:4}},
+    fairy:{name:"フェアリー",img:IMG.fairy,exp:13,stats:{hp:31,atk:11,def:3,mdef:7,spd:14}},
+    momo:{name:"モモイロナメクジ",img:IMG.momo,exp:28,stats:{hp:82,atk:16,def:10,mdef:8,spd:5}}
   };
 
   const battleFormations = {
@@ -1096,6 +1209,8 @@
   function resetRosterForDirectTest(){
     Object.entries(roster).forEach(([id,c])=>{
       c.stats={...initialStats[id]};
+      c.level=1;
+      c.exp=0;
       c.defending=false;
       c.atkBuff=1;
       c.atkBuffRounds=0;
@@ -1179,7 +1294,7 @@
       }
 
       btn.innerHTML=`
-        <span class="status-name">${c.name}</span>
+        <span class="status-name">${c.name} <small>Lv${c.level}</small></span>
         <span class="status-turn">${turnText}</span>
         ${c.atkBuffRounds>0?`<span class="buff-badge">ATK↑ ${c.atkBuffRounds}R</span>`:""}
         <span class="queued-action ${action?"ready":""}">${st.hp<=0 ? "行動不可" : actionLabel(action)}</span>
@@ -1291,7 +1406,7 @@
           uid:`${id}_${i}_${Date.now()}`,
           id,name:base.name,displayName:base.name+suffix,img:base.img,
           hp:base.stats.hp,hpMax:base.stats.hp,atk:base.stats.atk,def:base.stats.def,
-          mdef:base.stats.mdef||4,spd:base.stats.spd||5
+          mdef:base.stats.mdef||4,spd:base.stats.spd||5,exp:base.exp||10
         };
       });
     }
@@ -1924,20 +2039,37 @@
     clearEnemyActing();
     renderBattleParty();
     $("battleActorCaption").textContent="VICTORY";
-    setMessage("勝利！ 敵をすべて倒した。");
 
-    setTimeout(()=>{
-      if(state.battleFromRun){
-        const gain=12+rand(19);
-        state.gold+=gain;
-        state.run.runGold+=gain;
+    if(state.battleFromRun){
+      const gain=12+rand(19);
+      const expGain=state.battleEnemies.reduce((sum,e)=>sum+(e.exp||10),0);
+      const leveled=awardExperience(expGain);
+
+      state.gold+=gain;
+      state.run.runGold+=gain;
+      state.run.runExp+=expGain;
+
+      const levelText=leveled.length
+        ? ` LEVEL UP：${leveled.map(x=>`${x.name} Lv${x.level}`).join("、")}`
+        : "";
+      setMessage(`勝利！ ${gain}G / ${expGain}EXP を獲得。${levelText}`);
+      renderBattleParty();
+
+      setTimeout(()=>{
         updateRunHud();
         showScreen("exploreScreen");
-        $("topSubtitle").textContent="探索＋オート戦闘試作 v0.9";
-        toast(`${gain}G を獲得して探索へ戻った`);
+        $("topSubtitle").textContent="探索＋成長・消耗試作 v0.10";
+        toast(levedToastText(leveled,gain,expGain));
         state.battleFromRun=false;
-      }
-    },t(1100));
+      },t(leveled.length?1800:1300));
+    }else{
+      setMessage("勝利！ 戦闘テストではEXP・ゴールドは獲得しません。");
+    }
+  }
+
+  function levedToastText(leveled,gain,expGain){
+    if(leveled.length) return `${gain}G / ${expGain}EXP獲得・LEVEL UP！`;
+    return `${gain}G / ${expGain}EXPを獲得`;
   }
 
   function loseBattle(){
@@ -1952,12 +2084,24 @@
     clearEnemyActing();
     renderBattleParty();
     $("battleActorCaption").textContent="DEFEAT";
-    setMessage("パーティは力尽きた……。今回はテストなのでミレスタへ戻ります。");
+    setMessage(state.battleFromRun
+      ? "パーティは力尽きた……。探索を終了してミレスタへ戻ります。"
+      : "パーティは力尽きた……。戦闘テストを終了します。");
+
     setTimeout(()=>{
+      if(state.battleDirectTest){
+        restorePartySnapshot(state.battleTestSnapshot);
+        state.battleTestSnapshot=null;
+      }else{
+        state.run=null;
+        restorePartyFull();
+      }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋オート戦闘試作 v0.9";
+      $("topSubtitle").textContent="探索＋成長・消耗試作 v0.10";
       state.battleFromRun=false;
-    },t(1500));
+      state.battleDirectTest=false;
+      updateHeader();
+    },t(1600));
   }
 
   function updateSpeedButtons(){
@@ -1980,7 +2124,10 @@
     state.battleFromRun=fromRun;
     state.battleDirectTest=!fromRun;
     state.battleReturn=fromRun?"exploreScreen":"homeScreen";
-    if(!fromRun) resetRosterForDirectTest();
+    if(!fromRun){
+      state.battleTestSnapshot=snapshotPartyState();
+      resetRosterForDirectTest();
+    }
 
     state.battleSpeed=Number(localStorage.getItem("milesta_battle_speed")||"1");
     updateSpeedButtons();
@@ -1996,7 +2143,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="オート戦闘試作 v0.9";
+    $("topSubtitle").textContent="成長・消耗試作 v0.10";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -2013,8 +2160,11 @@
     state.battleEnded=true;
     state.battleAutoContinuous=false;
     cancelScheduledTurnStart();
+    restorePartySnapshot(state.battleTestSnapshot);
+    state.battleTestSnapshot=null;
+    state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋オート戦闘試作 v0.9";
+    $("topSubtitle").textContent="探索＋成長・消耗試作 v0.10";
     toast("戦闘テストを終了");
   }
 
@@ -2036,7 +2186,7 @@
       const thumb=c.img
         ? `<span class="reserve-thumb"><img src="${c.img}" alt="${c.name}"></span>`
         : `<span class="reserve-thumb"><span class="hero-placeholder">👤</span></span>`;
-      card.innerHTML=`${thumb}<span class="reserve-info"><span class="reserve-name">${c.name}</span><small>HP ${st.hp}/${st.hpMax}</small><small>MP ${st.mp}/${st.mpMax}</small></span>`;
+      card.innerHTML=`${thumb}<span class="reserve-info"><span class="reserve-name">${c.name} Lv${c.level}</span><small>HP ${st.hp}/${st.hpMax}</small><small>MP ${st.mp}/${st.mpMax}</small></span>`;
       card.onclick=()=>{
         if(st.hp<=0) return;
         const outgoing=state.battleActive[activeSlot];
@@ -2061,7 +2211,7 @@
   $("swapModal").addEventListener("click",e=>{ if(e.target===$("swapModal")) $("swapModal").classList.remove("show"); });
   $("swapBtn").onclick=openSwap;
   $("exploreReserveBtn").onclick=()=>{
-    modal("探索パーティ","想定はバトルメンバー4人＋控え6人、合計10人で探索です。\n戦闘中の交代はv0.9でもターン消費なしで実装しています。");
+    modal("探索パーティ","想定はバトルメンバー4人＋控え6人、合計10人で探索です。\n戦闘中の交代はターン消費なし。探索中はHP・MPを次の戦闘へ持ち越します。");
   };
 
 
@@ -2238,11 +2388,13 @@
   }
 
   function startRun(){
+    restorePartyFull();
     state.run={
       nodes:buildMap(),
       current:"L0N0",
       visited:new Set(["L0N0"]),
       runGold:0,
+      runExp:0,
       resolved:new Set()
     };
     $("exploreAreaLabel").textContent="🌿 ミレスタ平原";
@@ -2315,10 +2467,32 @@
     });
   }
 
+  function renderExploreParty(){
+    const list=$("explorePartyList");
+    if(!list) return;
+    list.innerHTML="";
+    state.battleActive.forEach(id=>{
+      const c=roster[id],st=S(c);
+      const need=expNeeded(c.level);
+      const expPct=c.level>=99?100:Math.max(0,Math.min(100,Math.round(c.exp/need*100)));
+      const card=document.createElement("div");
+      card.className="member"+(st.hp<=0?" ko":"");
+      card.innerHTML=`
+        <div class="member-head"><div class="name">${c.name}</div><span class="lv-tag">Lv${c.level}</span></div>
+        <div class="resource-line"><b>HP</b><span class="bar"><i style="width:${hpPct(c)}%"></i></span><span>${st.hp}/${st.hpMax}</span></div>
+        <div class="resource-line"><b>MP</b><span class="bar mp"><i style="width:${mpPct(c)}%"></i></span><span>${st.mp}/${st.mpMax}</span></div>
+        <div class="exp-line"><b>EXP</b><span class="bar exp"><i style="width:${expPct}%"></i></span><span>${c.level>=99?"MAX":`${c.exp}/${need}`}</span></div>`;
+      list.appendChild(card);
+    });
+    $("exploreReserveBtn").textContent=`控えメンバー ${state.battleReserve.length}人`;
+  }
+
   function updateRunHud(){
     const cur=byId(state.run.current);
     $("floorText").textContent=cur.layer===0 ? "入口" : cur.layer===6 ? "最奥" : `${cur.layer}F`;
     $("runGoldText").textContent=state.run.runGold;
+    $("runExpText").textContent=state.run.runExp;
+    renderExploreParty();
     updateHeader();
   }
 
@@ -2355,9 +2529,14 @@
           [["閉じる",()=>{closeModal();updateRunHud();}]]);
         break;
       }
-      case "heal":
-        modal("❤ 休息地点","澄んだ水が湧いている。\nパーティのHPが回復した。\n\n※HP処理はまだ演出のみです。");
+      case "heal":{
+        const recovered=recoverTravelParty(.50,.40);
+        const body=recovered.hpGain||recovered.mpGain
+          ? `澄んだ水のそばで休息した。\n同行メンバー全員のHPを最大値の50%、MPを40%ぶん回復した。\n\n合計 HP +${recovered.hpGain} / MP +${recovered.mpGain}`
+          : "澄んだ水のそばで休息した。\nパーティはすでに十分元気なようだ。";
+        modal("❤ 休息地点",body,[["出発する",()=>{closeModal();updateRunHud();}]]);
         break;
+      }
       case "shop":
         modal("🛒 珍しい行商人","こんな場所で行商人に出会った。\n「旅のお供に薬はいらんかね？」",
           [["薬を30Gで買う",()=>{
@@ -2389,6 +2568,7 @@
 
   function finishRun(){
     state.run=null;
+    restorePartyFull();
     updateWorld();
     showScreen("homeScreen");
     updateHeader();
@@ -2396,7 +2576,7 @@
   }
 
   $("returnBtn").onclick=()=>{
-    modal("探索から帰還しますか？","現在の探索マップは破棄されます。\n獲得したゴールドはそのまま持ち帰れます。",
+    modal("探索から帰還しますか？","現在の探索マップは破棄されます。\n獲得したゴールド・EXPはそのまま持ち帰れます。\nミレスタへ戻るとHP・MPは全回復します。",
       [["帰還する",()=>{closeModal();finishRun();}],["探索を続ける",closeModal]]);
   };
 
