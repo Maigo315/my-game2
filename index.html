@@ -17,6 +17,10 @@
     --hp:#68d391;
     --accent:#7ec8ff;
     --danger:#ef8585;
+    --safe-left:env(safe-area-inset-left, 0px);
+    --safe-right:env(safe-area-inset-right, 0px);
+    --safe-top:env(safe-area-inset-top, 0px);
+    --safe-bottom:env(safe-area-inset-bottom, 0px);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;width:100%;height:100%;background:#05080d;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI","Noto Sans JP",sans-serif;overflow:hidden}
@@ -38,7 +42,7 @@
   }
 
   .topbar{
-    height:54px;flex:0 0 54px;display:flex;align-items:center;gap:12px;padding:0 14px;
+    height:54px;flex:0 0 54px;display:flex;align-items:center;gap:12px;padding-left:calc(14px + var(--safe-left));padding-right:calc(14px + var(--safe-right));padding-top:0;padding-bottom:0;
     background:linear-gradient(#1d2b3c,#101a27);border-bottom:1px solid #334c63;
     box-shadow:0 3px 12px rgba(0,0,0,.35);z-index:5
   }
@@ -51,7 +55,7 @@
   .screen.active{display:flex}
 
   /* Home */
-  #homeScreen{align-items:center;justify-content:center;padding:24px;background:
+  #homeScreen{align-items:center;justify-content:center;padding-top:24px;padding-bottom:max(24px,var(--safe-bottom));padding-left:calc(24px + var(--safe-left));padding-right:calc(24px + var(--safe-right));background:
       linear-gradient(rgba(8,17,24,.55),rgba(8,17,24,.82)),
       radial-gradient(circle at 50% 40%,#314a55,#13202d 58%,#0a0f17)}
   .home-card{width:min(720px,92vw);padding:26px;border-radius:24px;background:rgba(16,29,41,.92);
@@ -69,7 +73,7 @@
   .locked{opacity:.45;filter:grayscale(.5);cursor:not-allowed!important}
 
   /* World */
-  #worldScreen{align-items:center;justify-content:center;padding:18px}
+  #worldScreen{align-items:center;justify-content:center;padding-top:18px;padding-bottom:max(18px,var(--safe-bottom));padding-left:calc(18px + var(--safe-left));padding-right:calc(18px + var(--safe-right))}
   .world-wrap{width:min(1000px,96vw);height:min(560px,calc(100dvh - 92px));display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
   .map-panel,.info-panel,.party-panel,.explore-panel{background:rgba(15,27,39,.93);border:1px solid #3a5369;border-radius:18px;overflow:hidden}
   .map-panel{padding:16px;position:relative}
@@ -94,8 +98,8 @@
   .action-btn{margin-top:auto;font-weight:800;font-size:17px}
 
   /* Exploration */
-  #exploreScreen{padding:10px;gap:10px}
-  .party-panel{width:205px;flex:0 0 205px;padding:12px;display:flex;flex-direction:column;gap:10px}
+  #exploreScreen{padding-top:10px;padding-bottom:max(10px,var(--safe-bottom));padding-left:calc(10px + var(--safe-left));padding-right:calc(10px + var(--safe-right));gap:10px}
+  .party-panel{width:205px;flex:0 0 205px;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
   .party-title{font-size:13px;color:var(--muted);font-weight:700}
   .member{padding:10px;border-radius:12px;background:#111d2a;border:1px solid #2f485d}
   .member .name{font-weight:800;margin-bottom:5px}
@@ -105,7 +109,7 @@
   .run-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:auto}
   .statbox{padding:8px;border-radius:10px;background:#0c1722;border:1px solid #2a4256;text-align:center;font-size:12px}
   .statbox strong{display:block;font-size:17px;color:var(--gold)}
-  .return-btn{border-color:#754646;background:linear-gradient(#623437,#3a2024)}
+  .return-btn{border-color:#754646;background:linear-gradient(#623437,#3a2024);flex:0 0 auto}
 
   .explore-panel{flex:1;min-width:0;position:relative;background:
     radial-gradient(circle at 50% 38%,rgba(58,98,77,.28),transparent 42%),
@@ -156,12 +160,41 @@
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
   @media (max-height:520px){
-    .topbar{height:46px;flex-basis:46px}
-    .party-panel{width:178px;flex-basis:178px;padding:8px;gap:6px}
-    .member{padding:7px}
-    .member small{font-size:10px}
+    .topbar{height:46px;flex-basis:46px;gap:8px}
+    .title{font-size:16px}
+    .subtitle{font-size:10px}
+    .resource{font-size:11px}
+    .badge{padding:4px 7px}
+    #exploreScreen{padding-top:7px;padding-bottom:max(7px,var(--safe-bottom));gap:7px}
+    .party-panel{width:168px;flex-basis:168px;padding:7px;gap:5px}
+    .party-title{display:none}
+    .member{padding:6px 7px;border-radius:9px}
+    .member .name{font-size:14px;margin-bottom:3px}
+    .bar{height:6px}
+    .member small{font-size:10px;margin-top:2px}
+    .run-info{gap:4px;margin-top:0}
+    .statbox{padding:4px 3px;font-size:9px;border-radius:8px}
+    .statbox strong{font-size:13px}
+    .return-btn{padding:7px 6px;font-size:11px;border-radius:9px}
     .menu-btn{padding:10px}
-    .map-hint{bottom:6px}
+    .map-hint{bottom:max(5px,var(--safe-bottom));padding:5px 10px;font-size:10px}
+    .map-header{left:8px;right:8px;top:7px}
+    .map-header .chip{padding:5px 8px;font-size:10px}
+    .legend{gap:4px}
+    .legend span{padding:4px 6px;font-size:9px}
+  }
+
+  @media (max-height:430px){
+    .topbar{height:42px;flex-basis:42px}
+    .subtitle{display:none}
+    .party-panel{width:154px;flex-basis:154px;padding:5px;gap:4px}
+    .member{padding:4px 6px}
+    .member .name{font-size:12px;margin-bottom:2px}
+    .member small{font-size:9px}
+    .bar{height:5px}
+    .statbox{padding:3px 2px}
+    .statbox strong{font-size:12px}
+    .return-btn{padding:5px 5px;font-size:10px}
   }
 </style>
 </head>
@@ -178,7 +211,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索システム試作 v0.1</div>
+      <div class="subtitle" id="topSubtitle">探索システム試作 v0.2</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
