@@ -524,6 +524,28 @@
     100%{box-shadow:0 0 0 rgba(255,213,94,0)}
   }
 
+  /* v0.11 battle-result pause */
+  .battle-result-tap{
+    display:none;position:absolute;inset:0;z-index:12;border:0;background:transparent;
+    cursor:pointer;color:#fff;font:inherit;
+  }
+  .battle-result-tap.show{display:block}
+  .battle-result-tap span{
+    position:absolute;left:50%;bottom:44px;transform:translateX(-50%);
+    min-width:150px;padding:7px 14px;border-radius:999px;
+    border:1px solid #d9c76f;background:rgba(43,38,17,.94);
+    color:#fff0a6;font-size:11px;font-weight:1000;
+    box-shadow:0 4px 14px rgba(0,0,0,.42);
+    animation:resultTapPulse .9s ease-in-out infinite alternate;
+  }
+  @keyframes resultTapPulse{
+    from{filter:brightness(.95);transform:translateX(-50%) scale(.98)}
+    to{filter:brightness(1.18);transform:translateX(-50%) scale(1.02)}
+  }
+  @media (max-height:520px){
+    .battle-result-tap span{bottom:37px;padding:5px 11px;font-size:9px}
+  }
+
   /* v0.9 auto battle controls */
   .auto-controls{
     display:grid;grid-template-columns:1fr 1fr;gap:5px;
@@ -689,7 +711,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋成長・消耗試作 v0.10</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘システム試作 v0.11</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -795,6 +817,9 @@
           <div class="enemy-stage" id="enemyStage" data-count="2"></div>
           <div class="battle-effect-layer" id="battleEffectLayer"></div>
           <div class="battle-message" id="battleMessage">4人全員の行動を選んでから、まとめてターンを処理します。</div>
+          <button class="battle-result-tap" id="battleContinueBtn" type="button" aria-label="戦闘結果を確認して進む">
+            <span>タップして進む</span>
+          </button>
         </section>
 
         <aside class="battle-commands">
@@ -831,7 +856,7 @@
       <button class="swap-close" id="swapCloseBtn">閉じる</button>
     </div>
     <div class="reserve-grid" id="reserveGrid"></div>
-    <div class="swap-note">※ v0.10でも交代はターン消費なし。交代後の仲間がそのまま行動を選べます。</div>
+    <div class="swap-note">※ v0.11でも交代はターン消費なし。交代後の仲間がそのまま行動を選べます。</div>
   </div>
 </div>
 
@@ -870,7 +895,10 @@
     battleSpeed: 1,
     battleAutoContinuous: false,
     battleAutoStartTimer: null,
-    battleTestSnapshot: null
+    battleTestSnapshot: null,
+    ownedSpecies: new Set(["slime","dog","fairy"]),
+    recruitedWaiting: [],
+    battleVictoryData: null
   };
 
   const IMG = {
@@ -925,9 +953,15 @@
   }
   function closeModal(){ $("modal").classList.remove("show"); }
 
-  $("dummyParty").onclick=()=>modal("編成・育成","想定編成は【バトルメンバー4人＋控え6人】です。\n現在はEXP・レベル・各種ステータス成長まで試作しています。");
+  $("dummyParty").onclick=()=>{
+    const active=state.battleActive.map(id=>`${roster[id].name}(運${roster[id].fate})`).join(" / ");
+    const owned=ownedSpeciesNames().join(" / ") || "なし";
+    const waiting=state.recruitedWaiting.map(id=>speciesRecruitment[id]?.name).filter(Boolean).join(" / ") || "なし";
+    modal("編成・育成",
+      `バトルメンバー：${active}\n運命値合計：${activeFateTotal()}\n\n正式加入済み種族：${owned}\n今回の試作で新規加入：${waiting}\n\n※編成変更・拠点待機所への接続は次の段階で実装予定です。`);
+  };
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋成長・消耗試作 v0.10"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘システム試作 v0.11"; updateWorld(); showScreen("worldScreen"); };
   $("backHome").onclick=()=>showScreen("homeScreen");
   $("battleTestBtn").onclick=()=>openBattle(false, "plains");
 
@@ -938,7 +972,7 @@
 
 
   /*
-    v0.10 internal organization:
+    v0.11 internal organization:
     - Character combat stats are grouped in stats {}
     - learnedSkills is an array, so characters can later hold 5-8+ skills
     - Skill definitions are separated from characters
@@ -946,61 +980,61 @@
   */
   const roster = {
     hero:{
-      id:"hero",name:"主人公",img:null,
+      id:"hero",name:"主人公",img:null,fate:16,
       stats:{hp:100,hpMax:100,mp:40,mpMax:40,atk:18,def:8,magic:18,mdef:7,spd:10},
       learnedSkills:["fire"],caption:"主人公画像は後で追加予定",
       portrait:{scale:1,x:0,y:0},atkBuff:1,atkBuffRounds:0
     },
     slime:{
-      id:"slime",name:"スライム娘",img:IMG.slime,
+      id:"slime",name:"スライム娘",img:IMG.slime,fate:10,
       stats:{hp:50,hpMax:50,mp:25,mpMax:25,atk:13,def:5,magic:7,mdef:5,spd:8},
       learnedSkills:["tackle"],caption:"スライム娘の行動を選択",
       portrait:{scale:1.28,x:0,y:4},atkBuff:1,atkBuffRounds:0
     },
     dog:{
-      id:"dog",name:"犬娘",img:IMG.dog,
+      id:"dog",name:"犬娘",img:IMG.dog,fate:12,
       stats:{hp:60,hpMax:60,mp:20,mpMax:20,atk:16,def:7,magic:6,mdef:6,spd:12},
       learnedSkills:["polish"],caption:"犬娘の行動を選択",
       portrait:{scale:1.12,x:0,y:1},atkBuff:1,atkBuffRounds:0
     },
     fairy:{
-      id:"fairy",name:"フェアリー",img:IMG.fairy,
+      id:"fairy",name:"フェアリー",img:IMG.fairy,fate:18,
       stats:{hp:40,hpMax:40,mp:40,mpMax:40,atk:11,def:4,magic:20,mdef:9,spd:15},
       learnedSkills:["heal"],caption:"フェアリーの行動を選択",
       portrait:{scale:1.23,x:0,y:2},atkBuff:1,atkBuffRounds:0
     },
     slug:{
-      id:"slug",name:"ナメクジ娘",img:IMG.slug,
+      id:"slug",name:"ナメクジ娘",img:IMG.slug,fate:14,
       stats:{hp:70,hpMax:70,mp:18,mpMax:18,atk:14,def:10,magic:6,mdef:8,spd:4},
       learnedSkills:[],caption:"ナメクジ娘の行動を選択",
       portrait:{scale:1.08,x:0,y:1},atkBuff:1,atkBuffRounds:0
     },
     slimebes:{
-      id:"slimebes",name:"スライムベス",img:IMG.slimebes,
+      id:"slimebes",name:"スライムベス",img:IMG.slimebes,fate:11,
       stats:{hp:55,hpMax:55,mp:22,mpMax:22,atk:14,def:6,magic:8,mdef:6,spd:9},
       learnedSkills:[],caption:"スライムベスの行動を選択",
       portrait:{scale:1.25,x:0,y:4},atkBuff:1,atkBuffRounds:0
     },
     poison:{
-      id:"poison",name:"ポイズンスライム",img:IMG.poison,
+      id:"poison",name:"ポイズンスライム",img:IMG.poison,fate:15,
       stats:{hp:52,hpMax:52,mp:30,mpMax:30,atk:15,def:6,magic:14,mdef:8,spd:9},
       learnedSkills:[],caption:"ポイズンスライムの行動を選択",
       portrait:{scale:1.22,x:0,y:3},atkBuff:1,atkBuffRounds:0
     },
     harpy:{
-      id:"harpy",name:"ハーピー",img:IMG.harpy,
+      id:"harpy",name:"ハーピー",img:IMG.harpy,fate:17,
       stats:{hp:58,hpMax:58,mp:27,mpMax:27,atk:17,def:5,magic:9,mdef:6,spd:17},
       learnedSkills:[],caption:"ハーピーの行動を選択",
       portrait:{scale:1.10,x:0,y:1},atkBuff:1,atkBuffRounds:0
     },
     momo:{
-      id:"momo",name:"モモイロナメクジ",img:IMG.momo,
+      id:"momo",name:"モモイロナメクジ",img:IMG.momo,fate:20,
       stats:{hp:78,hpMax:78,mp:32,mpMax:32,atk:16,def:11,magic:12,mdef:10,spd:5},
       learnedSkills:[],caption:"モモイロナメクジの行動を選択",
       portrait:{scale:1.06,x:0,y:1},atkBuff:1,atkBuffRounds:0
     },
     arachne:{
-      id:"arachne",name:"アラクネ",img:IMG.arachne,
+      id:"arachne",name:"アラクネ",img:IMG.arachne,fate:13,
       stats:{hp:85,hpMax:85,mp:36,mpMax:36,atk:19,def:9,magic:13,mdef:9,spd:11},
       learnedSkills:[],caption:"アラクネの行動を選択",
       portrait:{scale:1.06,x:0,y:1},atkBuff:1,atkBuffRounds:0
@@ -1071,7 +1105,9 @@
   function awardExperience(amount){
     const leveled=[];
     if(amount<=0) return leveled;
-    travelPartyIds().forEach(id=>{
+
+    // v0.11: reserve members receive no EXP.
+    [...new Set(state.battleActive)].forEach(id=>{
       const c=roster[id];
       if(!c) return;
       c.exp+=amount;
@@ -1139,6 +1175,74 @@
       c.atkBuffRounds=s.atkBuffRounds;
       c.defending=s.defending;
     });
+  }
+
+  const recruitRanks = {
+    D:{base:.18,cap:1.0},
+    C:{base:.06,cap:1.0},
+    B:{base:.025,cap:1.2},
+    A:{base:.007,cap:2.0},
+    S:{base:.0025,cap:5.0}
+  };
+
+  // Current ranks are provisional. Early-area monster girls are D.
+  const speciesRecruitment = {
+    slime:{name:"スライム娘",rank:"D"},
+    dog:{name:"犬娘",rank:"D"},
+    fairy:{name:"フェアリー",rank:"D"},
+    slug:{name:"ナメクジ娘",rank:"D"},
+    slimebes:{name:"スライムベス",rank:"C"},
+    poison:{name:"ポイズンスライム",rank:"C"},
+    harpy:{name:"ハーピー",rank:"B"},
+    momo:{name:"モモイロナメクジ",rank:"B"},
+    arachne:{name:"アラクネ",rank:"A"}
+  };
+
+  function activeFateTotal(){
+    return state.battleActive.reduce((sum,id)=>sum+(roster[id]?.fate||0),0);
+  }
+
+  function recruitmentChance(speciesId,fateTotal=activeFateTotal()){
+    const info=speciesRecruitment[speciesId];
+    if(!info) return 0;
+    const cfg=recruitRanks[info.rank];
+    if(!cfg) return 0;
+    return cfg.base * (1 + cfg.cap * fateTotal / (100 + fateTotal));
+  }
+
+  function pctText(rate){
+    const p=rate*100;
+    return p<1 ? `${p.toFixed(2)}%` : `${p.toFixed(1)}%`;
+  }
+
+  function uniqueEncounterSpecies(){
+    return [...new Set(state.battleEnemies.map(e=>e.id))];
+  }
+
+  function rollRecruitment(testMode=false){
+    const fateTotal=activeFateTotal();
+    const results=[];
+    uniqueEncounterSpecies().forEach(id=>{
+      const info=speciesRecruitment[id];
+      if(!info) return;
+      if(!testMode && state.ownedSpecies.has(id)) return;
+      const chance=recruitmentChance(id,fateTotal);
+      results.push({
+        id,
+        name:info.name,
+        rank:info.rank,
+        chance,
+        fateTotal,
+        success:Math.random()<chance
+      });
+    });
+    return results;
+  }
+
+  function ownedSpeciesNames(){
+    return [...state.ownedSpecies]
+      .map(id=>speciesRecruitment[id]?.name)
+      .filter(Boolean);
   }
 
   const enemyData = {
@@ -1294,7 +1398,7 @@
       }
 
       btn.innerHTML=`
-        <span class="status-name">${c.name} <small>Lv${c.level}</small></span>
+        <span class="status-name">${c.name} <small>Lv${c.level} / 運${c.fate}</small></span>
         <span class="status-turn">${turnText}</span>
         ${c.atkBuffRounds>0?`<span class="buff-badge">ATK↑ ${c.atkBuffRounds}R</span>`:""}
         <span class="queued-action ${action?"ready":""}">${st.hp<=0 ? "行動不可" : actionLabel(action)}</span>
@@ -2027,6 +2131,14 @@
     return changed || livingActiveSlots().length>0;
   }
 
+  function showBattleContinue(){
+    $("battleContinueBtn").classList.add("show");
+  }
+
+  function hideBattleContinue(){
+    $("battleContinueBtn").classList.remove("show");
+  }
+
   function winBattle(){
     if(state.battleEnded) return;
     state.battleEnded=true;
@@ -2039,6 +2151,7 @@
     clearEnemyActing();
     renderBattleParty();
     $("battleActorCaption").textContent="VICTORY";
+    hideBattleContinue();
 
     if(state.battleFromRun){
       const gain=12+rand(19);
@@ -2048,29 +2161,116 @@
       state.gold+=gain;
       state.run.runGold+=gain;
       state.run.runExp+=expGain;
+      state.battleVictoryData={gain,expGain,leveled};
 
       const levelText=leveled.length
-        ? ` LEVEL UP：${leveled.map(x=>`${x.name} Lv${x.level}`).join("、")}`
+        ? `　LEVEL UP：${leveled.map(x=>`${x.name} Lv${x.level}`).join("、")}`
         : "";
       setMessage(`勝利！ ${gain}G / ${expGain}EXP を獲得。${levelText}`);
       renderBattleParty();
-
-      setTimeout(()=>{
-        updateRunHud();
-        showScreen("exploreScreen");
-        $("topSubtitle").textContent="探索＋成長・消耗試作 v0.10";
-        toast(levedToastText(leveled,gain,expGain));
-        state.battleFromRun=false;
-      },t(leveled.length?1800:1300));
+      showBattleContinue();
     }else{
+      state.battleVictoryData={gain:0,expGain:0,leveled:[]};
       setMessage("勝利！ 戦闘テストではEXP・ゴールドは獲得しません。");
+      showBattleContinue();
     }
   }
 
-  function levedToastText(leveled,gain,expGain){
-    if(leveled.length) return `${gain}G / ${expGain}EXP獲得・LEVEL UP！`;
-    return `${gain}G / ${expGain}EXPを獲得`;
+  function finishVictoryReturn(extraToast=""){
+    const data=state.battleVictoryData || {gain:0,expGain:0,leveled:[]};
+    state.battleVictoryData=null;
+    hideBattleContinue();
+
+    if(state.battleDirectTest){
+      restorePartySnapshot(state.battleTestSnapshot);
+      state.battleTestSnapshot=null;
+      state.battleDirectTest=false;
+      state.battleFromRun=false;
+      showScreen("homeScreen");
+      $("topSubtitle").textContent="探索＋勧誘システム試作 v0.11";
+      updateHeader();
+      if(extraToast) toast(extraToast);
+      return;
+    }
+
+    updateRunHud();
+    showScreen("exploreScreen");
+    $("topSubtitle").textContent="探索＋勧誘システム試作 v0.11";
+    state.battleFromRun=false;
+
+    if(extraToast) toast(extraToast);
+    else if(data.leveled.length) toast(`${data.gain}G / ${data.expGain}EXP獲得・LEVEL UP！`);
+    else toast(`${data.gain}G / ${data.expGain}EXPを獲得`);
   }
+
+  function presentRecruitSuccesses(successes,index=0,testMode=false){
+    if(index>=successes.length){
+      finishVictoryReturn(testMode ? "勧誘テストを終了" : "新しい仲間が増えた！");
+      return;
+    }
+
+    const r=successes[index];
+    const testText=testMode ? "\n\n※直接戦闘テストなので加入記録には残りません。" : "";
+    modal(
+      "✨ 魔物娘が起き上がった！",
+      `${r.name}がこちらを見ている……。\n\n勧誘難度：${r.rank}\nバトルメンバー運命値：${r.fateTotal}\n今回の加入率：${pctText(r.chance)}${testText}`,
+      testMode
+        ? [["確認",()=>{closeModal();presentRecruitSuccesses(successes,index+1,true);}]]
+        : [
+            ["仲間にする",()=>{
+              state.ownedSpecies.add(r.id);
+              if(!state.recruitedWaiting.includes(r.id)) state.recruitedWaiting.push(r.id);
+              closeModal();
+              presentRecruitSuccesses(successes,index+1,false);
+            }],
+            ["見送る",()=>{
+              closeModal();
+              presentRecruitSuccesses(successes,index+1,false);
+            }]
+          ]
+    );
+  }
+
+  function continueAfterVictory(){
+    if(!state.battleEnded || state.battlePhase!=="ended") return;
+    hideBattleContinue();
+
+    // Direct battle mode can be used to inspect recruitment rolls without changing the real collection.
+    if(state.battleDirectTest){
+      const results=rollRecruitment(true);
+      const successes=results.filter(r=>r.success);
+      if(successes.length){
+        presentRecruitSuccesses(successes,0,true);
+      }else{
+        const detail=results.length
+          ? results.map(r=>`${r.name}（${r.rank}）：${pctText(r.chance)}`).join("\n")
+          : "勧誘対象なし";
+        modal(
+          "勧誘テスト",
+          `今回は誰も起き上がらなかった。\n\n運命値合計：${activeFateTotal()}\n${detail}\n\n※この判定はテスト用で記録されません。`,
+          [["確認",()=>{closeModal();finishVictoryReturn("勧誘テストを終了");}]]
+        );
+      }
+      return;
+    }
+
+    const results=rollRecruitment(false);
+    const successes=results.filter(r=>r.success);
+
+    if(successes.length){
+      presentRecruitSuccesses(successes,0,false);
+      return;
+    }
+
+    const encountered=uniqueEncounterSpecies();
+    const allOwned=encountered.length>0 && encountered.every(id=>state.ownedSpecies.has(id) || !speciesRecruitment[id]);
+    finishVictoryReturn(
+      results.length ? "今回は誰も起き上がらなかった" :
+      allOwned ? "加入済み種族のみ：勧誘判定なし" : ""
+    );
+  }
+
+  $("battleContinueBtn").onclick=continueAfterVictory;
 
   function loseBattle(){
     if(state.battleEnded) return;
@@ -2084,6 +2284,7 @@
     clearEnemyActing();
     renderBattleParty();
     $("battleActorCaption").textContent="DEFEAT";
+    hideBattleContinue();
     setMessage(state.battleFromRun
       ? "パーティは力尽きた……。探索を終了してミレスタへ戻ります。"
       : "パーティは力尽きた……。戦闘テストを終了します。");
@@ -2097,7 +2298,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋成長・消耗試作 v0.10";
+      $("topSubtitle").textContent="探索＋勧誘システム試作 v0.11";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -2140,10 +2341,12 @@
     state.battleActions=[null,null,null,null];
     state.battleTargetMode=null;
     state.battleAutoContinuous=false;
+    state.battleVictoryData=null;
+    hideBattleContinue();
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="成長・消耗試作 v0.10";
+    $("topSubtitle").textContent="勧誘システム試作 v0.11";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -2159,12 +2362,13 @@
     }
     state.battleEnded=true;
     state.battleAutoContinuous=false;
+    hideBattleContinue();
     cancelScheduledTurnStart();
     restorePartySnapshot(state.battleTestSnapshot);
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋成長・消耗試作 v0.10";
+    $("topSubtitle").textContent="探索＋勧誘システム試作 v0.11";
     toast("戦闘テストを終了");
   }
 
@@ -2186,7 +2390,7 @@
       const thumb=c.img
         ? `<span class="reserve-thumb"><img src="${c.img}" alt="${c.name}"></span>`
         : `<span class="reserve-thumb"><span class="hero-placeholder">👤</span></span>`;
-      card.innerHTML=`${thumb}<span class="reserve-info"><span class="reserve-name">${c.name} Lv${c.level}</span><small>HP ${st.hp}/${st.hpMax}</small><small>MP ${st.mp}/${st.mpMax}</small></span>`;
+      card.innerHTML=`${thumb}<span class="reserve-info"><span class="reserve-name">${c.name} Lv${c.level}・運${c.fate}</span><small>HP ${st.hp}/${st.hpMax}</small><small>MP ${st.mp}/${st.mpMax}</small></span>`;
       card.onclick=()=>{
         if(st.hp<=0) return;
         const outgoing=state.battleActive[activeSlot];
@@ -2211,7 +2415,7 @@
   $("swapModal").addEventListener("click",e=>{ if(e.target===$("swapModal")) $("swapModal").classList.remove("show"); });
   $("swapBtn").onclick=openSwap;
   $("exploreReserveBtn").onclick=()=>{
-    modal("探索パーティ","想定はバトルメンバー4人＋控え6人、合計10人で探索です。\n戦闘中の交代はターン消費なし。探索中はHP・MPを次の戦闘へ持ち越します。");
+    modal("探索パーティ","想定はバトルメンバー4人＋控え6人、合計10人で探索です。\n戦闘中の交代はターン消費なし。探索中はHP・MPを次の戦闘へ持ち越します。\n勧誘判定は戦闘終了時のバトルメンバー4人の運命値合計を参照します。");
   };
 
 
@@ -2478,7 +2682,7 @@
       const card=document.createElement("div");
       card.className="member"+(st.hp<=0?" ko":"");
       card.innerHTML=`
-        <div class="member-head"><div class="name">${c.name}</div><span class="lv-tag">Lv${c.level}</span></div>
+        <div class="member-head"><div class="name">${c.name}</div><span class="lv-tag">Lv${c.level}・運${c.fate}</span></div>
         <div class="resource-line"><b>HP</b><span class="bar"><i style="width:${hpPct(c)}%"></i></span><span>${st.hp}/${st.hpMax}</span></div>
         <div class="resource-line"><b>MP</b><span class="bar mp"><i style="width:${mpPct(c)}%"></i></span><span>${st.mp}/${st.mpMax}</span></div>
         <div class="exp-line"><b>EXP</b><span class="bar exp"><i style="width:${expPct}%"></i></span><span>${c.level>=99?"MAX":`${c.exp}/${need}`}</span></div>`;
