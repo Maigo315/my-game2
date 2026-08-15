@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+<meta name="theme-color" content="#101722" />
+<title>辺境の町ミレスタ - 探索試作</title>
+<style>
+  :root{
+    --bg:#0c1119;
+    --panel:#15202e;
+    --panel2:#1c2a3b;
+    --line:#49647e;
+    --text:#eef5ff;
+    --muted:#9fb0c4;
+    --gold:#f4cf6a;
+    --hp:#68d391;
+    --accent:#7ec8ff;
+    --danger:#ef8585;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;width:100%;height:100%;background:#05080d;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI","Noto Sans JP",sans-serif;overflow:hidden}
+  button{font:inherit;color:inherit}
+  #rotateNotice{
+    display:none;position:fixed;inset:0;z-index:9999;background:#07111d;
+    align-items:center;justify-content:center;text-align:center;padding:32px
+  }
+  #rotateNotice .card{max-width:420px;background:#112235;border:1px solid #31506c;border-radius:20px;padding:28px}
+  #rotateNotice .phone{font-size:56px;display:block;margin-bottom:12px;transform:rotate(90deg)}
+  @media (orientation:portrait) and (max-width:900px){
+    #rotateNotice{display:flex}
+  }
+
+  #app{width:100vw;height:100dvh;min-height:360px;background:
+    radial-gradient(circle at 50% 20%,rgba(50,86,113,.22),transparent 40%),
+    linear-gradient(#0f1824,#0b1018);
+    display:flex;flex-direction:column
+  }
+
+  .topbar{
+    height:54px;flex:0 0 54px;display:flex;align-items:center;gap:12px;padding:0 14px;
+    background:linear-gradient(#1d2b3c,#101a27);border-bottom:1px solid #334c63;
+    box-shadow:0 3px 12px rgba(0,0,0,.35);z-index:5
+  }
+  .title{font-weight:800;letter-spacing:.04em;white-space:nowrap}
+  .subtitle{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .grow{flex:1}
+  .resource{display:flex;align-items:center;gap:7px;font-weight:700;font-size:13px}
+  .badge{padding:5px 9px;border-radius:999px;background:#0d1722;border:1px solid #344d65}
+  .screen{display:none;flex:1;min-height:0}
+  .screen.active{display:flex}
+
+  /* Home */
+  #homeScreen{align-items:center;justify-content:center;padding:24px;background:
+      linear-gradient(rgba(8,17,24,.55),rgba(8,17,24,.82)),
+      radial-gradient(circle at 50% 40%,#314a55,#13202d 58%,#0a0f17)}
+  .home-card{width:min(720px,92vw);padding:26px;border-radius:24px;background:rgba(16,29,41,.92);
+    border:1px solid #405a70;box-shadow:0 18px 50px rgba(0,0,0,.4);text-align:center}
+  .home-card h1{margin:0 0 8px;font-size:clamp(24px,4vw,40px)}
+  .home-card p{margin:0 0 20px;color:#bdcada}
+  .big-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .menu-btn,.action-btn,.small-btn{
+    border:1px solid #4b6984;background:linear-gradient(#25415a,#172b3e);border-radius:14px;
+    padding:14px 16px;cursor:pointer;box-shadow:inset 0 1px rgba(255,255,255,.08),0 4px 12px rgba(0,0,0,.25)
+  }
+  .menu-btn:hover,.action-btn:hover,.small-btn:hover{filter:brightness(1.12)}
+  .menu-btn:active,.action-btn:active,.small-btn:active{transform:translateY(1px)}
+  .menu-btn .icon{font-size:28px;display:block;margin-bottom:5px}
+  .locked{opacity:.45;filter:grayscale(.5);cursor:not-allowed!important}
+
+  /* World */
+  #worldScreen{align-items:center;justify-content:center;padding:18px}
+  .world-wrap{width:min(1000px,96vw);height:min(560px,calc(100dvh - 92px));display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+  .map-panel,.info-panel,.party-panel,.explore-panel{background:rgba(15,27,39,.93);border:1px solid #3a5369;border-radius:18px;overflow:hidden}
+  .map-panel{padding:16px;position:relative}
+  .world-map{height:100%;position:relative;border-radius:14px;background:
+      radial-gradient(circle at 35% 55%,rgba(84,126,74,.55),transparent 26%),
+      radial-gradient(circle at 66% 43%,rgba(107,91,65,.5),transparent 25%),
+      linear-gradient(135deg,#243d42,#152632)}
+  .route{position:absolute;height:3px;background:#71879b;transform-origin:left center;opacity:.85}
+  .area-pin{
+    position:absolute;width:104px;height:70px;transform:translate(-50%,-50%);
+    border-radius:16px;border:2px solid #7fa0bb;background:linear-gradient(#284761,#182e42);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    cursor:pointer;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.35)
+  }
+  .area-pin strong{font-size:14px}
+  .area-pin span{font-size:22px}
+  .area-pin.selected{outline:3px solid var(--gold);border-color:#e3c568}
+  .info-panel{padding:18px;display:flex;flex-direction:column}
+  .info-panel h2{margin:0 0 8px}
+  .info-panel p{color:#c0ccda;line-height:1.6}
+  .info-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .action-btn{margin-top:auto;font-weight:800;font-size:17px}
+
+  /* Exploration */
+  #exploreScreen{padding:10px;gap:10px}
+  .party-panel{width:205px;flex:0 0 205px;padding:12px;display:flex;flex-direction:column;gap:10px}
+  .party-title{font-size:13px;color:var(--muted);font-weight:700}
+  .member{padding:10px;border-radius:12px;background:#111d2a;border:1px solid #2f485d}
+  .member .name{font-weight:800;margin-bottom:5px}
+  .bar{height:10px;border-radius:999px;background:#263746;overflow:hidden}
+  .bar>i{display:block;height:100%;background:linear-gradient(90deg,#48b972,#79df9a)}
+  .member small{display:block;color:#aab9c8;margin-top:4px}
+  .run-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:auto}
+  .statbox{padding:8px;border-radius:10px;background:#0c1722;border:1px solid #2a4256;text-align:center;font-size:12px}
+  .statbox strong{display:block;font-size:17px;color:var(--gold)}
+  .return-btn{border-color:#754646;background:linear-gradient(#623437,#3a2024)}
+
+  .explore-panel{flex:1;min-width:0;position:relative;background:
+    radial-gradient(circle at 50% 38%,rgba(58,98,77,.28),transparent 42%),
+    linear-gradient(#142437,#101a26)}
+  #mapSvg{width:100%;height:100%;display:block;touch-action:manipulation}
+  .edge{stroke:#607a91;stroke-width:4;opacity:.58;vector-effect:non-scaling-stroke}
+  .edge.active{stroke:#d2c277;opacity:.9;stroke-width:5}
+  .node circle{stroke:#aac0d2;stroke-width:4;filter:drop-shadow(0 4px 5px rgba(0,0,0,.35))}
+  .node text{font-size:34px;text-anchor:middle;dominant-baseline:middle;pointer-events:none}
+  .node .label{font-size:15px;font-weight:800;paint-order:stroke;stroke:#081019;stroke-width:5px;stroke-linejoin:round}
+  .node.reachable{cursor:pointer}
+  .node.reachable circle{stroke:#ffe589;stroke-width:7}
+  .node.reachable:hover circle{filter:brightness(1.2) drop-shadow(0 0 10px rgba(255,225,117,.5))}
+  .node.visited{opacity:.62}
+  .node.current circle{stroke:#7fffd4;stroke-width:8}
+  .node.unreachable{opacity:.36;pointer-events:none}
+  .floor-label{fill:#8093a6;font-size:16px;font-weight:700}
+  .map-header{
+    position:absolute;left:12px;top:10px;right:12px;display:flex;align-items:center;pointer-events:none
+  }
+  .map-header .chip{background:rgba(5,13,20,.75);border:1px solid #385069;border-radius:999px;padding:6px 10px;font-size:12px}
+  .map-header .grow{flex:1}
+  .legend{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .legend span{background:rgba(5,13,20,.72);border-radius:999px;padding:5px 8px;font-size:11px;color:#c6d1dc}
+  .map-hint{
+    position:absolute;left:50%;bottom:10px;transform:translateX(-50%);
+    background:rgba(5,13,20,.8);border:1px solid #334d64;border-radius:999px;
+    padding:7px 13px;font-size:12px;color:#c9d5df;pointer-events:none;white-space:nowrap
+  }
+
+  /* Modal */
+  .modal{
+    display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.62);
+    align-items:center;justify-content:center;padding:22px
+  }
+  .modal.show{display:flex}
+  .dialog{width:min(560px,92vw);max-height:86vh;overflow:auto;background:linear-gradient(#1c2d40,#111c29);
+    border:1px solid #58728b;border-radius:20px;padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.55)}
+  .dialog h2{margin:0 0 8px}
+  .dialog p{line-height:1.65;color:#c7d3df;white-space:pre-line}
+  .dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+  .dialog-actions button{min-width:120px}
+  .toast{
+    position:fixed;left:50%;top:66px;transform:translateX(-50%) translateY(-12px);z-index:150;
+    background:#152739;border:1px solid #577088;border-radius:999px;padding:9px 14px;
+    opacity:0;pointer-events:none;transition:.2s;box-shadow:0 6px 18px rgba(0,0,0,.35);font-size:13px
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (max-height:520px){
+    .topbar{height:46px;flex-basis:46px}
+    .party-panel{width:178px;flex-basis:178px;padding:8px;gap:6px}
+    .member{padding:7px}
+    .member small{font-size:10px}
+    .menu-btn{padding:10px}
+    .map-hint{bottom:6px}
+  }
+</style>
+</head>
+<body>
+<div id="rotateNotice">
+  <div class="card">
+    <span class="phone">📱</span>
+    <strong>端末を横向きにしてください</strong>
+    <p>この試作はスマホ横画面を基準に作っています。</p>
+  </div>
+</div>
+
+<div id="app">
+  <header class="topbar">
+    <div>
+      <div class="title" id="topTitle">辺境の町ミレスタ</div>
+      <div class="subtitle" id="topSubtitle">探索システム試作 v0.1</div>
+    </div>
+    <div class="grow"></div>
+    <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
+    <div class="resource"><span class="badge">🧪 <span id="potionText">2</span></span></div>
+  </header>
+
+  <main id="homeScreen" class="screen active">
+    <section class="home-card">
+      <h1>辺境の町ミレスタ</h1>
+      <p>小さな辺境の町。ここを拠点に周辺地域を探索します。</p>
+      <div class="big-actions">
+        <button class="menu-btn" id="goWorld"><span class="icon">🗺️</span>世界マップ</button>
+        <button class="menu-btn" id="dummyParty"><span class="icon">👥</span>編成・育成</button>
+        <button class="menu-btn" id="dummyTalk"><span class="icon">💬</span>会話</button>
+      </div>
+    </section>
+  </main>
+
+  <main id="worldScreen" class="screen">
+    <div class="world-wrap">
+      <section class="map-panel">
+        <div class="world-map" id="worldMap">
+          <div class="route" style="left:31%;top:54%;width:33%;transform:rotate(-14deg)"></div>
+          <div class="route" style="left:55%;top:47%;width:22%;transform:rotate(-33deg)"></div>
+          <button class="area-pin selected" data-area="plains" style="left:31%;top:58%">
+            <span>🌿</span><strong>ミレスタ平原</strong>
+          </button>
+          <button class="area-pin locked" id="cavePin" data-area="cave" style="left:69%;top:36%">
+            <span>🕳️</span><strong>小さな洞窟</strong>
+          </button>
+        </div>
+      </section>
+      <section class="info-panel">
+        <button class="small-btn" id="backHome" style="align-self:flex-start;padding:8px 12px">← ミレスタへ</button>
+        <h2 id="areaName" style="margin-top:14px">ミレスタ平原</h2>
+        <p id="areaDesc">町のすぐ外に広がる穏やかな平原。探索の基本を学ぶのに向いています。</p>
+        <div class="info-row">
+          <span class="badge">推奨：入門</span>
+          <span class="badge" id="areaStatus">探索可能</span>
+        </div>
+        <button class="action-btn" id="departBtn">探索を開始する</button>
+      </section>
+    </div>
+  </main>
+
+  <main id="exploreScreen" class="screen">
+    <aside class="party-panel">
+      <div class="party-title">PARTY</div>
+      <div class="member">
+        <div class="name">主人公</div>
+        <div class="bar"><i style="width:100%"></i></div>
+        <small>HP 100 / 100</small>
+      </div>
+      <div class="member">
+        <div class="name">スライム</div>
+        <div class="bar"><i style="width:86%"></i></div>
+        <small>HP 43 / 50</small>
+      </div>
+      <div class="member">
+        <div class="name">犬娘</div>
+        <div class="bar"><i style="width:92%"></i></div>
+        <small>HP 55 / 60</small>
+      </div>
+      <div class="run-info">
+        <div class="statbox">進行<strong id="floorText">入口</strong></div>
+        <div class="statbox">獲得G<strong id="runGoldText">0</strong></div>
+      </div>
+      <button class="small-btn return-btn" id="returnBtn">🏠 ミレスタへ帰還</button>
+    </aside>
+
+    <section class="explore-panel">
+      <svg id="mapSvg" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid meet" aria-label="探索ノードマップ"></svg>
+      <div class="map-header">
+        <span class="chip" id="exploreAreaLabel">🌿 ミレスタ平原</span>
+        <div class="grow"></div>
+        <div class="legend">
+          <span>⚔ 戦闘</span><span>📦 宝箱</span><span>❤ 回復</span><span>🛒 店</span><span>？ イベント</span>
+        </div>
+      </div>
+      <div class="map-hint">金色に光るノードをタップして上へ進む</div>
+    </section>
+  </main>
+</div>
+
+<div class="modal" id="modal">
+  <div class="dialog">
+    <h2 id="modalTitle">イベント</h2>
+    <p id="modalBody"></p>
+    <div class="dialog-actions" id="modalActions"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const state = {
+    gold: 120,
+    potions: 2,
+    caveUnlocked: localStorage.getItem("milesta_cave_unlocked") === "1",
+    selectedArea: "plains",
+    run: null
+  };
+
+  const NODE = {
+    start:  {icon:"⬆", label:"入口", color:"#386a62"},
+    battle: {icon:"⚔", label:"戦闘", color:"#7a3d42"},
+    chest:  {icon:"📦", label:"宝箱", color:"#7a6638"},
+    heal:   {icon:"❤", label:"回復", color:"#3d7355"},
+    shop:   {icon:"🛒", label:"レア店", color:"#53608b"},
+    event:  {icon:"？", label:"イベント", color:"#664c7c"},
+    goal:   {icon:"★", label:"最奥", color:"#8d7136"}
+  };
+
+  const screens = [...document.querySelectorAll(".screen")];
+  const $ = id => document.getElementById(id);
+
+  function showScreen(id){
+    screens.forEach(s => s.classList.toggle("active", s.id === id));
+  }
+  function updateHeader(){
+    $("goldText").textContent = state.gold;
+    $("potionText").textContent = state.potions;
+    $("cavePin").classList.toggle("locked", !state.caveUnlocked);
+  }
+  function toast(msg){
+    const t=$("toast"); t.textContent=msg; t.classList.add("show");
+    clearTimeout(t._timer); t._timer=setTimeout(()=>t.classList.remove("show"),1800);
+  }
+  function modal(title, body, actions=[["OK", closeModal]]){
+    $("modalTitle").textContent=title;
+    $("modalBody").textContent=body;
+    const box=$("modalActions"); box.innerHTML="";
+    actions.forEach(([label, fn, cls])=>{
+      const b=document.createElement("button");
+      b.className="small-btn"+(cls ? " "+cls : "");
+      b.textContent=label;
+      b.onclick=fn;
+      box.appendChild(b);
+    });
+    $("modal").classList.add("show");
+  }
+  function closeModal(){ $("modal").classList.remove("show"); }
+
+  $("dummyParty").onclick=()=>modal("編成・育成","今回は探索システムだけの試作です。\nここには将来、仲間の編成・装備・育成画面を追加できます。");
+  $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
+  $("goWorld").onclick=()=>{ updateWorld(); showScreen("worldScreen"); };
+  $("backHome").onclick=()=>showScreen("homeScreen");
+
+  function updateWorld(){
+    updateHeader();
+    const a=state.selectedArea;
+    document.querySelectorAll(".area-pin").forEach(p=>p.classList.toggle("selected",p.dataset.area===a));
+    if(a==="plains"){
+      $("areaName").textContent="ミレスタ平原";
+      $("areaDesc").textContent="町のすぐ外に広がる穏やかな平原。探索の基本を学ぶのに向いています。";
+      $("areaStatus").textContent="探索可能";
+      $("departBtn").disabled=false;
+      $("departBtn").classList.remove("locked");
+    }else{
+      $("areaName").textContent="小さな洞窟";
+      if(state.caveUnlocked){
+        $("areaDesc").textContent="平原の外れで見つかった小さな洞窟。今回は入口だけ開放した試作状態です。";
+        $("areaStatus").textContent="発見済み";
+        $("departBtn").disabled=false;
+        $("departBtn").classList.remove("locked");
+      }else{
+        $("areaDesc").textContent="まだ場所が分かっていません。ミレスタ平原の最奥まで進むと発見できます。";
+        $("areaStatus").textContent="未発見";
+        $("departBtn").disabled=true;
+        $("departBtn").classList.add("locked");
+      }
+    }
+  }
+
+  document.querySelectorAll(".area-pin").forEach(pin=>{
+    pin.onclick=()=>{
+      if(pin.dataset.area==="cave" && !state.caveUnlocked){
+        toast("まだこの場所は発見していません");
+        return;
+      }
+      state.selectedArea=pin.dataset.area;
+      updateWorld();
+    };
+  });
+
+  $("departBtn").onclick=()=>{
+    if(state.selectedArea==="cave"){
+      modal("小さな洞窟","今回の試作では、ミレスタ平原から新しいエリアを解放できるところまで実装しています。\n洞窟の探索内容は次の段階で追加できます。");
+      return;
+    }
+    startRun();
+  };
+
+  function rand(n){ return Math.floor(Math.random()*n); }
+  function choose(arr){ return arr[rand(arr.length)]; }
+
+  function weightedNode(layer){
+    const pool = [];
+    const add=(type,n)=>{for(let i=0;i<n;i++)pool.push(type)};
+    add("battle", 48);
+    add("chest", 18);
+    add("heal", 12);
+    add("event", 16);
+    add("shop", 6);
+    if(layer===1) return choose(["battle","battle","battle","chest"]);
+    return choose(pool);
+  }
+
+  function buildMap(){
+    const layers = [];
+    layers.push([{id:"L0N0", layer:0, index:0, x:500, y:655, type:"start"}]);
+
+    const yPositions=[655,555,455,355,255,155,65];
+    for(let l=1;l<=5;l++){
+      const count = 2 + rand(2); // 2-3
+      const xs = count===2 ? [350,650] : [245,500,755];
+      layers.push(xs.map((x,i)=>({
+        id:`L${l}N${i}`, layer:l,index:i,
+        x:x+(rand(41)-20), y:yPositions[l],
+        type:weightedNode(l), out:[]
+      })));
+    }
+    layers.push([{id:"L6N0",layer:6,index:0,x:500,y:yPositions[6],type:"goal",out:[]}]);
+
+    // Ensure every next-layer node has at least one incoming edge by linking it to nearest previous.
+    for(let l=0;l<layers.length-1;l++){
+      const prev=layers[l], next=layers[l+1];
+      prev.forEach(p=>p.out=[]);
+
+      next.forEach(n=>{
+        const nearest=[...prev].sort((a,b)=>Math.abs(a.x-n.x)-Math.abs(b.x-n.x))[0];
+        if(!nearest.out.includes(n.id)) nearest.out.push(n.id);
+      });
+
+      // Ensure every previous node has an outgoing edge.
+      prev.forEach(p=>{
+        if(p.out.length===0){
+          const nearest=[...next].sort((a,b)=>Math.abs(a.x-p.x)-Math.abs(b.x-p.x))[0];
+          p.out.push(nearest.id);
+        }
+        // Occasional branch to adjacent node.
+        if(Math.random()<0.45 && next.length>1){
+          const sorted=[...next].sort((a,b)=>Math.abs(a.x-p.x)-Math.abs(b.x-p.x));
+          const candidate=sorted[1];
+          if(candidate && Math.abs(candidate.x-p.x)<390 && !p.out.includes(candidate.id)) p.out.push(candidate.id);
+        }
+      });
+    }
+    return layers.flat();
+  }
+
+  function startRun(){
+    state.run={
+      nodes:buildMap(),
+      current:"L0N0",
+      visited:new Set(["L0N0"]),
+      runGold:0,
+      resolved:new Set()
+    };
+    $("exploreAreaLabel").textContent="🌿 ミレスタ平原";
+    showScreen("exploreScreen");
+    renderMap();
+    updateRunHud();
+  }
+
+  function byId(id){ return state.run.nodes.find(n=>n.id===id); }
+  function reachableIds(){
+    const cur=byId(state.run.current);
+    return new Set(cur.out || []);
+  }
+
+  function svgEl(name,attrs={}){
+    const e=document.createElementNS("http://www.w3.org/2000/svg",name);
+    Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+    return e;
+  }
+
+  function renderMap(){
+    const svg=$("mapSvg");
+    svg.innerHTML="";
+    const run=state.run;
+    const reachable=reachableIds();
+
+    // subtle floor separators
+    for(let l=1;l<=5;l++){
+      const y=655-l*100;
+      const line=svgEl("line",{x1:95,y1:y+45,x2:930,y2:y+45,stroke:"#263b4c","stroke-width":"2","stroke-dasharray":"8 12"});
+      svg.appendChild(line);
+      const label=svgEl("text",{x:35,y:y+6,class:"floor-label"});
+      label.textContent=`${l}F`;
+      svg.appendChild(label);
+    }
+
+    // edges
+    run.nodes.forEach(n=>{
+      (n.out||[]).forEach(tid=>{
+        const t=byId(tid);
+        const line=svgEl("line",{x1:n.x,y1:n.y,x2:t.x,y2:t.y,class:"edge"});
+        if(n.id===run.current) line.classList.add("active");
+        svg.appendChild(line);
+      });
+    });
+
+    // nodes
+    run.nodes.forEach(n=>{
+      const g=svgEl("g",{class:"node"});
+      const isVisited=run.visited.has(n.id);
+      const isCurrent=run.current===n.id;
+      const isReach=reachable.has(n.id);
+      if(isVisited) g.classList.add("visited");
+      if(isCurrent) g.classList.add("current");
+      else if(isReach) g.classList.add("reachable");
+      else if(!isVisited) g.classList.add("unreachable");
+      g.setAttribute("transform",`translate(${n.x},${n.y})`);
+      g.setAttribute("role","button");
+      g.setAttribute("aria-label",NODE[n.type].label);
+      const c=svgEl("circle",{cx:0,cy:0,r:34,fill:NODE[n.type].color});
+      const icon=svgEl("text",{x:0,y:2});
+      icon.textContent=NODE[n.type].icon;
+      const label=svgEl("text",{x:0,y:57,class:"label"});
+      label.textContent=NODE[n.type].label;
+      g.append(c,icon,label);
+      if(isReach){
+        g.addEventListener("click",()=>moveTo(n.id));
+      }
+      svg.appendChild(g);
+    });
+  }
+
+  function updateRunHud(){
+    const cur=byId(state.run.current);
+    $("floorText").textContent=cur.layer===0 ? "入口" : cur.layer===6 ? "最奥" : `${cur.layer}F`;
+    $("runGoldText").textContent=state.run.runGold;
+    updateHeader();
+  }
+
+  function moveTo(id){
+    const reachable=reachableIds();
+    if(!reachable.has(id)) return;
+    state.run.current=id;
+    state.run.visited.add(id);
+    renderMap();
+    updateRunHud();
+    resolveNode(byId(id));
+  }
+
+  const commonEvents=[
+    ["壊れた荷車","道端に壊れた荷車が放置されている。\n荷台を調べると、まだ使えそうな薬草が残っていた。"],
+    ["旅人の置き土産","小さな布袋が石の下に隠されていた。\n中にはわずかな硬貨が入っている。"],
+    ["風の通る丘","平原を渡る風が心地よい。\n少しだけ足を止め、周囲を見渡した。"],
+    ["妙な足跡","人とも獣ともつかない足跡が草の向こうへ続いている。\n今は追わず、位置だけ覚えておくことにした。"]
+  ];
+
+  function resolveNode(node){
+    if(state.run.resolved.has(node.id)) return;
+    state.run.resolved.add(node.id);
+
+    switch(node.type){
+      case "battle":{
+        const enemies=choose(["スライム ×2","スライムベス ×1","スライム ×1 / 犬娘 ×1"]);
+        modal("⚔ 戦闘",`${enemies} が現れた！\n\n※今回は探索試作なので戦闘は仮処理です。`,
+          [["仮戦闘：勝利する",()=>{
+            const gain=12+rand(19);
+            state.gold+=gain; state.run.runGold+=gain;
+            closeModal(); updateRunHud(); toast(`${gain}G を獲得`);
+          }]]);
+        break;
+      }
+      case "chest":{
+        const gain=18+rand(33);
+        state.gold+=gain; state.run.runGold+=gain;
+        modal("📦 宝箱",`古びた宝箱を発見した。\n${gain}G を手に入れた！`,
+          [["閉じる",()=>{closeModal();updateRunHud();}]]);
+        break;
+      }
+      case "heal":
+        modal("❤ 休息地点","澄んだ水が湧いている。\nパーティのHPが回復した。\n\n※HP処理はまだ演出のみです。");
+        break;
+      case "shop":
+        modal("🛒 珍しい行商人","こんな場所で行商人に出会った。\n「旅のお供に薬はいらんかね？」",
+          [["薬を30Gで買う",()=>{
+            if(state.gold>=30){state.gold-=30;state.potions++;closeModal();updateHeader();toast("回復薬を1個購入");}
+            else toast("お金が足りません");
+          }],["何も買わない",closeModal]]);
+        break;
+      case "event":{
+        const [title,body]=choose(commonEvents);
+        const bonus=Math.random()<0.45 ? 8+rand(13) : 0;
+        if(bonus){state.gold+=bonus;state.run.runGold+=bonus;}
+        modal("？ "+title, body+(bonus?`\n\n${bonus}G を見つけた。`:""),
+          [["進む",()=>{closeModal();updateRunHud();}]]);
+        break;
+      }
+      case "goal":
+        if(!state.caveUnlocked){
+          state.caveUnlocked=true;
+          localStorage.setItem("milesta_cave_unlocked","1");
+          modal("★ 平原の最奥", "草の切れ目の向こう、岩肌に小さな裂け目を見つけた。\n中へ続く空洞があるようだ。\n\n【小さな洞窟】が世界マップに追加された！",
+            [["ミレスタへ帰還",()=>{closeModal();finishRun();}]]);
+        }else{
+          modal("★ 平原の最奥","以前見つけた洞窟の入口までたどり着いた。\n今回の探索はここまで。",
+            [["ミレスタへ帰還",()=>{closeModal();finishRun();}]]);
+        }
+        break;
+    }
+  }
+
+  function finishRun(){
+    state.run=null;
+    updateWorld();
+    showScreen("homeScreen");
+    updateHeader();
+    toast("ミレスタへ帰還しました");
+  }
+
+  $("returnBtn").onclick=()=>{
+    modal("探索から帰還しますか？","現在の探索マップは破棄されます。\n獲得したゴールドはそのまま持ち帰れます。",
+      [["帰還する",()=>{closeModal();finishRun();}],["探索を続ける",closeModal]]);
+  };
+
+  updateHeader();
+})();
+</script>
+</body>
+</html>
