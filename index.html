@@ -628,85 +628,72 @@
     color:#9eafbd;font-size:9px;line-height:1.45;
   }
 
-  /* v0.12 recruit scene */
-  .recruit-overlay{
-    display:none;position:fixed;inset:0;z-index:240;
-    padding-top:calc(8px + var(--safe-top));padding-bottom:calc(8px + var(--safe-bottom));
-    padding-left:calc(8px + var(--safe-left));padding-right:calc(8px + var(--safe-right));
-    background:rgba(1,7,12,.84);backdrop-filter:blur(3px);
-    align-items:center;justify-content:center;
+  /* v0.12a recruit presentation inside battle field */
+  .battle-recruit-stage{
+    position:absolute;left:6%;right:6%;top:12%;bottom:16%;z-index:8;
+    display:none;grid-template-rows:minmax(0,1fr) auto auto;justify-items:center;align-items:center;
+    pointer-events:none;
   }
-  .recruit-overlay.show{display:flex}
-  .recruit-scene{
-    width:min(650px,94vw);height:min(390px,92vh);min-height:0;position:relative;overflow:hidden;
-    display:grid;grid-template-columns:minmax(0,1fr) 190px;grid-template-rows:minmax(0,1fr) auto;
-    border:1px solid #65788d;border-radius:18px;
-    background:
-      radial-gradient(circle at 42% 40%,rgba(120,106,183,.28),transparent 34%),
-      repeating-linear-gradient(0deg,rgba(104,91,158,.08) 0 1px,transparent 1px 22px),
-      repeating-linear-gradient(90deg,rgba(104,91,158,.07) 0 1px,transparent 1px 22px),
-      linear-gradient(#22243e,#101627 70%,#0b111c);
-    box-shadow:0 25px 80px rgba(0,0,0,.68);
+  .battle-recruit-stage.show{display:grid}
+  .battle-recruit-glow{
+    position:absolute;left:18%;right:18%;top:10%;bottom:18%;
+    background:radial-gradient(ellipse at center,rgba(255,244,182,.22),rgba(188,152,255,.08) 38%,transparent 70%);
+    filter:blur(4px);
+    pointer-events:none;
   }
-  .recruit-shine{
-    position:absolute;left:18%;top:5%;width:48%;height:90%;pointer-events:none;
-    background:radial-gradient(ellipse,rgba(255,240,168,.13),transparent 62%);
+  .battle-recruit-body{
+    position:relative;z-index:1;width:min(58%,320px);height:100%;
+    display:flex;align-items:flex-end;justify-content:center;pointer-events:none;
   }
-  .recruit-label{
-    position:absolute;left:10px;top:9px;z-index:3;padding:3px 8px;border-radius:999px;
-    background:#423b66;border:1px solid #71689b;color:#ded7ff;font-size:8px;font-weight:1000;letter-spacing:.12em;
+  .battle-recruit-body img{
+    width:100%;height:100%;object-fit:contain;object-position:center bottom;
+    filter:drop-shadow(0 12px 14px rgba(0,0,0,.52));
+    animation:battleRecruitRise .38s ease-out both;
   }
-  .recruit-image-wrap{
-    grid-row:1/3;min-height:0;display:flex;align-items:center;justify-content:center;padding:22px 10px 8px;
-    position:relative;z-index:2;
-  }
-  .recruit-image-wrap img{
-    width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 14px 12px rgba(0,0,0,.55));
-    animation:recruitRise .48s ease-out both;
-  }
-  @keyframes recruitRise{
-    from{opacity:0;transform:translateY(22px) scale(.92)}
+  @keyframes battleRecruitRise{
+    from{opacity:0;transform:translateY(20px) scale(.94)}
     to{opacity:1;transform:translateY(0) scale(1)}
   }
-  .recruit-copy{
-    z-index:3;align-self:end;margin:20px 12px 8px 0;padding:11px;border-radius:12px;
-    background:rgba(12,17,30,.88);border:1px solid #5b6684;
+  .battle-recruit-copy{
+    position:relative;z-index:2;max-width:min(86%,520px);
+    margin-top:-6px;padding:9px 12px;border-radius:12px;
+    background:rgba(8,16,25,.85);border:1px solid rgba(220,199,108,.78);
+    text-align:center;box-shadow:0 10px 24px rgba(0,0,0,.25);
+    pointer-events:none;
   }
-  .recruit-copy strong{display:block;font-size:14px;line-height:1.35;color:#fff0a3}
-  .recruit-copy span{display:block;margin-top:5px;font-size:11px;color:#e8eef4;font-weight:800}
-  .recruit-copy small{display:block;margin-top:6px;font-size:7px;color:#93a4b7}
-  .recruit-actions{
-    z-index:3;display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 12px 0;
+  .battle-recruit-copy strong{
+    display:block;font-size:15px;font-weight:1000;line-height:1.35;color:#fff0a4;
+    text-shadow:0 2px 6px rgba(0,0,0,.45);
   }
-  .recruit-actions button{
-    min-height:43px;border-radius:10px;font-size:12px;font-weight:1000;cursor:pointer;
+  .battle-recruit-copy span{
+    display:block;margin-top:5px;font-size:12px;font-weight:800;color:#eef5fb;
   }
-  .recruit-yes{border:1px solid #62a875;background:linear-gradient(#285e3d,#193b29);color:#dfffe8}
-  .recruit-no{border:1px solid #667489;background:linear-gradient(#273747,#182530);color:#d6e1ea}
+  .battle-recruit-copy small{
+    display:block;margin-top:5px;font-size:8px;color:#9fb0c1;
+  }
+  .battle-recruit-actions{
+    position:relative;z-index:2;display:flex;gap:10px;margin-top:8px;pointer-events:auto;
+  }
+  .battle-recruit-actions button{
+    min-width:108px;min-height:40px;border-radius:11px;font-size:12px;font-weight:1000;cursor:pointer;
+    box-shadow:0 6px 14px rgba(0,0,0,.26);
+  }
+  .battle-recruit-yes{
+    border:1px solid #69af7b;background:linear-gradient(#2a6642,#1a3f2a);color:#e2ffea;
+  }
+  .battle-recruit-no{
+    border:1px solid #6b7890;background:linear-gradient(#2a3948,#172430);color:#dbe6ef;
+  }
 
   @media (max-height:520px){
-    .party-manage-shell{grid-template-rows:auto minmax(0,1fr) 78px;gap:5px}
-    .party-manage-head{padding:5px 8px}
-    .party-manage-head h2{font-size:14px}
-    .party-manage-head p{font-size:7px}
-    .party-manage-grid{gap:5px}
-    .party-manage-column{padding:5px}
-    .party-slot-list{gap:3px}
-    .party-organize-slot{grid-template-columns:31px minmax(0,1fr);padding:2px 4px}
-    .party-slot-thumb{width:31px;height:35px}
-    .party-slot-name{font-size:8px}
-    .party-slot-meta,.party-mini-hp{font-size:6px}
-    .party-wait-card{height:43px;grid-template-columns:30px minmax(0,1fr)}
-    .party-wait-card .party-slot-thumb{width:30px;height:35px}
-    .party-detail-panel{grid-template-columns:54px minmax(0,1fr) 170px;padding:5px}
-    .party-detail-name{font-size:11px}
-    .party-detail-stats,.party-detail-meta,.party-detail-guide{font-size:7px}
-    .recruit-scene{height:min(320px,94vh);grid-template-columns:minmax(0,1fr) 165px}
-    .recruit-copy{margin:12px 8px 5px 0;padding:8px}
-    .recruit-copy strong{font-size:11px}
-    .recruit-copy span{font-size:9px}
-    .recruit-actions{margin:0 8px 8px 0;gap:4px}
-    .recruit-actions button{min-height:34px;font-size:10px}
+    .battle-recruit-stage{top:14%;bottom:18%}
+    .battle-recruit-body{width:min(54%,240px)}
+    .battle-recruit-copy{padding:7px 10px}
+    .battle-recruit-copy strong{font-size:12px}
+    .battle-recruit-copy span{font-size:10px}
+    .battle-recruit-copy small{font-size:7px}
+    .battle-recruit-actions{gap:6px}
+    .battle-recruit-actions button{min-width:88px;min-height:32px;font-size:10px}
   }
 
   /* v0.11 battle-result pause */
@@ -896,7 +883,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.12</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.12aa</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1043,6 +1030,21 @@
           </div>
           <div class="enemy-stage" id="enemyStage" data-count="2"></div>
           <div class="battle-effect-layer" id="battleEffectLayer"></div>
+          <div class="battle-recruit-stage" id="battleRecruitStage" aria-live="polite">
+            <div class="battle-recruit-glow"></div>
+            <div class="battle-recruit-body">
+              <img id="recruitImage" alt="">
+            </div>
+            <div class="battle-recruit-copy">
+              <strong id="recruitHeadline">犬娘が起き上がった！</strong>
+              <span id="recruitQuestion">仲間にしますか？</span>
+              <small id="recruitTestNote"></small>
+            </div>
+            <div class="battle-recruit-actions">
+              <button class="battle-recruit-yes" id="recruitYesBtn">はい</button>
+              <button class="battle-recruit-no" id="recruitNoBtn">いいえ</button>
+            </div>
+          </div>
           <div class="battle-message" id="battleMessage">4人全員の行動を選んでから、まとめてターンを処理します。</div>
           <button class="battle-result-tap" id="battleContinueBtn" type="button" aria-label="戦闘結果を確認して進む">
             <span>タップして進む</span>
@@ -1083,27 +1085,10 @@
       <button class="swap-close" id="swapCloseBtn">閉じる</button>
     </div>
     <div class="reserve-grid" id="reserveGrid"></div>
-    <div class="swap-note">※ v0.12でも交代はターン消費なし。交代後の仲間がそのまま行動を選べます。</div>
+    <div class="swap-note">※ v0.12aでも交代はターン消費なし。交代後の仲間がそのまま行動を選べます。</div>
   </div>
 </div>
 
-
-<div class="recruit-overlay" id="recruitOverlay">
-  <div class="recruit-scene">
-    <div class="recruit-shine"></div>
-    <div class="recruit-label">RECRUIT</div>
-    <div class="recruit-image-wrap"><img id="recruitImage" alt=""></div>
-    <div class="recruit-copy">
-      <strong id="recruitHeadline">犬娘が起き上がった！</strong>
-      <span id="recruitQuestion">仲間にしますか？</span>
-      <small id="recruitTestNote"></small>
-    </div>
-    <div class="recruit-actions">
-      <button class="recruit-yes" id="recruitYesBtn">はい</button>
-      <button class="recruit-no" id="recruitNoBtn">いいえ</button>
-    </div>
-  </div>
-</div>
 
 <div class="modal" id="modal">
   <div class="dialog">
@@ -1206,10 +1191,10 @@
     restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent="ミレスタ・仲間編成 v0.12";
+    $("topSubtitle").textContent="ミレスタ・仲間編成 v0.12a";
   };
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12aa"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -1448,7 +1433,7 @@
     state.partySelection=null;
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12aa";
     updateHeader();
   };
 
@@ -1462,7 +1447,7 @@
 
 
   /*
-    v0.12 internal organization:
+    v0.12a internal organization:
     - Character combat stats are grouped in stats {}
     - learnedSkills is an array, so characters can later hold 5-8+ skills
     - Skill definitions are separated from characters
@@ -2711,7 +2696,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12aa";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -2719,7 +2704,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12aa";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -2752,11 +2737,12 @@
     $("recruitTestNote").textContent=testMode ? "直接戦闘テスト：選択は加入記録に残りません" : "";
     $("recruitYesBtn").textContent="はい";
     $("recruitNoBtn").textContent="いいえ";
-    $("recruitOverlay").classList.add("show");
+    $("battleMessage").textContent=`${candidate.name}が起き上がった！ 仲間にしますか？`;
+    $("battleRecruitStage").classList.add("show");
   }
 
   function hideRecruitOverlay(){
-    $("recruitOverlay").classList.remove("show");
+    $("battleRecruitStage").classList.remove("show");
   }
 
   function resolveRecruitChoice(accept){
@@ -2830,7 +2816,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12aa";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -2881,7 +2867,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="勧誘・拠点編成試作 v0.12";
+    $("topSubtitle").textContent="勧誘・拠点編成試作 v0.12a";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -2903,7 +2889,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12aa";
     toast("戦闘テストを終了");
   }
 
