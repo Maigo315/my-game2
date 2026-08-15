@@ -524,6 +524,191 @@
     100%{box-shadow:0 0 0 rgba(255,213,94,0)}
   }
 
+
+  /* v0.12 Milesta party management */
+  #partyScreen{
+    padding-top:max(8px,var(--safe-top));
+    padding-bottom:max(8px,var(--safe-bottom));
+    padding-left:calc(8px + var(--safe-left));
+    padding-right:calc(8px + var(--safe-right));
+    background:
+      radial-gradient(circle at 25% 30%,rgba(65,100,126,.18),transparent 34%),
+      linear-gradient(#0b1621,#0a1119);
+  }
+  .party-manage-shell{
+    width:100%;height:100%;min-height:0;
+    display:grid;grid-template-rows:auto minmax(0,1fr) 102px;gap:7px;
+  }
+  .party-manage-head{
+    display:flex;align-items:center;gap:12px;padding:8px 11px;border-radius:14px;
+    background:rgba(18,31,44,.95);border:1px solid #3a5369;
+  }
+  .party-manage-head>div{min-width:0;flex:1}
+  .party-manage-kicker{font-size:8px;color:#8fa4b7;font-weight:900;letter-spacing:.12em}
+  .party-manage-head h2{margin:1px 0 0;font-size:18px}
+  .party-manage-head p{margin:1px 0 0;color:#aebdca;font-size:9px}
+  .party-manage-grid{
+    min-height:0;display:grid;grid-template-columns:1fr 1.2fr 1.15fr;gap:7px;
+  }
+  .party-manage-column{
+    min-width:0;min-height:0;padding:7px;border-radius:14px;
+    background:rgba(15,27,39,.94);border:1px solid #3a5369;overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+  .party-manage-column.battle{border-color:#766733}
+  .party-manage-column.reserve{border-color:#415b78}
+  .party-manage-column.waiting{border-color:#4b5364}
+  .party-column-head{
+    display:flex;align-items:center;justify-content:space-between;gap:6px;
+    padding:2px 3px 6px;font-size:10px;color:#dce6ee;
+  }
+  .party-column-head span{
+    padding:2px 6px;border-radius:999px;background:#172635;color:#afbdc9;font-size:8px;font-weight:900;
+  }
+  .party-slot-list{display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:5px;min-height:0;flex:1}
+  .party-slot-list.reserve-slots{grid-template-rows:repeat(3,minmax(0,1fr));grid-template-columns:1fr 1fr}
+  .party-organize-slot,.party-wait-card{
+    min-width:0;position:relative;border:1px solid #385168;border-radius:10px;
+    background:#101d29;color:inherit;padding:4px 6px;cursor:pointer;text-align:left;overflow:hidden;
+    display:grid;grid-template-columns:40px minmax(0,1fr);gap:6px;align-items:center;
+  }
+  .party-organize-slot.empty{
+    display:flex;align-items:center;justify-content:center;color:#657789;
+    border-style:dashed;background:#0d1721;font-size:9px;font-weight:800;
+  }
+  .party-organize-slot.locked{border-color:#776735;background:#242315;cursor:default}
+  .party-organize-slot.selected,.party-wait-card.selected{
+    border-color:#f0d36d;box-shadow:0 0 12px rgba(236,204,92,.28),inset 0 0 0 1px rgba(245,216,112,.25);
+  }
+  .party-slot-thumb{
+    width:40px;height:48px;display:flex;align-items:center;justify-content:center;
+    border-radius:7px;overflow:hidden;background:#0a141d;border:1px solid #294155;
+  }
+  .party-slot-thumb img{width:100%;height:100%;object-fit:contain}
+  .party-slot-thumb .hero-placeholder{font-size:26px}
+  .party-slot-info{min-width:0}
+  .party-slot-name{display:block;font-size:10px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .party-slot-meta{display:block;margin-top:2px;color:#aab9c7;font-size:7px;white-space:nowrap}
+  .party-mini-hp{display:flex;align-items:center;gap:3px;margin-top:3px;font-size:7px;color:#aab9c7}
+  .party-mini-hp i{display:block;flex:1;height:3px;border-radius:999px;background:#263746;overflow:hidden}
+  .party-mini-hp i:before{content:"";display:block;width:var(--hp);height:100%;background:linear-gradient(90deg,#48b972,#79df9a)}
+  .party-wait-drop{
+    margin-bottom:5px;min-height:29px;border:1px dashed #657181;border-radius:9px;
+    background:#121a24;color:#93a3b2;font-size:8px;font-weight:900;cursor:pointer;
+  }
+  .party-wait-drop.ready{border-color:#d4bd62;color:#f2dc82;background:#292615}
+  .party-wait-list{
+    display:grid;grid-template-columns:1fr 1fr;gap:5px;align-content:start;overflow:auto;min-height:0;
+  }
+  .party-wait-card{height:58px;grid-template-columns:38px minmax(0,1fr);padding:4px}
+  .party-wait-card .party-slot-thumb{width:38px;height:48px}
+  .party-wait-empty{
+    grid-column:1/-1;padding:18px 8px;text-align:center;color:#6f8090;font-size:9px;
+    border:1px dashed #344657;border-radius:10px;
+  }
+
+  .party-detail-panel{
+    min-height:0;display:grid;grid-template-columns:74px minmax(0,1fr) 210px;gap:8px;
+    padding:7px;border-radius:14px;background:rgba(15,27,39,.96);border:1px solid #3a5369;
+  }
+  .party-detail-portrait{
+    border-radius:9px;overflow:hidden;background:#0b1620;border:1px solid #2f485d;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .party-detail-portrait img{width:100%;height:100%;object-fit:contain}
+  .party-detail-portrait span{font-size:34px}
+  .party-detail-main{min-width:0;display:flex;flex-direction:column;justify-content:center}
+  .party-detail-name{font-size:14px;font-weight:1000}
+  .party-detail-meta{font-size:8px;color:#e3cc73;font-weight:800;margin-top:1px}
+  .party-detail-stats{
+    margin-top:4px;display:flex;flex-wrap:wrap;gap:3px 8px;color:#b7c5d1;font-size:8px;
+  }
+  .party-detail-guide{
+    border-left:1px solid #31485b;padding-left:8px;display:flex;align-items:center;
+    color:#9eafbd;font-size:9px;line-height:1.45;
+  }
+
+  /* v0.12 recruit scene */
+  .recruit-overlay{
+    display:none;position:fixed;inset:0;z-index:240;
+    padding-top:calc(8px + var(--safe-top));padding-bottom:calc(8px + var(--safe-bottom));
+    padding-left:calc(8px + var(--safe-left));padding-right:calc(8px + var(--safe-right));
+    background:rgba(1,7,12,.84);backdrop-filter:blur(3px);
+    align-items:center;justify-content:center;
+  }
+  .recruit-overlay.show{display:flex}
+  .recruit-scene{
+    width:min(650px,94vw);height:min(390px,92vh);min-height:0;position:relative;overflow:hidden;
+    display:grid;grid-template-columns:minmax(0,1fr) 190px;grid-template-rows:minmax(0,1fr) auto;
+    border:1px solid #65788d;border-radius:18px;
+    background:
+      radial-gradient(circle at 42% 40%,rgba(120,106,183,.28),transparent 34%),
+      repeating-linear-gradient(0deg,rgba(104,91,158,.08) 0 1px,transparent 1px 22px),
+      repeating-linear-gradient(90deg,rgba(104,91,158,.07) 0 1px,transparent 1px 22px),
+      linear-gradient(#22243e,#101627 70%,#0b111c);
+    box-shadow:0 25px 80px rgba(0,0,0,.68);
+  }
+  .recruit-shine{
+    position:absolute;left:18%;top:5%;width:48%;height:90%;pointer-events:none;
+    background:radial-gradient(ellipse,rgba(255,240,168,.13),transparent 62%);
+  }
+  .recruit-label{
+    position:absolute;left:10px;top:9px;z-index:3;padding:3px 8px;border-radius:999px;
+    background:#423b66;border:1px solid #71689b;color:#ded7ff;font-size:8px;font-weight:1000;letter-spacing:.12em;
+  }
+  .recruit-image-wrap{
+    grid-row:1/3;min-height:0;display:flex;align-items:center;justify-content:center;padding:22px 10px 8px;
+    position:relative;z-index:2;
+  }
+  .recruit-image-wrap img{
+    width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 14px 12px rgba(0,0,0,.55));
+    animation:recruitRise .48s ease-out both;
+  }
+  @keyframes recruitRise{
+    from{opacity:0;transform:translateY(22px) scale(.92)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+  }
+  .recruit-copy{
+    z-index:3;align-self:end;margin:20px 12px 8px 0;padding:11px;border-radius:12px;
+    background:rgba(12,17,30,.88);border:1px solid #5b6684;
+  }
+  .recruit-copy strong{display:block;font-size:14px;line-height:1.35;color:#fff0a3}
+  .recruit-copy span{display:block;margin-top:5px;font-size:11px;color:#e8eef4;font-weight:800}
+  .recruit-copy small{display:block;margin-top:6px;font-size:7px;color:#93a4b7}
+  .recruit-actions{
+    z-index:3;display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 12px 12px 0;
+  }
+  .recruit-actions button{
+    min-height:43px;border-radius:10px;font-size:12px;font-weight:1000;cursor:pointer;
+  }
+  .recruit-yes{border:1px solid #62a875;background:linear-gradient(#285e3d,#193b29);color:#dfffe8}
+  .recruit-no{border:1px solid #667489;background:linear-gradient(#273747,#182530);color:#d6e1ea}
+
+  @media (max-height:520px){
+    .party-manage-shell{grid-template-rows:auto minmax(0,1fr) 78px;gap:5px}
+    .party-manage-head{padding:5px 8px}
+    .party-manage-head h2{font-size:14px}
+    .party-manage-head p{font-size:7px}
+    .party-manage-grid{gap:5px}
+    .party-manage-column{padding:5px}
+    .party-slot-list{gap:3px}
+    .party-organize-slot{grid-template-columns:31px minmax(0,1fr);padding:2px 4px}
+    .party-slot-thumb{width:31px;height:35px}
+    .party-slot-name{font-size:8px}
+    .party-slot-meta,.party-mini-hp{font-size:6px}
+    .party-wait-card{height:43px;grid-template-columns:30px minmax(0,1fr)}
+    .party-wait-card .party-slot-thumb{width:30px;height:35px}
+    .party-detail-panel{grid-template-columns:54px minmax(0,1fr) 170px;padding:5px}
+    .party-detail-name{font-size:11px}
+    .party-detail-stats,.party-detail-meta,.party-detail-guide{font-size:7px}
+    .recruit-scene{height:min(320px,94vh);grid-template-columns:minmax(0,1fr) 165px}
+    .recruit-copy{margin:12px 8px 5px 0;padding:8px}
+    .recruit-copy strong{font-size:11px}
+    .recruit-copy span{font-size:9px}
+    .recruit-actions{margin:0 8px 8px 0;gap:4px}
+    .recruit-actions button{min-height:34px;font-size:10px}
+  }
+
   /* v0.11 battle-result pause */
   .battle-result-tap{
     display:none;position:absolute;inset:0;z-index:12;border:0;background:transparent;
@@ -711,7 +896,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘システム試作 v0.11</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.12</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -724,11 +909,53 @@
       <p>小さな辺境の町。ここを拠点に周辺地域を探索します。</p>
       <div class="big-actions">
         <button class="menu-btn" id="goWorld"><span class="icon">🗺️</span>世界マップ</button>
-        <button class="menu-btn" id="dummyParty"><span class="icon">👥</span>編成・育成</button>
+        <button class="menu-btn" id="dummyParty"><span class="icon">👥</span>仲間編成</button>
         <button class="menu-btn" id="dummyTalk"><span class="icon">💬</span>会話</button>
       </div>
       <button class="small-btn" id="battleTestBtn" style="margin-top:12px;width:100%">⚔ 戦闘を直接テスト</button>
     </section>
+  </main>
+
+
+  <main id="partyScreen" class="screen">
+    <div class="party-manage-shell">
+      <header class="party-manage-head">
+        <div>
+          <div class="party-manage-kicker">MILESTA PARTY ORGANIZE</div>
+          <h2>仲間編成</h2>
+          <p>仲間を選んで、移動先の枠をタップ。主人公はバトルメンバー固定です。</p>
+        </div>
+        <button class="small-btn" id="partyBackBtn">← ミレスタへ</button>
+      </header>
+
+      <div class="party-manage-grid">
+        <section class="party-manage-column battle">
+          <div class="party-column-head"><strong>⚔ バトルメンバー</strong><span id="partyBattleCount">1 / 4</span></div>
+          <div class="party-slot-list" id="partyBattleSlots"></div>
+        </section>
+
+        <section class="party-manage-column reserve">
+          <div class="party-column-head"><strong>🛡 控え</strong><span id="partyReserveCount">0 / 6</span></div>
+          <div class="party-slot-list reserve-slots" id="partyReserveSlots"></div>
+        </section>
+
+        <section class="party-manage-column waiting">
+          <div class="party-column-head"><strong>🏠 ミレスタ待機</strong><span id="partyWaitingCount">0</span></div>
+          <button class="party-wait-drop" id="partyWaitDrop">選択中の仲間を待機させる</button>
+          <div class="party-wait-list" id="partyWaitingList"></div>
+        </section>
+      </div>
+
+      <footer class="party-detail-panel" id="partyDetailPanel">
+        <div class="party-detail-portrait" id="partyDetailPortrait"><span>👤</span></div>
+        <div class="party-detail-main">
+          <div class="party-detail-name" id="partyDetailName">主人公</div>
+          <div class="party-detail-meta" id="partyDetailMeta">Lv1 / 運命値16</div>
+          <div class="party-detail-stats" id="partyDetailStats"></div>
+        </div>
+        <div class="party-detail-guide" id="partyDetailGuide">仲間をタップすると選択できます。</div>
+      </footer>
+    </div>
   </main>
 
   <main id="worldScreen" class="screen">
@@ -760,7 +987,7 @@
 
   <main id="exploreScreen" class="screen">
     <aside class="party-panel">
-      <div class="party-title">BATTLE MEMBER 4 / RESERVE 6</div>
+      <div class="party-title" id="explorePartyTitle">BATTLE MEMBER 1 / 4　RESERVE 0 / 6</div>
       <div class="party-list" id="explorePartyList"></div>
       <button class="reserve-chip" id="exploreReserveBtn">控えメンバー 6人</button>
       <div class="run-info">
@@ -852,11 +1079,29 @@
   <div class="swap-panel">
     <div class="swap-head">
       <h2>メンバー交代</h2>
-      <p id="swapLead">控え6人から交代する仲間を選択</p>
+      <p id="swapLead">控えから交代する仲間を選択</p>
       <button class="swap-close" id="swapCloseBtn">閉じる</button>
     </div>
     <div class="reserve-grid" id="reserveGrid"></div>
-    <div class="swap-note">※ v0.11でも交代はターン消費なし。交代後の仲間がそのまま行動を選べます。</div>
+    <div class="swap-note">※ v0.12でも交代はターン消費なし。交代後の仲間がそのまま行動を選べます。</div>
+  </div>
+</div>
+
+
+<div class="recruit-overlay" id="recruitOverlay">
+  <div class="recruit-scene">
+    <div class="recruit-shine"></div>
+    <div class="recruit-label">RECRUIT</div>
+    <div class="recruit-image-wrap"><img id="recruitImage" alt=""></div>
+    <div class="recruit-copy">
+      <strong id="recruitHeadline">犬娘が起き上がった！</strong>
+      <span id="recruitQuestion">仲間にしますか？</span>
+      <small id="recruitTestNote"></small>
+    </div>
+    <div class="recruit-actions">
+      <button class="recruit-yes" id="recruitYesBtn">はい</button>
+      <button class="recruit-no" id="recruitNoBtn">いいえ</button>
+    </div>
   </div>
 </div>
 
@@ -879,11 +1124,11 @@
     run: null,
     battleReturn: "homeScreen",
     battleFromRun: false,
-    battleActorSlot: 1,
+    battleActorSlot: 0,
     battleFormationArea: "plains",
     battleFormationIndex: 0,
-    battleActive: ["hero","slime","dog","fairy"],
-    battleReserve: ["slug","slimebes","poison","harpy","momo","arachne"],
+    battleActive: ["hero"],
+    battleReserve: [],
     battleEnemies: [],
     battleRound: 1,
     battleTurnSlot: 0,
@@ -896,9 +1141,12 @@
     battleAutoContinuous: false,
     battleAutoStartTimer: null,
     battleTestSnapshot: null,
-    ownedSpecies: new Set(["slime","dog","fairy"]),
+    ownedSpecies: new Set(),
     recruitedWaiting: [],
-    battleVictoryData: null
+    battleVictoryData: null,
+    battleDefeatCounter: 0,
+    partySelection: null,
+    pendingRecruitCandidate: null
   };
 
   const IMG = {
@@ -954,14 +1202,256 @@
   function closeModal(){ $("modal").classList.remove("show"); }
 
   $("dummyParty").onclick=()=>{
-    const active=state.battleActive.map(id=>`${roster[id].name}(運${roster[id].fate})`).join(" / ");
-    const owned=ownedSpeciesNames().join(" / ") || "なし";
-    const waiting=state.recruitedWaiting.map(id=>speciesRecruitment[id]?.name).filter(Boolean).join(" / ") || "なし";
-    modal("編成・育成",
-      `バトルメンバー：${active}\n運命値合計：${activeFateTotal()}\n\n正式加入済み種族：${owned}\n今回の試作で新規加入：${waiting}\n\n※編成変更・拠点待機所への接続は次の段階で実装予定です。`);
+    state.partySelection=null;
+    restorePartyFull();
+    renderPartyManage();
+    showScreen("partyScreen");
+    $("topSubtitle").textContent="ミレスタ・仲間編成 v0.12";
   };
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘システム試作 v0.11"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12"; updateWorld(); showScreen("worldScreen"); };
+
+  function ensureHeroBattleMember(){
+    const activeIndex=state.battleActive.indexOf("hero");
+    if(activeIndex===0) return;
+
+    if(activeIndex>0){
+      [state.battleActive[0],state.battleActive[activeIndex]]=[state.battleActive[activeIndex],state.battleActive[0]];
+      return;
+    }
+
+    const reserveIndex=state.battleReserve.indexOf("hero");
+    if(reserveIndex>=0) state.battleReserve.splice(reserveIndex,1);
+
+    if(state.battleActive.length<4){
+      state.battleActive.unshift("hero");
+    }else{
+      const displaced=state.battleActive[0];
+      state.battleActive[0]="hero";
+      if(displaced) state.battleReserve.push(displaced);
+    }
+  }
+
+  function waitingSpeciesIds(){
+    const traveling=new Set([...state.battleActive,...state.battleReserve]);
+    return [...state.ownedSpecies].filter(id=>!traveling.has(id));
+  }
+
+  function partyLocation(id){
+    let i=state.battleActive.indexOf(id);
+    if(i>=0) return {group:"battle",index:i};
+    i=state.battleReserve.indexOf(id);
+    if(i>=0) return {group:"reserve",index:i};
+    if(state.ownedSpecies.has(id)) return {group:"waiting",index:-1};
+    return null;
+  }
+
+  function partyThumbHtml(c){
+    return c.img
+      ? `<span class="party-slot-thumb"><img src="${c.img}" alt="${c.name}"></span>`
+      : `<span class="party-slot-thumb"><span class="hero-placeholder">👤</span></span>`;
+  }
+
+  function partyCardHtml(c){
+    const st=S(c);
+    return `${partyThumbHtml(c)}
+      <span class="party-slot-info">
+        <span class="party-slot-name">${c.name}</span>
+        <span class="party-slot-meta">Lv${c.level}　運${c.fate}</span>
+        <span class="party-mini-hp"><b>HP</b><i style="--hp:${hpPct(c)}%"></i><span>${st.hp}/${st.hpMax}</span></span>
+      </span>`;
+  }
+
+  function updatePartyDetail(id=null){
+    const c=roster[id||"hero"] || roster.hero;
+    const st=S(c);
+    const portrait=$("partyDetailPortrait");
+    portrait.innerHTML=c.img ? `<img src="${c.img}" alt="${c.name}">` : "<span>👤</span>";
+    $("partyDetailName").textContent=c.name;
+    $("partyDetailMeta").textContent=`Lv${c.level} / 運命値 ${c.fate}`;
+    const skillNames=learnedSkillIds(c).map(sid=>skills[sid]?.name).filter(Boolean).join("、") || "未設定";
+    $("partyDetailStats").innerHTML=
+      `<span>HP ${st.hpMax}</span><span>MP ${st.mpMax}</span><span>攻 ${st.atk}</span><span>防 ${st.def}</span>`+
+      `<span>魔 ${st.magic}</span><span>魔防 ${st.mdef}</span><span>速 ${st.spd}</span><span>スキル ${skillNames}</span>`;
+  }
+
+  function selectPartyMember(id,group,index){
+    if(id==="hero"){
+      state.partySelection=null;
+      updatePartyDetail("hero");
+      $("partyDetailGuide").textContent="主人公はバトルメンバー1枠目から外せません。";
+      renderPartyManage(false);
+      return;
+    }
+    state.partySelection={id,group,index};
+    updatePartyDetail(id);
+    $("partyDetailGuide").textContent="選択中。移動したいバトル枠・控え枠、または「待機させる」をタップしてください。";
+    renderPartyManage(false);
+  }
+
+  function clearPartySelection(message="仲間をタップすると選択できます。"){
+    state.partySelection=null;
+    $("partyDetailGuide").textContent=message;
+    renderPartyManage(false);
+  }
+
+  function moveSelectedTo(group,index,destId=null){
+    const sel=state.partySelection;
+    if(!sel) return;
+    const id=sel.id;
+    if(id==="hero") return;
+
+    const source=partyLocation(id);
+    if(!source) return;
+
+    if(group==="battle" && index===0){
+      clearPartySelection("主人公の枠は固定です。");
+      return;
+    }
+
+    const sourceArr=source.group==="battle" ? state.battleActive : source.group==="reserve" ? state.battleReserve : null;
+    const destArr=group==="battle" ? state.battleActive : state.battleReserve;
+
+    if(group==="battle" && !destId && state.battleActive.length>=4){
+      clearPartySelection("バトルメンバーは4人までです。");
+      return;
+    }
+    if(group==="reserve" && !destId && state.battleReserve.length>=6){
+      clearPartySelection("控えは6人までです。");
+      return;
+    }
+
+    // Waiting -> battle/reserve. Occupied destination is replaced and becomes waiting.
+    if(source.group==="waiting"){
+      if(destId){
+        destArr[index]=id;
+      }else{
+        destArr.push(id);
+      }
+      clearPartySelection(`${roster[id].name}を${group==="battle"?"バトルメンバー":"控え"}へ移動しました。`);
+      return;
+    }
+
+    // Same group: swap/reorder.
+    if(source.group===group){
+      if(destId && source.index!==index){
+        [sourceArr[source.index],sourceArr[index]]=[sourceArr[index],sourceArr[source.index]];
+      }else if(!destId && source.index!==index){
+        const [moved]=sourceArr.splice(source.index,1);
+        sourceArr.push(moved);
+      }
+      clearPartySelection("並び順を変更しました。");
+      return;
+    }
+
+    // Travel group -> other travel group.
+    if(destId){
+      const oldDest=destArr[index];
+      destArr[index]=id;
+      sourceArr[source.index]=oldDest;
+    }else{
+      sourceArr.splice(source.index,1);
+      destArr.push(id);
+    }
+    clearPartySelection(`${roster[id].name}を${group==="battle"?"バトルメンバー":"控え"}へ移動しました。`);
+  }
+
+  function moveSelectedToWaiting(){
+    const sel=state.partySelection;
+    if(!sel || sel.id==="hero") return;
+    const source=partyLocation(sel.id);
+    if(!source || source.group==="waiting"){
+      clearPartySelection();
+      return;
+    }
+    const arr=source.group==="battle" ? state.battleActive : state.battleReserve;
+    arr.splice(source.index,1);
+    clearPartySelection(`${roster[sel.id].name}をミレスタ待機にしました。`);
+  }
+
+  function makePartySlot(group,index,id){
+    const btn=document.createElement("button");
+    if(!id){
+      btn.className="party-organize-slot empty";
+      btn.textContent=group==="battle" ? `EMPTY ${index+1}/4` : `EMPTY ${index+1}/6`;
+      btn.onclick=()=>moveSelectedTo(group,index,null);
+      return btn;
+    }
+
+    const c=roster[id];
+    btn.className="party-organize-slot";
+    if(id==="hero") btn.classList.add("locked");
+    if(state.partySelection?.id===id) btn.classList.add("selected");
+    btn.innerHTML=partyCardHtml(c);
+    btn.onclick=()=>{
+      if(state.partySelection && state.partySelection.id!==id){
+        moveSelectedTo(group,index,id);
+      }else if(state.partySelection?.id===id){
+        clearPartySelection();
+      }else{
+        selectPartyMember(id,group,index);
+      }
+    };
+    return btn;
+  }
+
+  function renderPartyManage(refreshDetail=true){
+    ensureHeroBattleMember();
+    const battle=$("partyBattleSlots");
+    const reserve=$("partyReserveSlots");
+    const waiting=$("partyWaitingList");
+    battle.innerHTML="";
+    reserve.innerHTML="";
+    waiting.innerHTML="";
+
+    for(let i=0;i<4;i++) battle.appendChild(makePartySlot("battle",i,state.battleActive[i]||null));
+    for(let i=0;i<6;i++) reserve.appendChild(makePartySlot("reserve",i,state.battleReserve[i]||null));
+
+    const waits=waitingSpeciesIds();
+    if(!waits.length){
+      const empty=document.createElement("div");
+      empty.className="party-wait-empty";
+      empty.textContent="待機中の仲間はいません";
+      waiting.appendChild(empty);
+    }else{
+      waits.forEach(id=>{
+        const c=roster[id];
+        const btn=document.createElement("button");
+        btn.className="party-wait-card";
+        if(state.partySelection?.id===id) btn.classList.add("selected");
+        btn.innerHTML=partyCardHtml(c);
+        btn.onclick=()=>{
+          if(state.partySelection && state.partySelection.id!==id){
+            // Tapping another waiting member simply changes the selected member.
+            selectPartyMember(id,"waiting",-1);
+          }else if(state.partySelection?.id===id){
+            clearPartySelection();
+          }else{
+            selectPartyMember(id,"waiting",-1);
+          }
+        };
+        waiting.appendChild(btn);
+      });
+    }
+
+    $("partyBattleCount").textContent=`${state.battleActive.length} / 4`;
+    $("partyReserveCount").textContent=`${state.battleReserve.length} / 6`;
+    $("partyWaitingCount").textContent=String(waits.length);
+    $("partyWaitDrop").classList.toggle("ready",!!state.partySelection && state.partySelection.group!=="waiting");
+    if(refreshDetail){
+      updatePartyDetail(state.partySelection?.id || state.battleActive[0] || "hero");
+    }
+  }
+
+  $("partyWaitDrop").onclick=moveSelectedToWaiting;
+  $("partyBackBtn").onclick=()=>{
+    state.partySelection=null;
+    restorePartyFull();
+    showScreen("homeScreen");
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12";
+    updateHeader();
+  };
+
   $("backHome").onclick=()=>showScreen("homeScreen");
   $("battleTestBtn").onclick=()=>openBattle(false, "plains");
 
@@ -972,7 +1462,7 @@
 
 
   /*
-    v0.11 internal organization:
+    v0.12 internal organization:
     - Character combat stats are grouped in stats {}
     - learnedSkills is an array, so characters can later hold 5-8+ skills
     - Skill definitions are separated from characters
@@ -1178,7 +1668,7 @@
   }
 
   const recruitRanks = {
-    D:{base:.18,cap:1.0},
+    D:{base:.22,cap:1.0},
     C:{base:.06,cap:1.0},
     B:{base:.025,cap:1.2},
     A:{base:.007,cap:2.0},
@@ -1215,28 +1705,47 @@
     return p<1 ? `${p.toFixed(2)}%` : `${p.toFixed(1)}%`;
   }
 
+  const recruitRankPriority = {D:1,C:2,B:3,A:4,S:5};
+
   function uniqueEncounterSpecies(){
     return [...new Set(state.battleEnemies.map(e=>e.id))];
   }
 
-  function rollRecruitment(testMode=false){
+  function chooseRecruitWinner(testMode=false){
     const fateTotal=activeFateTotal();
-    const results=[];
-    uniqueEncounterSpecies().forEach(id=>{
-      const info=speciesRecruitment[id];
-      if(!info) return;
-      if(!testMode && state.ownedSpecies.has(id)) return;
-      const chance=recruitmentChance(id,fateTotal);
-      results.push({
-        id,
-        name:info.name,
-        rank:info.rank,
-        chance,
-        fateTotal,
-        success:Math.random()<chance
-      });
+    const successful=[];
+
+    // One roll per defeated enemy body, even when several are the same species.
+    state.battleEnemies.forEach((enemy,encounterIndex)=>{
+      const info=speciesRecruitment[enemy.id];
+      if(!info || enemy.hp>0) return;
+      if(!testMode && state.ownedSpecies.has(enemy.id)) return;
+
+      const chance=recruitmentChance(enemy.id,fateTotal);
+      if(Math.random()<chance){
+        successful.push({
+          id:enemy.id,
+          name:info.name,
+          rank:info.rank,
+          chance,
+          fateTotal,
+          defeatOrder:enemy.defeatOrder||0,
+          encounterIndex
+        });
+      }
     });
-    return results;
+
+    if(!successful.length) return null;
+
+    successful.sort((a,b)=>{
+      const rankDiff=(recruitRankPriority[b.rank]||0)-(recruitRankPriority[a.rank]||0);
+      if(rankDiff) return rankDiff;
+      const defeatDiff=(b.defeatOrder||0)-(a.defeatOrder||0);
+      if(defeatDiff) return defeatDiff;
+      return b.encounterIndex-a.encounterIndex;
+    });
+
+    return successful[0];
   }
 
   function ownedSpeciesNames(){
@@ -1433,6 +1942,19 @@
       };
       row.appendChild(btn);
     });
+
+    for(let slot=state.battleActive.length;slot<4;slot++){
+      const empty=document.createElement("div");
+      empty.className="battle-status-card";
+      empty.style.opacity=".34";
+      empty.style.display="flex";
+      empty.style.alignItems="center";
+      empty.style.justifyContent="center";
+      empty.style.fontSize="9px";
+      empty.style.color="#8192a1";
+      empty.textContent="EMPTY";
+      row.appendChild(empty);
+    }
     updateSkillButton();
   }
 
@@ -1484,7 +2006,8 @@
   }
 
   function setBattleActorSlot(slot){
-    state.battleActorSlot=Math.max(0,Math.min(3,Number(slot)||0));
+    const maxSlot=Math.max(0,state.battleActive.length-1);
+    state.battleActorSlot=Math.max(0,Math.min(maxSlot,Number(slot)||0));
     state.battleTargetMode=null;
     updateActorPortrait();
     renderBattleParty();
@@ -1510,7 +2033,7 @@
           uid:`${id}_${i}_${Date.now()}`,
           id,name:base.name,displayName:base.name+suffix,img:base.img,
           hp:base.stats.hp,hpMax:base.stats.hp,atk:base.stats.atk,def:base.stats.def,
-          mdef:base.stats.mdef||4,spd:base.stats.spd||5,exp:base.exp||10
+          mdef:base.stats.mdef||4,spd:base.stats.spd||5,exp:base.exp||10,defeatOrder:0
         };
       });
     }
@@ -1619,8 +2142,8 @@
 
   function nextUnqueuedSlot(afterSlot){
     const order=[];
-    for(let i=afterSlot+1;i<4;i++) order.push(i);
-    for(let i=0;i<=afterSlot;i++) order.push(i);
+    for(let i=afterSlot+1;i<state.battleActive.length;i++) order.push(i);
+    for(let i=0;i<=Math.min(afterSlot,state.battleActive.length-1);i++) order.push(i);
     return order.find(slot=>{
       const c=roster[state.battleActive[slot]];
       return S(c).hp>0 && !state.battleActions[slot];
@@ -1833,6 +2356,7 @@
     el.classList.remove("damage","flash-hit");
 
     if(killed){
+      if(!target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
       if(hpBar) hpBar.style.width="0%";
       if(hpNum) hpNum.textContent=`0/${target.hpMax}`;
       await wait(BASE_TIME.koHold);
@@ -1992,7 +2516,7 @@
     setCommandsEnabled(false);
     updateExecuteButton();
 
-    for(let slot=0;slot<4;slot++){
+    for(let slot=0;slot<state.battleActive.length;slot++){
       if(state.battleEnded) return;
       const actor=roster[state.battleActive[slot]];
       const action=state.battleActions[slot];
@@ -2187,7 +2711,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘システム試作 v0.11";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -2195,7 +2719,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘システム試作 v0.11";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -2203,71 +2727,78 @@
     else toast(`${data.gain}G / ${data.expGain}EXPを獲得`);
   }
 
-  function presentRecruitSuccesses(successes,index=0,testMode=false){
-    if(index>=successes.length){
-      finishVictoryReturn(testMode ? "勧誘テストを終了" : "新しい仲間が増えた！");
+  function addRecruitedSpecies(id){
+    if(state.ownedSpecies.has(id)) return "加入済み";
+    state.ownedSpecies.add(id);
+
+    // New recruits join the expedition reserve if there is space.
+    // Battle-member changes are performed back at Milesta.
+    if(state.battleReserve.length<6 && state.battleActive.length+state.battleReserve.length<10){
+      state.battleReserve.push(id);
+      return "控えに加わった";
+    }
+
+    if(!state.recruitedWaiting.includes(id)) state.recruitedWaiting.push(id);
+    return "ミレスタで待機";
+  }
+
+  function showRecruitOverlay(candidate,testMode=false){
+    state.pendingRecruitCandidate={...candidate,testMode};
+    const c=roster[candidate.id];
+    $("recruitImage").src=c?.img || enemyData[candidate.id]?.img || "";
+    $("recruitImage").alt=candidate.name;
+    $("recruitHeadline").textContent=`${candidate.name}が起き上がった！`;
+    $("recruitQuestion").textContent="仲間にしますか？";
+    $("recruitTestNote").textContent=testMode ? "直接戦闘テスト：選択は加入記録に残りません" : "";
+    $("recruitYesBtn").textContent="はい";
+    $("recruitNoBtn").textContent="いいえ";
+    $("recruitOverlay").classList.add("show");
+  }
+
+  function hideRecruitOverlay(){
+    $("recruitOverlay").classList.remove("show");
+  }
+
+  function resolveRecruitChoice(accept){
+    const pending=state.pendingRecruitCandidate;
+    if(!pending) return;
+    state.pendingRecruitCandidate=null;
+    hideRecruitOverlay();
+
+    if(pending.testMode){
+      finishVictoryReturn(accept ? `${pending.name}を仲間にする演出を確認` : "勧誘を見送った");
       return;
     }
 
-    const r=successes[index];
-    const testText=testMode ? "\n\n※直接戦闘テストなので加入記録には残りません。" : "";
-    modal(
-      "✨ 魔物娘が起き上がった！",
-      `${r.name}がこちらを見ている……。\n\n勧誘難度：${r.rank}\nバトルメンバー運命値：${r.fateTotal}\n今回の加入率：${pctText(r.chance)}${testText}`,
-      testMode
-        ? [["確認",()=>{closeModal();presentRecruitSuccesses(successes,index+1,true);}]]
-        : [
-            ["仲間にする",()=>{
-              state.ownedSpecies.add(r.id);
-              if(!state.recruitedWaiting.includes(r.id)) state.recruitedWaiting.push(r.id);
-              closeModal();
-              presentRecruitSuccesses(successes,index+1,false);
-            }],
-            ["見送る",()=>{
-              closeModal();
-              presentRecruitSuccesses(successes,index+1,false);
-            }]
-          ]
-    );
+    if(accept){
+      const placement=addRecruitedSpecies(pending.id);
+      finishVictoryReturn(`${pending.name}が仲間になった！ ${placement}`);
+    }else{
+      finishVictoryReturn(`${pending.name}を見送った`);
+    }
   }
+
+  $("recruitYesBtn").onclick=()=>resolveRecruitChoice(true);
+  $("recruitNoBtn").onclick=()=>resolveRecruitChoice(false);
 
   function continueAfterVictory(){
     if(!state.battleEnded || state.battlePhase!=="ended") return;
     hideBattleContinue();
 
-    // Direct battle mode can be used to inspect recruitment rolls without changing the real collection.
-    if(state.battleDirectTest){
-      const results=rollRecruitment(true);
-      const successes=results.filter(r=>r.success);
-      if(successes.length){
-        presentRecruitSuccesses(successes,0,true);
-      }else{
-        const detail=results.length
-          ? results.map(r=>`${r.name}（${r.rank}）：${pctText(r.chance)}`).join("\n")
-          : "勧誘対象なし";
-        modal(
-          "勧誘テスト",
-          `今回は誰も起き上がらなかった。\n\n運命値合計：${activeFateTotal()}\n${detail}\n\n※この判定はテスト用で記録されません。`,
-          [["確認",()=>{closeModal();finishVictoryReturn("勧誘テストを終了");}]]
-        );
-      }
+    const candidate=chooseRecruitWinner(state.battleDirectTest);
+    if(candidate){
+      showRecruitOverlay(candidate,state.battleDirectTest);
       return;
     }
 
-    const results=rollRecruitment(false);
-    const successes=results.filter(r=>r.success);
-
-    if(successes.length){
-      presentRecruitSuccesses(successes,0,false);
+    if(state.battleDirectTest){
+      finishVictoryReturn("今回は誰も起き上がらなかった");
       return;
     }
 
     const encountered=uniqueEncounterSpecies();
     const allOwned=encountered.length>0 && encountered.every(id=>state.ownedSpecies.has(id) || !speciesRecruitment[id]);
-    finishVictoryReturn(
-      results.length ? "今回は誰も起き上がらなかった" :
-      allOwned ? "加入済み種族のみ：勧誘判定なし" : ""
-    );
+    finishVictoryReturn(allOwned ? "加入済み種族のみ：勧誘判定なし" : "今回は誰も起き上がらなかった");
   }
 
   $("battleContinueBtn").onclick=continueAfterVictory;
@@ -2284,6 +2815,7 @@
     clearEnemyActing();
     renderBattleParty();
     $("battleActorCaption").textContent="DEFEAT";
+    hideRecruitOverlay();
     hideBattleContinue();
     setMessage(state.battleFromRun
       ? "パーティは力尽きた……。探索を終了してミレスタへ戻ります。"
@@ -2298,7 +2830,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘システム試作 v0.11";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -2342,11 +2874,14 @@
     state.battleTargetMode=null;
     state.battleAutoContinuous=false;
     state.battleVictoryData=null;
+    state.pendingRecruitCandidate=null;
+    state.battleDefeatCounter=0;
+    hideRecruitOverlay();
     hideBattleContinue();
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="勧誘システム試作 v0.11";
+    $("topSubtitle").textContent="勧誘・拠点編成試作 v0.12";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -2368,7 +2903,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘システム試作 v0.11";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12";
     toast("戦闘テストを終了");
   }
 
@@ -2415,7 +2950,10 @@
   $("swapModal").addEventListener("click",e=>{ if(e.target===$("swapModal")) $("swapModal").classList.remove("show"); });
   $("swapBtn").onclick=openSwap;
   $("exploreReserveBtn").onclick=()=>{
-    modal("探索パーティ","想定はバトルメンバー4人＋控え6人、合計10人で探索です。\n戦闘中の交代はターン消費なし。探索中はHP・MPを次の戦闘へ持ち越します。\n勧誘判定は戦闘終了時のバトルメンバー4人の運命値合計を参照します。");
+    const active=state.battleActive.map(id=>roster[id].name).join(" / ") || "なし";
+    const reserve=state.battleReserve.map(id=>roster[id].name).join(" / ") || "なし";
+    modal("探索パーティ",
+      `バトルメンバー：${active}\n控え：${reserve}\n運命値合計：${activeFateTotal()}\n\n戦闘中の交代はターン消費なし。探索中はHP・MPを次の戦闘へ持ち越します。`);
   };
 
 
@@ -2447,6 +2985,7 @@
     state.battleEnded=false;
     state.battleActions=[null,null,null,null];
     state.battleTargetMode=null;
+    state.battleDefeatCounter=0;
     renderFormation(e.target.value,0,true);
     startCommandInput();
   };
@@ -2459,6 +2998,7 @@
     state.battleEnded=false;
     state.battleActions=[null,null,null,null];
     state.battleTargetMode=null;
+    state.battleDefeatCounter=0;
     renderFormation(state.battleFormationArea,state.battleFormationIndex-1,true);
     startCommandInput();
   };
@@ -2471,6 +3011,7 @@
     state.battleEnded=false;
     state.battleActions=[null,null,null,null];
     state.battleTargetMode=null;
+    state.battleDefeatCounter=0;
     renderFormation(state.battleFormationArea,state.battleFormationIndex+1,true);
     startCommandInput();
   };
@@ -2689,6 +3230,7 @@
       list.appendChild(card);
     });
     $("exploreReserveBtn").textContent=`控えメンバー ${state.battleReserve.length}人`;
+    $("explorePartyTitle").textContent=`BATTLE MEMBER ${state.battleActive.length} / 4　RESERVE ${state.battleReserve.length} / 6`;
   }
 
   function updateRunHud(){
