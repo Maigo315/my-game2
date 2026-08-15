@@ -512,6 +512,37 @@
     45%{box-shadow:0 0 18px rgba(255,213,94,.72),inset 0 0 0 2px rgba(255,213,94,.5)}
     100%{box-shadow:0 0 0 rgba(255,213,94,0)}
   }
+
+  /* v0.9 auto battle controls */
+  .auto-controls{
+    display:grid;grid-template-columns:1fr 1fr;gap:5px;
+  }
+  .auto-command-btn{
+    min-height:40px;border:1px solid #536d86;border-radius:9px;
+    background:linear-gradient(#243e55,#172a3c);color:#eaf3fb;
+    font-size:9px;font-weight:900;cursor:pointer;display:flex;
+    align-items:center;justify-content:center;gap:4px;line-height:1.05;padding:4px;
+  }
+  .auto-command-btn strong{font-size:15px}
+  .auto-command-btn.on{
+    border-color:#e0c65e;background:linear-gradient(#63501c,#3c3215);color:#fff0a7;
+    box-shadow:0 0 11px rgba(236,207,95,.2);
+  }
+  .auto-command-btn:disabled{opacity:.38;cursor:not-allowed}
+  .auto-start-note{
+    min-height:18px;display:flex;align-items:center;justify-content:center;
+    padding:2px 4px;border:1px solid #344c61;border-radius:7px;background:#101d29;
+    color:#96a9ba;font-size:8px;font-weight:800;text-align:center;
+  }
+  .auto-start-note.countdown{
+    color:#f0da81;border-color:#75642c;background:#292516;
+  }
+  @media (max-height:520px){
+    .auto-command-btn{min-height:31px;font-size:8px;padding:2px}
+    .auto-command-btn strong{font-size:12px}
+    .auto-start-note{min-height:14px;font-size:7px}
+  }
+
   @media (max-height:520px){
     .battle-speed-box{top:34px}
     .speed-btn{height:22px;font-size:7px;padding:0 4px}
@@ -639,7 +670,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋演出強化戦闘試作 v0.8</div>
+      <div class="subtitle" id="topSubtitle">探索＋オート戦闘試作 v0.9</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -655,7 +686,7 @@
         <button class="menu-btn" id="dummyParty"><span class="icon">👥</span>編成・育成</button>
         <button class="menu-btn" id="dummyTalk"><span class="icon">💬</span>会話</button>
       </div>
-      <button class="small-btn" id="battleTestBtn" style="margin-top:12px;width:100%">⚔ 演出強化戦闘を直接テスト</button>
+      <button class="small-btn" id="battleTestBtn" style="margin-top:12px;width:100%">⚔ オート戦闘を直接テスト</button>
     </section>
   </main>
 
@@ -774,7 +805,12 @@
             <button class="cmd" data-command="アイテム"><strong>🧪</strong>アイテム</button>
             <button class="cmd swap-cmd command-wide" id="swapBtn"><strong>↔</strong>交代</button>
           </div>
-          <button class="cmd execute-btn" id="battleExecuteBtn" disabled><strong>▶</strong>行動開始</button>
+          <div class="auto-controls">
+            <button class="auto-command-btn" id="turnAutoBtn"><strong>🤖</strong><span>1ターン<br>オート</span></button>
+            <button class="auto-command-btn" id="autoToggleBtn"><strong>⚙</strong><span>AUTO<br>OFF</span></button>
+          </div>
+          <div class="auto-start-note" id="autoStartNote">全員入力で自動開始</div>
+          <button id="battleExecuteBtn" type="button" hidden></button>
           <button class="test-exit-btn" id="battleWinBtn">× テスト終了</button>
         </aside>
       </div>
@@ -794,7 +830,7 @@
       <button class="swap-close" id="swapCloseBtn">閉じる</button>
     </div>
     <div class="reserve-grid" id="reserveGrid"></div>
-    <div class="swap-note">※ v0.8でも交代はターン消費なし。交代後の仲間がそのまま行動を選べます。</div>
+    <div class="swap-note">※ v0.9でも交代はターン消費なし。交代後の仲間がそのまま行動を選べます。</div>
   </div>
 </div>
 
@@ -830,7 +866,9 @@
     battleDirectTest: false,
     battleActions: [null,null,null,null],
     battleTargetMode: null,
-    battleSpeed: 1
+    battleSpeed: 1,
+    battleAutoContinuous: false,
+    battleAutoStartTimer: null
   };
 
   const IMG = {
@@ -887,7 +925,7 @@
 
   $("dummyParty").onclick=()=>modal("編成・育成","想定編成は【バトルメンバー4人＋控え6人】です。\n今回は戦闘画面側で交代UIを試せます。");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋演出強化戦闘試作 v0.8"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋オート戦闘試作 v0.9"; updateWorld(); showScreen("worldScreen"); };
   $("backHome").onclick=()=>showScreen("homeScreen");
   $("battleTestBtn").onclick=()=>openBattle(false, "plains");
 
@@ -898,7 +936,7 @@
 
 
   /*
-    v0.8 internal organization:
+    v0.9 internal organization:
     - Character combat stats are grouped in stats {}
     - learnedSkills is an array, so characters can later hold 5-8+ skills
     - Skill definitions are separated from characters
@@ -1149,6 +1187,7 @@
         <span class="mini-bars"><b>MP</b><span class="mini-bar mp"><i style="width:${mpPct(c)}%"></i></span><span>${st.mp}/${st.mpMax}</span></span>`;
 
       btn.onclick=()=>{
+        if(state.battlePhase==="input") cancelScheduledTurnStart();
         if(state.battlePhase!=="input" || state.battleEnded) {
           state.battleActorSlot=slot;
           updateActorPortrait();
@@ -1275,6 +1314,7 @@
       div.append(img,name,hpNum,hpWrap);
 
       div.onclick=()=>{
+        if(state.battlePhase==="input") cancelScheduledTurnStart();
         if(state.battlePhase!=="input" || state.battleEnded || (state.battleTargetMode && state.battleTargetMode.kind==="ally")) return;
         stage.querySelectorAll(".enemy").forEach(x=>x.classList.remove("selected"));
         div.classList.add("selected");
@@ -1302,7 +1342,9 @@
 
   function setCommandsEnabled(enabled){
     document.querySelectorAll(".cmd[data-command], #swapBtn").forEach(b=>b.disabled=!enabled);
+    $("turnAutoBtn").disabled=!enabled;
     updateSkillButton();
+    updateAutoButtons();
   }
 
   function commandsReady(){ return livingActiveSlots().every(x=>!!state.battleActions[x.i]); }
@@ -1311,7 +1353,49 @@
     const btn=$("battleExecuteBtn");
     const ready=state.battlePhase==="input" && commandsReady() && !state.battleEnded && !state.battleTargetMode;
     btn.disabled=!ready;
-    btn.classList.toggle("ready",ready);
+  }
+
+  function cancelScheduledTurnStart(){
+    if(state.battleAutoStartTimer){
+      clearTimeout(state.battleAutoStartTimer);
+      state.battleAutoStartTimer=null;
+    }
+    const note=$("autoStartNote");
+    if(note){
+      note.classList.remove("countdown");
+      note.textContent=state.battleAutoContinuous ? "継続オート中" : "全員入力で自動開始";
+    }
+  }
+
+  function scheduleTurnStart(delay=520){
+    if(state.battlePhase!=="input" || state.battleEnded || state.battleTargetMode || !commandsReady()) return;
+    cancelScheduledTurnStart();
+    const note=$("autoStartNote");
+    if(note){
+      note.classList.add("countdown");
+      note.textContent="入力完了 → 行動開始";
+    }
+    state.battleAutoStartTimer=setTimeout(()=>{
+      state.battleAutoStartTimer=null;
+      if(state.battlePhase==="input" && !state.battleEnded && !state.battleTargetMode && commandsReady()){
+        resolveTurn();
+      }
+    }, delay);
+  }
+
+  function updateAutoButtons(){
+    const toggle=$("autoToggleBtn");
+    const one=$("turnAutoBtn");
+    if(toggle){
+      toggle.classList.toggle("on",state.battleAutoContinuous);
+      toggle.querySelector("span").innerHTML=state.battleAutoContinuous ? "AUTO<br>ON" : "AUTO<br>OFF";
+    }
+    if(one) one.disabled=state.battlePhase!=="input" || state.battleEnded;
+    const note=$("autoStartNote");
+    if(note && !state.battleAutoStartTimer){
+      note.classList.remove("countdown");
+      note.textContent=state.battleAutoContinuous ? "継続オート中" : "全員入力で自動開始";
+    }
   }
 
   function nextUnqueuedSlot(afterSlot){
@@ -1324,8 +1408,101 @@
     });
   }
 
+  function lowestHpEnemy(){
+    return [...livingEnemies()].sort((a,b)=>(a.hp/a.hpMax)-(b.hp/b.hpMax))[0] || null;
+  }
+
+  function lowestHpAllySlot(){
+    const living=livingActiveSlots();
+    if(!living.length) return null;
+    living.sort((a,b)=>(S(a.c).hp/S(a.c).hpMax)-(S(b.c).hp/S(b.c).hpMax));
+    return living[0].i;
+  }
+
+  function strongestUnbuffedAllySlot(){
+    const living=livingActiveSlots();
+    if(!living.length) return null;
+    const unbuffed=living.filter(x=>x.c.atkBuffRounds<=0);
+    const pool=unbuffed.length ? unbuffed : living;
+    pool.sort((a,b)=>effectiveAtk(b.c)-effectiveAtk(a.c));
+    return pool[0].i;
+  }
+
+  function makeAttackAction(){
+    const target=lowestHpEnemy();
+    return target ? {type:"attack",targetUid:target.uid} : null;
+  }
+
+  function chooseAutoAction(slot){
+    const actor=roster[state.battleActive[slot]];
+    if(!actor || S(actor).hp<=0) return null;
+    const firstSkillId=learnedSkillIds(actor)[0] || null;
+    const sk=firstSkillId ? skills[firstSkillId] : null;
+    const target=lowestHpEnemy();
+
+    // Hero: use Fire whenever MP allows.
+    if(actor.id==="hero" && sk?.id==="fire" && S(actor).mp>=sk.cost && target){
+      return {type:"skill",skill:"fire",targetUid:target.uid};
+    }
+
+    // Slime: use Tackle while HP is above 30%; otherwise play safely.
+    if(actor.id==="slime" && sk?.id==="tackle" && S(actor).mp>=sk.cost && S(actor).hp/S(actor).hpMax>.30 && target){
+      return {type:"skill",skill:"tackle",targetUid:target.uid};
+    }
+
+    // Dog: if somebody lacks the attack buff, use Polish on the strongest candidate.
+    if(actor.id==="dog" && sk?.id==="polish" && S(actor).mp>=sk.cost){
+      const needsBuff=livingActiveSlots().some(x=>x.c.atkBuffRounds<=0);
+      if(needsBuff){
+        const targetSlot=strongestUnbuffedAllySlot();
+        if(targetSlot!==null) return {type:"skill",skill:"polish",targetSlot};
+      }
+    }
+
+    // Fairy: heal the most injured ally below 50%; otherwise attack.
+    if(actor.id==="fairy" && sk?.id==="heal" && S(actor).mp>=sk.cost){
+      const targetSlot=lowestHpAllySlot();
+      if(targetSlot!==null){
+        const ally=roster[state.battleActive[targetSlot]];
+        if(S(ally).hp/S(ally).hpMax<.50){
+          return {type:"skill",skill:"heal",targetSlot};
+        }
+      }
+    }
+
+    return makeAttackAction();
+  }
+
+  function fillAutoActions(){
+    if(state.battlePhase!=="input" || state.battleEnded) return false;
+    cancelScheduledTurnStart();
+    state.battleTargetMode=null;
+
+    livingActiveSlots().forEach(({i})=>{
+      const action=chooseAutoAction(i);
+      if(action) state.battleActions[i]=action;
+    });
+
+    const first=livingActiveSlots()[0];
+    if(first) state.battleActorSlot=first.i;
+    renderBattleParty();
+    renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+    updateActorPortrait();
+    updateExecuteButton();
+
+    if(commandsReady()){
+      setMessage(state.battleAutoContinuous
+        ? "AUTO：4人の行動を選択しました。"
+        : "1ターンオート：4人の行動を選択しました。");
+      scheduleTurnStart(650);
+      return true;
+    }
+    return false;
+  }
+
   function startCommandInput(){
     if(state.battleEnded) return;
+    cancelScheduledTurnStart();
     state.battlePhase="input";
     state.battleActions=[null,null,null,null];
     state.battleTargetMode=null;
@@ -1340,11 +1517,19 @@
     updateActorPortrait();
     renderBattleParty();
     updateExecuteButton();
-    setMessage(`ROUND ${state.battleRound}：4人分の行動を選択してください。`);
+    updateAutoButtons();
+
+    if(state.battleAutoContinuous){
+      setMessage(`ROUND ${state.battleRound}：AUTOが行動を選択します。`);
+      setTimeout(()=>fillAutoActions(),260);
+    }else{
+      setMessage(`ROUND ${state.battleRound}：4人分の行動を選択してください。全員決まると自動で開始します。`);
+    }
   }
 
   function queueAction(action){
     if(state.battlePhase!=="input" || state.battleEnded) return;
+    cancelScheduledTurnStart();
     const slot=state.battleActorSlot;
     const actor=roster[state.battleActive[slot]];
     if(S(actor).hp<=0) return;
@@ -1363,11 +1548,13 @@
     }else{
       updateActorPortrait();
       renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
-      setMessage("全員の行動が決まりました。「行動開始」でターンを進めます。");
+      setMessage("全員の行動が決まりました。自動でターンを開始します。");
+      scheduleTurnStart(520);
     }
   }
 
   function queueAttack(){
+    cancelScheduledTurnStart();
     state.battleTargetMode=null;
     const target=selectedEnemy();
     if(!target){ setMessage("攻撃対象がいません。"); return; }
@@ -1375,12 +1562,14 @@
   }
 
   function queueDefend(){
+    cancelScheduledTurnStart();
     state.battleTargetMode=null;
     queueAction({type:"defend"});
   }
 
   function chooseSkill(){
     if(state.battlePhase!=="input" || state.battleEnded) return;
+    cancelScheduledTurnStart();
     const actor=roster[state.battleActive[state.battleActorSlot]];
     const sk=currentSkill();
     if(!sk){ setMessage(`${actor.name} のスキルはまだ未設定です。`); return; }
@@ -1403,6 +1592,7 @@
 
   function placeholderCommand(name){
     if(state.battlePhase!=="input" || state.battleEnded) return;
+    cancelScheduledTurnStart();
     const actor=roster[state.battleActive[state.battleActorSlot]];
     state.battleTargetMode=null;
     renderBattleParty();
@@ -1578,6 +1768,7 @@
 
   async function resolveTurn(){
     if(state.battlePhase!=="input" || state.battleEnded || !commandsReady() || state.battleTargetMode) return;
+    cancelScheduledTurnStart();
     state.battlePhase="resolve";
     setCommandsEnabled(false);
     updateExecuteButton();
@@ -1724,6 +1915,8 @@
   function winBattle(){
     if(state.battleEnded) return;
     state.battleEnded=true;
+    state.battleAutoContinuous=false;
+    cancelScheduledTurnStart();
     state.battlePhase="ended";
     state.battleTargetMode=null;
     setCommandsEnabled(false);
@@ -1740,7 +1933,7 @@
         state.run.runGold+=gain;
         updateRunHud();
         showScreen("exploreScreen");
-        $("topSubtitle").textContent="探索＋演出強化戦闘試作 v0.8";
+        $("topSubtitle").textContent="探索＋オート戦闘試作 v0.9";
         toast(`${gain}G を獲得して探索へ戻った`);
         state.battleFromRun=false;
       }
@@ -1750,6 +1943,8 @@
   function loseBattle(){
     if(state.battleEnded) return;
     state.battleEnded=true;
+    state.battleAutoContinuous=false;
+    cancelScheduledTurnStart();
     state.battlePhase="ended";
     state.battleTargetMode=null;
     setCommandsEnabled(false);
@@ -1760,7 +1955,7 @@
     setMessage("パーティは力尽きた……。今回はテストなのでミレスタへ戻ります。");
     setTimeout(()=>{
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋演出強化戦闘試作 v0.8";
+      $("topSubtitle").textContent="探索＋オート戦闘試作 v0.9";
       state.battleFromRun=false;
     },t(1500));
   }
@@ -1797,8 +1992,11 @@
     state.battleEnded=false;
     state.battleActions=[null,null,null,null];
     state.battleTargetMode=null;
+    state.battleAutoContinuous=false;
+    cancelScheduledTurnStart();
+    updateAutoButtons();
 
-    $("topSubtitle").textContent="演出強化戦闘試作 v0.8";
+    $("topSubtitle").textContent="オート戦闘試作 v0.9";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -1813,13 +2011,16 @@
       return;
     }
     state.battleEnded=true;
+    state.battleAutoContinuous=false;
+    cancelScheduledTurnStart();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋演出強化戦闘試作 v0.8";
+    $("topSubtitle").textContent="探索＋オート戦闘試作 v0.9";
     toast("戦闘テストを終了");
   }
 
   function openSwap(){
     if(state.battlePhase!=="input" || state.battleEnded) return;
+    cancelScheduledTurnStart();
     state.battleTargetMode=null;
     const activeSlot=state.battleActorSlot;
     const active=roster[state.battleActive[activeSlot]];
@@ -1860,11 +2061,33 @@
   $("swapModal").addEventListener("click",e=>{ if(e.target===$("swapModal")) $("swapModal").classList.remove("show"); });
   $("swapBtn").onclick=openSwap;
   $("exploreReserveBtn").onclick=()=>{
-    modal("探索パーティ","想定はバトルメンバー4人＋控え6人、合計10人で探索です。\n戦闘中の交代はv0.8でもターン消費なしで実装しています。");
+    modal("探索パーティ","想定はバトルメンバー4人＋控え6人、合計10人で探索です。\n戦闘中の交代はv0.9でもターン消費なしで実装しています。");
+  };
+
+
+  $("turnAutoBtn").onclick=()=>{
+    if(state.battlePhase!=="input" || state.battleEnded) return;
+    fillAutoActions();
+  };
+
+  $("autoToggleBtn").onclick=()=>{
+    if(state.battleEnded) return;
+    state.battleAutoContinuous=!state.battleAutoContinuous;
+    updateAutoButtons();
+    if(state.battleAutoContinuous){
+      setMessage("継続AUTOをONにしました。以後のラウンドは自動で行動を選択します。");
+      if(state.battlePhase==="input") fillAutoActions();
+    }else{
+      cancelScheduledTurnStart();
+      setMessage("継続AUTOをOFFにしました。次の行動から手動で選べます。");
+    }
   };
 
   $("formationAreaSelect").onchange=e=>{
     if(state.battlePhase==="resolve" || state.battlePhase==="enemy") return;
+    state.battleAutoContinuous=false;
+    cancelScheduledTurnStart();
+    updateAutoButtons();
     state.battleFormationIndex=0;
     state.battleRound=1;
     state.battleEnded=false;
@@ -1875,6 +2098,9 @@
   };
   $("formationPrevBtn").onclick=()=>{
     if(state.battlePhase==="resolve" || state.battlePhase==="enemy") return;
+    state.battleAutoContinuous=false;
+    cancelScheduledTurnStart();
+    updateAutoButtons();
     state.battleRound=1;
     state.battleEnded=false;
     state.battleActions=[null,null,null,null];
@@ -1884,6 +2110,9 @@
   };
   $("formationNextBtn").onclick=()=>{
     if(state.battlePhase==="resolve" || state.battlePhase==="enemy") return;
+    state.battleAutoContinuous=false;
+    cancelScheduledTurnStart();
+    updateAutoButtons();
     state.battleRound=1;
     state.battleEnded=false;
     state.battleActions=[null,null,null,null];
