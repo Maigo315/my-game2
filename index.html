@@ -628,21 +628,21 @@
     color:#9eafbd;font-size:9px;line-height:1.45;
   }
 
-  /* v0.12a recruit presentation inside battle field */
+  /* v0.12b recruit presentation inside battle field */
   .battle-recruit-stage{
-    position:absolute;left:6%;right:6%;top:12%;bottom:16%;z-index:8;
-    display:none;grid-template-rows:minmax(0,1fr) auto auto;justify-items:center;align-items:center;
+    position:absolute;left:4%;right:4%;top:8%;bottom:12%;z-index:8;
+    display:none;grid-template-rows:minmax(0,1fr) auto;justify-items:center;align-items:center;
     pointer-events:none;
   }
   .battle-recruit-stage.show{display:grid}
   .battle-recruit-glow{
-    position:absolute;left:18%;right:18%;top:10%;bottom:18%;
+    position:absolute;left:12%;right:12%;top:6%;bottom:16%;
     background:radial-gradient(ellipse at center,rgba(255,244,182,.22),rgba(188,152,255,.08) 38%,transparent 70%);
     filter:blur(4px);
     pointer-events:none;
   }
   .battle-recruit-body{
-    position:relative;z-index:1;width:min(58%,320px);height:100%;
+    position:relative;z-index:1;width:min(74%,420px);height:100%;
     display:flex;align-items:flex-end;justify-content:center;pointer-events:none;
   }
   .battle-recruit-body img{
@@ -654,28 +654,12 @@
     from{opacity:0;transform:translateY(20px) scale(.94)}
     to{opacity:1;transform:translateY(0) scale(1)}
   }
-  .battle-recruit-copy{
-    position:relative;z-index:2;max-width:min(86%,520px);
-    margin-top:-6px;padding:9px 12px;border-radius:12px;
-    background:rgba(8,16,25,.85);border:1px solid rgba(220,199,108,.78);
-    text-align:center;box-shadow:0 10px 24px rgba(0,0,0,.25);
-    pointer-events:none;
-  }
-  .battle-recruit-copy strong{
-    display:block;font-size:15px;font-weight:1000;line-height:1.35;color:#fff0a4;
-    text-shadow:0 2px 6px rgba(0,0,0,.45);
-  }
-  .battle-recruit-copy span{
-    display:block;margin-top:5px;font-size:12px;font-weight:800;color:#eef5fb;
-  }
-  .battle-recruit-copy small{
-    display:block;margin-top:5px;font-size:8px;color:#9fb0c1;
-  }
+  .battle-recruit-copy{display:none}
   .battle-recruit-actions{
-    position:relative;z-index:2;display:flex;gap:10px;margin-top:8px;pointer-events:auto;
+    position:relative;z-index:2;display:flex;gap:12px;margin-top:4px;pointer-events:auto;
   }
   .battle-recruit-actions button{
-    min-width:108px;min-height:40px;border-radius:11px;font-size:12px;font-weight:1000;cursor:pointer;
+    min-width:118px;min-height:44px;border-radius:11px;font-size:13px;font-weight:1000;cursor:pointer;
     box-shadow:0 6px 14px rgba(0,0,0,.26);
   }
   .battle-recruit-yes{
@@ -686,14 +670,10 @@
   }
 
   @media (max-height:520px){
-    .battle-recruit-stage{top:14%;bottom:18%}
-    .battle-recruit-body{width:min(54%,240px)}
-    .battle-recruit-copy{padding:7px 10px}
-    .battle-recruit-copy strong{font-size:12px}
-    .battle-recruit-copy span{font-size:10px}
-    .battle-recruit-copy small{font-size:7px}
-    .battle-recruit-actions{gap:6px}
-    .battle-recruit-actions button{min-width:88px;min-height:32px;font-size:10px}
+    .battle-recruit-stage{top:10%;bottom:14%}
+    .battle-recruit-body{width:min(68%,300px)}
+    .battle-recruit-actions{gap:8px}
+    .battle-recruit-actions button{min-width:96px;min-height:34px;font-size:10px}
   }
 
   /* v0.11 battle-result pause */
@@ -883,7 +863,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.12aa</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.12ba</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1085,7 +1065,7 @@
       <button class="swap-close" id="swapCloseBtn">閉じる</button>
     </div>
     <div class="reserve-grid" id="reserveGrid"></div>
-    <div class="swap-note">※ v0.12aでも交代はターン消費なし。交代後の仲間がそのまま行動を選べます。</div>
+    <div class="swap-note">※ v0.12bでも交代はターン消費なし。交代後の仲間がそのまま行動を選べます。</div>
   </div>
 </div>
 
@@ -1191,10 +1171,10 @@
     restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent="ミレスタ・仲間編成 v0.12a";
+    $("topSubtitle").textContent="ミレスタ・仲間編成 v0.12b";
   };
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12aa"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12ba"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -1433,7 +1413,7 @@
     state.partySelection=null;
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12aa";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12ba";
     updateHeader();
   };
 
@@ -1447,7 +1427,7 @@
 
 
   /*
-    v0.12a internal organization:
+    v0.12b internal organization:
     - Character combat stats are grouped in stats {}
     - learnedSkills is an array, so characters can later hold 5-8+ skills
     - Skill definitions are separated from characters
@@ -2696,7 +2676,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12aa";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12ba";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -2704,7 +2684,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12aa";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12ba";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -2816,7 +2796,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12aa";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12ba";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -2867,7 +2847,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="勧誘・拠点編成試作 v0.12a";
+    $("topSubtitle").textContent="勧誘・拠点編成試作 v0.12b";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -2889,7 +2869,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12aa";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.12ba";
     toast("戦闘テストを終了");
   }
 
