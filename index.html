@@ -368,8 +368,24 @@
     color:#cdd7ef;font-size:10px;font-weight:800;cursor:pointer;
   }
 
-  /* v0.15 multi-skill selection */
-  .skill-select-panel{width:min(620px,94vw)}
+  /* v0.15b multi-skill selection */
+  .skill-select-panel{width:min(680px,94vw)}
+  .skill-party-status{
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-bottom:7px;
+  }
+  .skill-party-card{
+    min-width:0;padding:6px 7px;border:1px solid #334f67;border-radius:9px;background:#0d1924;
+  }
+  .skill-party-card.current{border-color:#d8c363;box-shadow:inset 0 0 0 1px rgba(232,207,105,.18)}
+  .skill-party-card.ko{opacity:.52;filter:grayscale(.45)}
+  .skill-party-card.empty{display:flex;align-items:center;justify-content:center;color:#607487;font-size:8px;border-style:dashed}
+  .skill-party-name{font-size:9px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+  .skill-party-line{display:grid;grid-template-columns:17px minmax(0,1fr) auto;gap:3px;align-items:center;margin-top:2px}
+  .skill-party-line b{font-size:7px;color:#9eb0bf}
+  .skill-party-line span:last-child{font-size:8px;font-weight:900;color:#e5edf4;white-space:nowrap}
+  .skill-party-bar{height:4px;border-radius:999px;background:#263746;overflow:hidden}
+  .skill-party-bar i{display:block;height:100%;background:linear-gradient(90deg,#48b972,#79df9a)}
+  .skill-party-bar.mp i{background:linear-gradient(90deg,#4c78c7,#6ba1f0)}
   .skill-list{
     display:flex;flex-direction:column;gap:7px;max-height:min(430px,64vh);
     overflow:auto;overscroll-behavior:contain;padding:1px;
@@ -396,7 +412,13 @@
   .skill-option-meta small{display:block;margin-top:3px;color:#91a5b6;font-size:8px;font-weight:800}
   .skill-option:disabled .skill-option-meta{color:#d38f8f}
   @media (max-height:520px){
-    .skill-list{max-height:68vh;gap:5px}
+    .skill-party-status{gap:3px;margin-bottom:5px}
+    .skill-party-card{padding:4px 5px}
+    .skill-party-name{font-size:8px;margin-bottom:2px}
+    .skill-party-line{grid-template-columns:14px minmax(0,1fr) auto;gap:2px}
+    .skill-party-line b{font-size:6px}.skill-party-line span:last-child{font-size:7px}
+    .skill-party-bar{height:3px}
+    .skill-list{max-height:56vh;gap:5px}
     .skill-option{min-height:54px;grid-template-columns:36px minmax(0,1fr) auto;padding:5px 7px}
     .skill-option-icon{width:34px;height:34px;font-size:19px}
     .skill-option-name{font-size:11px}.skill-option-desc{font-size:8px}.skill-option-meta{font-size:9px}
@@ -691,8 +713,16 @@
   }
   .battle-recruit-copy{display:none}
   .battle-recruit-actions{
-    position:relative;z-index:2;display:flex;gap:12px;margin-top:4px;pointer-events:auto;
+    position:relative;z-index:2;display:none;gap:12px;margin-top:4px;pointer-events:auto;
   }
+  .battle-recruit-actions.show{display:flex}
+  .battle-recruit-continue{
+    display:none;position:relative;z-index:3;min-width:150px;min-height:42px;margin-top:4px;
+    border:1px solid #d9c76f;border-radius:999px;background:rgba(43,38,17,.96);
+    color:#fff0a6;font-size:11px;font-weight:1000;cursor:pointer;pointer-events:auto;
+    box-shadow:0 4px 14px rgba(0,0,0,.42);animation:resultTapPulse .9s ease-in-out infinite alternate;
+  }
+  .battle-recruit-continue.show{display:block}
   .battle-recruit-actions button{
     min-width:118px;min-height:44px;border-radius:11px;font-size:13px;font-weight:1000;cursor:pointer;
     box-shadow:0 6px 14px rgba(0,0,0,.26);
@@ -709,6 +739,7 @@
     .battle-recruit-body{width:min(68%,300px)}
     .battle-recruit-actions{gap:8px}
     .battle-recruit-actions button{min-width:96px;min-height:34px;font-size:10px}
+    .battle-recruit-continue{min-width:126px;min-height:34px;font-size:9px}
   }
 
   /* v0.11 battle-result pause */
@@ -886,7 +917,7 @@
 
 
 
-  /* v0.15 exploration party management */
+  /* v0.15b exploration party management */
   .party-manage-shell.explore-mode .party-manage-grid{grid-template-columns:1fr 1.2fr}
   .party-manage-shell.explore-mode #partyWaitingColumn{display:none}
   .battle-status-card.empty-deploy{
@@ -895,7 +926,7 @@
   }
   .battle-status-card.empty-deploy:hover{border-color:#e5cf70;color:#fff0a5;filter:brightness(1.12)}
 
-  /* v0.15 character detail */
+  /* v0.15b character detail */
   .party-detail-side{
     min-width:0;border-left:1px solid #31485b;padding-left:8px;
     display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:7px;align-items:stretch;
@@ -1026,7 +1057,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.15</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.15b</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1238,10 +1269,11 @@
               <span id="recruitQuestion">仲間にしますか？</span>
               <small id="recruitTestNote"></small>
             </div>
-            <div class="battle-recruit-actions">
+            <div class="battle-recruit-actions" id="recruitActions">
               <button class="battle-recruit-yes" id="recruitYesBtn">はい</button>
               <button class="battle-recruit-no" id="recruitNoBtn">いいえ</button>
             </div>
+            <button class="battle-recruit-continue" id="recruitContinueBtn" type="button">タップして進む</button>
           </div>
           <div class="battle-message" id="battleMessage">4人全員の行動を選んでから、まとめてターンを処理します。</div>
           <button class="battle-result-tap" id="battleContinueBtn" type="button" aria-label="戦闘結果を確認して進む">
@@ -1282,8 +1314,9 @@
       <p id="skillSelectLead">使用するスキルを選択</p>
       <button class="swap-close" id="skillCloseBtn">閉じる</button>
     </div>
+    <div class="skill-party-status" id="skillPartyStatus" aria-label="バトルメンバーの現在HPとMP"></div>
     <div class="skill-list" id="skillList"></div>
-    <div class="swap-note">単体攻撃は現在選択中の敵へ、回復は選択後に味方を指定します。</div>
+    <div class="swap-note">上段で味方の現在HP・MPを確認できます。単体攻撃は現在選択中の敵へ、回復は選択後に味方を指定します。</div>
   </div>
 </div>
 
@@ -1417,12 +1450,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.15" : "ミレスタ・仲間編成 v0.15";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.15b" : "ミレスタ・仲間編成 v0.15b";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -1722,7 +1755,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細 v0.15";
+    $("topSubtitle").textContent="キャラ詳細 v0.15b";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -1730,7 +1763,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.15" : "ミレスタ・仲間編成 v0.15";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.15b" : "ミレスタ・仲間編成 v0.15b";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -1739,13 +1772,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b";
     updateHeader();
   };
 
@@ -2167,6 +2200,30 @@
     if(modal) modal.classList.remove("show");
   }
 
+  function renderSkillPartyStatus(){
+    const box=$("skillPartyStatus");
+    if(!box) return;
+    box.innerHTML="";
+    for(let slot=0;slot<4;slot++){
+      const id=state.battleActive[slot];
+      const card=document.createElement("div");
+      if(!id || !roster[id]){
+        card.className="skill-party-card empty";
+        card.textContent="空き";
+        box.appendChild(card);
+        continue;
+      }
+      const c=roster[id], st=S(c);
+      card.className="skill-party-card"+(slot===state.battleActorSlot?" current":"")+(st.hp<=0?" ko":"");
+      const hp=Math.max(0,Math.min(100,Math.round(st.hp/st.hpMax*100)));
+      const mp=Math.max(0,Math.min(100,Math.round(st.mp/st.mpMax*100)));
+      card.innerHTML=`<div class="skill-party-name">${c.name}</div>`+
+        `<div class="skill-party-line"><b>HP</b><span class="skill-party-bar"><i style="width:${hp}%"></i></span><span>${st.hp}/${st.hpMax}</span></div>`+
+        `<div class="skill-party-line"><b>MP</b><span class="skill-party-bar mp"><i style="width:${mp}%"></i></span><span>${st.mp}/${st.mpMax}</span></div>`;
+      box.appendChild(card);
+    }
+  }
+
   function openSkillMenu(){
     if(state.battlePhase!=="input" || state.battleEnded) return;
     cancelScheduledTurnStart();
@@ -2182,7 +2239,8 @@
     updateActorPortrait();
     updateExecuteButton();
     $("skillSelectTitle").textContent=`${actor.name}：スキル`;
-    $("skillSelectLead").textContent=`MP ${S(actor).mp} / ${S(actor).mpMax}　使用するスキルを選択`;
+    $("skillSelectLead").textContent=`使用するスキルを選択`;
+    renderSkillPartyStatus();
     const box=$("skillList");
     box.innerHTML="";
 
@@ -3111,7 +3169,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -3119,7 +3177,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -3152,12 +3210,23 @@
     $("recruitTestNote").textContent=testMode ? "直接戦闘テスト：選択は加入記録に残りません" : "";
     $("recruitYesBtn").textContent="はい";
     $("recruitNoBtn").textContent="いいえ";
-    $("battleMessage").textContent=`${candidate.name}が起き上がった！ 仲間にしますか？`;
+    $("recruitActions").classList.remove("show");
+    $("recruitContinueBtn").classList.add("show");
+    $("battleMessage").textContent=`${candidate.name}が起き上がった！`;
     $("battleRecruitStage").classList.add("show");
+  }
+
+  function advanceRecruitPrompt(){
+    if(!state.pendingRecruitCandidate) return;
+    $("recruitContinueBtn").classList.remove("show");
+    $("recruitActions").classList.add("show");
+    $("battleMessage").textContent="仲間にしますか？";
   }
 
   function hideRecruitOverlay(){
     $("battleRecruitStage").classList.remove("show");
+    $("recruitContinueBtn").classList.remove("show");
+    $("recruitActions").classList.remove("show");
   }
 
   function resolveRecruitChoice(accept){
@@ -3179,6 +3248,7 @@
     }
   }
 
+  $("recruitContinueBtn").onclick=advanceRecruitPrompt;
   $("recruitYesBtn").onclick=()=>resolveRecruitChoice(true);
   $("recruitNoBtn").onclick=()=>resolveRecruitChoice(false);
 
@@ -3225,7 +3295,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -3276,7 +3346,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.15";
+    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.15b";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -3298,7 +3368,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b";
     toast("戦闘テストを終了");
   }
 
