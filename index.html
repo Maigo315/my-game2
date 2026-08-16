@@ -101,10 +101,10 @@
   #exploreScreen{padding-top:10px;padding-bottom:max(10px,var(--safe-bottom));padding-left:calc(10px + var(--safe-left));padding-right:calc(10px + var(--safe-right));gap:10px}
   .party-panel{width:205px;flex:0 0 205px;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:0;overflow:hidden}
   .party-panel>*{flex:0 0 auto}
+  .party-title{font-size:13px;color:var(--muted);font-weight:700}
   .party-list{display:flex;flex-direction:column;gap:6px;flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding-right:2px}
   .party-list::-webkit-scrollbar{width:0;height:0}
-  .party-title{font-size:13px;color:var(--muted);font-weight:700}
-    .member{padding:7px 8px;border-radius:12px;background:#111d2a;border:1px solid #2f485d}
+  .member{padding:7px 8px;border-radius:12px;background:#111d2a;border:1px solid #2f485d}
   .member-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:3px}
   .member .name{font-weight:800;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .lv-tag{flex:0 0 auto;padding:1px 5px;border-radius:999px;background:#27384b;color:#e8d88d;font-size:9px;font-weight:900}
@@ -1248,7 +1248,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.20</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.20b</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1749,7 +1749,7 @@
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2147,13 +2147,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b";
     updateHeader();
   };
 
@@ -3980,7 +3980,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -3988,7 +3988,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -4114,7 +4114,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -4170,7 +4170,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.20";
+    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.20b";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -4192,7 +4192,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -4380,8 +4380,7 @@
 
   $("departBtn").onclick=()=>{
     if(state.selectedArea==="cave"){
-      modal("小さな洞窟","今回の試作では、ミレスタ平原から新しいエリアを解放できるところまで実装しています。
-洞窟の探索内容は次の段階で追加できます。");
+      modal("小さな洞窟","今回の試作では、ミレスタ平原から新しいエリアを解放できるところまで実装しています。\n洞窟の探索内容は次の段階で追加できます。");
       return;
     }
     startRun();
@@ -4721,14 +4720,10 @@
   }
 
   const commonEvents=[
-    ["壊れた荷車","道端に壊れた荷車が放置されている。
-荷台を調べると、まだ使えそうな薬草が残っていた。"],
-    ["旅人の置き土産","小さな布袋が石の下に隠されていた。
-中にはわずかな硬貨が入っている。"],
-    ["風の通る丘","平原を渡る風が心地よい。
-少しだけ足を止め、周囲を見渡した。"],
-    ["妙な足跡","人とも獣ともつかない足跡が草の向こうへ続いている。
-今は追わず、位置だけ覚えておくことにした。"]
+    ["壊れた荷車","道端に壊れた荷車が放置されている。\n荷台を調べると、まだ使えそうな薬草が残っていた。"],
+    ["旅人の置き土産","小さな布袋が石の下に隠されていた。\n中にはわずかな硬貨が入っている。"],
+    ["風の通る丘","平原を渡る風が心地よい。\n少しだけ足を止め、周囲を見渡した。"],
+    ["妙な足跡","人とも獣ともつかない足跡が草の向こうへ続いている。\n今は追わず、位置だけ覚えておくことにした。"]
   ];
 
   function resolveNode(node){
@@ -4743,26 +4738,20 @@
       case "chest":{
         const gain=18+rand(33);
         state.gold+=gain; state.run.runGold+=gain;
-        modal("📦 宝箱",`古びた宝箱を発見した。
-${gain}G を手に入れた！`,
+        modal("📦 宝箱",`古びた宝箱を発見した。\n${gain}G を手に入れた！`,
           [["閉じる",()=>{closeModal();updateRunHud();}]]);
         break;
       }
       case "heal":{
         const recovered=recoverTravelParty(.50,.40);
         const body=recovered.hpGain||recovered.mpGain
-          ? `澄んだ水のそばで休息した。
-同行メンバー全員のHPを最大値の50%、MPを40%ぶん回復した。
-
-合計 HP +${recovered.hpGain} / MP +${recovered.mpGain}`
-          : "澄んだ水のそばで休息した。
-パーティはすでに十分元気なようだ。";
+          ? `澄んだ水のそばで休息した。\n同行メンバー全員のHPを最大値の50%、MPを40%ぶん回復した。\n\n合計 HP +${recovered.hpGain} / MP +${recovered.mpGain}`
+          : "澄んだ水のそばで休息した。\nパーティはすでに十分元気なようだ。";
         modal("❤ 休息地点",body,[["出発する",()=>{closeModal();updateRunHud();}]]);
         break;
       }
       case "shop":
-        modal("🛒 珍しい行商人","こんな場所で行商人に出会った。
-「旅のお供にポーションはいらんかね？」",
+        modal("🛒 珍しい行商人","こんな場所で行商人に出会った。\n「旅のお供にポーションはいらんかね？」",
           [["ポーションを30Gで買う",()=>{
             if(state.gold>=30){state.gold-=30;state.potions++;closeModal();updateHeader();toast("ポーションを1個購入");}
             else toast("お金が足りません");
@@ -4772,9 +4761,7 @@ ${gain}G を手に入れた！`,
         const [title,body]=choose(commonEvents);
         const bonus=Math.random()<0.45 ? 8+rand(13) : 0;
         if(bonus){state.gold+=bonus;state.run.runGold+=bonus;}
-        modal("？ "+title, body+(bonus?`
-
-${bonus}G を見つけた。`:""),
+        modal("？ "+title, body+(bonus?`\n\n${bonus}G を見つけた。`:""),
           [["進む",()=>{closeModal();updateRunHud();}]]);
         break;
       }
@@ -4782,14 +4769,10 @@ ${bonus}G を見つけた。`:""),
         if(!state.caveUnlocked){
           state.caveUnlocked=true;
           localStorage.setItem("milesta_cave_unlocked","1");
-          modal("★ 平原の最奥", "草の切れ目の向こう、岩肌に小さな裂け目を見つけた。
-中へ続く空洞があるようだ。
-
-【小さな洞窟】が世界マップに追加された！",
+          modal("★ 平原の最奥", "草の切れ目の向こう、岩肌に小さな裂け目を見つけた。\n中へ続く空洞があるようだ。\n\n【小さな洞窟】が世界マップに追加された！",
             [["ミレスタへ帰還",()=>{closeModal();finishRun();}]]);
         }else{
-          modal("★ 平原の最奥","以前見つけた洞窟の入口までたどり着いた。
-今回の探索はここまで。",
+          modal("★ 平原の最奥","以前見つけた洞窟の入口までたどり着いた。\n今回の探索はここまで。",
             [["ミレスタへ帰還",()=>{closeModal();finishRun();}]]);
         }
         break;
@@ -4806,9 +4789,7 @@ ${bonus}G を見つけた。`:""),
   }
 
   $("returnBtn").onclick=()=>{
-    modal("探索から帰還しますか？","現在の探索マップは破棄されます。
-獲得したゴールド・EXPはそのまま持ち帰れます。
-ミレスタへ戻るとHP・MPは全回復します。",
+    modal("探索から帰還しますか？","現在の探索マップは破棄されます。\n獲得したゴールド・EXPはそのまま持ち帰れます。\nミレスタへ戻るとHP・MPは全回復します。",
       [["帰還する",()=>{closeModal();finishRun();}],["探索を続ける",closeModal]]);
   };
 
