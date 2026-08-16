@@ -368,6 +368,40 @@
     color:#cdd7ef;font-size:10px;font-weight:800;cursor:pointer;
   }
 
+  /* v0.15 multi-skill selection */
+  .skill-select-panel{width:min(620px,94vw)}
+  .skill-list{
+    display:flex;flex-direction:column;gap:7px;max-height:min(430px,64vh);
+    overflow:auto;overscroll-behavior:contain;padding:1px;
+  }
+  .skill-option{
+    width:100%;min-height:66px;display:grid;grid-template-columns:44px minmax(0,1fr) auto;
+    gap:9px;align-items:center;text-align:left;color:inherit;cursor:pointer;
+    border:1px solid #3d5d78;border-radius:11px;background:linear-gradient(#172b3d,#101e2b);
+    padding:7px 9px;
+  }
+  .skill-option:hover:not(:disabled){border-color:#dfc96b;filter:brightness(1.08)}
+  .skill-option:active:not(:disabled){transform:translateY(1px)}
+  .skill-option:disabled{opacity:.42;cursor:not-allowed;filter:grayscale(.35)}
+  .skill-option-icon{
+    width:42px;height:42px;border-radius:10px;background:#0b1722;border:1px solid #31506a;
+    display:flex;align-items:center;justify-content:center;font-size:23px;
+  }
+  .skill-option-main{min-width:0}
+  .skill-option-name{font-size:13px;font-weight:1000}
+  .skill-option-desc{margin-top:3px;color:#aebdca;font-size:9px;line-height:1.35}
+  .skill-option-meta{
+    min-width:70px;text-align:right;color:#e7d77d;font-size:10px;font-weight:900;white-space:nowrap;
+  }
+  .skill-option-meta small{display:block;margin-top:3px;color:#91a5b6;font-size:8px;font-weight:800}
+  .skill-option:disabled .skill-option-meta{color:#d38f8f}
+  @media (max-height:520px){
+    .skill-list{max-height:68vh;gap:5px}
+    .skill-option{min-height:54px;grid-template-columns:36px minmax(0,1fr) auto;padding:5px 7px}
+    .skill-option-icon{width:34px;height:34px;font-size:19px}
+    .skill-option-name{font-size:11px}.skill-option-desc{font-size:8px}.skill-option-meta{font-size:9px}
+  }
+
   .swap-modal{
     display:none;position:fixed;inset:0;z-index:180;background:rgba(0,0,0,.72);
     align-items:center;justify-content:center;
@@ -852,7 +886,7 @@
 
 
 
-  /* v0.14 exploration party management */
+  /* v0.15 exploration party management */
   .party-manage-shell.explore-mode .party-manage-grid{grid-template-columns:1fr 1.2fr}
   .party-manage-shell.explore-mode #partyWaitingColumn{display:none}
   .battle-status-card.empty-deploy{
@@ -861,7 +895,7 @@
   }
   .battle-status-card.empty-deploy:hover{border-color:#e5cf70;color:#fff0a5;filter:brightness(1.12)}
 
-  /* v0.14 character detail */
+  /* v0.15 character detail */
   .party-detail-side{
     min-width:0;border-left:1px solid #31485b;padding-left:8px;
     display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:7px;align-items:stretch;
@@ -992,7 +1026,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.14</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.15</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1241,6 +1275,18 @@
 </div>
 
 
+<div class="swap-modal" id="skillModal">
+  <div class="swap-panel skill-select-panel">
+    <div class="swap-head">
+      <h2 id="skillSelectTitle">スキル選択</h2>
+      <p id="skillSelectLead">使用するスキルを選択</p>
+      <button class="swap-close" id="skillCloseBtn">閉じる</button>
+    </div>
+    <div class="skill-list" id="skillList"></div>
+    <div class="swap-note">単体攻撃は現在選択中の敵へ、回復は選択後に味方を指定します。</div>
+  </div>
+</div>
+
 <div class="swap-modal" id="swapModal">
   <div class="swap-panel">
     <div class="swap-head">
@@ -1371,12 +1417,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.14" : "ミレスタ・仲間編成 v0.14";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.15" : "ミレスタ・仲間編成 v0.15";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.14"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -1676,7 +1722,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細 v0.14";
+    $("topSubtitle").textContent="キャラ詳細 v0.15";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -1684,7 +1730,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.14" : "ミレスタ・仲間編成 v0.14";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.15" : "ミレスタ・仲間編成 v0.15";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -1693,13 +1739,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.14";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.14";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15";
     updateHeader();
   };
 
@@ -1723,7 +1769,7 @@
     hero:{
       id:"hero",name:"主人公",img:IMG.hero,fate:16,
       stats:{hp:100,hpMax:100,mp:40,mpMax:40,atk:18,def:8,magic:18,mdef:7,spd:10},
-      learnedSkills:["fire"],caption:"主人公の行動を選択",
+      learnedSkills:["fire","heal","blaze"],caption:"主人公の行動を選択",
       portrait:{scale:1.22,x:0,y:0},atkBuff:1,atkBuffRounds:0
     },
     slime:{
@@ -1786,6 +1832,10 @@
     fire:{
       id:"fire",name:"ファイア",icon:"🔥",cost:5,target:"enemy",
       desc:"敵1体に炎属性の魔法ダメージ",kind:"magic",element:"fire",power:24,animation:"fire"
+    },
+    blaze:{
+      id:"blaze",name:"ブレイズ",icon:"🔥",cost:10,target:"enemyAll",
+      desc:"敵全体に炎属性の魔法ダメージ",kind:"magic",element:"fire",power:16,animation:"fire"
     },
     tackle:{
       id:"tackle",name:"体当たり",icon:"💥",cost:3,target:"enemy",
@@ -2087,26 +2137,102 @@
     return Array.isArray(actor.learnedSkills) ? actor.learnedSkills : [];
   }
 
+  function knownSkills(actor){
+    return learnedSkillIds(actor).map(id=>skills[id]).filter(Boolean);
+  }
+
   function currentSkill(){
     const actor=roster[state.battleActive[state.battleActorSlot]];
-    const ids=learnedSkillIds(actor);
-    return ids.length ? skills[ids[0]] : null;
+    return knownSkills(actor)[0] || null;
   }
 
   function updateSkillButton(){
     const btn=$("skillBtn");
     if(!btn) return;
     const actor=roster[state.battleActive[state.battleActorSlot]];
-    const skill=currentSkill();
-    if(!skill){
+    const list=knownSkills(actor);
+    if(!list.length){
       $("skillBtnLabel").textContent="スキル未設定";
       $("skillCostLabel").textContent="";
       btn.disabled=true;
       return;
     }
-    $("skillBtnLabel").textContent=skill.name;
-    $("skillCostLabel").textContent=`MP ${skill.cost}`;
-    btn.disabled=state.battlePhase!=="input" || state.battleEnded || S(actor).hp<=0 || S(actor).mp<skill.cost;
+    $("skillBtnLabel").textContent="スキル";
+    $("skillCostLabel").textContent=`${list.length}種`;
+    btn.disabled=state.battlePhase!=="input" || state.battleEnded || S(actor).hp<=0;
+  }
+
+  function closeSkillMenu(){
+    const modal=$("skillModal");
+    if(modal) modal.classList.remove("show");
+  }
+
+  function openSkillMenu(){
+    if(state.battlePhase!=="input" || state.battleEnded) return;
+    cancelScheduledTurnStart();
+    const actor=roster[state.battleActive[state.battleActorSlot]];
+    const list=knownSkills(actor);
+    if(!list.length){
+      setMessage(`${actor.name} のスキルはまだ未設定です。`);
+      return;
+    }
+
+    state.battleTargetMode=null;
+    renderBattleParty();
+    updateActorPortrait();
+    updateExecuteButton();
+    $("skillSelectTitle").textContent=`${actor.name}：スキル`;
+    $("skillSelectLead").textContent=`MP ${S(actor).mp} / ${S(actor).mpMax}　使用するスキルを選択`;
+    const box=$("skillList");
+    box.innerHTML="";
+
+    list.forEach(sk=>{
+      const usable=S(actor).mp>=sk.cost;
+      const btn=document.createElement("button");
+      btn.className="skill-option";
+      btn.disabled=!usable;
+      const targetLabel=sk.target==="enemyAll" ? "敵全体" : sk.target==="ally" ? "味方1人" : "敵1体";
+      btn.innerHTML=`<span class="skill-option-icon">${sk.icon||"✨"}</span>`+
+        `<span class="skill-option-main"><span class="skill-option-name">${sk.name}</span>`+
+        `<span class="skill-option-desc">${sk.desc||""}</span></span>`+
+        `<span class="skill-option-meta">MP ${sk.cost}<small>${usable?targetLabel:"MP不足"}</small></span>`;
+      btn.onclick=()=>selectSkill(sk.id);
+      box.appendChild(btn);
+    });
+    $("skillModal").classList.add("show");
+  }
+
+  function selectSkill(skillId){
+    if(state.battlePhase!=="input" || state.battleEnded) return;
+    const actor=roster[state.battleActive[state.battleActorSlot]];
+    const sk=skills[skillId];
+    if(!sk || !learnedSkillIds(actor).includes(skillId)) return;
+    if(S(actor).mp<sk.cost){
+      setMessage(`${sk.name} を使うMPが足りません。（必要MP ${sk.cost}）`);
+      return;
+    }
+
+    closeSkillMenu();
+    if(sk.target==="enemyAll"){
+      state.battleTargetMode=null;
+      if(!livingEnemies().length){ setMessage("スキルの対象がいません。"); return; }
+      queueAction({type:"skill",skill:sk.id});
+      return;
+    }
+
+    if(sk.target==="enemy"){
+      state.battleTargetMode=null;
+      const target=selectedEnemy();
+      if(!target){ setMessage("スキルの対象がいません。"); return; }
+      queueAction({type:"skill",skill:sk.id,targetUid:target.uid});
+      return;
+    }
+
+    state.battleTargetMode={kind:"ally",skill:sk.id,actorSlot:state.battleActorSlot};
+    renderBattleParty();
+    updateActorPortrait();
+    updateExecuteButton();
+    setMessage(`${sk.icon} ${sk.name}：下の味方ステータスから対象を選んでください。`);
   }
 
   function actionLabel(action){
@@ -2119,6 +2245,7 @@
     if(action.type==="skill"){
       const sk=skills[action.skill];
       if(!sk) return "✨ スキル";
+      if(sk.target==="enemyAll") return `${sk.icon} ${sk.name}→敵全体`;
       if(sk.target==="enemy"){
         const target=enemyByUid(action.targetUid);
         return `${sk.icon} ${sk.name}→${target && target.hp>0 ? target.displayName : "敵"}`;
@@ -2343,6 +2470,7 @@
   }
 
   function setCommandsEnabled(enabled){
+    if(!enabled) closeSkillMenu();
     document.querySelectorAll(".cmd[data-command], #swapBtn").forEach(b=>b.disabled=!enabled);
     $("turnAutoBtn").disabled=!enabled;
     updateSkillButton();
@@ -2442,9 +2570,15 @@
     const sk=firstSkillId ? skills[firstSkillId] : null;
     const target=lowestHpEnemy();
 
-    // Hero: use Fire whenever MP allows.
-    if(actor.id==="hero" && sk?.id==="fire" && S(actor).mp>=sk.cost && target){
-      return {type:"skill",skill:"fire",targetUid:target.uid};
+    // Hero: demonstrate the multi-skill setup. Blaze when 2+ enemies remain, otherwise Fire.
+    if(actor.id==="hero"){
+      const blaze=skills.blaze, fire=skills.fire;
+      if(livingEnemies().length>=2 && learnedSkillIds(actor).includes("blaze") && S(actor).mp>=blaze.cost){
+        return {type:"skill",skill:"blaze"};
+      }
+      if(target && learnedSkillIds(actor).includes("fire") && S(actor).mp>=fire.cost){
+        return {type:"skill",skill:"fire",targetUid:target.uid};
+      }
     }
 
     // Slime: use Tackle while HP is above 30%; otherwise play safely.
@@ -2570,26 +2704,7 @@
   }
 
   function chooseSkill(){
-    if(state.battlePhase!=="input" || state.battleEnded) return;
-    cancelScheduledTurnStart();
-    const actor=roster[state.battleActive[state.battleActorSlot]];
-    const sk=currentSkill();
-    if(!sk){ setMessage(`${actor.name} のスキルはまだ未設定です。`); return; }
-    if(S(actor).mp<sk.cost){ setMessage(`${sk.name} を使うMPが足りません。（必要MP ${sk.cost}）`); return; }
-
-    if(sk.target==="enemy"){
-      state.battleTargetMode=null;
-      const target=selectedEnemy();
-      if(!target){ setMessage("スキルの対象がいません。"); return; }
-      queueAction({type:"skill",skill:sk.id,targetUid:target.uid});
-      return;
-    }
-
-    state.battleTargetMode={kind:"ally",skill:sk.id,actorSlot:state.battleActorSlot};
-    renderBattleParty();
-    updateActorPortrait();
-    updateExecuteButton();
-    setMessage(`${sk.icon} ${sk.name}：下の味方ステータスから対象を選んでください。`);
+    openSkillMenu();
   }
 
   function placeholderCommand(name){
@@ -2685,6 +2800,31 @@
       const killed=target.hp<=0;
       setMessage(`🔥 ${sk.name}！ ${target.displayName} に ${dmg} の炎ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
       await animateEnemyDamage(target,killed,"fire","🔥");
+      return;
+    }
+
+    if(sk.id==="blaze"){
+      const targets=[...livingEnemies()];
+      if(!targets.length) return;
+
+      animateActor("cast");
+      setMessage(`🔥 ${actor.name} は ${sk.name} を唱えた！`);
+      await wait(BASE_TIME.actionLead);
+
+      const magicPower=S(actor).magic||18;
+      const results=targets.map(target=>{
+        const variance=rand(5)-2;
+        const dmg=Math.max(2,Math.round(sk.power + magicPower*.25)-Math.floor((target.mdef||4)/2)+variance);
+        target.hp=Math.max(0,target.hp-dmg);
+        const killed=target.hp<=0;
+        if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
+        return {target,dmg,killed};
+      });
+
+      const total=results.reduce((sum,r)=>sum+r.dmg,0);
+      const defeated=results.filter(r=>r.killed).length;
+      setMessage(`🔥 ${sk.name}！ 敵全体に炎ダメージ、合計 ${total}！${defeated?` ${defeated}体を倒した！`:""}`);
+      await Promise.all(results.map(r=>animateEnemyDamage(r.target,r.killed,"fire","🔥")));
       return;
     }
 
@@ -2971,7 +3111,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.14";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -2979,7 +3119,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.14";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -3085,7 +3225,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.14";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -3136,7 +3276,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.14";
+    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.15";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -3158,7 +3298,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.14";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15";
     toast("戦闘テストを終了");
   }
 
@@ -3222,6 +3362,8 @@
   $("swapCloseBtn").onclick=()=>$("swapModal").classList.remove("show");
   $("swapModal").addEventListener("click",e=>{ if(e.target===$("swapModal")) $("swapModal").classList.remove("show"); });
   $("swapBtn").onclick=()=>openSwap();
+  $("skillCloseBtn").onclick=closeSkillMenu;
+  $("skillModal").addEventListener("click",e=>{ if(e.target===$("skillModal")) closeSkillMenu(); });
   $("exploreReserveBtn").onclick=()=>openPartyManage("explore");
 
 
