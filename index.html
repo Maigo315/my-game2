@@ -368,7 +368,7 @@
     color:#cdd7ef;font-size:10px;font-weight:800;cursor:pointer;
   }
 
-  /* v0.17b multi-skill selection */
+  /* v0.18 multi-skill selection */
   .skill-select-panel{width:min(680px,94vw)}
   .skill-party-status{
     display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-bottom:7px;
@@ -412,7 +412,7 @@
   .skill-option-meta small{display:block;margin-top:3px;color:#91a5b6;font-size:8px;font-weight:800}
   .skill-option:disabled .skill-option-meta{color:#d38f8f}
 
-  /* v0.17b item selection */
+  /* v0.18 item selection */
   .item-target-grid{
     display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;
     max-height:min(430px,58vh);overflow:auto;overscroll-behavior:contain;padding:1px;
@@ -960,7 +960,7 @@
 
 
 
-  /* v0.17b exploration party management */
+  /* v0.18 exploration party management */
   .party-manage-shell.explore-mode .party-manage-grid{grid-template-columns:1fr 1.2fr}
   .party-manage-shell.explore-mode #partyWaitingColumn{display:none}
   .battle-status-card.empty-deploy{
@@ -969,7 +969,7 @@
   }
   .battle-status-card.empty-deploy:hover{border-color:#e5cf70;color:#fff0a5;filter:brightness(1.12)}
 
-  /* v0.17b character detail */
+  /* v0.18 character detail */
   .party-detail-side{
     min-width:0;border-left:1px solid #31485b;padding-left:8px;
     display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:7px;align-items:stretch;
@@ -981,6 +981,69 @@
   }
   .party-detail-action:hover{filter:brightness(1.12)}
   .party-detail-action:active{transform:translateY(1px)}
+
+  /* v0.18 level-up result presentation */
+  .levelup-modal{
+    display:none;position:fixed;inset:0;z-index:195;background:rgba(0,0,0,.74);
+    align-items:center;justify-content:center;
+    padding-top:calc(10px + var(--safe-top));padding-bottom:calc(10px + var(--safe-bottom));
+    padding-left:calc(10px + var(--safe-left));padding-right:calc(10px + var(--safe-right));
+  }
+  .levelup-modal.show{display:flex}
+  .levelup-panel{
+    width:min(720px,96vw);max-height:94%;overflow:hidden;
+    display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:8px;
+    background:linear-gradient(#1b2d41,#0f1a27);border:1px solid #6b7f93;border-radius:18px;
+    box-shadow:0 24px 70px rgba(0,0,0,.62);padding:12px;
+  }
+  .levelup-head{
+    display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;
+    background:linear-gradient(90deg,#183760,#152944);border:1px solid #46698b;
+  }
+  .levelup-head-icon{font-size:25px}
+  .levelup-head-copy{min-width:0;flex:1}
+  .levelup-kicker{font-size:8px;color:#91abc2;font-weight:1000;letter-spacing:.14em}
+  .levelup-title{font-size:17px;font-weight:1000;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .levelup-step{font-size:9px;color:#a9bac9;font-weight:800}
+  .levelup-body{min-height:0;display:grid;grid-template-columns:180px minmax(0,1fr);gap:9px;overflow:hidden}
+  .levelup-portrait-wrap{
+    min-height:0;border:1px solid #36546d;border-radius:12px;background:
+      radial-gradient(circle at 50% 40%,rgba(85,134,164,.30),transparent 54%),linear-gradient(#15283a,#0b1722);
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+  .levelup-portrait{flex:1;min-height:0;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+  .levelup-portrait img{width:100%;height:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 9px 9px rgba(0,0,0,.4))}
+  .levelup-level{padding:7px 8px;border-top:1px solid #304a61;text-align:center;background:#0d1925}
+  .levelup-level strong{font-size:19px;color:#f2da78}
+  .levelup-level span{font-size:9px;color:#9fb0c0;margin:0 5px}
+  .levelup-info{min-width:0;min-height:0;display:flex;flex-direction:column;gap:7px;overflow:hidden}
+  .levelup-growth-title{font-size:9px;color:#9fb0c4;font-weight:1000;letter-spacing:.10em}
+  .levelup-growth-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;overflow:auto;min-height:0}
+  .levelup-growth{
+    min-width:0;display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:7px 9px;border:1px solid #334e64;border-radius:9px;background:#101e2b;
+  }
+  .levelup-growth span{font-size:9px;color:#b7c5d1;font-weight:800}
+  .levelup-growth strong{font-size:13px;color:#83d8ff;font-weight:1000}
+  .levelup-skill-box[hidden]{display:none}
+  .levelup-skill-box{
+    flex:0 0 auto;border:1px solid #7d6830;border-radius:10px;background:linear-gradient(#292515,#1b1a11);padding:7px 9px;
+  }
+  .levelup-skill-title{font-size:11px;color:#ffe787;font-weight:1000;display:flex;align-items:center;gap:5px}
+  .levelup-skill-list{margin-top:5px;display:flex;flex-wrap:wrap;gap:4px;max-height:66px;overflow:auto}
+  .levelup-skill-chip{
+    padding:4px 7px;border-radius:999px;background:#17283a;border:1px solid #4d6680;
+    color:#eef5ff;font-size:9px;font-weight:900;white-space:nowrap;
+  }
+  .levelup-actions{display:flex;justify-content:flex-end;align-items:center;gap:8px}
+  .levelup-actions small{margin-right:auto;color:#8fa1b1;font-size:8px}
+  .levelup-next{min-width:132px;padding:9px 14px}
+  @media(max-height:520px){
+    .levelup-panel{padding:8px;gap:5px}.levelup-head{padding:5px 7px}.levelup-title{font-size:14px}
+    .levelup-body{grid-template-columns:145px minmax(0,1fr);gap:6px}.levelup-level{padding:4px}.levelup-level strong{font-size:15px}
+    .levelup-info{gap:4px}.levelup-growth-grid{gap:3px}.levelup-growth{padding:4px 6px}.levelup-growth strong{font-size:11px}
+    .levelup-skill-box{padding:5px 7px}.levelup-skill-list{max-height:44px}.levelup-next{padding:6px 10px;min-width:108px}
+  }
 
   #characterScreen{
     padding-top:max(8px,var(--safe-top));
@@ -1100,7 +1163,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.17b</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.18</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1390,6 +1453,37 @@
   </div>
 </div>
 
+<div class="levelup-modal" id="levelUpModal" aria-live="polite">
+  <div class="levelup-panel">
+    <div class="levelup-head">
+      <div class="levelup-head-icon">✨</div>
+      <div class="levelup-head-copy">
+        <div class="levelup-kicker">LEVEL UP</div>
+        <div class="levelup-title" id="levelUpTitle">主人公のレベルが上がった！</div>
+      </div>
+      <div class="levelup-step" id="levelUpStep">1 / 1</div>
+    </div>
+    <div class="levelup-body">
+      <div class="levelup-portrait-wrap">
+        <div class="levelup-portrait" id="levelUpPortrait"></div>
+        <div class="levelup-level"><strong id="levelUpOldLevel">1</strong><span>→</span><strong id="levelUpNewLevel">2</strong></div>
+      </div>
+      <div class="levelup-info">
+        <div class="levelup-growth-title">STATUS GROWTH</div>
+        <div class="levelup-growth-grid" id="levelUpGrowthGrid"></div>
+        <div class="levelup-skill-box" id="levelUpSkillBox" hidden>
+          <div class="levelup-skill-title">✨ 新たなスキルを習得！</div>
+          <div class="levelup-skill-list" id="levelUpSkillList"></div>
+        </div>
+      </div>
+    </div>
+    <div class="levelup-actions">
+      <small>複数人がレベルアップした場合は順番に表示します。</small>
+      <button class="small-btn levelup-next" id="levelUpNextBtn">次へ</button>
+    </div>
+  </div>
+</div>
+
 <div class="swap-modal" id="swapModal">
   <div class="swap-panel">
     <div class="swap-head">
@@ -1522,12 +1616,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.17b" : "ミレスタ・仲間編成 v0.17b";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.18" : "ミレスタ・仲間編成 v0.18";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.17b"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.18"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -1827,7 +1921,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細 v0.17b";
+    $("topSubtitle").textContent="キャラ詳細 v0.18";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -1835,7 +1929,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.17b" : "ミレスタ・仲間編成 v0.17b";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.18" : "ミレスタ・仲間編成 v0.18";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -1844,13 +1938,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.17b";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.18";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.17b";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.18";
     updateHeader();
   };
 
@@ -1874,7 +1968,7 @@
     hero:{
       id:"hero",name:"主人公",img:IMG.hero,fate:16,
       stats:{hp:100,hpMax:100,mp:40,mpMax:40,atk:18,def:8,magic:18,mdef:7,spd:10},
-      learnedSkills:["fire","heal","blaze"],caption:"主人公の行動を選択",
+      learnedSkills:["fire"],caption:"主人公の行動を選択",
       portrait:{scale:1.22,x:0,y:0},atkBuff:1,atkBuffRounds:0
     },
     slime:{
@@ -1956,13 +2050,37 @@
     }
   };
 
+  // v0.18 provisional level-learning table. Only the hero is configured for now.
+  const levelSkillTable = {
+    hero:{1:["fire"],2:["heal"],4:["blaze"]}
+  };
+
+  function skillsLearnedAtLevel(c,level){
+    return levelSkillTable[c.id]?.[level] || [];
+  }
+
+  function learnSkillsForLevel(c,level){
+    const learned=[];
+    skillsLearnedAtLevel(c,level).forEach(skillId=>{
+      if(!c.learnedSkills.includes(skillId)){
+        c.learnedSkills.push(skillId);
+        learned.push(skillId);
+      }
+    });
+    return learned;
+  }
+
+  const initialLearnedSkills = Object.fromEntries(
+    Object.entries(roster).map(([id,c])=>[id,[...(c.learnedSkills||[])]])
+  );
+
   const initialStats = Object.fromEntries(
     Object.entries(roster).map(([id,c])=>[id,{...c.stats}])
   );
 
   // Temporary v0.10 growth values. These are data-driven so they can be tuned later.
   const characterGrowth = {
-    hero:    {hp:8,mp:3,atk:2,def:2,magic:2,mdef:1,spd:1},
+    hero:    {hp:10,mp:4,atk:2,def:1,magic:2,mdef:1,spd:1},
     slime:   {hp:7,mp:2,atk:2,def:1,magic:1,mdef:1,spd:1},
     dog:     {hp:8,mp:2,atk:2,def:2,magic:1,mdef:1,spd:2},
     fairy:   {hp:5,mp:4,atk:1,def:1,magic:3,mdef:2,spd:2},
@@ -1985,35 +2103,57 @@
   }
 
   function levelUpCharacter(c){
-    if(c.level>=99) return;
+    if(c.level>=99) return [];
     c.level++;
     const g=c.growth;
     const st=S(c);
     st.hpMax+=g.hp; st.hp=Math.min(st.hpMax,st.hp+g.hp);
     st.mpMax+=g.mp; st.mp=Math.min(st.mpMax,st.mp+g.mp);
     st.atk+=g.atk; st.def+=g.def; st.magic+=g.magic; st.mdef+=g.mdef; st.spd+=g.spd;
+    return learnSkillsForLevel(c,c.level);
   }
 
   function travelPartyIds(){
     return [...new Set([...state.battleActive,...state.battleReserve])];
   }
 
+  function statGrowthDiff(before,after){
+    return {
+      hpMax:after.hpMax-before.hpMax,
+      mpMax:after.mpMax-before.mpMax,
+      atk:after.atk-before.atk,
+      def:after.def-before.def,
+      magic:after.magic-before.magic,
+      mdef:after.mdef-before.mdef,
+      spd:after.spd-before.spd
+    };
+  }
+
   function awardExperience(amount){
     const leveled=[];
     if(amount<=0) return leveled;
 
-    // v0.11: reserve members receive no EXP.
+    // Reserve members receive no EXP.
     [...new Set(state.battleActive)].forEach(id=>{
       const c=roster[id];
       if(!c) return;
+      const oldLevel=c.level;
+      const before={...S(c)};
+      const learned=[];
       c.exp+=amount;
       let gains=0;
       while(c.level<99 && c.exp>=expNeeded(c.level)){
         c.exp-=expNeeded(c.level);
-        levelUpCharacter(c);
+        learned.push(...levelUpCharacter(c));
         gains++;
       }
-      if(gains) leveled.push({id,name:c.name,level:c.level,gains});
+      if(gains){
+        leveled.push({
+          id,name:c.name,oldLevel,level:c.level,gains,
+          growth:statGrowthDiff(before,S(c)),
+          learned:[...new Set(learned)]
+        });
+      }
     });
     return leveled;
   }
@@ -2051,6 +2191,7 @@
         stats:{...c.stats},
         level:c.level,
         exp:c.exp,
+        learnedSkills:[...(c.learnedSkills||[])],
         atkBuff:c.atkBuff,
         atkBuffRounds:c.atkBuffRounds,
         defending:!!c.defending
@@ -2069,6 +2210,7 @@
       c.stats={...s.stats};
       c.level=s.level;
       c.exp=s.exp;
+      c.learnedSkills=[...(s.learnedSkills||initialLearnedSkills[id]||[])];
       c.atkBuff=s.atkBuff;
       c.atkBuffRounds=s.atkBuffRounds;
       c.defending=s.defending;
@@ -2252,6 +2394,7 @@
       c.stats={...initialStats[id]};
       c.level=1;
       c.exp=0;
+      c.learnedSkills=[...(initialLearnedSkills[id]||[])];
       c.defending=false;
       c.atkBuff=1;
       c.atkBuffRounds=0;
@@ -3370,6 +3513,57 @@
     $("battleContinueBtn").classList.remove("show");
   }
 
+  const levelGrowthLabels={hpMax:"最大HP",mpMax:"最大MP",atk:"攻撃",def:"防御",magic:"魔力",mdef:"魔防",spd:"素早さ"};
+
+  function renderLevelUpEntry(entry){
+    const c=roster[entry.id];
+    $("levelUpTitle").textContent=`${entry.name}のレベルが上がった！`;
+    $("levelUpStep").textContent=`${state.levelUpPresentationIndex+1} / ${state.levelUpPresentationQueue.length}`;
+    $("levelUpOldLevel").textContent=entry.oldLevel;
+    $("levelUpNewLevel").textContent=entry.level;
+    const portrait=$("levelUpPortrait");
+    portrait.innerHTML=c?.img ? `<img src="${c.img}" alt="${entry.name}">` : `<span class="hero-placeholder">👤</span>`;
+
+    $("levelUpGrowthGrid").innerHTML=Object.entries(levelGrowthLabels).map(([key,label])=>{
+      const value=entry.growth?.[key]||0;
+      return `<div class="levelup-growth"><span>${label}</span><strong>+${value}</strong></div>`;
+    }).join("");
+
+    const learned=(entry.learned||[]).map(id=>skills[id]).filter(Boolean);
+    $("levelUpSkillBox").hidden=learned.length===0;
+    $("levelUpSkillList").innerHTML=learned.map(sk=>`<span class="levelup-skill-chip">${sk.icon||"✨"} ${sk.name}</span>`).join("");
+    $("levelUpNextBtn").textContent=state.levelUpPresentationIndex>=state.levelUpPresentationQueue.length-1 ? "決定" : "次へ";
+  }
+
+  function showLevelUpResults(entries,afterClose){
+    if(!entries?.length){
+      if(afterClose) afterClose();
+      return;
+    }
+    state.levelUpPresentationQueue=[...entries];
+    state.levelUpPresentationIndex=0;
+    state.levelUpAfterClose=afterClose||null;
+    renderLevelUpEntry(state.levelUpPresentationQueue[0]);
+    $("levelUpModal").classList.add("show");
+  }
+
+  function advanceLevelUpResults(){
+    if(!state.levelUpPresentationQueue.length) return;
+    if(state.levelUpPresentationIndex<state.levelUpPresentationQueue.length-1){
+      state.levelUpPresentationIndex++;
+      renderLevelUpEntry(state.levelUpPresentationQueue[state.levelUpPresentationIndex]);
+      return;
+    }
+    $("levelUpModal").classList.remove("show");
+    state.levelUpPresentationQueue=[];
+    state.levelUpPresentationIndex=0;
+    const cb=state.levelUpAfterClose;
+    state.levelUpAfterClose=null;
+    if(cb) cb();
+  }
+
+  $("levelUpNextBtn").onclick=advanceLevelUpResults;
+
   function winBattle(){
     if(state.battleEnded) return;
     state.battleEnded=true;
@@ -3393,6 +3587,7 @@
       state.run.runGold+=gain;
       state.run.runExp+=expGain;
       state.battleVictoryData={gain,expGain,leveled};
+      state.levelUpPresentationDone=false;
 
       const levelText=leveled.length
         ? `　LEVEL UP：${leveled.map(x=>`${x.name} Lv${x.level}`).join("、")}`
@@ -3402,6 +3597,7 @@
       showBattleContinue();
     }else{
       state.battleVictoryData={gain:0,expGain:0,leveled:[]};
+      state.levelUpPresentationDone=true;
       setMessage("勝利！ 戦闘テストではEXP・ゴールドは獲得しません。");
       showBattleContinue();
     }
@@ -3410,6 +3606,11 @@
   function finishVictoryReturn(extraToast=""){
     const data=state.battleVictoryData || {gain:0,expGain:0,leveled:[]};
     state.battleVictoryData=null;
+    state.levelUpPresentationDone=false;
+    state.levelUpPresentationQueue=[];
+    state.levelUpPresentationIndex=0;
+    state.levelUpAfterClose=null;
+    $("levelUpModal").classList.remove("show");
     hideBattleContinue();
 
     if(state.battleDirectTest){
@@ -3418,7 +3619,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.17b";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.18";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -3426,7 +3627,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.17b";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.18";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -3505,6 +3706,13 @@
     if(!state.battleEnded || state.battlePhase!=="ended") return;
     hideBattleContinue();
 
+    const data=state.battleVictoryData || {leveled:[]};
+    if(!state.levelUpPresentationDone && data.leveled?.length){
+      state.levelUpPresentationDone=true;
+      showLevelUpResults(data.leveled,continueAfterVictory);
+      return;
+    }
+
     const candidate=chooseRecruitWinner(state.battleDirectTest);
     if(candidate){
       showRecruitOverlay(candidate,state.battleDirectTest);
@@ -3544,7 +3752,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.17b";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.18";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -3589,13 +3797,18 @@
     state.battleAutoContinuous=false;
     state.battleVictoryData=null;
     state.pendingRecruitCandidate=null;
+    state.levelUpPresentationDone=false;
+    state.levelUpPresentationQueue=[];
+    state.levelUpPresentationIndex=0;
+    state.levelUpAfterClose=null;
+    $("levelUpModal").classList.remove("show");
     state.battleDefeatCounter=0;
     hideRecruitOverlay();
     hideBattleContinue();
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.17b";
+    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.18";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -3617,7 +3830,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.17b";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.18";
     updateHeader();
     toast("戦闘テストを終了");
   }
