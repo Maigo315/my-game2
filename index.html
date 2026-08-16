@@ -301,6 +301,7 @@
   .cmd:active{transform:translateY(1px)}
   .cmd:disabled{opacity:.38;cursor:not-allowed;filter:grayscale(.35)}
   .swap-cmd{border-color:#6c6898;background:linear-gradient(#3f4068,#272946)}
+  .escape-cmd{border-color:#88734c;background:linear-gradient(#554525,#302817);color:#ffe7a5}
   .command-wide{grid-column:1/-1;min-height:36px}
   .execute-btn{
     min-height:42px;background:linear-gradient(#6c5720,#403514);border-color:#927a35;color:#fff0aa;
@@ -436,6 +437,16 @@
     display:flex;align-items:center;gap:9px;font-size:10px;color:#c9d6df;
   }
   .item-summary-note strong{color:#fff0a6;font-size:12px}
+  .field-item-btn{
+    width:100%;min-height:52px;margin-bottom:7px;display:grid;grid-template-columns:34px minmax(0,1fr) auto;
+    gap:8px;align-items:center;text-align:left;border:1px solid #7c6d43;border-radius:11px;
+    background:linear-gradient(#413921,#272418);color:#eef5ff;padding:7px 9px;cursor:pointer;
+  }
+  .field-item-btn:disabled{opacity:.4;cursor:not-allowed}
+  .field-item-btn .icon{font-size:25px;text-align:center}
+  .field-item-btn strong{display:block;font-size:12px;color:#fff0aa}
+  .field-item-btn small{display:block;margin-top:2px;color:#bfc9d2;font-size:8px;line-height:1.35}
+  .field-item-count{font-size:11px;font-weight:1000;color:#ffe69a}
   .member-tags{display:flex;align-items:center;gap:3px;flex:0 0 auto}
   .explore-condition{padding:1px 4px;border-radius:999px;font-size:7px;font-weight:1000;white-space:nowrap}
   .explore-condition.poison{border:1px solid #7f5aa4;background:#2d1d3b;color:#dfc0ff}
@@ -1248,7 +1259,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.20b</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.21</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1426,7 +1437,6 @@
         <div class="statbox">獲得G<strong id="runGoldText">0</strong></div>
         <div class="statbox">獲得EXP<strong id="runExpText">0</strong></div>
       </div>
-      <button class="small-btn return-btn" id="returnBtn">🏠 ミレスタへ帰還</button>
     </aside>
 
     <section class="explore-panel">
@@ -1503,7 +1513,8 @@
             <button class="cmd skill-cmd" data-command="スキル" id="skillBtn"><strong>✨</strong><span id="skillBtnLabel">スキル</span><small id="skillCostLabel"></small></button>
             <button class="cmd" data-command="防御"><strong>🛡</strong>防御</button>
             <button class="cmd" data-command="アイテム"><strong>🧪</strong>アイテム</button>
-            <button class="cmd swap-cmd command-wide" id="swapBtn"><strong>↔</strong>交代</button>
+            <button class="cmd swap-cmd" id="swapBtn"><strong>↔</strong>交代</button>
+            <button class="cmd escape-cmd" id="escapeBtn"><strong>💨</strong>逃走</button>
           </div>
           <div class="auto-controls">
             <button class="auto-command-btn" id="turnAutoBtn"><strong>🤖</strong><span>1ターン<br>オート</span></button>
@@ -1552,12 +1563,17 @@
   <div class="swap-panel skill-select-panel">
     <div class="swap-head">
       <h2>探索中のアイテム</h2>
-      <p>ポーションを使う仲間を選択</p>
+      <p>使用するアイテムを選択</p>
       <button class="swap-close" id="exploreItemCloseBtn">閉じる</button>
     </div>
+    <button class="field-item-btn" id="exploreReturnFeatherBtn" type="button">
+      <span class="icon">🪶</span>
+      <span><strong>帰還の羽</strong><small>探索を終了し、ミレスタへ即座に帰還する。戦闘中は使用不可。</small></span>
+      <span class="field-item-count" id="returnFeatherCount">×1</span>
+    </button>
     <div class="item-summary-note" id="exploreItemSummary"></div>
     <div class="item-target-grid" id="exploreItemTargets"></div>
-    <div class="swap-note">探索中はバトルメンバーと控えの両方に使用できます。ポーションでは戦闘不能を回復できません。</div>
+    <div class="swap-note">ポーションはバトルメンバーと控えの両方に使用できます。帰還の羽は探索中のみ使用できます。</div>
   </div>
 </div>
 
@@ -1636,6 +1652,7 @@
   const state = {
     gold: 120,
     potions: 2,
+    returnFeathers: 1,
     caveUnlocked: localStorage.getItem("milesta_cave_unlocked") === "1",
     selectedArea: "plains",
     run: null,
@@ -1662,6 +1679,8 @@
     recruitedWaiting: [],
     battleVictoryData: null,
     battleDefeatCounter: 0,
+    escapeAttempts: 0,
+    escapeBaseRate: null,
     partySelection: null,
     partyManageContext: "milesta",
     partyDetailCharacterId: "hero",
@@ -1704,7 +1723,9 @@
     $("goldText").textContent = state.gold;
     $("potionText").textContent = state.potions;
     const exploreItemBtn=$("exploreItemBtn");
-    if(exploreItemBtn) exploreItemBtn.textContent=`🧪 アイテム　ポーション ×${state.potions}`;
+    if(exploreItemBtn) exploreItemBtn.textContent=`🧪 アイテム`;
+    const featherCount=$("returnFeatherCount");
+    if(featherCount) featherCount.textContent=`×${state.returnFeathers}`;
     $("cavePin").classList.toggle("locked", !state.caveUnlocked);
   }
   function toast(msg){
@@ -1744,12 +1765,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.20b" : "ミレスタ・仲間編成 v0.20b";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.21" : "ミレスタ・仲間編成 v0.21";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2138,7 +2159,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.20b" : "ミレスタ・仲間編成 v0.20b";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.21" : "ミレスタ・仲間編成 v0.21";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -2147,13 +2168,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
     updateHeader();
   };
 
@@ -2696,7 +2717,8 @@
   function S(c){ return c.stats; }
 
   const ITEMS = {
-    potion:{id:"potion",name:"ポーション",icon:"🧪",heal:50,desc:"味方1人のHPを50回復"}
+    potion:{id:"potion",name:"ポーション",icon:"🧪",heal:50,desc:"味方1人のHPを50回復"},
+    returnFeather:{id:"returnFeather",name:"帰還の羽",icon:"🪶",fieldOnly:true,desc:"探索を終了し、ミレスタへ即座に帰還する"}
   };
 
   // Default v0.8 is deliberately slower than v0.7.
@@ -3212,7 +3234,7 @@
 
   function setCommandsEnabled(enabled){
     if(!enabled){ closeSkillMenu(); closeItemMenu(); }
-    document.querySelectorAll(".cmd[data-command], #swapBtn").forEach(b=>b.disabled=!enabled);
+    document.querySelectorAll(".cmd[data-command], #swapBtn, #escapeBtn").forEach(b=>b.disabled=!enabled);
     $("turnAutoBtn").disabled=!enabled;
     updateSkillButton();
     updateAutoButtons();
@@ -3749,6 +3771,116 @@
     }
   }
 
+  function clamp(min,max,value){ return Math.max(min,Math.min(max,value)); }
+
+  function averageLivingAllySpd(){
+    const living=livingActiveSlots();
+    if(!living.length) return 1;
+    return living.reduce((sum,x)=>sum+Math.max(1,S(x.c).spd||1),0)/living.length;
+  }
+
+  function averageLivingEnemySpd(){
+    const living=livingEnemies();
+    if(!living.length) return 1;
+    return living.reduce((sum,e)=>sum+Math.max(1,e.spd||1),0)/living.length;
+  }
+
+  function baseEscapeRate(){
+    const ally=averageLivingAllySpd();
+    const enemy=averageLivingEnemySpd();
+    const ratio=(ally-enemy)/Math.max(1,ally+enemy);
+    return clamp(30,90,Math.round(70+40*ratio));
+  }
+
+  function currentEscapeRate(attemptNumber=state.escapeAttempts+1){
+    const base=state.escapeBaseRate ?? baseEscapeRate();
+    if(attemptNumber>=3) return 100;
+    if(attemptNumber===2) return Math.min(100,base+20);
+    return base;
+  }
+
+  function finishEscape(){
+    state.battleEnded=true;
+    state.battleAutoContinuous=false;
+    cancelScheduledTurnStart();
+    state.battlePhase="ended";
+    state.battleTargetMode=null;
+    state.battleActions=[null,null,null,null];
+    clearBattleEndStates();
+    setCommandsEnabled(false);
+    hideRecruitOverlay();
+    hideBattleContinue();
+    clearEnemyActing();
+
+    if(state.battleDirectTest){
+      restorePartySnapshot(state.battleTestSnapshot);
+      state.battleTestSnapshot=null;
+      state.battleDirectTest=false;
+      state.battleFromRun=false;
+      showScreen("homeScreen");
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
+      updateHeader();
+      toast("戦闘から逃走しました");
+      return;
+    }
+
+    state.battleFromRun=false;
+    updateRunHud();
+    showScreen("exploreScreen");
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
+    toast("戦闘から逃走しました。報酬・勧誘判定はありません");
+  }
+
+  async function attemptEscape(){
+    if(state.battlePhase!=="input" || state.battleEnded) return;
+    cancelScheduledTurnStart();
+    state.battleAutoContinuous=false;
+    updateAutoButtons();
+    closeSkillMenu();
+    closeItemMenu();
+    $("swapModal").classList.remove("show");
+    state.battleTargetMode=null;
+    refundAllQueuedItems();
+    state.battleActions=[null,null,null,null];
+    state.battleActive.forEach(id=>roster[id].defending=false);
+
+    if(state.escapeBaseRate===null) state.escapeBaseRate=baseEscapeRate();
+    state.escapeAttempts++;
+    const rate=currentEscapeRate(state.escapeAttempts);
+    state.battlePhase="resolve";
+    setCommandsEnabled(false);
+    renderBattleParty();
+    setMessage(`逃走を試みた……！ 成功率 ${rate}%`);
+    await wait(BASE_TIME.message);
+
+    if(Math.random()*100<rate){
+      setMessage("うまく逃げ切った！");
+      await wait(BASE_TIME.message);
+      finishEscape();
+      return;
+    }
+
+    setMessage(`逃げ切れなかった！ 次の逃走成功率は ${currentEscapeRate(state.escapeAttempts+1)}%。`);
+    await wait(BASE_TIME.message);
+
+    // 逃走失敗時は味方全員の行動を消費し、敵だけが1回ずつ行動する。
+    const enemies=[...livingEnemies()].map(enemy=>({enemy,initiative:rollInitiative(enemy.spd),tie:Math.random()}))
+      .sort((a,b)=>(b.initiative-a.initiative)||(b.tie-a.tie));
+    for(const entry of enemies){
+      if(state.battleEnded) return;
+      const enemy=enemyByUid(entry.enemy.uid);
+      if(!enemy || enemy.hp<=0) continue;
+      await executeEnemyAction(enemy);
+      if(state.battleEnded) return;
+    }
+
+    if(!state.battleEnded){
+      state.battleRound++;
+      await wait(BASE_TIME.roundGap);
+      startCommandInput();
+    }
+  }
+
   async function resolveTurn(){
     if(state.battlePhase!=="input" || state.battleEnded || !commandsReady() || state.battleTargetMode) return;
     cancelScheduledTurnStart();
@@ -3980,7 +4112,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -3988,7 +4120,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -4114,7 +4246,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -4165,12 +4297,14 @@
     state.levelUpAfterClose=null;
     $("levelUpModal").classList.remove("show");
     state.battleDefeatCounter=0;
+    state.escapeAttempts=0;
+    state.escapeBaseRate=null;
     hideRecruitOverlay();
     hideBattleContinue();
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.20b";
+    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.21";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -4192,7 +4326,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.20b";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -4258,6 +4392,7 @@
   $("swapCloseBtn").onclick=()=>$("swapModal").classList.remove("show");
   $("swapModal").addEventListener("click",e=>{ if(e.target===$("swapModal")) $("swapModal").classList.remove("show"); });
   $("swapBtn").onclick=()=>openSwap();
+  $("escapeBtn").onclick=attemptEscape;
   $("skillCloseBtn").onclick=closeSkillMenu;
   $("skillModal").addEventListener("click",e=>{ if(e.target===$("skillModal")) closeSkillMenu(); });
   $("itemCloseBtn").onclick=closeItemMenu;
@@ -4295,6 +4430,8 @@
     state.battleActions=[null,null,null,null];
     state.battleTargetMode=null;
     state.battleDefeatCounter=0;
+    state.escapeAttempts=0;
+    state.escapeBaseRate=null;
     renderFormation(e.target.value,0,true);
     startCommandInput();
   };
@@ -4309,6 +4446,8 @@
     state.battleActions=[null,null,null,null];
     state.battleTargetMode=null;
     state.battleDefeatCounter=0;
+    state.escapeAttempts=0;
+    state.escapeBaseRate=null;
     renderFormation(state.battleFormationArea,state.battleFormationIndex-1,true);
     startCommandInput();
   };
@@ -4323,6 +4462,8 @@
     state.battleActions=[null,null,null,null];
     state.battleTargetMode=null;
     state.battleDefeatCounter=0;
+    state.escapeAttempts=0;
+    state.escapeBaseRate=null;
     renderFormation(state.battleFormationArea,state.battleFormationIndex+1,true);
     startCommandInput();
   };
@@ -4571,7 +4712,7 @@
     }
     entries.forEach(({actor,skill:sk})=>{
       const st=S(actor);
-      const validTargets=[...state.battleActive,...state.battleReserve].some(id=>{
+      const validTargets=sk.fieldUse==="return" || [...state.battleActive,...state.battleReserve].some(id=>{
         const ts=S(roster[id]);
         return sk.kind!=="heal" || (ts.hp>0 && ts.hp<ts.hpMax);
       });
@@ -4594,6 +4735,21 @@
     if(!actor || !sk || !sk.fieldUse) return;
     state.exploreSkillActorId=actorId;
     state.exploreSkillId=skillId;
+    if(sk.fieldUse==="return"){
+      const ast=S(actor);
+      if(ast.hp<=0){ toast(`${actor.name} は戦闘不能でスキルを使えません`); return; }
+      if(ast.mp<sk.cost){ toast(`${actor.name} のMPが足りません`); return; }
+      modal("🌀 リターン",`${actor.name}がリターンを使用します。\nMPを ${sk.cost} 消費してミレスタへ帰還しますか？`,[
+        ["帰還する",()=>{
+          ast.mp-=sk.cost;
+          closeModal();
+          closeExploreSkillMenu();
+          finishRun("リターンでミレスタへ帰還しました");
+        }],
+        ["やめる",closeModal]
+      ]);
+      return;
+    }
     renderExploreSkillTargets();
   }
 
@@ -4654,6 +4810,10 @@
 
   function renderExploreItemMenu(){
     const item=ITEMS.potion;
+    const featherBtn=$("exploreReturnFeatherBtn");
+    const featherCount=$("returnFeatherCount");
+    if(featherCount) featherCount.textContent=`×${state.returnFeathers}`;
+    if(featherBtn) featherBtn.disabled=state.returnFeathers<=0;
     $("exploreItemSummary").innerHTML=`<span style="font-size:24px">${item.icon}</span><span><strong>${item.name} ×${state.potions}</strong><br>${item.desc}</span>`;
     const box=$("exploreItemTargets");
     box.innerHTML="";
@@ -4692,6 +4852,21 @@
     toast(`${c.name} のHPが ${amount} 回復`);
   }
 
+  function useReturnFeather(){
+    if(!state.run || state.returnFeathers<=0) return;
+    modal("🪶 帰還の羽を使いますか？",`帰還の羽を1個消費して、現在の探索を終了します。\n所持数：${state.returnFeathers}`,[
+      ["使用する",()=>{
+        if(!state.run || state.returnFeathers<=0){ closeModal(); return; }
+        state.returnFeathers--;
+        closeModal();
+        closeExploreItemMenu();
+        finishRun("帰還の羽でミレスタへ帰還しました");
+      }],
+      ["やめる",closeModal]
+    ]);
+  }
+
+  $("exploreReturnFeatherBtn").onclick=useReturnFeather;
   $("exploreSkillBtn").onclick=openExploreSkillMenu;
   $("exploreSkillCloseBtn").onclick=closeExploreSkillMenu;
   $("exploreSkillBackBtn").onclick=renderExploreSkillList;
@@ -4770,28 +4945,23 @@
           state.caveUnlocked=true;
           localStorage.setItem("milesta_cave_unlocked","1");
           modal("★ 平原の最奥", "草の切れ目の向こう、岩肌に小さな裂け目を見つけた。\n中へ続く空洞があるようだ。\n\n【小さな洞窟】が世界マップに追加された！",
-            [["ミレスタへ帰還",()=>{closeModal();finishRun();}]]);
+            [["ミレスタへ帰還",()=>{closeModal();finishRun("エリアを踏破してミレスタへ帰還しました");}]]);
         }else{
           modal("★ 平原の最奥","以前見つけた洞窟の入口までたどり着いた。\n今回の探索はここまで。",
-            [["ミレスタへ帰還",()=>{closeModal();finishRun();}]]);
+            [["ミレスタへ帰還",()=>{closeModal();finishRun("エリアを踏破してミレスタへ帰還しました");}]]);
         }
         break;
     }
   }
 
-  function finishRun(){
+  function finishRun(message="ミレスタへ帰還しました"){
     state.run=null;
     restorePartyFull();
     updateWorld();
     showScreen("homeScreen");
     updateHeader();
-    toast("ミレスタへ帰還しました");
+    toast(message);
   }
-
-  $("returnBtn").onclick=()=>{
-    modal("探索から帰還しますか？","現在の探索マップは破棄されます。\n獲得したゴールド・EXPはそのまま持ち帰れます。\nミレスタへ戻るとHP・MPは全回復します。",
-      [["帰還する",()=>{closeModal();finishRun();}],["探索を続ける",closeModal]]);
-  };
 
   updateHeader();
 })();
