@@ -99,14 +99,16 @@
 
   /* Exploration */
   #exploreScreen{padding-top:10px;padding-bottom:max(10px,var(--safe-bottom));padding-left:calc(10px + var(--safe-left));padding-right:calc(10px + var(--safe-right));gap:10px}
-  .party-panel{width:205px;flex:0 0 205px;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+  .party-panel{width:205px;flex:0 0 205px;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:0;overflow:hidden}
+  .party-panel>*{flex:0 0 auto}
+  .party-list{display:flex;flex-direction:column;gap:6px;flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding-right:2px}
+  .party-list::-webkit-scrollbar{width:0;height:0}
   .party-title{font-size:13px;color:var(--muted);font-weight:700}
-  .party-list{display:flex;flex-direction:column;gap:7px}
-  .member{padding:8px 9px;border-radius:12px;background:#111d2a;border:1px solid #2f485d}
-  .member-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px}
+    .member{padding:7px 8px;border-radius:12px;background:#111d2a;border:1px solid #2f485d}
+  .member-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:3px}
   .member .name{font-weight:800;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .lv-tag{flex:0 0 auto;padding:1px 5px;border-radius:999px;background:#27384b;color:#e8d88d;font-size:9px;font-weight:900}
-  .resource-line{display:grid;grid-template-columns:20px minmax(0,1fr) 62px;gap:4px;align-items:center;margin-top:3px}
+  .resource-line{display:grid;grid-template-columns:18px minmax(0,1fr) 58px;gap:4px;align-items:center;margin-top:2px}
   .resource-line b{font-size:8px;color:#aab9c8}
   .resource-line span:last-child{text-align:right;font-size:9px;color:#dbe5ee;font-weight:800}
   .bar{height:7px;border-radius:999px;background:#263746;overflow:hidden}
@@ -117,7 +119,7 @@
   .exp-line b{font-size:8px;color:#9faebd}
   .exp-line span:last-child{text-align:right;font-size:8px;color:#c6b86d;font-weight:800}
   .member.ko{border-color:#663f46;opacity:.72}
-  .run-info{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:auto}
+  .run-info{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:0}
   .statbox{padding:8px;border-radius:10px;background:#0c1722;border:1px solid #2a4256;text-align:center;font-size:12px}
   .statbox strong{display:block;font-size:17px;color:var(--gold)}
   .return-btn{border-color:#754646;background:linear-gradient(#623437,#3a2024);flex:0 0 auto}
@@ -1742,7 +1744,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.20" : "ミレスタ・仲間編成 v0.20";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.20b" : "ミレスタ・仲間編成 v0.20b";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -2136,7 +2138,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.20" : "ミレスタ・仲間編成 v0.20";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.20b" : "ミレスタ・仲間編成 v0.20b";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -4378,7 +4380,8 @@
 
   $("departBtn").onclick=()=>{
     if(state.selectedArea==="cave"){
-      modal("小さな洞窟","今回の試作では、ミレスタ平原から新しいエリアを解放できるところまで実装しています。\n洞窟の探索内容は次の段階で追加できます。");
+      modal("小さな洞窟","今回の試作では、ミレスタ平原から新しいエリアを解放できるところまで実装しています。
+洞窟の探索内容は次の段階で追加できます。");
       return;
     }
     startRun();
@@ -4528,16 +4531,13 @@
     list.innerHTML="";
     state.battleActive.forEach(id=>{
       const c=roster[id],st=S(c);
-      const need=expNeeded(c.level,c);
-      const expPct=c.level>=MAX_LEVEL?100:Math.max(0,Math.min(100,Math.round(c.exp/need*100)));
       const card=document.createElement("div");
       card.className="member"+(st.hp<=0?" ko":"");
       const cond=conditionsOf(c);
       card.innerHTML=`
         <div class="member-head"><div class="name">${c.name}</div><div class="member-tags">${cond.poison?'<span class="explore-condition poison">☠ 毒</span>':''}<span class="lv-tag">Lv${c.level}</span></div></div>
         <div class="resource-line"><b>HP</b><span class="bar"><i style="width:${hpPct(c)}%"></i></span><span>${st.hp}/${st.hpMax}</span></div>
-        <div class="resource-line"><b>MP</b><span class="bar mp"><i style="width:${mpPct(c)}%"></i></span><span>${st.mp}/${st.mpMax}</span></div>
-        <div class="exp-line"><b>EXP</b><span class="bar exp"><i style="width:${expPct}%"></i></span><span>${c.level>=MAX_LEVEL?"MAX":`${c.exp}/${need}`}</span></div>`;
+        <div class="resource-line"><b>MP</b><span class="bar mp"><i style="width:${mpPct(c)}%"></i></span><span>${st.mp}/${st.mpMax}</span></div>`;
       list.appendChild(card);
     });
     $("exploreReserveBtn").textContent=`👥 パーティ編成`;
@@ -4721,10 +4721,14 @@
   }
 
   const commonEvents=[
-    ["壊れた荷車","道端に壊れた荷車が放置されている。\n荷台を調べると、まだ使えそうな薬草が残っていた。"],
-    ["旅人の置き土産","小さな布袋が石の下に隠されていた。\n中にはわずかな硬貨が入っている。"],
-    ["風の通る丘","平原を渡る風が心地よい。\n少しだけ足を止め、周囲を見渡した。"],
-    ["妙な足跡","人とも獣ともつかない足跡が草の向こうへ続いている。\n今は追わず、位置だけ覚えておくことにした。"]
+    ["壊れた荷車","道端に壊れた荷車が放置されている。
+荷台を調べると、まだ使えそうな薬草が残っていた。"],
+    ["旅人の置き土産","小さな布袋が石の下に隠されていた。
+中にはわずかな硬貨が入っている。"],
+    ["風の通る丘","平原を渡る風が心地よい。
+少しだけ足を止め、周囲を見渡した。"],
+    ["妙な足跡","人とも獣ともつかない足跡が草の向こうへ続いている。
+今は追わず、位置だけ覚えておくことにした。"]
   ];
 
   function resolveNode(node){
@@ -4739,20 +4743,26 @@
       case "chest":{
         const gain=18+rand(33);
         state.gold+=gain; state.run.runGold+=gain;
-        modal("📦 宝箱",`古びた宝箱を発見した。\n${gain}G を手に入れた！`,
+        modal("📦 宝箱",`古びた宝箱を発見した。
+${gain}G を手に入れた！`,
           [["閉じる",()=>{closeModal();updateRunHud();}]]);
         break;
       }
       case "heal":{
         const recovered=recoverTravelParty(.50,.40);
         const body=recovered.hpGain||recovered.mpGain
-          ? `澄んだ水のそばで休息した。\n同行メンバー全員のHPを最大値の50%、MPを40%ぶん回復した。\n\n合計 HP +${recovered.hpGain} / MP +${recovered.mpGain}`
-          : "澄んだ水のそばで休息した。\nパーティはすでに十分元気なようだ。";
+          ? `澄んだ水のそばで休息した。
+同行メンバー全員のHPを最大値の50%、MPを40%ぶん回復した。
+
+合計 HP +${recovered.hpGain} / MP +${recovered.mpGain}`
+          : "澄んだ水のそばで休息した。
+パーティはすでに十分元気なようだ。";
         modal("❤ 休息地点",body,[["出発する",()=>{closeModal();updateRunHud();}]]);
         break;
       }
       case "shop":
-        modal("🛒 珍しい行商人","こんな場所で行商人に出会った。\n「旅のお供にポーションはいらんかね？」",
+        modal("🛒 珍しい行商人","こんな場所で行商人に出会った。
+「旅のお供にポーションはいらんかね？」",
           [["ポーションを30Gで買う",()=>{
             if(state.gold>=30){state.gold-=30;state.potions++;closeModal();updateHeader();toast("ポーションを1個購入");}
             else toast("お金が足りません");
@@ -4762,7 +4772,9 @@
         const [title,body]=choose(commonEvents);
         const bonus=Math.random()<0.45 ? 8+rand(13) : 0;
         if(bonus){state.gold+=bonus;state.run.runGold+=bonus;}
-        modal("？ "+title, body+(bonus?`\n\n${bonus}G を見つけた。`:""),
+        modal("？ "+title, body+(bonus?`
+
+${bonus}G を見つけた。`:""),
           [["進む",()=>{closeModal();updateRunHud();}]]);
         break;
       }
@@ -4770,10 +4782,14 @@
         if(!state.caveUnlocked){
           state.caveUnlocked=true;
           localStorage.setItem("milesta_cave_unlocked","1");
-          modal("★ 平原の最奥", "草の切れ目の向こう、岩肌に小さな裂け目を見つけた。\n中へ続く空洞があるようだ。\n\n【小さな洞窟】が世界マップに追加された！",
+          modal("★ 平原の最奥", "草の切れ目の向こう、岩肌に小さな裂け目を見つけた。
+中へ続く空洞があるようだ。
+
+【小さな洞窟】が世界マップに追加された！",
             [["ミレスタへ帰還",()=>{closeModal();finishRun();}]]);
         }else{
-          modal("★ 平原の最奥","以前見つけた洞窟の入口までたどり着いた。\n今回の探索はここまで。",
+          modal("★ 平原の最奥","以前見つけた洞窟の入口までたどり着いた。
+今回の探索はここまで。",
             [["ミレスタへ帰還",()=>{closeModal();finishRun();}]]);
         }
         break;
@@ -4790,7 +4806,9 @@
   }
 
   $("returnBtn").onclick=()=>{
-    modal("探索から帰還しますか？","現在の探索マップは破棄されます。\n獲得したゴールド・EXPはそのまま持ち帰れます。\nミレスタへ戻るとHP・MPは全回復します。",
+    modal("探索から帰還しますか？","現在の探索マップは破棄されます。
+獲得したゴールド・EXPはそのまま持ち帰れます。
+ミレスタへ戻るとHP・MPは全回復します。",
       [["帰還する",()=>{closeModal();finishRun();}],["探索を続ける",closeModal]]);
   };
 
