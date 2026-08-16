@@ -928,7 +928,7 @@
 
   /* Modal */
   .modal{
-    display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.62);
+    display:none;position:fixed;inset:0;z-index:220;background:rgba(0,0,0,.62);
     align-items:center;justify-content:center;padding:22px
   }
   .modal.show{display:flex}
@@ -1259,7 +1259,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.21</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.22</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1765,12 +1765,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.21" : "ミレスタ・仲間編成 v0.21";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.22" : "ミレスタ・仲間編成 v0.22";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2159,7 +2159,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.21" : "ミレスタ・仲間編成 v0.21";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.22" : "ミレスタ・仲間編成 v0.22";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -2168,13 +2168,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
     updateHeader();
   };
 
@@ -2745,6 +2745,29 @@
   function livingEnemies(){ return state.battleEnemies.filter(e=>e.hp>0); }
   function setMessage(text){ $("battleMessage").textContent=text; }
   function effectiveAtk(c){ return Math.round(S(c).atk*(c.atkBuff||1)); }
+  function effectiveDef(c){ return Math.round(S(c).def*(c.defBuff||1)); }
+  function effectiveMagic(c){ return Math.round(S(c).magic*(c.magicBuff||1)); }
+  function effectiveMdef(c){ return Math.round(S(c).mdef*(c.mdefBuff||1)); }
+
+  // v0.22 damage model (candidate B): defense is a ratio-based reduction rather than subtraction.
+  // Equal offense/defense retains about 59% damage; very high defense stays meaningful without forcing 1 damage too early.
+  function defenseDamageFactor(offense,defense){
+    const o=Math.max(1,Number(offense)||1);
+    const d=Math.max(0,Number(defense)||0);
+    return o/(o+d*.70);
+  }
+  function damageVariance(){ return .95+Math.random()*.10; }
+  function physicalDamage(offense,defense,power=1,minDamage=1){
+    const o=Math.max(1,Number(offense)||1);
+    const raw=o*Math.max(0,Number(power)||1);
+    return Math.max(minDamage,Math.round(raw*defenseDamageFactor(o,defense)*damageVariance()));
+  }
+  function magicDamage(magic,mdef,basePower=0,magicScale=1,minDamage=2){
+    const m=Math.max(1,Number(magic)||1);
+    const raw=Math.max(0,(Number(basePower)||0)+m*(Number(magicScale)||0));
+    return Math.max(minDamage,Math.round(raw*defenseDamageFactor(m,mdef)*damageVariance()));
+  }
+
   function rollInitiative(spd){
     const base=Math.max(1,Number(spd)||1);
     return base*(.90+Math.random()*.20);
@@ -3542,8 +3565,7 @@
     setMessage(`${actor.name} の${skillName||"攻撃"}！`);
     await wait(BASE_TIME.actionLead);
 
-    const variance=rand(5)-2;
-    const dmg=Math.max(1,Math.round(effectiveAtk(actor)*mult)-Math.floor(target.def/2)+variance);
+    const dmg=physicalDamage(effectiveAtk(actor),target.def,mult,1);
     target.hp=Math.max(0,target.hp-dmg);
     const killed=target.hp<=0;
     setMessage(`${actor.name} の${skillName||"攻撃"}！ ${target.displayName} に ${dmg} ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
@@ -3572,9 +3594,8 @@
       setMessage(`${actor.name} は ${sk.name} を唱えた！`);
       await wait(BASE_TIME.actionLead);
 
-      const variance=rand(6)-2;
-      const magicPower=S(actor).magic||18;
-      const dmg=Math.max(2,Math.round(sk.power + magicPower*.35)-Math.floor((target.mdef||4)/2)+variance);
+      const magicPower=effectiveMagic(actor)||18;
+      const dmg=magicDamage(magicPower,target.mdef||4,sk.power,.35,2);
       target.hp=Math.max(0,target.hp-dmg);
       const killed=target.hp<=0;
       setMessage(`🔥 ${sk.name}！ ${target.displayName} に ${dmg} の炎ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
@@ -3590,10 +3611,9 @@
       setMessage(`🔥 ${actor.name} は ${sk.name} を唱えた！`);
       await wait(BASE_TIME.actionLead);
 
-      const magicPower=S(actor).magic||18;
+      const magicPower=effectiveMagic(actor)||18;
       const results=targets.map(target=>{
-        const variance=rand(5)-2;
-        const dmg=Math.max(2,Math.round(sk.power + magicPower*.25)-Math.floor((target.mdef||4)/2)+variance);
+        const dmg=magicDamage(magicPower,target.mdef||4,sk.power,.25,2);
         target.hp=Math.max(0,target.hp-dmg);
         const killed=target.hp<=0;
         if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
@@ -3745,7 +3765,7 @@
 
     const target=choose(refreshedTargets);
     const c=target.c;
-    const raw=Math.max(1,enemy.atk-Math.floor(S(c).def/2)+(rand(5)-2));
+    const raw=physicalDamage(enemy.atk,effectiveDef(c),1,1);
     const dmg=Math.max(1,c.defending?Math.ceil(raw/2):raw);
     S(c).hp=Math.max(0,S(c).hp-dmg);
 
@@ -3818,7 +3838,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
       updateHeader();
       toast("戦闘から逃走しました");
       return;
@@ -3827,7 +3847,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
     toast("戦闘から逃走しました。報酬・勧誘判定はありません");
   }
 
@@ -3850,7 +3870,7 @@
     state.battlePhase="resolve";
     setCommandsEnabled(false);
     renderBattleParty();
-    setMessage(`逃走を試みた……！ 成功率 ${rate}%`);
+    setMessage("逃走を試みた……！");
     await wait(BASE_TIME.message);
 
     if(Math.random()*100<rate){
@@ -3860,7 +3880,7 @@
       return;
     }
 
-    setMessage(`逃げ切れなかった！ 次の逃走成功率は ${currentEscapeRate(state.escapeAttempts+1)}%。`);
+    setMessage("逃げ切れなかった！");
     await wait(BASE_TIME.message);
 
     // 逃走失敗時は味方全員の行動を消費し、敵だけが1回ずつ行動する。
@@ -4112,7 +4132,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -4120,7 +4140,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -4246,7 +4266,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -4304,7 +4324,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.21";
+    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.22";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -4326,7 +4346,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.21";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
     updateHeader();
     toast("戦闘テストを終了");
   }
