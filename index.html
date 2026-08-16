@@ -368,7 +368,7 @@
     color:#cdd7ef;font-size:10px;font-weight:800;cursor:pointer;
   }
 
-  /* v0.15b multi-skill selection */
+  /* v0.16 multi-skill selection */
   .skill-select-panel{width:min(680px,94vw)}
   .skill-party-status{
     display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-bottom:7px;
@@ -460,14 +460,29 @@
   .skill-cmd small{
     display:block;margin-top:1px;font-size:8px;font-weight:800;color:#d4cafa;
   }
+  .battle-party-row{position:relative}
+  .battle-party-row.target-selecting{
+    padding:3px;border-radius:12px;outline:2px solid #86d8ff;
+    background:rgba(70,151,197,.10);box-shadow:0 0 16px rgba(111,205,255,.18);
+  }
+  .battle-party-row.target-selecting:before{
+    content:"▼ 回復・補助する仲間をタップ";position:absolute;left:50%;top:-20px;transform:translateX(-50%);
+    z-index:9;padding:3px 9px;border-radius:999px;background:rgba(8,25,36,.96);border:1px solid #86d8ff;
+    color:#dff6ff;font-size:8px;font-weight:1000;white-space:nowrap;pointer-events:none;
+    box-shadow:0 3px 10px rgba(0,0,0,.34);
+  }
   .battle-status-card.targetable{
-    border-color:#86d8ff;
-    box-shadow:0 0 12px rgba(111,205,255,.28),inset 0 0 0 1px rgba(132,218,255,.22);
-    animation:targetPulse .75s ease-in-out infinite alternate;
+    border-color:#a7e7ff;
+    box-shadow:0 0 15px rgba(111,205,255,.46),inset 0 0 0 2px rgba(132,218,255,.34);
+    animation:targetPulse .62s ease-in-out infinite alternate;
+    transform:translateY(-2px);
+  }
+  .battle-status-card.targetable .queued-action{
+    color:#e8f9ff;background:#17374b;border:1px solid rgba(134,216,255,.30);
   }
   @keyframes targetPulse{
     from{filter:brightness(1)}
-    to{filter:brightness(1.18)}
+    to{filter:brightness(1.22)}
   }
   .battle-status-card.buff-atk{
     box-shadow:inset 0 0 0 1px rgba(255,206,95,.22);
@@ -917,7 +932,7 @@
 
 
 
-  /* v0.15b exploration party management */
+  /* v0.16 exploration party management */
   .party-manage-shell.explore-mode .party-manage-grid{grid-template-columns:1fr 1.2fr}
   .party-manage-shell.explore-mode #partyWaitingColumn{display:none}
   .battle-status-card.empty-deploy{
@@ -926,7 +941,7 @@
   }
   .battle-status-card.empty-deploy:hover{border-color:#e5cf70;color:#fff0a5;filter:brightness(1.12)}
 
-  /* v0.15b character detail */
+  /* v0.16 character detail */
   .party-detail-side{
     min-width:0;border-left:1px solid #31485b;padding-left:8px;
     display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:7px;align-items:stretch;
@@ -1057,7 +1072,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.15b</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.16</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1450,12 +1465,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.15b" : "ミレスタ・仲間編成 v0.15b";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.16" : "ミレスタ・仲間編成 v0.16";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.16"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -1755,7 +1770,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細 v0.15b";
+    $("topSubtitle").textContent="キャラ詳細 v0.16";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -1763,7 +1778,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.15b" : "ミレスタ・仲間編成 v0.15b";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.16" : "ミレスタ・仲間編成 v0.16";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -1772,13 +1787,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.16";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.16";
     updateHeader();
   };
 
@@ -2138,6 +2153,22 @@
   function livingEnemies(){ return state.battleEnemies.filter(e=>e.hp>0); }
   function setMessage(text){ $("battleMessage").textContent=text; }
   function effectiveAtk(c){ return Math.round(S(c).atk*(c.atkBuff||1)); }
+  function rollInitiative(spd){
+    const base=Math.max(1,Number(spd)||1);
+    return base*(.90+Math.random()*.20);
+  }
+  function buildTurnOrder(){
+    const order=[];
+    livingActiveSlots().forEach(({id,i,c})=>{
+      const action=state.battleActions[i];
+      if(action) order.push({side:"ally",actorId:id,slot:i,action,initiative:rollInitiative(S(c).spd),tie:Math.random()});
+    });
+    livingEnemies().forEach(enemy=>{
+      order.push({side:"enemy",enemyUid:enemy.uid,initiative:rollInitiative(enemy.spd),tie:Math.random()});
+    });
+    order.sort((a,b)=>(b.initiative-a.initiative)||(b.tie-a.tie));
+    return order;
+  }
 
   function enemyByUid(uid){
     return state.battleEnemies.find(e=>e.uid===uid) || null;
@@ -2308,7 +2339,7 @@
         const target=enemyByUid(action.targetUid);
         return `${sk.icon} ${sk.name}→${target && target.hp>0 ? target.displayName : "敵"}`;
       }
-      const target=roster[state.battleActive[action.targetSlot]];
+      const target=roster[action.targetId || state.battleActive[action.targetSlot]];
       return `${sk.icon} ${sk.name}→${target ? target.name : "味方"}`;
     }
     return action.type;
@@ -2317,12 +2348,13 @@
   function renderBattleParty(){
     const row=$("battlePartyRow");
     row.innerHTML="";
+    row.classList.toggle("target-selecting",!!(state.battleTargetMode && state.battleTargetMode.kind==="ally"));
     state.battleActive.forEach((id,slot)=>{
       const c=roster[id], st=S(c);
       const action=state.battleActions[slot];
       const btn=document.createElement("button");
       btn.className="battle-status-card";
-      if(slot===state.battleActorSlot && state.battlePhase==="input" && !state.battleEnded) btn.classList.add("active");
+      if(slot===state.battleActorSlot && state.battlePhase==="input" && !state.battleEnded && !state.battleTargetMode) btn.classList.add("active");
       if(st.hp<=0) btn.classList.add("ko");
       if(c.defending) btn.classList.add("defending");
       if(c.atkBuffRounds>0) btn.classList.add("buff-atk");
@@ -2332,7 +2364,7 @@
       let turnText="";
       if(st.hp<=0) turnText="戦闘不能";
       else if(state.battlePhase==="input"){
-        if(state.battleTargetMode && state.battleTargetMode.kind==="ally") turnText="対象候補";
+        if(state.battleTargetMode && state.battleTargetMode.kind==="ally") turnText="タップで対象";
         else if(slot===state.battleActorSlot) turnText="選択中";
         else if(action) turnText="入力済";
         else if(c.atkBuffRounds>0) turnText=`ATK↑${c.atkBuffRounds}`;
@@ -2342,11 +2374,15 @@
         turnText=`ATK↑${c.atkBuffRounds}`;
       }
 
+      const targetSelectText=(state.battleTargetMode && state.battleTargetMode.kind==="ally" && st.hp>0)
+        ? `👆 ${skills[state.battleTargetMode.skill]?.name||"スキル"}の対象`
+        : (st.hp<=0 ? "行動不可" : actionLabel(action));
+
       btn.innerHTML=`
         <span class="status-name">${c.name} <small>Lv${c.level}</small></span>
         <span class="status-turn">${turnText}</span>
         ${c.atkBuffRounds>0?`<span class="buff-badge">ATK↑ ${c.atkBuffRounds}R</span>`:""}
-        <span class="queued-action ${action?"ready":""}">${st.hp<=0 ? "行動不可" : actionLabel(action)}</span>
+        <span class="queued-action ${action?"ready":""}">${targetSelectText}</span>
         <span class="mini-bars"><b>HP</b><span class="mini-bar"><i style="width:${hpPct(c)}%"></i></span><span>${st.hp}/${st.hpMax}</span></span>
         <span class="mini-bars"><b>MP</b><span class="mini-bar mp"><i style="width:${mpPct(c)}%"></i></span><span>${st.mp}/${st.mpMax}</span></span>`;
 
@@ -2364,8 +2400,9 @@
             return;
           }
           const mode=state.battleTargetMode;
+          const targetId=state.battleActive[slot];
           state.battleTargetMode=null;
-          queueAction({type:"skill",skill:mode.skill,targetSlot:slot});
+          queueAction({type:"skill",skill:mode.skill,targetSlot:slot,targetId});
           return;
         }
         if(st.hp>0){
@@ -2408,7 +2445,7 @@
     const c=roster[id];
     $("battleActorName").textContent=c.name;
     $("battleActorCaption").textContent=state.battleEnded ? "戦闘終了" :
-      state.battleTargetMode ? "スキルの対象を選択中" :
+      state.battleTargetMode ? `${skills[state.battleTargetMode.skill]?.name||"スキル"}：下の仲間を選択` :
       state.battlePhase==="input" ? c.caption :
       state.battlePhase==="resolve" ? "味方の行動を処理中" :
       state.battlePhase==="enemy" ? "敵の行動を処理中" : c.caption;
@@ -2649,7 +2686,7 @@
       const needsBuff=livingActiveSlots().some(x=>x.c.atkBuffRounds<=0);
       if(needsBuff){
         const targetSlot=strongestUnbuffedAllySlot();
-        if(targetSlot!==null) return {type:"skill",skill:"polish",targetSlot};
+        if(targetSlot!==null) return {type:"skill",skill:"polish",targetSlot,targetId:state.battleActive[targetSlot]};
       }
     }
 
@@ -2659,7 +2696,7 @@
       if(targetSlot!==null){
         const ally=roster[state.battleActive[targetSlot]];
         if(S(ally).hp/S(ally).hpMax<.50){
-          return {type:"skill",skill:"heal",targetSlot};
+          return {type:"skill",skill:"heal",targetSlot,targetId:state.battleActive[targetSlot]};
         }
       }
     }
@@ -2916,9 +2953,12 @@
     }
 
     if(sk.id==="polish"){
-      let target=roster[state.battleActive[action.targetSlot]];
-      if(!target || S(target).hp<=0){
+      let targetSlot=action.targetSlot;
+      let target=roster[action.targetId || state.battleActive[targetSlot]];
+      const stillActive=target && state.battleActive[targetSlot]===target.id;
+      if(!target || S(target).hp<=0 || !stillActive){
         const alt=livingActiveSlots()[0];
+        targetSlot=alt?alt.i:null;
         target=alt?alt.c:null;
       }
       if(!target) return;
@@ -2930,8 +2970,8 @@
       target.atkBuff=sk.multiplier;
       target.atkBuffRounds=sk.duration;
       renderBattleParty();
-      flashPartyValue(action.targetSlot,"","buff");
-      const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${action.targetSlot}"]`);
+      flashPartyValue(targetSlot,"","buff");
+      const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${targetSlot}"]`);
       if(card) spawnFx("buff","✨",card);
       setMessage(`✨ ${target.name} の攻撃力が上がった！（${sk.duration}ラウンド）`);
       await wait(BASE_TIME.buff);
@@ -2940,8 +2980,9 @@
 
     if(sk.id==="heal"){
       let targetSlot=action.targetSlot;
-      let target=roster[state.battleActive[targetSlot]];
-      if(!target || S(target).hp<=0){
+      let target=roster[action.targetId || state.battleActive[targetSlot]];
+      const stillActive=target && state.battleActive[targetSlot]===target.id;
+      if(!target || S(target).hp<=0 || !stillActive){
         const alternatives=livingActiveSlots().sort((a,b)=>(S(a.c).hp/S(a.c).hpMax)-(S(b.c).hp/S(b.c).hpMax));
         if(alternatives.length){
           targetSlot=alternatives[0].i;
@@ -2967,6 +3008,51 @@
     }
   }
 
+  async function executeEnemyAction(enemy){
+    if(state.battleEnded || !enemy || enemy.hp<=0) return;
+    state.battlePhase="enemy";
+    clearEnemyActing();
+    const enemyEl=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${enemy.uid}"]`);
+    if(enemyEl) enemyEl.classList.add("acting");
+    renderBattleParty();
+    setMessage(`${enemy.displayName} が行動！`);
+    await wait(BASE_TIME.enemyLead);
+
+    const targets=livingActiveSlots();
+    if(targets.length===0){
+      if(!autoDeployReserves()){ loseBattle(); return; }
+    }
+    const refreshedTargets=livingActiveSlots();
+    if(refreshedTargets.length===0){ loseBattle(); return; }
+
+    const target=choose(refreshedTargets);
+    const c=target.c;
+    const raw=Math.max(1,enemy.atk-Math.floor(S(c).def/2)+(rand(5)-2));
+    const dmg=Math.max(1,c.defending?Math.ceil(raw/2):raw);
+    S(c).hp=Math.max(0,S(c).hp-dmg);
+
+    if(enemyEl) spawnFx("impact","💥",enemyEl);
+    renderBattleParty();
+    flashPartyValue(target.i,dmg,"damage");
+    setMessage(`${enemy.displayName} の攻撃！ ${c.name} に ${dmg} ダメージ。${c.defending?"（防御で軽減）":""}`);
+    await wait(BASE_TIME.enemyAfter);
+
+    if(S(c).hp<=0){
+      const outgoingName=c.name;
+      const replaced=autoReplaceSlot(target.i);
+      renderBattleParty();
+      updateActorPortrait();
+      if(replaced){
+        const incoming=roster[state.battleActive[target.i]];
+        setMessage(`${outgoingName} は戦闘不能。控えの ${incoming.name} が戦線に入った。`);
+        await wait(BASE_TIME.message);
+      }else if(livingActiveSlots().length===0){
+        loseBattle();
+        return;
+      }
+    }
+  }
+
   async function resolveTurn(){
     if(state.battlePhase!=="input" || state.battleEnded || !commandsReady() || state.battleTargetMode) return;
     cancelScheduledTurnStart();
@@ -2974,12 +3060,29 @@
     setCommandsEnabled(false);
     updateExecuteButton();
 
-    for(let slot=0;slot<state.battleActive.length;slot++){
-      if(state.battleEnded) return;
-      const actor=roster[state.battleActive[slot]];
-      const action=state.battleActions[slot];
-      if(S(actor).hp<=0 || !action) continue;
+    const turnOrder=buildTurnOrder();
+    setMessage(`ROUND ${state.battleRound}：素早さをもとに行動順を決定！`);
+    await wait(BASE_TIME.short);
 
+    for(const turn of turnOrder){
+      if(state.battleEnded) return;
+
+      if(turn.side==="enemy"){
+        const enemy=enemyByUid(turn.enemyUid);
+        if(!enemy || enemy.hp<=0) continue;
+        await executeEnemyAction(enemy);
+        if(state.battleEnded) return;
+        continue;
+      }
+
+      const slot=turn.slot;
+      if(state.battleActive[slot]!==turn.actorId) continue;
+      const actor=roster[turn.actorId];
+      const action=turn.action;
+      if(!actor || S(actor).hp<=0 || !action) continue;
+
+      state.battlePhase="resolve";
+      clearEnemyActing();
       state.battleActorSlot=slot;
       updateActorPortrait();
       renderBattleParty();
@@ -2988,7 +3091,7 @@
         animateActor("buff");
         actor.defending=true;
         renderBattleParty();
-        setMessage(`${actor.name} は身を守った。敵から受けるダメージをこのラウンド中半減します。`);
+        setMessage(`${actor.name} は身を守った。以後、このラウンド中に受けるダメージを半減します。`);
         await wait(BASE_TIME.message);
         continue;
       }
@@ -2997,8 +3100,10 @@
         let target=enemyByUid(action.targetUid);
         if(!target || target.hp<=0){
           target=livingEnemies()[0] || null;
-          if(target) setMessage(`${actor.name} の狙っていた敵は倒れている。${target.displayName} に狙いを変更！`);
-          await wait(BASE_TIME.short);
+          if(target){
+            setMessage(`${actor.name} の狙っていた敵は倒れている。${target.displayName} に狙いを変更！`);
+            await wait(BASE_TIME.short);
+          }
         }
         if(!target){ winBattle(); return; }
         await resolveAttack(actor,target,null,1,"slash","⚔");
@@ -3014,68 +3119,7 @@
       }
     }
 
-    await enemyPhase();
-  }
-
-  function clearEnemyActing(){
-    $("enemyStage").querySelectorAll(".enemy.acting").forEach(el=>el.classList.remove("acting"));
-  }
-
-  async function enemyPhase(){
-    if(state.battleEnded) return;
-    state.battlePhase="enemy";
-    state.battleTargetMode=null;
-    setCommandsEnabled(false);
-    updateExecuteButton();
-    renderBattleParty();
-
-    const enemies=state.battleEnemies.filter(e=>e.hp>0);
-    for(const enemy of enemies){
-      if(state.battleEnded || enemy.hp<=0) continue;
-
-      clearEnemyActing();
-      const enemyEl=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${enemy.uid}"]`);
-      if(enemyEl) enemyEl.classList.add("acting");
-      setMessage(`${enemy.displayName} が行動！`);
-      await wait(BASE_TIME.enemyLead);
-
-      const targets=livingActiveSlots();
-      if(targets.length===0){
-        if(!autoDeployReserves()){ loseBattle(); return; }
-      }
-      const refreshedTargets=livingActiveSlots();
-      if(refreshedTargets.length===0){ loseBattle(); return; }
-
-      const target=choose(refreshedTargets);
-      const c=target.c;
-      const raw=Math.max(1,enemy.atk-Math.floor(S(c).def/2)+(rand(5)-2));
-      const dmg=Math.max(1,c.defending?Math.ceil(raw/2):raw);
-      S(c).hp=Math.max(0,S(c).hp-dmg);
-
-      if(enemyEl) spawnFx("impact","💥",enemyEl);
-      renderBattleParty();
-      flashPartyValue(target.i,dmg,"damage");
-      setMessage(`${enemy.displayName} の攻撃！ ${c.name} に ${dmg} ダメージ。${c.defending?"（防御で軽減）":""}`);
-      await wait(BASE_TIME.enemyAfter);
-
-      if(S(c).hp<=0){
-        const outgoingName=c.name;
-        const replaced=autoReplaceSlot(target.i);
-        renderBattleParty();
-        updateActorPortrait();
-        if(replaced){
-          const incoming=roster[state.battleActive[target.i]];
-          setMessage(`${outgoingName} は戦闘不能。控えの ${incoming.name} が戦線に入った。`);
-          await wait(BASE_TIME.message);
-        }else if(livingActiveSlots().length===0){
-          loseBattle();
-          return;
-        }
-      }
-    }
-
     clearEnemyActing();
-
     state.battleActive.concat(state.battleReserve).forEach(id=>{
       const c=roster[id];
       if(c.atkBuffRounds>0){
@@ -3092,6 +3136,10 @@
       await wait(BASE_TIME.roundGap);
       startCommandInput();
     }
+  }
+
+  function clearEnemyActing(){
+    $("enemyStage").querySelectorAll(".enemy.acting").forEach(el=>el.classList.remove("acting"));
   }
 
   function autoReplaceSlot(slot){
@@ -3169,7 +3217,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.16";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -3177,7 +3225,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.16";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -3295,7 +3343,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.16";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -3346,7 +3394,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.15b";
+    $("topSubtitle").textContent="探索＋勧誘・編成試作 v0.16";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -3368,7 +3416,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.15b";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.16";
     toast("戦闘テストを終了");
   }
 
