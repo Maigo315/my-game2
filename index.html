@@ -497,7 +497,7 @@
   .equipment-picker-head strong{font-size:12px}.equipment-picker-head span{margin-left:auto;color:#91a6b8;font-size:8px}
   .equipment-picker-list{min-height:0;overflow-y:auto;display:grid;align-content:start;gap:5px;scrollbar-width:thin}
   .equipment-picker-item{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:6px;align-items:center;padding:7px;border:1px solid #344d62;border-radius:9px;background:#132232;color:#dce7ef;text-align:left;cursor:pointer}
-  .equipment-picker-item.preview{border-color:#d9c565;background:#2d2918}.equipment-picker-item.equipped{box-shadow:inset 0 0 0 1px #6cae87}
+  .equipment-picker-item.preview{border-color:#d9c565;background:#2d2918}.equipment-picker-item.equipped{box-shadow:inset 0 0 0 1px #6cae87}.equipment-picker-item:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.35)}
   .equipment-picker-item .ico{font-size:20px;text-align:center}.equipment-picker-item b{display:block;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.equipment-picker-item small{display:block;margin-top:2px;color:#91a5b5;font-size:7px;line-height:1.35}.equipment-picker-item .mark{font-size:8px;color:#d7ca80;font-weight:1000}
   .equipment-picker-footer{border-top:1px solid #2b4255;padding-top:7px}.equipment-picker-desc{min-height:28px;color:#9eb0bf;font-size:7px;line-height:1.45;margin-bottom:6px}.equipment-picker-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}.equipment-picker-actions button{padding:7px;border-radius:8px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:8px;font-weight:1000;cursor:pointer}.equipment-picker-actions button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.equipment-picker-actions button:disabled{opacity:.35;cursor:default}
   .character-portrait-card.picker-mode{padding:8px}
@@ -1633,7 +1633,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・武器演出試作 v0.24a</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.24b</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2139,12 +2139,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.24a" : "ミレスタ・仲間編成 v0.24a";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.24b" : "ミレスタ・仲間編成 v0.24b";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24b"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2525,6 +2525,10 @@
     if(item.attackAll) bits.push(`全体${Math.round((item.normalAttackPower||1)*100)}%`);
     if(item.defenseInfluence!==undefined && item.defenseInfluence!==1) bits.push(`防御影響${Math.round(item.defenseInfluence*100)}%`);
     if(item.fate) bits.push(`運+${item.fate}`);
+    Object.entries(item.resist||{}).forEach(([key,steps])=>{
+      if(steps) bits.push(`${RESISTANCE_LABELS[key]||key}耐性${steps>0?"+":""}${steps}`);
+    });
+    if(item.physicalPoisonRate) bits.push(`毒付与${Number(item.physicalPoisonRate).toFixed(1)}%（保留）`);
     return bits;
   }
 
@@ -2534,7 +2538,7 @@
     card.classList.add("picker-mode"); portrait.className="";
     const previewId=state.equipmentPreviewId||c.equipment[slot];
     const items=equipmentInventory[slot]||[];
-    const list=items.map(id=>{const item=equipmentCatalog[id];const bits=equipmentItemBits(c,item);return `<button class="equipment-picker-item${id===previewId?" preview":""}${id===c.equipment[slot]?" equipped":""}" data-picker-item="${id}"><span class="ico">${item.icon||"－"}</span><span><b>${item.name}</b><small>${bits.join(" / ")||"補正なし"}</small></span><span class="mark">${id===c.equipment[slot]?"装備中":""}</span></button>`;}).join("");
+    const list=items.map(id=>{const item=equipmentCatalog[id];const bits=equipmentItemBits(c,item);const unavailable=!!item.unavailable;return `<button class="equipment-picker-item${id===previewId?" preview":""}${id===c.equipment[slot]?" equipped":""}" data-picker-item="${id}" ${unavailable?"disabled":""}><span class="ico">${item.icon||"－"}</span><span><b>${item.name}</b><small>${bits.join(" / ")||"補正なし"}</small></span><span class="mark">${unavailable?"保留":id===c.equipment[slot]?"装備中":""}</span></button>`;}).join("");
     const item=equipmentCatalog[previewId]; const same=previewId===c.equipment[slot];
     portrait.innerHTML=`<div class="equipment-picker"><div class="equipment-picker-head"><strong>${EQUIPMENT_SLOT_LABELS[slot]}を選択</strong><span>${items.length}個</span></div><div class="equipment-picker-list">${list}</div><div class="equipment-picker-footer"><div class="equipment-picker-desc"><strong>${item?.name||"装備なし"}</strong><br>${item?.desc||""}</div><div class="equipment-picker-actions"><button id="equipmentPickerCancel">キャンセル</button><button class="primary" id="equipmentPickerConfirm" ${same?"disabled":""}>装備する</button></div></div></div>`;
     const listEl=portrait.querySelector(".equipment-picker-list");
@@ -2649,7 +2653,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・武器演出試作 v0.24a";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.24b";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2657,7 +2661,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.24a" : "ミレスタ・仲間編成 v0.24a";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.24b" : "ミレスタ・仲間編成 v0.24b";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -2666,13 +2670,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24b";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24b";
     updateHeader();
   };
 
@@ -2798,24 +2802,23 @@
     whip:{id:"whip",slot:"weapon",weaponType:"whip",name:"ウィップ",icon:"➰",mods:{atk:6},canCrit:false,normalAttackPower:.80,attackAll:true,desc:"攻撃力+6。通常攻撃が敵全体になり、各対象へ80%威力。敵が1体でも80%。"},
     type_milesta:{id:"type_milesta",slot:"weapon",weaponType:"gun",name:"タイプ・ミレスタ",icon:"🔫",mods:{atk:9},canCrit:false,normalAttackPower:.85,defenseInfluence:.50,desc:"攻撃力+9。通常攻撃は85%威力だが、敵防御力の影響を通常の50%しか受けない。"},
     no_shield:{id:"no_shield",slot:"shield",name:"装備なし",icon:"－",mods:{}},
-    wood_shield:{id:"wood_shield",slot:"shield",name:"木の盾",icon:"🛡️",mods:{def:3},desc:"軽い基本盾。"},
-    iron_shield:{id:"iron_shield",slot:"shield",name:"鉄の盾",icon:"🛡️",mods:{def:5,spd:-1},desc:"防御重視。少し重い。"},
-    flame_buckler:{id:"flame_buckler",slot:"shield",name:"炎紋の盾",icon:"🔥",mods:{def:2},resist:{fire:1},desc:"防御は控えめ。炎耐性+1段階（表示試作）。"},
+    wood_shield:{id:"wood_shield",slot:"shield",name:"木の盾",icon:"🛡️",mods:{def:2},desc:"防御力+2。軽く扱いやすい基本の盾。"},
+    stone_greatshield:{id:"stone_greatshield",slot:"shield",name:"石の大盾",icon:"🪨",mods:{def:5,spd:-5},desc:"防御力+5 / 素早さ-5。非常に重いが、防御力に優れる大盾。"},
     no_body:{id:"no_body",slot:"body",name:"装備なし",icon:"－",mods:{}},
-    leather_armor:{id:"leather_armor",slot:"body",name:"革の鎧",icon:"🥋",mods:{def:4},desc:"身体装備の基本型。"},
-    apprentice_robe:{id:"apprentice_robe",slot:"body",name:"見習いローブ",icon:"👘",mods:{def:1,magic:2,mdef:4},desc:"防御控えめ、魔力・魔防型。"},
-    light_vest:{id:"light_vest",slot:"body",name:"軽装ベスト",icon:"🦺",mods:{def:2,spd:3},desc:"防御控えめ、素早さ型。"},
+    milesta_clothes:{id:"milesta_clothes",slot:"body",name:"ミレスタの服",icon:"👕",mods:{def:3,spd:2},desc:"防御力+3 / 素早さ+2。動きやすさを重視した軽装。"},
+    leather_armor:{id:"leather_armor",slot:"body",name:"革の鎧",icon:"🥋",mods:{def:6},desc:"防御力+6。素直に防御力を高める革鎧。"},
     no_accessory:{id:"no_accessory",slot:"accessory",name:"装備なし",icon:"－",mods:{}},
-    power_ring:{id:"power_ring",slot:"accessory",name:"力の指輪",icon:"💍",mods:{atk:2},desc:"攻撃を少し補強。"},
-    lucky_charm:{id:"lucky_charm",slot:"accessory",name:"幸運のお守り",icon:"🍀",mods:{},fate:3,desc:"運命値+3（表示試作）。"},
-    dodge_feather:{id:"dodge_feather",slot:"accessory",name:"身かわしの羽飾り",icon:"🪶",mods:{},evasion:5,desc:"回避率+5.0%。物理攻撃のみ回避可能。"},
-    crit_lens:{id:"crit_lens",slot:"accessory",name:"急所のレンズ",icon:"🔎",mods:{},crit:3,desc:"会心率+3.0%。会心可能な通常攻撃と物理スキルに有効。"}
+    hunter_charm:{id:"hunter_charm",slot:"accessory",name:"狩人の御守り",icon:"🦷",mods:{atk:2},crit:2,desc:"攻撃力+2 / 会心率+2.0%。物理攻撃を堅実に強化する御守り。"},
+    light_shoes:{id:"light_shoes",slot:"accessory",name:"身軽なシューズ",icon:"👟",mods:{},evasion:5,desc:"回避率+5.0%。物理攻撃に対する回避を目に見えて高める。"},
+    magic_earrings:{id:"magic_earrings",slot:"accessory",name:"魔法のイヤリング",icon:"💎",mods:{magic:4},resist:{silence:1},desc:"魔力+4 / 封印耐性+1段階。魔法を扱う者向けのイヤリング。"},
+    fate_ring:{id:"fate_ring",slot:"accessory",name:"運命の指輪",icon:"💍",mods:{},fate:4,desc:"運命値+4。運命値を大きく引き上げる指輪。"},
+    poison_gloves:{id:"poison_gloves",slot:"accessory",name:"毒手袋",icon:"🧤",mods:{},physicalPoisonRate:10,unavailable:true,desc:"物理攻撃時、10%の確率で毒状態にする。※毒付与の戦闘処理が未実装のため現在は保留。"}
   };
   const equipmentInventory={
     weapon:["bare","stone_claw","dagger","stone_axe","hinoki_staff","short_bow","whip","type_milesta"],
-    shield:["no_shield","wood_shield","iron_shield","flame_buckler"],
-    body:["no_body","leather_armor","apprentice_robe","light_vest"],
-    accessory:["no_accessory","power_ring","lucky_charm","dodge_feather","crit_lens"]
+    shield:["no_shield","wood_shield","stone_greatshield"],
+    body:["no_body","milesta_clothes","leather_armor"],
+    accessory:["no_accessory","hunter_charm","light_shoes","magic_earrings","fate_ring","poison_gloves"]
   };
   const favoriteWeaponsByCharacter={hero:["sword","bow","staff"],slime:["fist","whip"],dog:["fist"]};
   const weaponTypeLabels={fist:"拳",sword:"剣",axe:"斧槌",bow:"弓",staff:"杖",whip:"鞭",gun:"銃"};
@@ -2869,7 +2872,7 @@
       bowInstantKillRate:clampRate(weapon.bowInstantKillRate||0),
       fx:weapon.weaponType==="fist"?{kind:"punch",symbol:"💥"}:
          weapon.weaponType==="sword"?{kind:"slash",symbol:"✦"}:
-         weapon.weaponType==="axe"?{kind:"heavy",symbol:"💢"}:
+         weapon.weaponType==="axe"?{kind:"heavy",symbol:"💥"}:
          weapon.weaponType==="bow"?{kind:"arrow",symbol:"➶"}:
          weapon.weaponType==="staff"?{kind:"magicshot",symbol:"✧"}:
          weapon.weaponType==="whip"?{kind:"whip",symbol:"〰"}:
@@ -4571,7 +4574,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24b";
       updateHeader();
       return;
     }
@@ -4579,7 +4582,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24b";
   }
 
   async function attemptEscape(){
@@ -4854,7 +4857,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24b";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -4862,7 +4865,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24b";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -4986,7 +4989,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24b";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -5044,7 +5047,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24b";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -5066,7 +5069,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24b";
     updateHeader();
     toast("戦闘テストを終了");
   }
