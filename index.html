@@ -476,6 +476,21 @@
   .equipment-candidate-head{display:flex;gap:5px;align-items:center}.equipment-candidate-head b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.equipment-candidate-desc{margin-top:3px;color:#91a5b5;font-size:7px;line-height:1.35}
   .equipment-action-row{display:flex;justify-content:flex-end;gap:5px;margin-top:6px}.equipment-action-row button{min-width:72px;padding:5px 8px;border-radius:7px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:8px;font-weight:1000;cursor:pointer}.equipment-action-row button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.equipment-action-row button:disabled{opacity:.35;cursor:default}
   .equipment-note{margin-top:5px;color:#738797;font-size:7px;line-height:1.4}
+  .equipment-compare-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:5px;padding:3px;border:1px solid #293f51;border-radius:8px;background:#0a141e}
+  .equipment-compare-tab{min-height:25px;border:1px solid #344d62;border-radius:6px;background:#132232;color:#9fb1c1;font-size:8px;font-weight:1000;cursor:pointer}
+  .equipment-compare-tab.active{border-color:#d9c565;background:#3b321b;color:#fff0a2}
+  .equipment-resistance-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+  .equipment-resistance{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px;align-items:center;padding:5px 6px;border-radius:7px;background:#111e2a;border:1px solid #2c4457}
+  .equipment-resistance span{font-size:7px;color:#94a8b9;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .equipment-resistance strong{font-size:10px;color:#eef5f9}
+  .equipment-resistance em{grid-column:1/-1;text-align:right;font-style:normal;font-size:7px;font-weight:1000;min-height:9px}
+  .equipment-resistance em.up{color:#7ee5a1}.equipment-resistance em.down{color:#ff9b9b}.equipment-resistance em.same{color:#687a8a}
+  .character-compact-resources{display:grid;grid-template-columns:1fr 1fr minmax(170px,.9fr);gap:5px;margin-top:5px}
+  .character-compact-resources .character-resource,.character-compact-resources .character-exp-box{margin:0;padding:4px 6px;border-radius:8px}
+  .character-compact-resources .character-resource-head,.character-compact-resources .character-exp-head{font-size:8px}
+  .character-compact-resources .character-resource-head strong,.character-compact-resources .character-exp-head strong{font-size:9px}
+  .character-compact-resources .bar{margin-top:3px;height:4px}
+  .character-compact-resources .character-exp-note{display:none}
   .equipment-combined{display:grid;grid-template-columns:minmax(190px,.9fr) minmax(0,1.2fr);gap:7px;min-height:0}
   .equipment-picker{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:7px;border-radius:11px;background:#0b151f;border:1px solid #2e4960;padding:8px;overflow:hidden}
   .equipment-picker-head{display:flex;align-items:center;gap:7px;padding-bottom:6px;border-bottom:1px solid #2b4255}
@@ -1443,6 +1458,14 @@
     .character-resistance strong{height:19px;font-size:9px}
   }
 
+  /* v0.23c compact detail header: keep resources visible without pushing equipment below the fold */
+  .character-compact-resources{display:grid;grid-template-columns:1fr 1fr minmax(150px,.9fr);gap:5px;margin-top:5px}
+  .character-compact-resources .character-resource,.character-compact-resources .character-exp-box{margin:0;padding:4px 6px;border-radius:8px}
+  .character-compact-resources .character-resource-head,.character-compact-resources .character-exp-head{font-size:8px}
+  .character-compact-resources .character-resource-head strong,.character-compact-resources .character-exp-head strong{font-size:9px}
+  .character-compact-resources .character-resource .bar,.character-compact-resources .character-exp-box .bar{margin-top:3px;height:4px}
+  .character-compact-resources .character-exp-note{display:none}
+
 </style>
 </head>
 <body>
@@ -1458,7 +1481,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.23b</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.23c</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1553,7 +1576,7 @@
             </div>
           </div>
 
-          <div class="character-resource-grid">
+          <div class="character-compact-resources">
             <div class="character-resource">
               <div class="character-resource-head"><span>HP</span><strong id="characterHpText">100 / 100</strong></div>
               <div class="bar"><i id="characterHpBar" style="width:100%"></i></div>
@@ -1562,12 +1585,11 @@
               <div class="character-resource-head"><span>MP</span><strong id="characterMpText">40 / 40</strong></div>
               <div class="bar mp"><i id="characterMpBar" style="width:100%"></i></div>
             </div>
-          </div>
-
-          <div class="character-exp-box">
-            <div class="character-exp-head"><span>EXP</span><strong id="characterExpText">0 / 30</strong></div>
-            <div class="bar exp"><i id="characterExpBar" style="width:0%"></i></div>
-            <div class="character-exp-note" id="characterExpNote">次のレベルまで 30 EXP</div>
+            <div class="character-exp-box">
+              <div class="character-exp-head"><span>EXP</span><strong id="characterExpText">0 / 30</strong></div>
+              <div class="bar exp"><i id="characterExpBar" style="width:0%"></i></div>
+              <div class="character-exp-note" id="characterExpNote">次のレベルまで 30 EXP</div>
+            </div>
           </div>
 
           <div class="character-tabs" role="tablist" aria-label="キャラ詳細ページ">
@@ -1886,6 +1908,8 @@
     characterDetailTab: "status",
     equipmentSlot: "weapon",
     equipmentPreviewId: null,
+    equipmentCompareMode: "stats",
+    equipmentPickerScrollTop: 0,
     exploreSkillActorId: null,
     exploreSkillId: null,
     pendingRecruitCandidate: null
@@ -1971,7 +1995,7 @@
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2285,6 +2309,38 @@
     const diff=pre-cur,cls=diff>0?"up":diff<0?"down":"same",arrow=diff>0?"▲":diff<0?"▼":"－";
     return `<div class="equipment-stat"><span>${label}</span><strong>${cur}${suffix}</strong><em class="${cls}">${arrow}${diff?` ${pre}${suffix}`:""}</em></div>`;
   }
+  const RESISTANCE_RANK_ORDER=["E","D","C","B","A","S"];
+  function equipmentResistanceDelta(equipmentOverride){
+    const out={};
+    EQUIPMENT_SLOTS.forEach(slot=>{
+      const item=equipmentCatalog[equipmentOverride?.[slot]];
+      Object.entries(item?.resist||{}).forEach(([key,v])=>out[key]=(out[key]||0)+v);
+    });
+    return out;
+  }
+  function shiftedResistanceRank(baseRank,steps=0){
+    const i=RESISTANCE_RANK_ORDER.indexOf(baseRank);
+    if(i<0) return baseRank||"-";
+    return RESISTANCE_RANK_ORDER[Math.max(0,Math.min(RESISTANCE_RANK_ORDER.length-1,i+steps))];
+  }
+  function equipmentResistancePreview(c,eq){
+    const base=profileFor(c)?.resist||{};
+    const currentEq=ensureEquipment(c);
+    const curDelta=equipmentResistanceDelta(currentEq),preDelta=equipmentResistanceDelta(eq);
+    const cur={},pre={};
+    [...ATTRIBUTE_RESISTANCE_KEYS,...STATUS_RESISTANCE_KEYS].forEach(k=>{
+      cur[k]=shiftedResistanceRank(base[k]||"-",curDelta[k]||0);
+      pre[k]=shiftedResistanceRank(base[k]||"-",preDelta[k]||0);
+    });
+    return {cur,pre};
+  }
+  function equipmentResistanceDiffHtml(key,cur,pre){
+    const ci=RESISTANCE_RANK_ORDER.indexOf(cur),pi=RESISTANCE_RANK_ORDER.indexOf(pre);
+    const diff=(ci<0||pi<0)?0:pi-ci,cls=diff>0?"up":diff<0?"down":"same";
+    const mark=diff>0?`▲ ${pre}`:diff<0?`▼ ${pre}`:"－";
+    return `<div class="equipment-resistance"><span>${RESISTANCE_LABELS[key]||key}</span><strong>${cur}</strong><em class="${cls}">${mark}</em></div>`;
+  }
+
   function renderCharacterPortrait(c){
     const card=document.querySelector(".character-portrait-card");
     if(card) card.classList.remove("picker-mode");
@@ -2315,9 +2371,16 @@
     const list=items.map(id=>{const item=equipmentCatalog[id];const bits=equipmentItemBits(c,item);return `<button class="equipment-picker-item${id===previewId?" preview":""}${id===c.equipment[slot]?" equipped":""}" data-picker-item="${id}"><span class="ico">${item.icon||"－"}</span><span><b>${item.name}</b><small>${bits.join(" / ")||"補正なし"}</small></span><span class="mark">${id===c.equipment[slot]?"装備中":""}</span></button>`;}).join("");
     const item=equipmentCatalog[previewId]; const same=previewId===c.equipment[slot];
     portrait.innerHTML=`<div class="equipment-picker"><div class="equipment-picker-head"><strong>${EQUIPMENT_SLOT_LABELS[slot]}を選択</strong><span>${items.length}個</span></div><div class="equipment-picker-list">${list}</div><div class="equipment-picker-footer"><div class="equipment-picker-desc"><strong>${item?.name||"装備なし"}</strong><br>${item?.desc||""}</div><div class="equipment-picker-actions"><button id="equipmentPickerCancel">キャンセル</button><button class="primary" id="equipmentPickerConfirm" ${same?"disabled":""}>装備する</button></div></div></div>`;
-    portrait.querySelectorAll("[data-picker-item]").forEach(b=>b.onclick=()=>{state.equipmentPreviewId=b.dataset.pickerItem;renderEquipmentTab(c);renderEquipmentPicker(c,slot);});
-    $("equipmentPickerCancel").onclick=()=>{state.equipmentPickerOpen=false;state.equipmentPreviewId=c.equipment[slot];renderEquipmentTab(c);renderCharacterPortrait(c);};
-    $("equipmentPickerConfirm").onclick=()=>{changeEquipment(c,slot,state.equipmentPreviewId);state.equipmentPickerOpen=false;state.equipmentPreviewId=c.equipment[slot];renderCharacterDetail(c.id,true);};
+    const listEl=portrait.querySelector(".equipment-picker-list");
+    if(listEl) listEl.scrollTop=state.equipmentPickerScrollTop||0;
+    portrait.querySelectorAll("[data-picker-item]").forEach(b=>b.onclick=()=>{
+      state.equipmentPickerScrollTop=listEl?.scrollTop||0;
+      state.equipmentPreviewId=b.dataset.pickerItem;
+      renderEquipmentTab(c);
+      renderEquipmentPicker(c,slot);
+    });
+    $("equipmentPickerCancel").onclick=()=>{state.equipmentPickerOpen=false;state.equipmentPreviewId=c.equipment[slot];state.equipmentPickerScrollTop=0;renderEquipmentTab(c);renderCharacterPortrait(c);};
+    $("equipmentPickerConfirm").onclick=()=>{changeEquipment(c,slot,state.equipmentPreviewId);state.equipmentPickerOpen=false;state.equipmentPreviewId=c.equipment[slot];state.equipmentPickerScrollTop=0;renderCharacterDetail(c.id,true);};
   }
 
   function renderEquipmentTab(c){
@@ -2327,6 +2390,7 @@
     if(!equipmentInventory[slot]?.includes(previewId)) previewId=c.equipment[slot];
     state.equipmentPreviewId=previewId;
     const p=equipmentPreviewState(c,slot,previewId);
+    const resist=equipmentResistancePreview(c,p.eq);
     const favorite=testFavoriteWeapon[c.id];
     const slotsHtml=EQUIPMENT_SLOTS.map(sl=>{const item=equipmentCatalog[c.equipment[sl]];return `<button class="equipment-slot${sl===slot?" selected":""}" data-equip-slot="${sl}"><span class="equipment-slot-icon">${item?.icon||"－"}</span><span><span class="equipment-slot-kind">${EQUIPMENT_SLOT_LABELS[sl]}</span><span class="equipment-slot-name">${item?.name||"装備なし"}</span></span><span>›</span></button>`;}).join("");
     const statHtml=[
@@ -2334,8 +2398,13 @@
       ["魔力",p.cur.magic,p.pre.magic,""],["魔防",p.cur.mdef,p.pre.mdef,""],["素早さ",p.cur.spd,p.pre.spd,""],["運命値",p.cur.fate,p.pre.fate,""],
       ["会心率",p.cur.crit,p.pre.crit,"％"],["回避率",p.cur.evasion,p.pre.evasion,"％"]
     ].map(x=>equipmentDiffHtml(x[0],x[1],x[2],x[3])).join("");
-    host.innerHTML=`<div class="equipment-combined"><div class="equipment-slots"><div class="equipment-slot-list">${slotsHtml}</div><div class="equipment-favorite">得意武器（UI確認用仮設定）：${favorite?weaponTypeLabels[favorite]:"未設定"}<br>得意武器は武器由来ステータスを約10%強化。</div></div><div class="equipment-preview"><div class="equipment-stat-grid">${statHtml}</div><div class="equipment-note">装備枠をタップすると、左側の立ち絵が所持装備一覧に切り替わります。候補を選ぶとここで能力差を即時比較できます。</div></div></div>`;
-    host.querySelectorAll("[data-equip-slot]").forEach(b=>b.onclick=()=>{state.equipmentSlot=b.dataset.equipSlot;state.equipmentPreviewId=c.equipment[state.equipmentSlot];state.equipmentPickerOpen=true;renderEquipmentTab(c);renderEquipmentPicker(c,state.equipmentSlot);});
+    const resistanceHtml=[...ATTRIBUTE_RESISTANCE_KEYS,...STATUS_RESISTANCE_KEYS].map(k=>equipmentResistanceDiffHtml(k,resist.cur[k],resist.pre[k])).join("");
+    const compareMode=state.equipmentCompareMode||"stats";
+    const compareTabs=`<div class="equipment-compare-tabs"><button class="equipment-compare-tab${compareMode==="stats"?" active":""}" data-equip-compare="stats">能力</button><button class="equipment-compare-tab${compareMode==="resist"?" active":""}" data-equip-compare="resist">耐性</button></div>`;
+    const compareBody=compareMode==="resist" ? `<div class="equipment-resistance-grid">${resistanceHtml}</div><div class="equipment-note">装備による耐性ランクの変化を表示。▲は上昇、▼は低下です。</div>` : `<div class="equipment-stat-grid">${statHtml}</div><div class="equipment-note">候補装備による能力差を即時比較。▲は上昇、▼は低下です。</div>`;
+    host.innerHTML=`<div class="equipment-combined"><div class="equipment-slots"><div class="equipment-slot-list">${slotsHtml}</div><div class="equipment-favorite">得意武器（UI確認用仮設定）：${favorite?weaponTypeLabels[favorite]:"未設定"}<br>得意武器は武器由来ステータスを約10%強化。</div></div><div class="equipment-preview">${compareTabs}${compareBody}</div></div>`;
+    host.querySelectorAll("[data-equip-slot]").forEach(b=>b.onclick=()=>{state.equipmentSlot=b.dataset.equipSlot;state.equipmentPreviewId=c.equipment[state.equipmentSlot];state.equipmentPickerScrollTop=0;state.equipmentPickerOpen=true;renderEquipmentTab(c);renderEquipmentPicker(c,state.equipmentSlot);});
+    host.querySelectorAll("[data-equip-compare]").forEach(b=>b.onclick=()=>{state.equipmentCompareMode=b.dataset.equipCompare;renderEquipmentTab(c);});
   }
 
   function renderCharacterDetail(id="hero",preserveTab=false){
@@ -2345,6 +2414,7 @@
     const profile=profileFor(c);
     state.partyDetailCharacterId=c.id;
     state.equipmentPreviewId=ensureEquipment(c)[state.equipmentSlot||"weapon"];
+    if(!preserveTab){state.equipmentCompareMode="stats";state.equipmentPickerScrollTop=0;}
 
     $("characterName").textContent=c.name;
     $("characterLevel").textContent=`LEVEL ${c.level}`;
@@ -2375,10 +2445,13 @@
       : `<div class="character-trait-card character-trait-empty"><div class="character-trait-icon">◇</div><div class="character-trait-main"><div class="character-trait-name">固有特性 未設定</div><div class="character-trait-desc">このキャラクターの固有特性はまだ設定されていません。</div></div></div>`;
 
     if(profile?.resist){
+      const eqResDelta=equipmentResistanceDelta(ensureEquipment(c));
+      const effectiveProfile={...profile,resist:{...profile.resist}};
+      [...ATTRIBUTE_RESISTANCE_KEYS,...STATUS_RESISTANCE_KEYS].forEach(k=>effectiveProfile.resist[k]=shiftedResistanceRank(profile.resist[k],eqResDelta[k]||0));
       $("characterResistance").innerHTML=`
-        <div class="character-resistance-section"><div class="character-resistance-title">属性耐性</div><div class="character-resistance-grid">${resistanceCards(profile,ATTRIBUTE_RESISTANCE_KEYS)}</div></div>
-        <div class="character-resistance-section"><div class="character-resistance-title">状態異常耐性</div><div class="character-resistance-grid">${resistanceCards(profile,STATUS_RESISTANCE_KEYS)}</div></div>
-        <div class="character-resistance-note">ランクは E ～ S。内部補正値は共通テーブルで管理し、詳細画面ではランクのみ表示します。</div>`;
+        <div class="character-resistance-section"><div class="character-resistance-title">属性耐性</div><div class="character-resistance-grid">${resistanceCards(effectiveProfile,ATTRIBUTE_RESISTANCE_KEYS)}</div></div>
+        <div class="character-resistance-section"><div class="character-resistance-title">状態異常耐性</div><div class="character-resistance-grid">${resistanceCards(effectiveProfile,STATUS_RESISTANCE_KEYS)}</div></div>
+        <div class="character-resistance-note">ランクは E ～ S。装備による耐性補正も反映しています。</div>`;
     }else{
       $("characterResistance").innerHTML=`<div class="character-skill-empty">耐性データはまだ正式移行されていません</div>`;
     }
@@ -2408,7 +2481,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備統合試作 v0.23b";
+    $("topSubtitle").textContent="キャラ詳細・装備統合試作 v0.23c";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2425,13 +2498,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
     updateHeader();
   };
 
@@ -2544,7 +2617,7 @@
     return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","heal","blaze","tackle","polish"].includes(id));
   }
 
-  // v0.23b UI trial equipment. These names/numbers are intentionally provisional.
+  // v0.23c UI trial equipment. These names/numbers are intentionally provisional.
   const EQUIPMENT_SLOTS=["weapon","shield","body","accessory"];
   const EQUIPMENT_SLOT_LABELS={weapon:"武器",shield:"盾",body:"身体",accessory:"アクセサリ"};
   const equipmentCatalog={
@@ -4165,7 +4238,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
       updateHeader();
       return;
     }
@@ -4173,7 +4246,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
   }
 
   async function attemptEscape(){
@@ -4457,7 +4530,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -4465,7 +4538,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -4589,7 +4662,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -4669,7 +4742,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
     updateHeader();
     toast("戦闘テストを終了");
   }
