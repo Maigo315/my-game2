@@ -1458,7 +1458,7 @@
     .character-resistance strong{height:19px;font-size:9px}
   }
 
-  /* v0.23e compact detail header: keep resources visible without pushing equipment below the fold */
+  /* v0.23f compact detail header: keep resources visible without pushing equipment below the fold */
   .character-compact-resources{display:grid;grid-template-columns:1fr 1fr minmax(150px,.9fr);gap:5px;margin-top:5px}
   .character-compact-resources .character-resource,.character-compact-resources .character-exp-box{margin:0;padding:4px 6px;border-radius:8px}
   .character-compact-resources .character-resource-head,.character-compact-resources .character-exp-head{font-size:8px}
@@ -1466,7 +1466,7 @@
   .character-compact-resources .character-resource .bar,.character-compact-resources .character-exp-box .bar{margin-top:3px;height:4px}
   .character-compact-resources .character-exp-note{display:none}
 
-  /* v0.23e: identity header doubles as HP / MP / EXP HUD */
+  /* v0.23f: identity header doubles as HP / MP / EXP HUD */
   .character-identity{
     display:grid;grid-template-columns:minmax(135px,.7fr) minmax(330px,1.65fr) auto;align-items:center;gap:8px;
   }
@@ -1490,7 +1490,7 @@
   }
 
 
-  /* v0.23e: fixed character-detail viewport. Only content that truly needs it scrolls internally. */
+  /* v0.23f: fixed character-detail viewport. Only content that truly needs it scrolls internally. */
   .character-info-card{
     overflow:hidden;
     display:flex;
@@ -1532,6 +1532,41 @@
   .equipment-stat-grid{gap:4px}
   .equipment-stat{padding:5px 6px}
 
+
+  /* v0.23f: reserve a guaranteed lane for character navigation. */
+  .character-identity{
+    grid-template-columns:minmax(120px,.68fr) minmax(0,1.55fr) 112px;
+    gap:7px;
+  }
+  .character-nav{
+    width:112px;min-width:112px;max-width:112px;box-sizing:border-box;
+    grid-template-columns:29px minmax(38px,1fr) 29px;gap:3px;padding:3px;
+  }
+  .character-nav button{width:29px;height:29px;font-size:11px}
+  .character-nav-count{min-width:38px;font-size:8px}
+  .character-compact-resources{grid-template-columns:1fr 1fr 1.04fr}
+
+  /* v0.23f: cleaner party-management character summary. */
+  .party-detail-panel{grid-template-columns:74px minmax(0,1fr) 210px}
+  .party-detail-main{justify-content:center;gap:1px}
+  .party-detail-stats{margin-top:4px;display:block;color:#b7c5d1;font-size:8px}
+  .party-detail-resource-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:470px}
+  .party-detail-resource{min-width:0}
+  .party-detail-resource-head{display:flex;align-items:center;justify-content:space-between;gap:6px;color:#aebdca;font-size:8px;font-weight:900}
+  .party-detail-resource-head span{color:#e7eef4;font-size:8px}
+  .party-detail-resource-bar{height:5px;margin-top:2px;border-radius:999px;background:#263746;overflow:hidden}
+  .party-detail-resource-bar i{display:block;height:100%;background:linear-gradient(90deg,#48b972,#79df9a)}
+  .party-detail-resource-bar.mp i{background:linear-gradient(90deg,#4c78c7,#6ba1f0)}
+  .party-detail-ability-row{display:flex;flex-wrap:wrap;gap:3px 11px;margin-top:5px;color:#91a3b2;font-size:8px}
+  .party-detail-ability-row b{color:#dbe5ed;font-weight:900}
+  @media(max-height:520px){
+    .character-identity{grid-template-columns:minmax(100px,.55fr) minmax(0,1.6fr) 102px;gap:4px}
+    .character-nav{width:102px;min-width:102px;max-width:102px;grid-template-columns:27px minmax(34px,1fr) 27px;gap:2px;padding:2px}
+    .character-nav button{width:27px;height:26px}
+    .party-detail-resource-row{gap:6px}
+    .party-detail-ability-row{gap:2px 8px;margin-top:3px}
+  }
+
 </style>
 </head>
 <body>
@@ -1547,7 +1582,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.23e</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.23f</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2058,7 +2093,7 @@
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23f"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2120,10 +2155,21 @@
     portrait.innerHTML=c.img ? `<img src="${c.img}" alt="${c.name}">` : "<span>👤</span>";
     $("partyDetailName").textContent=c.name;
     $("partyDetailMeta").textContent=`Lv${c.level}`;
-    const skillNames=learnedSkillIds(c).map(sid=>skills[sid]?.name).filter(Boolean).join("、") || "未設定";
-    $("partyDetailStats").innerHTML=
-      `<span>HP ${st.hpMax}</span><span>MP ${st.mpMax}</span><span>攻 ${st.atk}</span><span>防 ${st.def}</span>`+
-      `<span>魔 ${st.magic}</span><span>魔防 ${st.mdef}</span><span>速 ${st.spd}</span><span>運 ${c.fate}</span><span>スキル ${skillNames}</span>`;
+    $("partyDetailStats").innerHTML=`
+      <div class="party-detail-resource-row">
+        <div class="party-detail-resource">
+          <div class="party-detail-resource-head"><b>HP</b><span>${st.hp}/${st.hpMax}</span></div>
+          <div class="party-detail-resource-bar hp"><i style="width:${hpPct(c)}%"></i></div>
+        </div>
+        <div class="party-detail-resource">
+          <div class="party-detail-resource-head"><b>MP</b><span>${st.mp}/${st.mpMax}</span></div>
+          <div class="party-detail-resource-bar mp"><i style="width:${mpPct(c)}%"></i></div>
+        </div>
+      </div>
+      <div class="party-detail-ability-row">
+        <span>攻 <b>${st.atk}</b></span><span>防 <b>${st.def}</b></span><span>魔 <b>${st.magic}</b></span>
+        <span>魔防 <b>${st.mdef}</b></span><span>速 <b>${st.spd}</b></span><span>運 <b>${c.fate}</b></span>
+      </div>`;
   }
 
   function selectPartyMember(id,group,index){
@@ -2546,7 +2592,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備統合試作 v0.23e";
+    $("topSubtitle").textContent="キャラ詳細・装備統合試作 v0.23f";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2563,13 +2609,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23f";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23f";
     updateHeader();
   };
 
@@ -2682,7 +2728,7 @@
     return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","heal","blaze","tackle","polish"].includes(id));
   }
 
-  // v0.23e UI trial equipment. These names/numbers are intentionally provisional.
+  // v0.23f UI trial equipment. These names/numbers are intentionally provisional.
   const EQUIPMENT_SLOTS=["weapon","shield","body","accessory"];
   const EQUIPMENT_SLOT_LABELS={weapon:"武器",shield:"盾",body:"身体",accessory:"アクセサリ"};
   const equipmentCatalog={
@@ -4303,7 +4349,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23f";
       updateHeader();
       return;
     }
@@ -4311,7 +4357,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23f";
   }
 
   async function attemptEscape(){
@@ -4595,7 +4641,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23f";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -4603,7 +4649,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23f";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -4727,7 +4773,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23f";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -4807,7 +4853,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23f";
     updateHeader();
     toast("戦闘テストを終了");
   }
