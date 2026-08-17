@@ -1458,7 +1458,7 @@
     .character-resistance strong{height:19px;font-size:9px}
   }
 
-  /* v0.23d compact detail header: keep resources visible without pushing equipment below the fold */
+  /* v0.23e compact detail header: keep resources visible without pushing equipment below the fold */
   .character-compact-resources{display:grid;grid-template-columns:1fr 1fr minmax(150px,.9fr);gap:5px;margin-top:5px}
   .character-compact-resources .character-resource,.character-compact-resources .character-exp-box{margin:0;padding:4px 6px;border-radius:8px}
   .character-compact-resources .character-resource-head,.character-compact-resources .character-exp-head{font-size:8px}
@@ -1466,7 +1466,7 @@
   .character-compact-resources .character-resource .bar,.character-compact-resources .character-exp-box .bar{margin-top:3px;height:4px}
   .character-compact-resources .character-exp-note{display:none}
 
-  /* v0.23d: identity header doubles as HP / MP / EXP HUD */
+  /* v0.23e: identity header doubles as HP / MP / EXP HUD */
   .character-identity{
     display:grid;grid-template-columns:minmax(135px,.7fr) minmax(330px,1.65fr) auto;align-items:center;gap:8px;
   }
@@ -1489,6 +1489,49 @@
     .character-compact-resources .character-resource-head strong,.character-compact-resources .character-exp-head strong{font-size:7px}
   }
 
+
+  /* v0.23e: fixed character-detail viewport. Only content that truly needs it scrolls internally. */
+  .character-info-card{
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .character-identity,
+  .character-tabs{flex:0 0 auto}
+  .character-tab-panel.active{
+    flex:1 1 auto;
+    min-height:0;
+  }
+  #characterPanelStatus.active{
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    scrollbar-width:none;
+  }
+  #characterPanelStatus.active::-webkit-scrollbar{width:0;height:0}
+  #characterPanelSkills.active{
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    scrollbar-width:thin;
+  }
+
+  /* Remove visual dead space so all eight battle-management stats fit at first glance. */
+  #characterPanelStatus .character-section-title:first-child{display:none}
+  .equipment-combined{gap:6px}
+  .equipment-slots,.equipment-preview{padding:6px}
+  .equipment-slot-list{gap:4px}
+  .equipment-slot{padding:5px 7px}
+  .equipment-favorite{
+    margin-top:5px;
+    padding:4px 7px;
+    line-height:1.2;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .equipment-compare-tabs{margin-bottom:4px}
+  .equipment-stat-grid{gap:4px}
+  .equipment-stat{padding:5px 6px}
+
 </style>
 </head>
 <body>
@@ -1504,7 +1547,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.23d</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.23e</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1620,7 +1663,6 @@
           </div>
 
           <div class="character-tab-panel active" id="characterPanelStatus">
-            <div class="character-section-title">ABILITY / EQUIPMENT <span style="color:#7f91a1;font-weight:700">・UI試作</span></div>
             <div id="characterEquipment"></div>
             <div class="character-section-title">UNIQUE TRAIT</div>
             <div id="characterTrait"></div>
@@ -2016,7 +2058,7 @@
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2423,8 +2465,9 @@
     const resistanceHtml=[...ATTRIBUTE_RESISTANCE_KEYS,...STATUS_RESISTANCE_KEYS].map(k=>equipmentResistanceDiffHtml(k,resist.cur[k],resist.pre[k])).join("");
     const compareMode=state.equipmentCompareMode||"stats";
     const compareTabs=`<div class="equipment-compare-tabs"><button class="equipment-compare-tab${compareMode==="stats"?" active":""}" data-equip-compare="stats">能力</button><button class="equipment-compare-tab${compareMode==="resist"?" active":""}" data-equip-compare="resist">耐性</button></div>`;
-    const compareBody=compareMode==="resist" ? `<div class="equipment-resistance-grid">${resistanceHtml}</div><div class="equipment-note">装備による耐性ランクの変化を表示。▲は上昇、▼は低下です。</div>` : `<div class="equipment-stat-grid">${statHtml}</div><div class="equipment-note">候補装備による能力差を即時比較。▲は上昇、▼は低下です。</div>`;
-    host.innerHTML=`<div class="equipment-combined"><div class="equipment-slots"><div class="equipment-slot-list">${slotsHtml}</div><div class="equipment-favorite">得意武器（UI確認用仮設定）：${favorite?weaponTypeLabels[favorite]:"未設定"}<br>得意武器は武器由来ステータスを約10%強化。</div></div><div class="equipment-preview">${compareTabs}${compareBody}</div></div>`;
+    const compareBody=compareMode==="resist" ? `<div class="equipment-resistance-grid">${resistanceHtml}</div>` : `<div class="equipment-stat-grid">${statHtml}</div>`;
+    const favoriteIcon={fist:"🥊",sword:"⚔️",axe:"🪓",bow:"🏹",staff:"🪄",whip:"〰️",gun:"🔫"}[favorite]||"";
+    host.innerHTML=`<div class="equipment-combined"><div class="equipment-slots"><div class="equipment-slot-list">${slotsHtml}</div><div class="equipment-favorite">得意武器種：${favorite?`${favoriteIcon} ${weaponTypeLabels[favorite]}`:"未設定"}</div></div><div class="equipment-preview">${compareTabs}${compareBody}</div></div>`;
     host.querySelectorAll("[data-equip-slot]").forEach(b=>b.onclick=()=>{state.equipmentSlot=b.dataset.equipSlot;state.equipmentPreviewId=c.equipment[state.equipmentSlot];state.equipmentPickerScrollTop=0;state.equipmentPickerOpen=true;renderEquipmentTab(c);renderEquipmentPicker(c,state.equipmentSlot);});
     host.querySelectorAll("[data-equip-compare]").forEach(b=>b.onclick=()=>{state.equipmentCompareMode=b.dataset.equipCompare;renderEquipmentTab(c);});
   }
@@ -2503,7 +2546,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備統合試作 v0.23d";
+    $("topSubtitle").textContent="キャラ詳細・装備統合試作 v0.23e";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2520,13 +2563,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
     updateHeader();
   };
 
@@ -2639,7 +2682,7 @@
     return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","heal","blaze","tackle","polish"].includes(id));
   }
 
-  // v0.23d UI trial equipment. These names/numbers are intentionally provisional.
+  // v0.23e UI trial equipment. These names/numbers are intentionally provisional.
   const EQUIPMENT_SLOTS=["weapon","shield","body","accessory"];
   const EQUIPMENT_SLOT_LABELS={weapon:"武器",shield:"盾",body:"身体",accessory:"アクセサリ"};
   const equipmentCatalog={
@@ -4260,7 +4303,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
       updateHeader();
       return;
     }
@@ -4268,7 +4311,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
   }
 
   async function attemptEscape(){
@@ -4552,7 +4595,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -4560,7 +4603,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -4684,7 +4727,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -4764,7 +4807,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23e";
     updateHeader();
     toast("戦闘テストを終了");
   }
