@@ -476,6 +476,16 @@
   .equipment-candidate-head{display:flex;gap:5px;align-items:center}.equipment-candidate-head b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.equipment-candidate-desc{margin-top:3px;color:#91a5b5;font-size:7px;line-height:1.35}
   .equipment-action-row{display:flex;justify-content:flex-end;gap:5px;margin-top:6px}.equipment-action-row button{min-width:72px;padding:5px 8px;border-radius:7px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:8px;font-weight:1000;cursor:pointer}.equipment-action-row button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.equipment-action-row button:disabled{opacity:.35;cursor:default}
   .equipment-note{margin-top:5px;color:#738797;font-size:7px;line-height:1.4}
+  .equipment-combined{display:grid;grid-template-columns:minmax(190px,.9fr) minmax(0,1.2fr);gap:7px;min-height:0}
+  .equipment-picker{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:7px;border-radius:11px;background:#0b151f;border:1px solid #2e4960;padding:8px;overflow:hidden}
+  .equipment-picker-head{display:flex;align-items:center;gap:7px;padding-bottom:6px;border-bottom:1px solid #2b4255}
+  .equipment-picker-head strong{font-size:12px}.equipment-picker-head span{margin-left:auto;color:#91a6b8;font-size:8px}
+  .equipment-picker-list{min-height:0;overflow-y:auto;display:grid;align-content:start;gap:5px;scrollbar-width:thin}
+  .equipment-picker-item{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:6px;align-items:center;padding:7px;border:1px solid #344d62;border-radius:9px;background:#132232;color:#dce7ef;text-align:left;cursor:pointer}
+  .equipment-picker-item.preview{border-color:#d9c565;background:#2d2918}.equipment-picker-item.equipped{box-shadow:inset 0 0 0 1px #6cae87}
+  .equipment-picker-item .ico{font-size:20px;text-align:center}.equipment-picker-item b{display:block;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.equipment-picker-item small{display:block;margin-top:2px;color:#91a5b5;font-size:7px;line-height:1.35}.equipment-picker-item .mark{font-size:8px;color:#d7ca80;font-weight:1000}
+  .equipment-picker-footer{border-top:1px solid #2b4255;padding-top:7px}.equipment-picker-desc{min-height:28px;color:#9eb0bf;font-size:7px;line-height:1.45;margin-bottom:6px}.equipment-picker-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}.equipment-picker-actions button{padding:7px;border-radius:8px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:8px;font-weight:1000;cursor:pointer}.equipment-picker-actions button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.equipment-picker-actions button:disabled{opacity:.35;cursor:default}
+  .character-portrait-card.picker-mode{padding:8px}
   @media (max-height:520px){
     .item-target-card{padding:5px 7px}.item-target-name{font-size:9px}.item-target-hp{grid-template-columns:18px minmax(0,1fr) 52px;font-size:7px}
     .item-target-hp span:last-child{font-size:8px}.item-summary-note{padding:5px 7px;font-size:8px;margin-bottom:5px}
@@ -1340,7 +1350,7 @@
   .character-skill-cost{font-size:8px;color:#d6cbff;font-weight:900;white-space:nowrap}
   .character-skill-empty{grid-column:1/-1;padding:12px;border:1px dashed #405164;border-radius:9px;color:#788b9d;text-align:center;font-size:9px}
   .character-tabs{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:9px;padding:4px;border-radius:10px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:9px;padding:4px;border-radius:10px;
     background:#0b151f;border:1px solid #293f51;position:sticky;top:45px;z-index:3;
   }
   .character-tab{
@@ -1448,7 +1458,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.23</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.23b</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1520,7 +1530,7 @@
         <div>
           <div class="character-kicker">CHARACTER PROFILE</div>
           <h2>キャラ詳細</h2>
-          <p>能力・耐性・固有特性・習得済みスキルを確認できます。</p>
+          <p>能力・装備・耐性・固有特性・習得済みスキルを確認できます。</p>
         </div>
         <button class="small-btn" id="characterBackBtn">← 仲間編成へ</button>
       </header>
@@ -1561,15 +1571,14 @@
           </div>
 
           <div class="character-tabs" role="tablist" aria-label="キャラ詳細ページ">
-            <button class="character-tab active" id="characterTabStatus" data-character-tab="status" type="button">ステータス</button>
+            <button class="character-tab active" id="characterTabStatus" data-character-tab="status" type="button">能力・装備</button>
             <button class="character-tab" id="characterTabResistance" data-character-tab="resistance" type="button">耐性</button>
             <button class="character-tab" id="characterTabSkills" data-character-tab="skills" type="button">スキル</button>
-            <button class="character-tab" id="characterTabEquipment" data-character-tab="equipment" type="button">装備</button>
           </div>
 
           <div class="character-tab-panel active" id="characterPanelStatus">
-            <div class="character-section-title">STATUS</div>
-            <div class="character-stat-grid" id="characterStatGrid"></div>
+            <div class="character-section-title">ABILITY / EQUIPMENT <span style="color:#7f91a1;font-weight:700">・UI試作</span></div>
+            <div id="characterEquipment"></div>
             <div class="character-section-title">UNIQUE TRAIT</div>
             <div id="characterTrait"></div>
           </div>
@@ -1582,11 +1591,6 @@
           <div class="character-tab-panel" id="characterPanelSkills">
             <div class="character-section-title">LEARNED SKILLS</div>
             <div class="character-skill-list" id="characterSkillList"></div>
-          </div>
-
-          <div class="character-tab-panel" id="characterPanelEquipment">
-            <div class="character-section-title">EQUIPMENT <span style="color:#7f91a1;font-weight:700">・UI試作</span></div>
-            <div id="characterEquipment"></div>
           </div>
         </section>
       </div>
@@ -1967,7 +1971,7 @@
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2214,12 +2218,17 @@
   const STATUS_RESISTANCE_KEYS=["poison","blind","silence","death"];
 
   function setCharacterDetailTab(tab="status"){
-    const valid=["status","resistance","skills","equipment"].includes(tab) ? tab : "status";
+    const valid=["status","resistance","skills"].includes(tab) ? tab : "status";
     state.characterDetailTab=valid;
     document.querySelectorAll("[data-character-tab]").forEach(btn=>btn.classList.toggle("active",btn.dataset.characterTab===valid));
-    [["status","characterPanelStatus"],["resistance","characterPanelResistance"],["skills","characterPanelSkills"],["equipment","characterPanelEquipment"]].forEach(([name,id])=>{
+    [["status","characterPanelStatus"],["resistance","characterPanelResistance"],["skills","characterPanelSkills"]].forEach(([name,id])=>{
       $(id)?.classList.toggle("active",name===valid);
     });
+    if(valid!=="status" && state.equipmentPickerOpen){
+      state.equipmentPickerOpen=false;
+      const c=roster[state.partyDetailCharacterId];
+      if(c) renderCharacterPortrait(c);
+    }
   }
 
   function resistanceCards(profile,keys){
@@ -2276,6 +2285,41 @@
     const diff=pre-cur,cls=diff>0?"up":diff<0?"down":"same",arrow=diff>0?"▲":diff<0?"▼":"－";
     return `<div class="equipment-stat"><span>${label}</span><strong>${cur}${suffix}</strong><em class="${cls}">${arrow}${diff?` ${pre}${suffix}`:""}</em></div>`;
   }
+  function renderCharacterPortrait(c){
+    const card=document.querySelector(".character-portrait-card");
+    if(card) card.classList.remove("picker-mode");
+    const portrait=$("characterPortrait");
+    if(!portrait) return;
+    portrait.className="character-portrait";
+    portrait.innerHTML="";
+    if(c.img){
+      const img=document.createElement("img"); img.src=c.img; img.alt=c.name; portrait.appendChild(img);
+    }else{
+      const ph=document.createElement("span"); ph.textContent="👤"; portrait.appendChild(ph);
+    }
+  }
+
+  function equipmentItemBits(c,item){
+    const mods=itemModsFor(c,item); const bits=[];
+    Object.entries(mods).filter(([,v])=>v).forEach(([k,v])=>bits.push(`${({atk:"攻",def:"防",magic:"魔",mdef:"魔防",spd:"速",hpMax:"HP",mpMax:"MP"}[k]||k)}${v>0?"+":""}${v}`));
+    if(item.crit) bits.push(`会心+${item.crit}%`); if(item.evasion) bits.push(`回避+${item.evasion}%`); if(item.fate) bits.push(`運+${item.fate}`);
+    return bits;
+  }
+
+  function renderEquipmentPicker(c,slot){
+    const card=document.querySelector(".character-portrait-card");
+    const portrait=$("characterPortrait"); if(!card||!portrait)return;
+    card.classList.add("picker-mode"); portrait.className="";
+    const previewId=state.equipmentPreviewId||c.equipment[slot];
+    const items=equipmentInventory[slot]||[];
+    const list=items.map(id=>{const item=equipmentCatalog[id];const bits=equipmentItemBits(c,item);return `<button class="equipment-picker-item${id===previewId?" preview":""}${id===c.equipment[slot]?" equipped":""}" data-picker-item="${id}"><span class="ico">${item.icon||"－"}</span><span><b>${item.name}</b><small>${bits.join(" / ")||"補正なし"}</small></span><span class="mark">${id===c.equipment[slot]?"装備中":""}</span></button>`;}).join("");
+    const item=equipmentCatalog[previewId]; const same=previewId===c.equipment[slot];
+    portrait.innerHTML=`<div class="equipment-picker"><div class="equipment-picker-head"><strong>${EQUIPMENT_SLOT_LABELS[slot]}を選択</strong><span>${items.length}個</span></div><div class="equipment-picker-list">${list}</div><div class="equipment-picker-footer"><div class="equipment-picker-desc"><strong>${item?.name||"装備なし"}</strong><br>${item?.desc||""}</div><div class="equipment-picker-actions"><button id="equipmentPickerCancel">キャンセル</button><button class="primary" id="equipmentPickerConfirm" ${same?"disabled":""}>装備する</button></div></div></div>`;
+    portrait.querySelectorAll("[data-picker-item]").forEach(b=>b.onclick=()=>{state.equipmentPreviewId=b.dataset.pickerItem;renderEquipmentTab(c);renderEquipmentPicker(c,slot);});
+    $("equipmentPickerCancel").onclick=()=>{state.equipmentPickerOpen=false;state.equipmentPreviewId=c.equipment[slot];renderEquipmentTab(c);renderCharacterPortrait(c);};
+    $("equipmentPickerConfirm").onclick=()=>{changeEquipment(c,slot,state.equipmentPreviewId);state.equipmentPickerOpen=false;state.equipmentPreviewId=c.equipment[slot];renderCharacterDetail(c.id,true);};
+  }
+
   function renderEquipmentTab(c){
     const host=$("characterEquipment"); if(!host)return; ensureEquipment(c);
     const slot=state.equipmentSlot||"weapon";
@@ -2286,17 +2330,12 @@
     const favorite=testFavoriteWeapon[c.id];
     const slotsHtml=EQUIPMENT_SLOTS.map(sl=>{const item=equipmentCatalog[c.equipment[sl]];return `<button class="equipment-slot${sl===slot?" selected":""}" data-equip-slot="${sl}"><span class="equipment-slot-icon">${item?.icon||"－"}</span><span><span class="equipment-slot-kind">${EQUIPMENT_SLOT_LABELS[sl]}</span><span class="equipment-slot-name">${item?.name||"装備なし"}</span></span><span>›</span></button>`;}).join("");
     const statHtml=[
-      ["最大HP","hpMax",p.cur.hpMax,p.pre.hpMax,""],["最大MP","mpMax",p.cur.mpMax,p.pre.mpMax,""],["攻撃","atk",p.cur.atk,p.pre.atk,""],["防御","def",p.cur.def,p.pre.def,""],
-      ["魔力","magic",p.cur.magic,p.pre.magic,""],["魔防","mdef",p.cur.mdef,p.pre.mdef,""],["素早さ","spd",p.cur.spd,p.pre.spd,""],["運命値","fate",p.cur.fate,p.pre.fate,""],
-      ["会心率","crit",p.cur.crit,p.pre.crit,"%"],["回避率","evasion",p.cur.evasion,p.pre.evasion,"%"]
-    ].map(x=>equipmentDiffHtml(x[0],x[2],x[3],x[4])).join("");
-    const candidates=equipmentInventory[slot].map(id=>{const item=equipmentCatalog[id];const mods=itemModsFor(c,item);const bits=Object.entries(mods).filter(([,v])=>v).map(([k,v])=>`${({atk:"攻",def:"防",magic:"魔",mdef:"魔防",spd:"速",hpMax:"HP",mpMax:"MP"}[k]||k)}${v>0?"+":""}${v}`);if(item.crit)bits.push(`会心+${item.crit}%`);if(item.evasion)bits.push(`回避+${item.evasion}%`);if(item.fate)bits.push(`運+${item.fate}`);return `<button class="equipment-candidate${id===previewId?" preview":""}${id===c.equipment[slot]?" equipped":""}" data-equip-item="${id}"><div class="equipment-candidate-head"><span>${item.icon||"－"}</span><b>${item.name}</b></div><div class="equipment-candidate-desc">${bits.join(" / ")||"補正なし"}<br>${item.desc||""}</div></button>`;}).join("");
-    const previewItem=equipmentCatalog[previewId]; const isSame=previewId===c.equipment[slot];
-    host.innerHTML=`<div class="equipment-shell"><div class="equipment-slots"><div class="equipment-slot-list">${slotsHtml}</div><div class="equipment-favorite">得意武器（UI確認用仮設定）：${favorite?weaponTypeLabels[favorite]:"未設定"}<br>得意武器は武器由来ステータスを約10%強化。</div></div><div class="equipment-preview"><div class="equipment-stat-grid">${statHtml}</div><div class="equipment-note">右側は現在値。▲▼は選択候補を装備した場合のプレビューです。基礎会心率3%・基礎回避率0%。</div></div><div class="equipment-candidates"><div style="font-size:8px;color:#91a6b8;font-weight:1000">${EQUIPMENT_SLOT_LABELS[slot]}を選択</div><div class="equipment-candidate-list">${candidates}</div><div class="equipment-action-row"><button id="equipmentCancelPreview" ${isSame?"disabled":""}>元に戻す</button><button class="primary" id="equipmentConfirm" ${isSame?"disabled":""}>${previewItem?.name||"装備"}を装備</button></div></div></div>`;
-    host.querySelectorAll("[data-equip-slot]").forEach(b=>b.onclick=()=>{state.equipmentSlot=b.dataset.equipSlot;state.equipmentPreviewId=c.equipment[state.equipmentSlot];renderEquipmentTab(c);});
-    host.querySelectorAll("[data-equip-item]").forEach(b=>b.onclick=()=>{state.equipmentPreviewId=b.dataset.equipItem;renderEquipmentTab(c);});
-    $("equipmentCancelPreview").onclick=()=>{state.equipmentPreviewId=c.equipment[slot];renderEquipmentTab(c);};
-    $("equipmentConfirm").onclick=()=>{changeEquipment(c,slot,state.equipmentPreviewId);state.equipmentPreviewId=c.equipment[slot];renderCharacterDetail(c.id,true);};
+      ["最大HP",p.cur.hpMax,p.pre.hpMax,""],["最大MP",p.cur.mpMax,p.pre.mpMax,""],["攻撃",p.cur.atk,p.pre.atk,""],["防御",p.cur.def,p.pre.def,""],
+      ["魔力",p.cur.magic,p.pre.magic,""],["魔防",p.cur.mdef,p.pre.mdef,""],["素早さ",p.cur.spd,p.pre.spd,""],["運命値",p.cur.fate,p.pre.fate,""],
+      ["会心率",p.cur.crit,p.pre.crit,"％"],["回避率",p.cur.evasion,p.pre.evasion,"％"]
+    ].map(x=>equipmentDiffHtml(x[0],x[1],x[2],x[3])).join("");
+    host.innerHTML=`<div class="equipment-combined"><div class="equipment-slots"><div class="equipment-slot-list">${slotsHtml}</div><div class="equipment-favorite">得意武器（UI確認用仮設定）：${favorite?weaponTypeLabels[favorite]:"未設定"}<br>得意武器は武器由来ステータスを約10%強化。</div></div><div class="equipment-preview"><div class="equipment-stat-grid">${statHtml}</div><div class="equipment-note">装備枠をタップすると、左側の立ち絵が所持装備一覧に切り替わります。候補を選ぶとここで能力差を即時比較できます。</div></div></div>`;
+    host.querySelectorAll("[data-equip-slot]").forEach(b=>b.onclick=()=>{state.equipmentSlot=b.dataset.equipSlot;state.equipmentPreviewId=c.equipment[state.equipmentSlot];state.equipmentPickerOpen=true;renderEquipmentTab(c);renderEquipmentPicker(c,state.equipmentSlot);});
   }
 
   function renderCharacterDetail(id="hero",preserveTab=false){
@@ -2310,18 +2349,8 @@
     $("characterName").textContent=c.name;
     $("characterLevel").textContent=`LEVEL ${c.level}`;
 
-    const portrait=$("characterPortrait");
-    portrait.innerHTML="";
-    if(c.img){
-      const img=document.createElement("img");
-      img.src=c.img;
-      img.alt=c.name;
-      portrait.appendChild(img);
-    }else{
-      const ph=document.createElement("span");
-      ph.textContent="👤";
-      portrait.appendChild(ph);
-    }
+    state.equipmentPickerOpen=false;
+    renderCharacterPortrait(c);
 
     $("characterHpText").textContent=`${st.hp} / ${st.hpMax}`;
     $("characterMpText").textContent=`${st.mp} / ${st.mpMax}`;
@@ -2339,14 +2368,6 @@
       $("characterExpBar").style.width=`${pct}%`;
       $("characterExpNote").textContent=`次のレベルまで ${Math.max(0,need-c.exp)} EXP`;
     }
-
-    const stats=[
-      ["最大HP",st.hpMax],["最大MP",st.mpMax],["攻撃",st.atk],["防御",st.def],
-      ["魔力",st.magic],["魔防",st.mdef],["素早さ",st.spd],["運命値",c.fate]
-    ];
-    $("characterStatGrid").innerHTML=stats.map(([label,value])=>
-      `<div class="character-stat"><span>${label}</span><strong>${value}</strong></div>`
-    ).join("");
 
     const trait=profile?.trait;
     $("characterTrait").innerHTML=trait
@@ -2387,7 +2408,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.23";
+    $("topSubtitle").textContent="キャラ詳細・装備統合試作 v0.23b";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2404,13 +2425,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
     updateHeader();
   };
 
@@ -2523,7 +2544,7 @@
     return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","heal","blaze","tackle","polish"].includes(id));
   }
 
-  // v0.23 UI trial equipment. These names/numbers are intentionally provisional.
+  // v0.23b UI trial equipment. These names/numbers are intentionally provisional.
   const EQUIPMENT_SLOTS=["weapon","shield","body","accessory"];
   const EQUIPMENT_SLOT_LABELS={weapon:"武器",shield:"盾",body:"身体",accessory:"アクセサリ"};
   const equipmentCatalog={
@@ -4144,7 +4165,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
       updateHeader();
       return;
     }
@@ -4152,7 +4173,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
   }
 
   async function attemptEscape(){
@@ -4436,7 +4457,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -4444,7 +4465,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -4568,7 +4589,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -4648,7 +4669,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23b";
     updateHeader();
     toast("戦闘テストを終了");
   }
