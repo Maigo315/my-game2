@@ -646,7 +646,7 @@
   .battle-effect-layer{
     position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden;
   }
-  .fx-slash,.fx-fire,.fx-heal,.fx-buff,.fx-impact{
+  .fx-slash,.fx-fire,.fx-heal,.fx-buff,.fx-impact,.fx-punch,.fx-heavy,.fx-arrow,.fx-magicshot,.fx-whip,.fx-gun{
     position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);
     font-size:64px;font-weight:1000;text-shadow:0 4px 12px rgba(0,0,0,.7);
     opacity:0;pointer-events:none;
@@ -656,6 +656,19 @@
   .fx-heal{animation:fxHeal .78s ease forwards}
   .fx-buff{animation:fxBuff .72s ease forwards}
   .fx-impact{animation:fxImpact .55s ease forwards}
+  .fx-punch{animation:fxPunch .46s ease forwards}
+  .fx-heavy{animation:fxHeavy .58s ease forwards}
+  .fx-arrow{animation:fxArrow .54s ease forwards}
+  .fx-magicshot{animation:fxMagicShot .58s ease forwards}
+  .fx-whip{animation:fxWhip .56s ease forwards}
+  .fx-gun{animation:fxGun .42s ease forwards}
+  .critical-pop{
+    position:absolute;z-index:12;transform:translate(-50%,-50%);pointer-events:none;text-align:center;
+    font-weight:1000;line-height:.9;text-shadow:0 3px 7px #000,0 0 12px rgba(255,231,116,.75);
+    animation:criticalPop .86s cubic-bezier(.2,.8,.25,1) forwards;
+  }
+  .critical-pop strong{display:block;font-size:22px;letter-spacing:.08em;color:#fff1a0}
+  .critical-pop span{display:block;margin-top:5px;font-size:30px;color:#fff}
   @keyframes fxSlash{
     0%{opacity:0;transform:translate(-65%,-65%) rotate(-28deg) scale(.45)}
     25%{opacity:1;transform:translate(-50%,-50%) rotate(-12deg) scale(1.2)}
@@ -681,6 +694,44 @@
     0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}
     35%{opacity:1;transform:translate(-50%,-50%) scale(1.35)}
     100%{opacity:0;transform:translate(-50%,-50%) scale(.8)}
+  }
+  @keyframes fxPunch{
+    0%{opacity:0;transform:translate(-50%,-50%) scale(.25)}
+    32%{opacity:1;transform:translate(-50%,-50%) scale(1.22)}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(.78)}
+  }
+  @keyframes fxHeavy{
+    0%{opacity:0;transform:translate(-62%,-72%) rotate(-28deg) scale(.5)}
+    38%{opacity:1;transform:translate(-50%,-46%) rotate(8deg) scale(1.3)}
+    100%{opacity:0;transform:translate(-48%,-42%) rotate(10deg) scale(.88)}
+  }
+  @keyframes fxArrow{
+    0%{opacity:0;transform:translate(-150%,-50%) rotate(-8deg) scale(.75)}
+    18%{opacity:1}
+    75%{opacity:1;transform:translate(-45%,-50%) rotate(-8deg) scale(1)}
+    100%{opacity:0;transform:translate(-22%,-50%) rotate(-8deg) scale(.8)}
+  }
+  @keyframes fxMagicShot{
+    0%{opacity:0;transform:translate(-90%,-45%) scale(.25)}
+    30%{opacity:1;transform:translate(-58%,-50%) scale(.85)}
+    100%{opacity:0;transform:translate(-42%,-50%) scale(1.3)}
+  }
+  @keyframes fxWhip{
+    0%{opacity:0;transform:translate(-65%,-50%) rotate(-18deg) scaleX(.45)}
+    28%{opacity:1;transform:translate(-50%,-50%) rotate(4deg) scaleX(1.25)}
+    100%{opacity:0;transform:translate(-34%,-50%) rotate(13deg) scaleX(.9)}
+  }
+  @keyframes fxGun{
+    0%{opacity:0;transform:translate(-75%,-50%) scale(.4)}
+    18%{opacity:1;transform:translate(-58%,-50%) scale(1.35)}
+    42%{opacity:1;transform:translate(-48%,-50%) scale(.95)}
+    100%{opacity:0;transform:translate(-42%,-50%) scale(.55)}
+  }
+  @keyframes criticalPop{
+    0%{opacity:0;transform:translate(-50%,-38%) scale(.55)}
+    18%{opacity:1;transform:translate(-50%,-55%) scale(1.18)}
+    64%{opacity:1;transform:translate(-50%,-70%) scale(1)}
+    100%{opacity:0;transform:translate(-50%,-92%) scale(.9)}
   }
   .battle-focus-portrait.actor-attack{animation:actorAttack .5s ease}
   .battle-focus-portrait.actor-cast{animation:actorCast .65s ease}
@@ -1020,7 +1071,7 @@
   @media (max-height:520px){
     .battle-speed-box{top:34px}
     .speed-btn{height:22px;font-size:7px;padding:0 4px}
-    .fx-slash,.fx-fire,.fx-heal,.fx-buff,.fx-impact{font-size:48px}
+    .fx-slash,.fx-fire,.fx-heal,.fx-buff,.fx-impact,.fx-punch,.fx-heavy,.fx-arrow,.fx-magicshot,.fx-whip,.fx-gun{font-size:48px}
   }
 
   .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
@@ -1582,7 +1633,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・武器特性試作 v0.24</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・武器演出試作 v0.24a</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2088,12 +2139,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.24" : "ミレスタ・仲間編成 v0.24";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.24a" : "ミレスタ・仲間編成 v0.24a";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・武器特性試作 v0.24"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2598,7 +2649,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・武器特性試作 v0.24";
+    $("topSubtitle").textContent="キャラ詳細・武器演出試作 v0.24a";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2606,7 +2657,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.24" : "ミレスタ・仲間編成 v0.24";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.24a" : "ミレスタ・仲間編成 v0.24a";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -2615,13 +2666,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・武器特性試作 v0.24";
+      $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・武器特性試作 v0.24";
+    $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
     updateHeader();
   };
 
@@ -2766,7 +2817,7 @@
     body:["no_body","leather_armor","apprentice_robe","light_vest"],
     accessory:["no_accessory","power_ring","lucky_charm","dodge_feather","crit_lens"]
   };
-  const favoriteWeaponsByCharacter={hero:["sword"],slime:["fist","whip"],dog:["fist"]};
+  const favoriteWeaponsByCharacter={hero:["sword","bow","staff"],slime:["fist","whip"],dog:["fist"]};
   const weaponTypeLabels={fist:"拳",sword:"剣",axe:"斧槌",bow:"弓",staff:"杖",whip:"鞭",gun:"銃"};
   const weaponTypeIcons={fist:"🥊",sword:"⚔️",axe:"🪓",bow:"🏹",staff:"🪄",whip:"〰️",gun:"🔫"};
   const BASE_CRITICAL_RATE=0;
@@ -2815,7 +2866,15 @@
       defenseInfluence:Number.isFinite(weapon.defenseInfluence)?weapon.defenseInfluence:1,
       attackAll:!!weapon.attackAll,
       canCrit:weapon.canCrit!==false,
-      bowInstantKillRate:clampRate(weapon.bowInstantKillRate||0)
+      bowInstantKillRate:clampRate(weapon.bowInstantKillRate||0),
+      fx:weapon.weaponType==="fist"?{kind:"punch",symbol:"💥"}:
+         weapon.weaponType==="sword"?{kind:"slash",symbol:"✦"}:
+         weapon.weaponType==="axe"?{kind:"heavy",symbol:"💢"}:
+         weapon.weaponType==="bow"?{kind:"arrow",symbol:"➶"}:
+         weapon.weaponType==="staff"?{kind:"magicshot",symbol:"✧"}:
+         weapon.weaponType==="whip"?{kind:"whip",symbol:"〰"}:
+         weapon.weaponType==="gun"?{kind:"gun",symbol:"✹"}:
+         {kind:"impact",symbol:"💥"}
     };
   }
   function equipmentStatDelta(c,equipmentOverride=null){
@@ -3746,6 +3805,20 @@
     setTimeout(()=>fx.remove(),t(950));
   }
 
+  function spawnCritical(targetEl,damage){
+    if(!targetEl) return;
+    const layer=$("battleEffectLayer");
+    const pop=document.createElement("div");
+    pop.className="critical-pop";
+    pop.innerHTML=`<strong>CRITICAL!</strong><span>${damage}</span>`;
+    const fieldRect=layer.getBoundingClientRect();
+    const r=targetEl.getBoundingClientRect();
+    pop.style.left=`${r.left+r.width/2-fieldRect.left}px`;
+    pop.style.top=`${r.top+r.height*.38-fieldRect.top}px`;
+    layer.appendChild(pop);
+    setTimeout(()=>pop.remove(),t(1050));
+  }
+
   function setBattleActorSlot(slot){
     const maxSlot=Math.max(0,state.battleActive.length-1);
     state.battleActorSlot=Math.max(0,Math.min(maxSlot,Number(slot)||0));
@@ -4095,10 +4168,11 @@
     setMessage(`${actor.name}：${name} はまだ仮ボタンです。`);
   }
 
-  async function animateEnemyDamage(target,killed=false,fxKind="slash",fxSymbol="✦"){
+  async function animateEnemyDamage(target,killed=false,fxKind="slash",fxSymbol="✦",critical=false,damage=0){
     const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${target.uid}"]`);
     if(!el) return;
     spawnFx(fxKind,fxSymbol,el);
+    if(critical) spawnCritical(el,damage);
     el.classList.add("damage","flash-hit");
 
     const hpBar=el.querySelector(".enemy-hp");
@@ -4169,7 +4243,8 @@
     const killed=target.hp<=0;
     const critText=critical?" 会心の一撃！":"";
     setMessage(`${actor.name} の${skillName||"攻撃"}！${critText} ${target.displayName} に ${dmg} ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
-    await animateEnemyDamage(target,killed,fxKind,fxSymbol);
+    const hitFx=isBasic?profile.fx:{kind:fxKind,symbol:fxSymbol};
+    await animateEnemyDamage(target,killed,hitFx.kind,hitFx.symbol,critical,dmg);
     return {dmg,killed,missed:false,critical};
   }
 
@@ -4214,7 +4289,7 @@
       total+=dmg;
       if(killed) defeated++;
       setMessage(`➰ ${target.displayName} に ${dmg} ダメージ。${critical?" 会心！":""}${killed?` ${target.displayName} を倒した！`:""}`);
-      await animateEnemyDamage(target,killed,"slash","➰");
+      await animateEnemyDamage(target,killed,profile.fx.kind,profile.fx.symbol,critical,dmg);
     }
     const notes=[defeated?`${defeated}体撃破`:"",missed?`${missed}体回避`:"",criticals?`${criticals}回会心`:""].filter(Boolean).join(" / ");
     setMessage(`➰ ${actor.name} の鞭撃：合計 ${total} ダメージ${notes?`（${notes}）`:""}`);
@@ -4496,7 +4571,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・武器特性試作 v0.24";
+      $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
       updateHeader();
       return;
     }
@@ -4504,7 +4579,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・武器特性試作 v0.24";
+    $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
   }
 
   async function attemptEscape(){
@@ -4779,7 +4854,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・武器特性試作 v0.24";
+      $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -4787,7 +4862,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・武器特性試作 v0.24";
+    $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -4911,7 +4986,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・武器特性試作 v0.24";
+      $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -4969,7 +5044,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・武器特性試作 v0.24";
+    $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -4991,7 +5066,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・武器特性試作 v0.24";
+    $("topSubtitle").textContent="探索＋勧誘・武器演出試作 v0.24a";
     updateHeader();
     toast("戦闘テストを終了");
   }
