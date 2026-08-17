@@ -1458,13 +1458,36 @@
     .character-resistance strong{height:19px;font-size:9px}
   }
 
-  /* v0.23c compact detail header: keep resources visible without pushing equipment below the fold */
+  /* v0.23d compact detail header: keep resources visible without pushing equipment below the fold */
   .character-compact-resources{display:grid;grid-template-columns:1fr 1fr minmax(150px,.9fr);gap:5px;margin-top:5px}
   .character-compact-resources .character-resource,.character-compact-resources .character-exp-box{margin:0;padding:4px 6px;border-radius:8px}
   .character-compact-resources .character-resource-head,.character-compact-resources .character-exp-head{font-size:8px}
   .character-compact-resources .character-resource-head strong,.character-compact-resources .character-exp-head strong{font-size:9px}
   .character-compact-resources .character-resource .bar,.character-compact-resources .character-exp-box .bar{margin-top:3px;height:4px}
   .character-compact-resources .character-exp-note{display:none}
+
+  /* v0.23d: identity header doubles as HP / MP / EXP HUD */
+  .character-identity{
+    display:grid;grid-template-columns:minmax(135px,.7fr) minmax(330px,1.65fr) auto;align-items:center;gap:8px;
+  }
+  .character-name-wrap{min-width:0;overflow:hidden}
+  .character-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .character-compact-resources{display:grid;grid-template-columns:1fr 1fr 1.08fr;gap:5px;margin:0;min-width:0}
+  .character-compact-resources .character-resource,.character-compact-resources .character-exp-box{margin:0;padding:4px 6px;border-radius:8px;min-width:0}
+  .character-compact-resources .character-resource-head,.character-compact-resources .character-exp-head{font-size:7px;gap:4px;white-space:nowrap}
+  .character-compact-resources .character-resource-head strong,.character-compact-resources .character-exp-head strong{font-size:8px;overflow:hidden;text-overflow:ellipsis}
+  .character-compact-resources .character-resource .bar,.character-compact-resources .character-exp-box .bar{margin-top:3px;height:4px}
+  .character-compact-resources .character-exp-note{display:none}
+  .character-tabs{grid-template-columns:repeat(2,1fr)}
+  .equipment-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+  .equipment-stat{padding:6px 7px}
+  @media (max-height:520px){
+    .character-identity{grid-template-columns:minmax(105px,.58fr) minmax(285px,1.7fr) auto;gap:5px}
+    .character-compact-resources{gap:3px}
+    .character-compact-resources .character-resource,.character-compact-resources .character-exp-box{padding:3px 5px}
+    .character-compact-resources .character-resource-head,.character-compact-resources .character-exp-head{font-size:6px}
+    .character-compact-resources .character-resource-head strong,.character-compact-resources .character-exp-head strong{font-size:7px}
+  }
 
 </style>
 </head>
@@ -1481,7 +1504,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.23c</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.23d</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1553,7 +1576,7 @@
         <div>
           <div class="character-kicker">CHARACTER PROFILE</div>
           <h2>キャラ詳細</h2>
-          <p>能力・装備・耐性・固有特性・習得済みスキルを確認できます。</p>
+          <p>能力・装備・固有特性・習得済みスキルを確認できます。</p>
         </div>
         <button class="small-btn" id="characterBackBtn">← 仲間編成へ</button>
       </header>
@@ -1569,6 +1592,21 @@
               <div class="character-name" id="characterName">主人公</div>
               <div class="character-level" id="characterLevel">LEVEL 1</div>
             </div>
+            <div class="character-compact-resources">
+              <div class="character-resource">
+                <div class="character-resource-head"><span>HP</span><strong id="characterHpText">100 / 100</strong></div>
+                <div class="bar"><i id="characterHpBar" style="width:100%"></i></div>
+              </div>
+              <div class="character-resource">
+                <div class="character-resource-head"><span>MP</span><strong id="characterMpText">40 / 40</strong></div>
+                <div class="bar mp"><i id="characterMpBar" style="width:100%"></i></div>
+              </div>
+              <div class="character-exp-box">
+                <div class="character-exp-head"><span>EXP</span><strong id="characterExpText">0 / 30</strong></div>
+                <div class="bar exp"><i id="characterExpBar" style="width:0%"></i></div>
+                <div class="character-exp-note" id="characterExpNote">次のレベルまで 30 EXP</div>
+              </div>
+            </div>
             <div class="character-nav" aria-label="キャラクター切り替え">
               <button id="characterPrevBtn" type="button" aria-label="前のキャラクター">◀</button>
               <span class="character-nav-count" id="characterNavCount">1 / 1</span>
@@ -1576,25 +1614,8 @@
             </div>
           </div>
 
-          <div class="character-compact-resources">
-            <div class="character-resource">
-              <div class="character-resource-head"><span>HP</span><strong id="characterHpText">100 / 100</strong></div>
-              <div class="bar"><i id="characterHpBar" style="width:100%"></i></div>
-            </div>
-            <div class="character-resource">
-              <div class="character-resource-head"><span>MP</span><strong id="characterMpText">40 / 40</strong></div>
-              <div class="bar mp"><i id="characterMpBar" style="width:100%"></i></div>
-            </div>
-            <div class="character-exp-box">
-              <div class="character-exp-head"><span>EXP</span><strong id="characterExpText">0 / 30</strong></div>
-              <div class="bar exp"><i id="characterExpBar" style="width:0%"></i></div>
-              <div class="character-exp-note" id="characterExpNote">次のレベルまで 30 EXP</div>
-            </div>
-          </div>
-
           <div class="character-tabs" role="tablist" aria-label="キャラ詳細ページ">
             <button class="character-tab active" id="characterTabStatus" data-character-tab="status" type="button">能力・装備</button>
-            <button class="character-tab" id="characterTabResistance" data-character-tab="resistance" type="button">耐性</button>
             <button class="character-tab" id="characterTabSkills" data-character-tab="skills" type="button">スキル</button>
           </div>
 
@@ -1995,7 +2016,7 @@
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2242,10 +2263,10 @@
   const STATUS_RESISTANCE_KEYS=["poison","blind","silence","death"];
 
   function setCharacterDetailTab(tab="status"){
-    const valid=["status","resistance","skills"].includes(tab) ? tab : "status";
+    const valid=["status","skills"].includes(tab) ? tab : "status";
     state.characterDetailTab=valid;
     document.querySelectorAll("[data-character-tab]").forEach(btn=>btn.classList.toggle("active",btn.dataset.characterTab===valid));
-    [["status","characterPanelStatus"],["resistance","characterPanelResistance"],["skills","characterPanelSkills"]].forEach(([name,id])=>{
+    [["status","characterPanelStatus"],["skills","characterPanelSkills"]].forEach(([name,id])=>{
       $(id)?.classList.toggle("active",name===valid);
     });
     if(valid!=="status" && state.equipmentPickerOpen){
@@ -2394,8 +2415,9 @@
     const favorite=testFavoriteWeapon[c.id];
     const slotsHtml=EQUIPMENT_SLOTS.map(sl=>{const item=equipmentCatalog[c.equipment[sl]];return `<button class="equipment-slot${sl===slot?" selected":""}" data-equip-slot="${sl}"><span class="equipment-slot-icon">${item?.icon||"－"}</span><span><span class="equipment-slot-kind">${EQUIPMENT_SLOT_LABELS[sl]}</span><span class="equipment-slot-name">${item?.name||"装備なし"}</span></span><span>›</span></button>`;}).join("");
     const statHtml=[
-      ["最大HP",p.cur.hpMax,p.pre.hpMax,""],["最大MP",p.cur.mpMax,p.pre.mpMax,""],["攻撃",p.cur.atk,p.pre.atk,""],["防御",p.cur.def,p.pre.def,""],
-      ["魔力",p.cur.magic,p.pre.magic,""],["魔防",p.cur.mdef,p.pre.mdef,""],["素早さ",p.cur.spd,p.pre.spd,""],["運命値",p.cur.fate,p.pre.fate,""],
+      ["攻撃",p.cur.atk,p.pre.atk,""],["防御",p.cur.def,p.pre.def,""],
+      ["魔力",p.cur.magic,p.pre.magic,""],["魔防",p.cur.mdef,p.pre.mdef,""],
+      ["素早さ",p.cur.spd,p.pre.spd,""],["運命値",p.cur.fate,p.pre.fate,""],
       ["会心率",p.cur.crit,p.pre.crit,"％"],["回避率",p.cur.evasion,p.pre.evasion,"％"]
     ].map(x=>equipmentDiffHtml(x[0],x[1],x[2],x[3])).join("");
     const resistanceHtml=[...ATTRIBUTE_RESISTANCE_KEYS,...STATUS_RESISTANCE_KEYS].map(k=>equipmentResistanceDiffHtml(k,resist.cur[k],resist.pre[k])).join("");
@@ -2481,7 +2503,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備統合試作 v0.23c";
+    $("topSubtitle").textContent="キャラ詳細・装備統合試作 v0.23d";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2498,13 +2520,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
     updateHeader();
   };
 
@@ -2617,7 +2639,7 @@
     return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","heal","blaze","tackle","polish"].includes(id));
   }
 
-  // v0.23c UI trial equipment. These names/numbers are intentionally provisional.
+  // v0.23d UI trial equipment. These names/numbers are intentionally provisional.
   const EQUIPMENT_SLOTS=["weapon","shield","body","accessory"];
   const EQUIPMENT_SLOT_LABELS={weapon:"武器",shield:"盾",body:"身体",accessory:"アクセサリ"};
   const equipmentCatalog={
@@ -4238,7 +4260,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
       updateHeader();
       return;
     }
@@ -4246,7 +4268,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
   }
 
   async function attemptEscape(){
@@ -4530,7 +4552,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -4538,7 +4560,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -4662,7 +4684,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -4742,7 +4764,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23c";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23d";
     updateHeader();
     toast("戦闘テストを終了");
   }
