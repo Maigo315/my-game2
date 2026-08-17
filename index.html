@@ -455,11 +455,53 @@
     margin-bottom:6px;border:1px solid #4a667e;border-radius:8px;background:#172b3d;color:#dce8f0;
     padding:5px 8px;font-size:9px;font-weight:900;cursor:pointer;
   }
+  .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
+  .equipment-slots,.equipment-preview{border:1px solid #2d465a;border-radius:10px;background:#0d1823;padding:7px;min-width:0}
+  .equipment-slot-list{display:grid;gap:5px}
+  .equipment-slot{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:6px;align-items:center;width:100%;padding:6px 7px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;text-align:left;cursor:pointer}
+  .equipment-slot:hover,.equipment-slot.selected{border-color:#d9c565;background:#2e2a19}
+  .equipment-slot-kind{font-size:7px;color:#8fa4b7;font-weight:1000}
+  .equipment-slot-name{font-size:9px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .equipment-slot-icon{font-size:16px}
+  .equipment-favorite{margin-top:6px;padding:5px 7px;border:1px dashed #665d38;border-radius:8px;color:#d6c77e;font-size:7px;line-height:1.4}
+  .equipment-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .equipment-stat{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px;align-items:center;padding:5px 6px;border-radius:7px;background:#111e2a;border:1px solid #2c4457;font-size:8px}
+  .equipment-stat span{color:#94a8b9;font-weight:900}.equipment-stat strong{font-size:11px;color:#eef5f9}.equipment-stat em{font-style:normal;font-size:8px;font-weight:1000;min-width:34px;text-align:right}
+  .equipment-stat em.up{color:#7ee5a1}.equipment-stat em.down{color:#ff9b9b}.equipment-stat em.same{color:#687a8a}
+  .equipment-candidates{grid-column:1/-1;border:1px solid #2d465a;border-radius:10px;background:#0b151f;padding:7px;min-height:84px}
+  .equipment-candidate-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:5px}
+  .equipment-candidate{min-width:0;padding:6px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;cursor:pointer;text-align:left}
+  .equipment-candidate:hover,.equipment-candidate.preview{border-color:#d9c565;background:#2d2918}
+  .equipment-candidate.equipped{box-shadow:inset 0 0 0 1px #6cae87}
+  .equipment-candidate-head{display:flex;gap:5px;align-items:center}.equipment-candidate-head b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.equipment-candidate-desc{margin-top:3px;color:#91a5b5;font-size:7px;line-height:1.35}
+  .equipment-action-row{display:flex;justify-content:flex-end;gap:5px;margin-top:6px}.equipment-action-row button{min-width:72px;padding:5px 8px;border-radius:7px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:8px;font-weight:1000;cursor:pointer}.equipment-action-row button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.equipment-action-row button:disabled{opacity:.35;cursor:default}
+  .equipment-note{margin-top:5px;color:#738797;font-size:7px;line-height:1.4}
   @media (max-height:520px){
     .item-target-card{padding:5px 7px}.item-target-name{font-size:9px}.item-target-hp{grid-template-columns:18px minmax(0,1fr) 52px;font-size:7px}
     .item-target-hp span:last-child{font-size:8px}.item-summary-note{padding:5px 7px;font-size:8px;margin-bottom:5px}
   }
 
+  .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
+  .equipment-slots,.equipment-preview{border:1px solid #2d465a;border-radius:10px;background:#0d1823;padding:7px;min-width:0}
+  .equipment-slot-list{display:grid;gap:5px}
+  .equipment-slot{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:6px;align-items:center;width:100%;padding:6px 7px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;text-align:left;cursor:pointer}
+  .equipment-slot:hover,.equipment-slot.selected{border-color:#d9c565;background:#2e2a19}
+  .equipment-slot-kind{font-size:7px;color:#8fa4b7;font-weight:1000}
+  .equipment-slot-name{font-size:9px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .equipment-slot-icon{font-size:16px}
+  .equipment-favorite{margin-top:6px;padding:5px 7px;border:1px dashed #665d38;border-radius:8px;color:#d6c77e;font-size:7px;line-height:1.4}
+  .equipment-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .equipment-stat{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px;align-items:center;padding:5px 6px;border-radius:7px;background:#111e2a;border:1px solid #2c4457;font-size:8px}
+  .equipment-stat span{color:#94a8b9;font-weight:900}.equipment-stat strong{font-size:11px;color:#eef5f9}.equipment-stat em{font-style:normal;font-size:8px;font-weight:1000;min-width:34px;text-align:right}
+  .equipment-stat em.up{color:#7ee5a1}.equipment-stat em.down{color:#ff9b9b}.equipment-stat em.same{color:#687a8a}
+  .equipment-candidates{grid-column:1/-1;border:1px solid #2d465a;border-radius:10px;background:#0b151f;padding:7px;min-height:84px}
+  .equipment-candidate-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:5px}
+  .equipment-candidate{min-width:0;padding:6px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;cursor:pointer;text-align:left}
+  .equipment-candidate:hover,.equipment-candidate.preview{border-color:#d9c565;background:#2d2918}
+  .equipment-candidate.equipped{box-shadow:inset 0 0 0 1px #6cae87}
+  .equipment-candidate-head{display:flex;gap:5px;align-items:center}.equipment-candidate-head b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.equipment-candidate-desc{margin-top:3px;color:#91a5b5;font-size:7px;line-height:1.35}
+  .equipment-action-row{display:flex;justify-content:flex-end;gap:5px;margin-top:6px}.equipment-action-row button{min-width:72px;padding:5px 8px;border-radius:7px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:8px;font-weight:1000;cursor:pointer}.equipment-action-row button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.equipment-action-row button:disabled{opacity:.35;cursor:default}
+  .equipment-note{margin-top:5px;color:#738797;font-size:7px;line-height:1.4}
   @media (max-height:520px){
     .skill-party-status{gap:3px;margin-bottom:5px}
     .skill-party-card{padding:4px 5px}
@@ -806,6 +848,27 @@
     border:1px solid #6b7890;background:linear-gradient(#2a3948,#172430);color:#dbe6ef;
   }
 
+  .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
+  .equipment-slots,.equipment-preview{border:1px solid #2d465a;border-radius:10px;background:#0d1823;padding:7px;min-width:0}
+  .equipment-slot-list{display:grid;gap:5px}
+  .equipment-slot{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:6px;align-items:center;width:100%;padding:6px 7px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;text-align:left;cursor:pointer}
+  .equipment-slot:hover,.equipment-slot.selected{border-color:#d9c565;background:#2e2a19}
+  .equipment-slot-kind{font-size:7px;color:#8fa4b7;font-weight:1000}
+  .equipment-slot-name{font-size:9px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .equipment-slot-icon{font-size:16px}
+  .equipment-favorite{margin-top:6px;padding:5px 7px;border:1px dashed #665d38;border-radius:8px;color:#d6c77e;font-size:7px;line-height:1.4}
+  .equipment-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .equipment-stat{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px;align-items:center;padding:5px 6px;border-radius:7px;background:#111e2a;border:1px solid #2c4457;font-size:8px}
+  .equipment-stat span{color:#94a8b9;font-weight:900}.equipment-stat strong{font-size:11px;color:#eef5f9}.equipment-stat em{font-style:normal;font-size:8px;font-weight:1000;min-width:34px;text-align:right}
+  .equipment-stat em.up{color:#7ee5a1}.equipment-stat em.down{color:#ff9b9b}.equipment-stat em.same{color:#687a8a}
+  .equipment-candidates{grid-column:1/-1;border:1px solid #2d465a;border-radius:10px;background:#0b151f;padding:7px;min-height:84px}
+  .equipment-candidate-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:5px}
+  .equipment-candidate{min-width:0;padding:6px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;cursor:pointer;text-align:left}
+  .equipment-candidate:hover,.equipment-candidate.preview{border-color:#d9c565;background:#2d2918}
+  .equipment-candidate.equipped{box-shadow:inset 0 0 0 1px #6cae87}
+  .equipment-candidate-head{display:flex;gap:5px;align-items:center}.equipment-candidate-head b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.equipment-candidate-desc{margin-top:3px;color:#91a5b5;font-size:7px;line-height:1.35}
+  .equipment-action-row{display:flex;justify-content:flex-end;gap:5px;margin-top:6px}.equipment-action-row button{min-width:72px;padding:5px 8px;border-radius:7px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:8px;font-weight:1000;cursor:pointer}.equipment-action-row button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.equipment-action-row button:disabled{opacity:.35;cursor:default}
+  .equipment-note{margin-top:5px;color:#738797;font-size:7px;line-height:1.4}
   @media (max-height:520px){
     .battle-recruit-stage{top:10%;bottom:14%}
     .battle-recruit-body{width:min(68%,300px)}
@@ -832,6 +895,27 @@
     from{filter:brightness(.95);transform:translateX(-50%) scale(.98)}
     to{filter:brightness(1.18);transform:translateX(-50%) scale(1.02)}
   }
+  .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
+  .equipment-slots,.equipment-preview{border:1px solid #2d465a;border-radius:10px;background:#0d1823;padding:7px;min-width:0}
+  .equipment-slot-list{display:grid;gap:5px}
+  .equipment-slot{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:6px;align-items:center;width:100%;padding:6px 7px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;text-align:left;cursor:pointer}
+  .equipment-slot:hover,.equipment-slot.selected{border-color:#d9c565;background:#2e2a19}
+  .equipment-slot-kind{font-size:7px;color:#8fa4b7;font-weight:1000}
+  .equipment-slot-name{font-size:9px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .equipment-slot-icon{font-size:16px}
+  .equipment-favorite{margin-top:6px;padding:5px 7px;border:1px dashed #665d38;border-radius:8px;color:#d6c77e;font-size:7px;line-height:1.4}
+  .equipment-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .equipment-stat{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px;align-items:center;padding:5px 6px;border-radius:7px;background:#111e2a;border:1px solid #2c4457;font-size:8px}
+  .equipment-stat span{color:#94a8b9;font-weight:900}.equipment-stat strong{font-size:11px;color:#eef5f9}.equipment-stat em{font-style:normal;font-size:8px;font-weight:1000;min-width:34px;text-align:right}
+  .equipment-stat em.up{color:#7ee5a1}.equipment-stat em.down{color:#ff9b9b}.equipment-stat em.same{color:#687a8a}
+  .equipment-candidates{grid-column:1/-1;border:1px solid #2d465a;border-radius:10px;background:#0b151f;padding:7px;min-height:84px}
+  .equipment-candidate-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:5px}
+  .equipment-candidate{min-width:0;padding:6px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;cursor:pointer;text-align:left}
+  .equipment-candidate:hover,.equipment-candidate.preview{border-color:#d9c565;background:#2d2918}
+  .equipment-candidate.equipped{box-shadow:inset 0 0 0 1px #6cae87}
+  .equipment-candidate-head{display:flex;gap:5px;align-items:center}.equipment-candidate-head b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.equipment-candidate-desc{margin-top:3px;color:#91a5b5;font-size:7px;line-height:1.35}
+  .equipment-action-row{display:flex;justify-content:flex-end;gap:5px;margin-top:6px}.equipment-action-row button{min-width:72px;padding:5px 8px;border-radius:7px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:8px;font-weight:1000;cursor:pointer}.equipment-action-row button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.equipment-action-row button:disabled{opacity:.35;cursor:default}
+  .equipment-note{margin-top:5px;color:#738797;font-size:7px;line-height:1.4}
   @media (max-height:520px){
     .battle-result-tap span{bottom:37px;padding:5px 11px;font-size:9px}
   }
@@ -860,18 +944,81 @@
   .auto-start-note.countdown{
     color:#f0da81;border-color:#75642c;background:#292516;
   }
+  .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
+  .equipment-slots,.equipment-preview{border:1px solid #2d465a;border-radius:10px;background:#0d1823;padding:7px;min-width:0}
+  .equipment-slot-list{display:grid;gap:5px}
+  .equipment-slot{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:6px;align-items:center;width:100%;padding:6px 7px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;text-align:left;cursor:pointer}
+  .equipment-slot:hover,.equipment-slot.selected{border-color:#d9c565;background:#2e2a19}
+  .equipment-slot-kind{font-size:7px;color:#8fa4b7;font-weight:1000}
+  .equipment-slot-name{font-size:9px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .equipment-slot-icon{font-size:16px}
+  .equipment-favorite{margin-top:6px;padding:5px 7px;border:1px dashed #665d38;border-radius:8px;color:#d6c77e;font-size:7px;line-height:1.4}
+  .equipment-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .equipment-stat{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px;align-items:center;padding:5px 6px;border-radius:7px;background:#111e2a;border:1px solid #2c4457;font-size:8px}
+  .equipment-stat span{color:#94a8b9;font-weight:900}.equipment-stat strong{font-size:11px;color:#eef5f9}.equipment-stat em{font-style:normal;font-size:8px;font-weight:1000;min-width:34px;text-align:right}
+  .equipment-stat em.up{color:#7ee5a1}.equipment-stat em.down{color:#ff9b9b}.equipment-stat em.same{color:#687a8a}
+  .equipment-candidates{grid-column:1/-1;border:1px solid #2d465a;border-radius:10px;background:#0b151f;padding:7px;min-height:84px}
+  .equipment-candidate-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:5px}
+  .equipment-candidate{min-width:0;padding:6px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;cursor:pointer;text-align:left}
+  .equipment-candidate:hover,.equipment-candidate.preview{border-color:#d9c565;background:#2d2918}
+  .equipment-candidate.equipped{box-shadow:inset 0 0 0 1px #6cae87}
+  .equipment-candidate-head{display:flex;gap:5px;align-items:center}.equipment-candidate-head b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.equipment-candidate-desc{margin-top:3px;color:#91a5b5;font-size:7px;line-height:1.35}
+  .equipment-action-row{display:flex;justify-content:flex-end;gap:5px;margin-top:6px}.equipment-action-row button{min-width:72px;padding:5px 8px;border-radius:7px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:8px;font-weight:1000;cursor:pointer}.equipment-action-row button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.equipment-action-row button:disabled{opacity:.35;cursor:default}
+  .equipment-note{margin-top:5px;color:#738797;font-size:7px;line-height:1.4}
   @media (max-height:520px){
     .auto-command-btn{min-height:31px;font-size:8px;padding:2px}
     .auto-command-btn strong{font-size:12px}
     .auto-start-note{min-height:14px;font-size:7px}
   }
 
+  .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
+  .equipment-slots,.equipment-preview{border:1px solid #2d465a;border-radius:10px;background:#0d1823;padding:7px;min-width:0}
+  .equipment-slot-list{display:grid;gap:5px}
+  .equipment-slot{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:6px;align-items:center;width:100%;padding:6px 7px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;text-align:left;cursor:pointer}
+  .equipment-slot:hover,.equipment-slot.selected{border-color:#d9c565;background:#2e2a19}
+  .equipment-slot-kind{font-size:7px;color:#8fa4b7;font-weight:1000}
+  .equipment-slot-name{font-size:9px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .equipment-slot-icon{font-size:16px}
+  .equipment-favorite{margin-top:6px;padding:5px 7px;border:1px dashed #665d38;border-radius:8px;color:#d6c77e;font-size:7px;line-height:1.4}
+  .equipment-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .equipment-stat{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px;align-items:center;padding:5px 6px;border-radius:7px;background:#111e2a;border:1px solid #2c4457;font-size:8px}
+  .equipment-stat span{color:#94a8b9;font-weight:900}.equipment-stat strong{font-size:11px;color:#eef5f9}.equipment-stat em{font-style:normal;font-size:8px;font-weight:1000;min-width:34px;text-align:right}
+  .equipment-stat em.up{color:#7ee5a1}.equipment-stat em.down{color:#ff9b9b}.equipment-stat em.same{color:#687a8a}
+  .equipment-candidates{grid-column:1/-1;border:1px solid #2d465a;border-radius:10px;background:#0b151f;padding:7px;min-height:84px}
+  .equipment-candidate-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:5px}
+  .equipment-candidate{min-width:0;padding:6px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;cursor:pointer;text-align:left}
+  .equipment-candidate:hover,.equipment-candidate.preview{border-color:#d9c565;background:#2d2918}
+  .equipment-candidate.equipped{box-shadow:inset 0 0 0 1px #6cae87}
+  .equipment-candidate-head{display:flex;gap:5px;align-items:center}.equipment-candidate-head b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.equipment-candidate-desc{margin-top:3px;color:#91a5b5;font-size:7px;line-height:1.35}
+  .equipment-action-row{display:flex;justify-content:flex-end;gap:5px;margin-top:6px}.equipment-action-row button{min-width:72px;padding:5px 8px;border-radius:7px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:8px;font-weight:1000;cursor:pointer}.equipment-action-row button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.equipment-action-row button:disabled{opacity:.35;cursor:default}
+  .equipment-note{margin-top:5px;color:#738797;font-size:7px;line-height:1.4}
   @media (max-height:520px){
     .battle-speed-box{top:34px}
     .speed-btn{height:22px;font-size:7px;padding:0 4px}
     .fx-slash,.fx-fire,.fx-heal,.fx-buff,.fx-impact{font-size:48px}
   }
 
+  .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
+  .equipment-slots,.equipment-preview{border:1px solid #2d465a;border-radius:10px;background:#0d1823;padding:7px;min-width:0}
+  .equipment-slot-list{display:grid;gap:5px}
+  .equipment-slot{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:6px;align-items:center;width:100%;padding:6px 7px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;text-align:left;cursor:pointer}
+  .equipment-slot:hover,.equipment-slot.selected{border-color:#d9c565;background:#2e2a19}
+  .equipment-slot-kind{font-size:7px;color:#8fa4b7;font-weight:1000}
+  .equipment-slot-name{font-size:9px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .equipment-slot-icon{font-size:16px}
+  .equipment-favorite{margin-top:6px;padding:5px 7px;border:1px dashed #665d38;border-radius:8px;color:#d6c77e;font-size:7px;line-height:1.4}
+  .equipment-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .equipment-stat{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px;align-items:center;padding:5px 6px;border-radius:7px;background:#111e2a;border:1px solid #2c4457;font-size:8px}
+  .equipment-stat span{color:#94a8b9;font-weight:900}.equipment-stat strong{font-size:11px;color:#eef5f9}.equipment-stat em{font-style:normal;font-size:8px;font-weight:1000;min-width:34px;text-align:right}
+  .equipment-stat em.up{color:#7ee5a1}.equipment-stat em.down{color:#ff9b9b}.equipment-stat em.same{color:#687a8a}
+  .equipment-candidates{grid-column:1/-1;border:1px solid #2d465a;border-radius:10px;background:#0b151f;padding:7px;min-height:84px}
+  .equipment-candidate-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:5px}
+  .equipment-candidate{min-width:0;padding:6px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;cursor:pointer;text-align:left}
+  .equipment-candidate:hover,.equipment-candidate.preview{border-color:#d9c565;background:#2d2918}
+  .equipment-candidate.equipped{box-shadow:inset 0 0 0 1px #6cae87}
+  .equipment-candidate-head{display:flex;gap:5px;align-items:center}.equipment-candidate-head b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.equipment-candidate-desc{margin-top:3px;color:#91a5b5;font-size:7px;line-height:1.35}
+  .equipment-action-row{display:flex;justify-content:flex-end;gap:5px;margin-top:6px}.equipment-action-row button{min-width:72px;padding:5px 8px;border-radius:7px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:8px;font-weight:1000;cursor:pointer}.equipment-action-row button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.equipment-action-row button:disabled{opacity:.35;cursor:default}
+  .equipment-note{margin-top:5px;color:#738797;font-size:7px;line-height:1.4}
   @media (max-height:520px){
     .battle-shell{grid-template-rows:minmax(0,1fr) 88px;gap:5px}
     .battle-upper{grid-template-columns:154px minmax(0,1fr) 146px;gap:5px}
@@ -945,6 +1092,27 @@
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+  .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
+  .equipment-slots,.equipment-preview{border:1px solid #2d465a;border-radius:10px;background:#0d1823;padding:7px;min-width:0}
+  .equipment-slot-list{display:grid;gap:5px}
+  .equipment-slot{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:6px;align-items:center;width:100%;padding:6px 7px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;text-align:left;cursor:pointer}
+  .equipment-slot:hover,.equipment-slot.selected{border-color:#d9c565;background:#2e2a19}
+  .equipment-slot-kind{font-size:7px;color:#8fa4b7;font-weight:1000}
+  .equipment-slot-name{font-size:9px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .equipment-slot-icon{font-size:16px}
+  .equipment-favorite{margin-top:6px;padding:5px 7px;border:1px dashed #665d38;border-radius:8px;color:#d6c77e;font-size:7px;line-height:1.4}
+  .equipment-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .equipment-stat{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px;align-items:center;padding:5px 6px;border-radius:7px;background:#111e2a;border:1px solid #2c4457;font-size:8px}
+  .equipment-stat span{color:#94a8b9;font-weight:900}.equipment-stat strong{font-size:11px;color:#eef5f9}.equipment-stat em{font-style:normal;font-size:8px;font-weight:1000;min-width:34px;text-align:right}
+  .equipment-stat em.up{color:#7ee5a1}.equipment-stat em.down{color:#ff9b9b}.equipment-stat em.same{color:#687a8a}
+  .equipment-candidates{grid-column:1/-1;border:1px solid #2d465a;border-radius:10px;background:#0b151f;padding:7px;min-height:84px}
+  .equipment-candidate-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:5px}
+  .equipment-candidate{min-width:0;padding:6px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;cursor:pointer;text-align:left}
+  .equipment-candidate:hover,.equipment-candidate.preview{border-color:#d9c565;background:#2d2918}
+  .equipment-candidate.equipped{box-shadow:inset 0 0 0 1px #6cae87}
+  .equipment-candidate-head{display:flex;gap:5px;align-items:center}.equipment-candidate-head b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.equipment-candidate-desc{margin-top:3px;color:#91a5b5;font-size:7px;line-height:1.35}
+  .equipment-action-row{display:flex;justify-content:flex-end;gap:5px;margin-top:6px}.equipment-action-row button{min-width:72px;padding:5px 8px;border-radius:7px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:8px;font-weight:1000;cursor:pointer}.equipment-action-row button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.equipment-action-row button:disabled{opacity:.35;cursor:default}
+  .equipment-note{margin-top:5px;color:#738797;font-size:7px;line-height:1.4}
   @media (max-height:520px){
     .topbar{height:46px;flex-basis:46px;gap:8px}
     .title{font-size:16px}
@@ -1172,7 +1340,7 @@
   .character-skill-cost{font-size:8px;color:#d6cbff;font-weight:900;white-space:nowrap}
   .character-skill-empty{grid-column:1/-1;padding:12px;border:1px dashed #405164;border-radius:9px;color:#788b9d;text-align:center;font-size:9px}
   .character-tabs{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:9px;padding:4px;border-radius:10px;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:9px;padding:4px;border-radius:10px;
     background:#0b151f;border:1px solid #293f51;position:sticky;top:45px;z-index:3;
   }
   .character-tab{
@@ -1212,6 +1380,27 @@
   .character-resistance.rank-S strong{border-color:#9a76bd;color:#e2c4ff;background:#2b1c39}
   .character-resistance-note{margin-top:7px;color:#7f91a1;font-size:8px;line-height:1.45}
 
+  .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
+  .equipment-slots,.equipment-preview{border:1px solid #2d465a;border-radius:10px;background:#0d1823;padding:7px;min-width:0}
+  .equipment-slot-list{display:grid;gap:5px}
+  .equipment-slot{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:6px;align-items:center;width:100%;padding:6px 7px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;text-align:left;cursor:pointer}
+  .equipment-slot:hover,.equipment-slot.selected{border-color:#d9c565;background:#2e2a19}
+  .equipment-slot-kind{font-size:7px;color:#8fa4b7;font-weight:1000}
+  .equipment-slot-name{font-size:9px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .equipment-slot-icon{font-size:16px}
+  .equipment-favorite{margin-top:6px;padding:5px 7px;border:1px dashed #665d38;border-radius:8px;color:#d6c77e;font-size:7px;line-height:1.4}
+  .equipment-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .equipment-stat{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px;align-items:center;padding:5px 6px;border-radius:7px;background:#111e2a;border:1px solid #2c4457;font-size:8px}
+  .equipment-stat span{color:#94a8b9;font-weight:900}.equipment-stat strong{font-size:11px;color:#eef5f9}.equipment-stat em{font-style:normal;font-size:8px;font-weight:1000;min-width:34px;text-align:right}
+  .equipment-stat em.up{color:#7ee5a1}.equipment-stat em.down{color:#ff9b9b}.equipment-stat em.same{color:#687a8a}
+  .equipment-candidates{grid-column:1/-1;border:1px solid #2d465a;border-radius:10px;background:#0b151f;padding:7px;min-height:84px}
+  .equipment-candidate-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:5px}
+  .equipment-candidate{min-width:0;padding:6px;border:1px solid #344d62;border-radius:8px;background:#132232;color:#dce7ef;cursor:pointer;text-align:left}
+  .equipment-candidate:hover,.equipment-candidate.preview{border-color:#d9c565;background:#2d2918}
+  .equipment-candidate.equipped{box-shadow:inset 0 0 0 1px #6cae87}
+  .equipment-candidate-head{display:flex;gap:5px;align-items:center}.equipment-candidate-head b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.equipment-candidate-desc{margin-top:3px;color:#91a5b5;font-size:7px;line-height:1.35}
+  .equipment-action-row{display:flex;justify-content:flex-end;gap:5px;margin-top:6px}.equipment-action-row button{min-width:72px;padding:5px 8px;border-radius:7px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:8px;font-weight:1000;cursor:pointer}.equipment-action-row button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.equipment-action-row button:disabled{opacity:.35;cursor:default}
+  .equipment-note{margin-top:5px;color:#738797;font-size:7px;line-height:1.4}
   @media (max-height:520px){
     .party-detail-side{grid-template-columns:minmax(0,1fr) 78px;gap:5px}
     .party-detail-action{font-size:8px;padding:4px}
@@ -1259,7 +1448,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.22</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・拠点編成試作 v0.23</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1375,6 +1564,7 @@
             <button class="character-tab active" id="characterTabStatus" data-character-tab="status" type="button">ステータス</button>
             <button class="character-tab" id="characterTabResistance" data-character-tab="resistance" type="button">耐性</button>
             <button class="character-tab" id="characterTabSkills" data-character-tab="skills" type="button">スキル</button>
+            <button class="character-tab" id="characterTabEquipment" data-character-tab="equipment" type="button">装備</button>
           </div>
 
           <div class="character-tab-panel active" id="characterPanelStatus">
@@ -1392,6 +1582,11 @@
           <div class="character-tab-panel" id="characterPanelSkills">
             <div class="character-section-title">LEARNED SKILLS</div>
             <div class="character-skill-list" id="characterSkillList"></div>
+          </div>
+
+          <div class="character-tab-panel" id="characterPanelEquipment">
+            <div class="character-section-title">EQUIPMENT <span style="color:#7f91a1;font-weight:700">・UI試作</span></div>
+            <div id="characterEquipment"></div>
           </div>
         </section>
       </div>
@@ -1685,6 +1880,8 @@
     partyManageContext: "milesta",
     partyDetailCharacterId: "hero",
     characterDetailTab: "status",
+    equipmentSlot: "weapon",
+    equipmentPreviewId: null,
     exploreSkillActorId: null,
     exploreSkillId: null,
     pendingRecruitCandidate: null
@@ -1770,7 +1967,7 @@
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2017,10 +2214,10 @@
   const STATUS_RESISTANCE_KEYS=["poison","blind","silence","death"];
 
   function setCharacterDetailTab(tab="status"){
-    const valid=["status","resistance","skills"].includes(tab) ? tab : "status";
+    const valid=["status","resistance","skills","equipment"].includes(tab) ? tab : "status";
     state.characterDetailTab=valid;
     document.querySelectorAll("[data-character-tab]").forEach(btn=>btn.classList.toggle("active",btn.dataset.characterTab===valid));
-    [["status","characterPanelStatus"],["resistance","characterPanelResistance"],["skills","characterPanelSkills"]].forEach(([name,id])=>{
+    [["status","characterPanelStatus"],["resistance","characterPanelResistance"],["skills","characterPanelSkills"],["equipment","characterPanelEquipment"]].forEach(([name,id])=>{
       $(id)?.classList.toggle("active",name===valid);
     });
   }
@@ -2065,12 +2262,50 @@
     renderCharacterDetail(ids[index],true);
   }
 
+  function equipmentPreviewState(c,slot,itemId){
+    const eq={...ensureEquipment(c)}; if(itemId) eq[slot]=itemId;
+    const currentDelta=equipmentStatDelta(c); const previewDelta=equipmentStatDelta(c,eq);
+    const currentExtras=equipmentExtras(c); const previewExtras=equipmentExtras(c,eq);
+    const base={...S(c)}; Object.entries(currentDelta).forEach(([k,v])=>{if(k in base)base[k]-=v;});
+    const cur={...base},pre={...base}; Object.entries(currentDelta).forEach(([k,v])=>cur[k]=(cur[k]||0)+v); Object.entries(previewDelta).forEach(([k,v])=>pre[k]=(pre[k]||0)+v);
+    cur.crit=currentExtras.crit;cur.evasion=currentExtras.evasion;cur.fate=currentExtras.fate;
+    pre.crit=previewExtras.crit;pre.evasion=previewExtras.evasion;pre.fate=previewExtras.fate;
+    return {cur,pre,eq};
+  }
+  function equipmentDiffHtml(label,cur,pre,suffix=""){
+    const diff=pre-cur,cls=diff>0?"up":diff<0?"down":"same",arrow=diff>0?"▲":diff<0?"▼":"－";
+    return `<div class="equipment-stat"><span>${label}</span><strong>${cur}${suffix}</strong><em class="${cls}">${arrow}${diff?` ${pre}${suffix}`:""}</em></div>`;
+  }
+  function renderEquipmentTab(c){
+    const host=$("characterEquipment"); if(!host)return; ensureEquipment(c);
+    const slot=state.equipmentSlot||"weapon";
+    let previewId=state.equipmentPreviewId;
+    if(!equipmentInventory[slot]?.includes(previewId)) previewId=c.equipment[slot];
+    state.equipmentPreviewId=previewId;
+    const p=equipmentPreviewState(c,slot,previewId);
+    const favorite=testFavoriteWeapon[c.id];
+    const slotsHtml=EQUIPMENT_SLOTS.map(sl=>{const item=equipmentCatalog[c.equipment[sl]];return `<button class="equipment-slot${sl===slot?" selected":""}" data-equip-slot="${sl}"><span class="equipment-slot-icon">${item?.icon||"－"}</span><span><span class="equipment-slot-kind">${EQUIPMENT_SLOT_LABELS[sl]}</span><span class="equipment-slot-name">${item?.name||"装備なし"}</span></span><span>›</span></button>`;}).join("");
+    const statHtml=[
+      ["最大HP","hpMax",p.cur.hpMax,p.pre.hpMax,""],["最大MP","mpMax",p.cur.mpMax,p.pre.mpMax,""],["攻撃","atk",p.cur.atk,p.pre.atk,""],["防御","def",p.cur.def,p.pre.def,""],
+      ["魔力","magic",p.cur.magic,p.pre.magic,""],["魔防","mdef",p.cur.mdef,p.pre.mdef,""],["素早さ","spd",p.cur.spd,p.pre.spd,""],["運命値","fate",p.cur.fate,p.pre.fate,""],
+      ["会心率","crit",p.cur.crit,p.pre.crit,"%"],["回避率","evasion",p.cur.evasion,p.pre.evasion,"%"]
+    ].map(x=>equipmentDiffHtml(x[0],x[2],x[3],x[4])).join("");
+    const candidates=equipmentInventory[slot].map(id=>{const item=equipmentCatalog[id];const mods=itemModsFor(c,item);const bits=Object.entries(mods).filter(([,v])=>v).map(([k,v])=>`${({atk:"攻",def:"防",magic:"魔",mdef:"魔防",spd:"速",hpMax:"HP",mpMax:"MP"}[k]||k)}${v>0?"+":""}${v}`);if(item.crit)bits.push(`会心+${item.crit}%`);if(item.evasion)bits.push(`回避+${item.evasion}%`);if(item.fate)bits.push(`運+${item.fate}`);return `<button class="equipment-candidate${id===previewId?" preview":""}${id===c.equipment[slot]?" equipped":""}" data-equip-item="${id}"><div class="equipment-candidate-head"><span>${item.icon||"－"}</span><b>${item.name}</b></div><div class="equipment-candidate-desc">${bits.join(" / ")||"補正なし"}<br>${item.desc||""}</div></button>`;}).join("");
+    const previewItem=equipmentCatalog[previewId]; const isSame=previewId===c.equipment[slot];
+    host.innerHTML=`<div class="equipment-shell"><div class="equipment-slots"><div class="equipment-slot-list">${slotsHtml}</div><div class="equipment-favorite">得意武器（UI確認用仮設定）：${favorite?weaponTypeLabels[favorite]:"未設定"}<br>得意武器は武器由来ステータスを約10%強化。</div></div><div class="equipment-preview"><div class="equipment-stat-grid">${statHtml}</div><div class="equipment-note">右側は現在値。▲▼は選択候補を装備した場合のプレビューです。基礎会心率3%・基礎回避率0%。</div></div><div class="equipment-candidates"><div style="font-size:8px;color:#91a6b8;font-weight:1000">${EQUIPMENT_SLOT_LABELS[slot]}を選択</div><div class="equipment-candidate-list">${candidates}</div><div class="equipment-action-row"><button id="equipmentCancelPreview" ${isSame?"disabled":""}>元に戻す</button><button class="primary" id="equipmentConfirm" ${isSame?"disabled":""}>${previewItem?.name||"装備"}を装備</button></div></div></div>`;
+    host.querySelectorAll("[data-equip-slot]").forEach(b=>b.onclick=()=>{state.equipmentSlot=b.dataset.equipSlot;state.equipmentPreviewId=c.equipment[state.equipmentSlot];renderEquipmentTab(c);});
+    host.querySelectorAll("[data-equip-item]").forEach(b=>b.onclick=()=>{state.equipmentPreviewId=b.dataset.equipItem;renderEquipmentTab(c);});
+    $("equipmentCancelPreview").onclick=()=>{state.equipmentPreviewId=c.equipment[slot];renderEquipmentTab(c);};
+    $("equipmentConfirm").onclick=()=>{changeEquipment(c,slot,state.equipmentPreviewId);state.equipmentPreviewId=c.equipment[slot];renderCharacterDetail(c.id,true);};
+  }
+
   function renderCharacterDetail(id="hero",preserveTab=false){
     const tab=preserveTab ? (state.characterDetailTab||"status") : "status";
     const c=roster[id] || roster.hero;
     const st=S(c);
     const profile=profileFor(c);
     state.partyDetailCharacterId=c.id;
+    state.equipmentPreviewId=ensureEquipment(c)[state.equipmentSlot||"weapon"];
 
     $("characterName").textContent=c.name;
     $("characterLevel").textContent=`LEVEL ${c.level}`;
@@ -2137,6 +2372,7 @@
         `<div class="character-skill-cost">MP ${sk.cost||0}</div></div>`;
     }).join("") : `<div class="character-skill-empty">習得済みスキルはありません</div>`;
 
+    renderEquipmentTab(c);
     updateCharacterDetailNavigator();
     setCharacterDetailTab(tab);
   }
@@ -2151,7 +2387,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細 v0.20";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.23";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2168,13 +2404,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
     updateHeader();
   };
 
@@ -2287,6 +2523,71 @@
     return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","heal","blaze","tackle","polish"].includes(id));
   }
 
+  // v0.23 UI trial equipment. These names/numbers are intentionally provisional.
+  const EQUIPMENT_SLOTS=["weapon","shield","body","accessory"];
+  const EQUIPMENT_SLOT_LABELS={weapon:"武器",shield:"盾",body:"身体",accessory:"アクセサリ"};
+  const equipmentCatalog={
+    bare:{id:"bare",slot:"weapon",name:"装備なし",icon:"－",mods:{}},
+    bronze_knuckle:{id:"bronze_knuckle",slot:"weapon",weaponType:"fist",name:"青銅の拳甲",icon:"🥊",mods:{atk:4,spd:2},crit:4,desc:"攻撃と素早さ。会心率+4%。"},
+    iron_sword:{id:"iron_sword",slot:"weapon",weaponType:"sword",name:"鉄の剣",icon:"⚔️",mods:{atk:6},desc:"癖のない試作用の剣。"},
+    battle_axe:{id:"battle_axe",slot:"weapon",weaponType:"axe",name:"戦斧",icon:"🪓",mods:{atk:9,spd:-2},crit:5,desc:"高攻撃・会心率+5%。素早さ低下。"},
+    hunter_bow:{id:"hunter_bow",slot:"weapon",weaponType:"bow",name:"狩人の弓",icon:"🏹",mods:{atk:6},crit:2,desc:"会心率+2%。雑魚への特殊即死は将来実装。"},
+    oak_staff:{id:"oak_staff",slot:"weapon",weaponType:"staff",name:"樫の杖",icon:"🪄",mods:{magic:6,mdef:2},desc:"魔力と魔防を強化。"},
+    leather_whip:{id:"leather_whip",slot:"weapon",weaponType:"whip",name:"革の鞭",icon:"➰",mods:{atk:4},desc:"全体通常攻撃は将来実装。"},
+    old_pistol:{id:"old_pistol",slot:"weapon",weaponType:"gun",name:"旧式拳銃",icon:"🔫",mods:{atk:7},crit:1,desc:"高攻撃。防御依存特性は将来実装。"},
+    no_shield:{id:"no_shield",slot:"shield",name:"装備なし",icon:"－",mods:{}},
+    wood_shield:{id:"wood_shield",slot:"shield",name:"木の盾",icon:"🛡️",mods:{def:3},desc:"軽い基本盾。"},
+    iron_shield:{id:"iron_shield",slot:"shield",name:"鉄の盾",icon:"🛡️",mods:{def:5,spd:-1},desc:"防御重視。少し重い。"},
+    flame_buckler:{id:"flame_buckler",slot:"shield",name:"炎紋の盾",icon:"🔥",mods:{def:2},resist:{fire:1},desc:"防御は控えめ。炎耐性+1段階（表示試作）。"},
+    no_body:{id:"no_body",slot:"body",name:"装備なし",icon:"－",mods:{}},
+    leather_armor:{id:"leather_armor",slot:"body",name:"革の鎧",icon:"🥋",mods:{def:4},desc:"身体装備の基本型。"},
+    apprentice_robe:{id:"apprentice_robe",slot:"body",name:"見習いローブ",icon:"👘",mods:{def:1,magic:2,mdef:4},desc:"防御控えめ、魔力・魔防型。"},
+    light_vest:{id:"light_vest",slot:"body",name:"軽装ベスト",icon:"🦺",mods:{def:2,spd:3},desc:"防御控えめ、素早さ型。"},
+    no_accessory:{id:"no_accessory",slot:"accessory",name:"装備なし",icon:"－",mods:{}},
+    power_ring:{id:"power_ring",slot:"accessory",name:"力の指輪",icon:"💍",mods:{atk:2},desc:"攻撃を少し補強。"},
+    lucky_charm:{id:"lucky_charm",slot:"accessory",name:"幸運のお守り",icon:"🍀",mods:{},fate:3,desc:"運命値+3（表示試作）。"},
+    dodge_feather:{id:"dodge_feather",slot:"accessory",name:"身かわしの羽飾り",icon:"🪶",mods:{},evasion:5,desc:"回避率+5%。"},
+    crit_lens:{id:"crit_lens",slot:"accessory",name:"急所のレンズ",icon:"🔎",mods:{},crit:3,desc:"会心率+3%。"}
+  };
+  const equipmentInventory={
+    weapon:["bare","bronze_knuckle","iron_sword","battle_axe","hunter_bow","oak_staff","leather_whip","old_pistol"],
+    shield:["no_shield","wood_shield","iron_shield","flame_buckler"],
+    body:["no_body","leather_armor","apprentice_robe","light_vest"],
+    accessory:["no_accessory","power_ring","lucky_charm","dodge_feather","crit_lens"]
+  };
+  const testFavoriteWeapon={hero:"sword",slime:"whip",dog:"fist"};
+  const weaponTypeLabels={fist:"拳",sword:"剣",axe:"斧槌",bow:"弓",staff:"杖",whip:"鞭",gun:"銃"};
+  function ensureEquipment(c){
+    if(!c.equipment) c.equipment={weapon:"bare",shield:"no_shield",body:"no_body",accessory:"no_accessory"};
+    return c.equipment;
+  }
+  function itemModsFor(c,item){
+    const mods={...(item?.mods||{})};
+    if(item?.slot==="weapon" && item.weaponType && testFavoriteWeapon[c.id]===item.weaponType){
+      Object.keys(mods).forEach(k=>mods[k]=Math.round(mods[k]*1.10));
+    }
+    return mods;
+  }
+  function equipmentExtras(c,equipmentOverride=null){
+    const eq=equipmentOverride||ensureEquipment(c); let crit=3,evasion=0,fate=c.fate||0;
+    EQUIPMENT_SLOTS.forEach(slot=>{const item=equipmentCatalog[eq[slot]]; if(!item)return; crit+=item.crit||0;evasion+=item.evasion||0;fate+=item.fate||0;});
+    return {crit,evasion,fate};
+  }
+  function equipmentStatDelta(c,equipmentOverride=null){
+    const eq=equipmentOverride||ensureEquipment(c); const d={hpMax:0,mpMax:0,atk:0,def:0,magic:0,mdef:0,spd:0};
+    EQUIPMENT_SLOTS.forEach(slot=>{const item=equipmentCatalog[eq[slot]]; const mods=itemModsFor(c,item); Object.entries(mods).forEach(([k,v])=>{if(k in d)d[k]+=v;});});
+    return d;
+  }
+  function changeEquipment(c,slot,itemId){
+    ensureEquipment(c); const oldDelta=equipmentStatDelta(c); const oldHpMax=c.stats.hpMax, oldMpMax=c.stats.mpMax;
+    Object.entries(oldDelta).forEach(([k,v])=>{ if(k in c.stats) c.stats[k]-=v; });
+    c.equipment[slot]=itemId;
+    const newDelta=equipmentStatDelta(c);
+    Object.entries(newDelta).forEach(([k,v])=>{ if(k in c.stats) c.stats[k]+=v; });
+    c.stats.hp=Math.min(c.stats.hpMax,c.stats.hp+Math.max(0,c.stats.hpMax-oldHpMax));
+    c.stats.mp=Math.min(c.stats.mpMax,c.stats.mp+Math.max(0,c.stats.mpMax-oldMpMax));
+  }
+
   const roster = {
     hero:{
       id:"hero",name:"主人公",img:IMG.hero,fate:16,profileId:"hero",
@@ -2349,6 +2650,7 @@
       portrait:{scale:1.06,x:0,y:1},atkBuff:1,atkBuffRounds:0
     }
   };
+  Object.values(roster).forEach(c=>ensureEquipment(c));
 
   const skills = {
     fire:{
@@ -2435,6 +2737,8 @@
   function levelUpCharacter(c){
     if(c.level>=MAX_LEVEL) return [];
     const old=S(c);
+    const equipBefore=equipmentStatDelta(c);
+    Object.entries(equipBefore).forEach(([k,v])=>{if(k in old) old[k]-=v;});
     const oldHpMax=old.hpMax,oldMpMax=old.mpMax;
     c.level++;
 
@@ -2453,6 +2757,8 @@
       old.mpMax+=g.mp; old.mp=Math.min(old.mpMax,old.mp+g.mp);
       old.atk+=g.atk; old.def+=g.def; old.magic+=g.magic; old.mdef+=g.mdef; old.spd+=g.spd;
     }
+    const equipAfter=equipmentStatDelta(c);
+    Object.entries(equipAfter).forEach(([k,v])=>{if(k in old) old[k]+=v;});
     return learnSkillsForLevel(c,c.level);
   }
 
@@ -3838,17 +4144,15 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
       updateHeader();
-      toast("戦闘から逃走しました");
       return;
     }
 
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
-    toast("戦闘から逃走しました。報酬・勧誘判定はありません");
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
   }
 
   async function attemptEscape(){
@@ -4132,7 +4436,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -4140,12 +4444,10 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
-    else if(data.leveled.length) toast(`${data.gain}G / ${data.expGain}EXP獲得・LEVEL UP！`);
-    else toast(`${data.gain}G / ${data.expGain}EXPを獲得`);
   }
 
   function addRecruitedSpecies(id){
@@ -4266,7 +4568,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
+      $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -4346,7 +4648,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.22";
+    $("topSubtitle").textContent="探索＋勧誘・拠点編成試作 v0.23";
     updateHeader();
     toast("戦闘テストを終了");
   }
