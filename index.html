@@ -1633,7 +1633,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.24c</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.24d</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2139,12 +2139,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.24c" : "ミレスタ・仲間編成 v0.24c";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.24d" : "ミレスタ・仲間編成 v0.24d";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24c"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24d"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2653,7 +2653,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.24c";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.24d";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2661,7 +2661,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.24c" : "ミレスタ・仲間編成 v0.24c";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.24d" : "ミレスタ・仲間編成 v0.24d";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -2670,13 +2670,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24d";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24d";
     updateHeader();
   };
 
@@ -2701,7 +2701,7 @@
     - Formal profile data is separated from mutable battle state.
     - Lv1 / Lv100 values + growth curve produce intermediate stats.
     - EXP type, recruitment rank, resistances, unique trait and planned skills live here.
-    - Hero / Slime Girl / Dog Girl / Fairy / Slug Girl / Pink Slug are migrated. Remaining characters stay on legacy data until their turn.
+    - Hero / Slime Girl / Dog Girl / Fairy / Slug Girl / Pink Slug / Arachne / Slime Bes Girl / Harpy are migrated. Poison Slime remains on legacy data until its turn.
   */
   const MAX_LEVEL = 100;
 
@@ -2783,6 +2783,30 @@
       resist:{fire:"E",ice:"C",light:"C",dark:"C",thunder:"D",wind:"C",earth:"B",pleasure:"B",poison:"B",blind:"C",silence:"C",death:"C"},
       trait:{id:"stickyHeal",name:"ネバネバヒール",icon:"💗",chance:null,trigger:"turnEndAfterHealingMagic",desc:"回復魔法を使用したターン終了時、確率で自身の魔力がアップする。魔力アップは戦闘中バフ。※発動確率・上昇量・持続は未定。",effect:{type:"battleBuff",stat:"magic",multiplier:null,duration:null,stacking:null}},
       plannedSkills:{1:["heal"],4:["allHeal"],18:["allHeal2"],25:["allBlock"],41:["fairyHeal"],50:["gigaRaise"]}
+    },
+    arachne:{
+      id:"arachne",role:null,growthType:"early",expType:"normal",recruitRank:"C",fate:8,
+      base:{hpMax:40,mpMax:16,atk:11,def:10,magic:12,mdef:12,spd:8},
+      final:{hpMax:600,mpMax:440,atk:240,def:240,magic:280,mdef:240,spd:280},
+      resist:{fire:"D",ice:"C",light:"D",dark:"A",thunder:"C",wind:"C",earth:"C",pleasure:"B",poison:"A",blind:"A",silence:"C",death:"C"},
+      trait:{id:"timeThread",name:"時繰りの糸",icon:"🕸️",chance:null,trigger:"battleStart",desc:"戦闘開始時、確率でランダムな味方1人にクイックを発動する。※発動確率は未定。",effect:{type:"castSkill",skillId:"quick",target:"randomAlly"}},
+      plannedSkills:{2:["poison"],5:["touch"],14:["dark"],16:["allQuick"],29:["gigaPleasure"],36:["gigaDark"],42:["eraser"]}
+    },
+    slimebes:{
+      id:"slimebes",role:null,growthType:"early",expType:"fast",recruitRank:"C",fate:12,
+      base:{hpMax:52,mpMax:7,atk:18,def:6,magic:5,mdef:6,spd:9},
+      final:{hpMax:600,mpMax:260,atk:310,def:240,magic:130,mdef:230,spd:270},
+      resist:{fire:"D",ice:"D",light:"C",dark:"C",thunder:"E",wind:"C",earth:"C",pleasure:"D",poison:"E",blind:"B",silence:"B",death:"B"},
+      trait:{id:"orangeGel",name:"オレンジジェル",icon:"🟠",chance:null,trigger:"normalAttack",desc:"通常攻撃時、ごくまれに敵のバフをすべて解除する。※発動確率は未定。",effect:{type:"removeBuffs",target:"attackedEnemy",all:true}},
+      plannedSkills:{6:["silence"],11:["blaze"],31:["fresh"],40:["counterStance"],57:["unyieldingHeart"]}
+    },
+    harpy:{
+      id:"harpy",role:null,growthType:"early",expType:"normal",recruitRank:"B",fate:16,
+      base:{hpMax:33,mpMax:16,atk:16,def:9,magic:13,mdef:7,spd:26},
+      final:{hpMax:530,mpMax:430,atk:300,def:220,magic:270,mdef:210,spd:360},
+      resist:{fire:"C",ice:"C",light:"C",dark:"C",thunder:"E",wind:"B",earth:"A",pleasure:"C",poison:"D",blind:"C",silence:"E",death:"C"},
+      trait:{id:"windWings",name:"風の翼",icon:"🪽",trigger:"passive",desc:"味方全員の風属性攻撃のダメージを5%上昇させる。",effect:{type:"partyElementDamageBoost",element:"wind",percent:5}},
+      plannedSkills:{3:["sonic"],10:["allHeal"],13:["wind"],24:["return"],36:["gigaWind"],41:["aura"],84:["annihilationWindBlade"]}
     }
   };
 
@@ -2844,7 +2868,7 @@
     body:["no_body","milesta_clothes","leather_armor"],
     accessory:["no_accessory","hunter_charm","light_shoes","magic_earrings","fate_ring","poison_gloves"]
   };
-  const favoriteWeaponsByCharacter={hero:["sword","bow","staff"],slime:["fist","whip"],dog:["fist"],fairy:["staff","whip"],slug:["fist","axe"],momo:["fist","axe"]};
+  const favoriteWeaponsByCharacter={hero:["sword","bow","staff"],slime:["fist","whip"],dog:["fist"],fairy:["staff","whip"],slug:["fist","axe"],momo:["fist","axe"],arachne:["staff","whip"],slimebes:["fist","sword","axe"],harpy:["fist","staff"]};
   const weaponTypeLabels={fist:"拳",sword:"剣",axe:"斧槌",bow:"弓",staff:"杖",whip:"鞭",gun:"銃"};
   const weaponTypeIcons={fist:"🥊",sword:"⚔️",axe:"🪓",bow:"🏹",staff:"🪄",whip:"〰️",gun:"🔫"};
   const BASE_CRITICAL_RATE=0;
@@ -2951,9 +2975,9 @@
       portrait:{scale:1.08,x:0,y:1},atkBuff:1,atkBuffRounds:0
     },
     slimebes:{
-      id:"slimebes",name:"スライムベス",img:IMG.slimebes,fate:11,
-      stats:{hp:55,hpMax:55,mp:22,mpMax:22,atk:14,def:6,magic:8,mdef:6,spd:9},
-      learnedSkills:[],caption:"スライムベスの行動を選択",
+      id:"slimebes",name:"スライムベス娘",img:IMG.slimebes,fate:characterProfiles.slimebes.fate,profileId:"slimebes",
+      stats:mutableStatsFromFormal(characterProfiles.slimebes,1),
+      learnedSkills:plannedSkillIdsUpTo(characterProfiles.slimebes,1),caption:"スライムベス娘の行動を選択",
       portrait:{scale:1.25,x:0,y:4},atkBuff:1,atkBuffRounds:0
     },
     poison:{
@@ -2963,9 +2987,9 @@
       portrait:{scale:1.22,x:0,y:3},atkBuff:1,atkBuffRounds:0
     },
     harpy:{
-      id:"harpy",name:"ハーピー",img:IMG.harpy,fate:17,
-      stats:{hp:58,hpMax:58,mp:27,mpMax:27,atk:17,def:5,magic:9,mdef:6,spd:17},
-      learnedSkills:[],caption:"ハーピーの行動を選択",
+      id:"harpy",name:"ハーピー",img:IMG.harpy,fate:characterProfiles.harpy.fate,profileId:"harpy",
+      stats:mutableStatsFromFormal(characterProfiles.harpy,1),
+      learnedSkills:plannedSkillIdsUpTo(characterProfiles.harpy,1),caption:"ハーピーの行動を選択",
       portrait:{scale:1.10,x:0,y:1},atkBuff:1,atkBuffRounds:0
     },
     momo:{
@@ -2975,9 +2999,9 @@
       portrait:{scale:1.06,x:0,y:1},atkBuff:1,atkBuffRounds:0
     },
     arachne:{
-      id:"arachne",name:"アラクネ",img:IMG.arachne,fate:13,
-      stats:{hp:85,hpMax:85,mp:36,mpMax:36,atk:19,def:9,magic:13,mdef:9,spd:11},
-      learnedSkills:[],caption:"アラクネの行動を選択",
+      id:"arachne",name:"アラクネ",img:IMG.arachne,fate:characterProfiles.arachne.fate,profileId:"arachne",
+      stats:mutableStatsFromFormal(characterProfiles.arachne,1),
+      learnedSkills:plannedSkillIdsUpTo(characterProfiles.arachne,1),caption:"アラクネの行動を選択",
       portrait:{scale:1.06,x:0,y:1},atkBuff:1,atkBuffRounds:0
     }
   };
@@ -3040,10 +3064,7 @@
 
   // Legacy growth remains only for characters that have not yet been migrated to formal profile data.
   const characterGrowth = {
-    slimebes:{hp:7,mp:2,atk:2,def:1,magic:1,mdef:1,spd:1},
-    poison:{hp:6,mp:3,atk:2,def:1,magic:2,mdef:2,spd:1},
-    harpy:{hp:6,mp:3,atk:2,def:1,magic:1,mdef:1,spd:2},
-    arachne:{hp:8,mp:3,atk:2,def:2,magic:2,mdef:2,spd:1}
+    poison:{hp:6,mp:3,atk:2,def:1,magic:2,mdef:2,spd:1}
   };
 
   Object.values(roster).forEach(c=>{
@@ -3247,17 +3268,17 @@
     S:{base:.0025,cap:5.0}
   };
 
-  // Current ranks are provisional. Early-area monster girls are D.
+  // Recruitment rank mirrors each character's current formal profile where available.
   const speciesRecruitment = {
     slime:{name:"スライム娘",rank:"D"},
     dog:{name:"犬娘",rank:"D"},
     fairy:{name:"フェアリー",rank:"D"},
     slug:{name:"ナメクジ娘",rank:"D"},
-    slimebes:{name:"スライムベス",rank:"C"},
+    slimebes:{name:"スライムベス娘",rank:"C"},
     poison:{name:"ポイズンスライム",rank:"C"},
     harpy:{name:"ハーピー",rank:"B"},
-    momo:{name:"モモイロナメクジ",rank:"B"},
-    arachne:{name:"アラクネ",rank:"A"}
+    momo:{name:"モモイロナメクジ",rank:"D"},
+    arachne:{name:"アラクネ",rank:"C"}
   };
 
   function activeFateTotal(){
@@ -4597,7 +4618,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24d";
       updateHeader();
       return;
     }
@@ -4605,7 +4626,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24d";
   }
 
   async function attemptEscape(){
@@ -4880,7 +4901,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24d";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -4888,7 +4909,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24d";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -5012,7 +5033,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24d";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -5070,7 +5091,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24d";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -5092,7 +5113,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.24d";
     updateHeader();
     toast("戦闘テストを終了");
   }
