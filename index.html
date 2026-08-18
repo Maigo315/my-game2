@@ -1669,6 +1669,91 @@
     .party-detail-ability-row{gap:2px 8px;margin-top:3px}
   }
 
+
+
+  /* v0.31a shop UI readability + landscape safe-area pass */
+  .shop-modal{
+    padding-top:max(8px,var(--safe-top));
+    padding-bottom:max(8px,var(--safe-bottom));
+    padding-left:calc(10px + var(--safe-left));
+    padding-right:calc(10px + var(--safe-right));
+  }
+  .shop-panel{
+    width:min(1180px,100%);height:min(680px,100%);
+    padding:11px;gap:8px;
+  }
+  .shop-head-copy h2{font-size:21px}
+  .shop-head-copy p{font-size:11px}
+  .shop-head .swap-close{font-size:13px;padding:8px 14px}
+  .shop-body{grid-template-columns:minmax(230px,32%) minmax(0,68%);gap:10px}
+  .shop-merchant-card{padding:9px;gap:8px}
+  .shop-dialogue{padding:10px 11px 10px 15px;min-height:62px;font-size:12px;line-height:1.5}
+  .shop-dialogue:before{font-size:20px}
+  .shop-tabs{gap:6px;padding:4px}
+  .shop-tab{min-height:39px;font-size:12px}
+  .shop-main{grid-template-columns:minmax(265px,1.28fr) minmax(225px,.82fr);gap:8px}
+  .shop-list{gap:6px}
+  .shop-row{grid-template-columns:38px minmax(0,1fr) auto;gap:8px;padding:9px 9px;min-height:54px}
+  .shop-row .ico{font-size:24px}
+  .shop-row b{font-size:11px}
+  .shop-row small{font-size:8.5px;margin-top:3px}
+  .shop-price{font-size:11px}
+  .shop-owned{font-size:8px;margin-top:3px}
+  .shop-detail{padding:9px;gap:7px}
+  .shop-detail-head{grid-template-columns:40px minmax(0,1fr) auto;gap:8px}
+  .shop-detail-icon{width:40px;height:40px;font-size:24px}
+  .shop-detail-name b{font-size:13px}
+  .shop-detail-name small{font-size:8px}
+  .shop-detail-price{font-size:13px}
+  .shop-detail-desc{padding:7px 8px;min-height:38px;font-size:9.5px;line-height:1.45}
+  .shop-compare-title{font-size:8.5px;margin-bottom:5px}
+  .shop-compare-grid{grid-template-columns:1fr;gap:4px}
+  .shop-compare-card{grid-template-columns:32px minmax(0,1fr);gap:7px;padding:5px 6px;min-height:43px}
+  .shop-compare-thumb{width:32px;height:35px}
+  .shop-compare-name{font-size:9px}
+  .shop-favorite{font-size:6.5px}
+  .shop-current-equip{font-size:7px}
+  .shop-diff-line{margin-top:3px;gap:3px}
+  .shop-diff{font-size:7px;padding:1px 5px}
+  .shop-nochange{font-size:7.5px}
+  .shop-info-row{padding:8px 9px;font-size:9.5px}
+  .shop-action-row{grid-template-columns:minmax(0,1fr) 104px;gap:7px}
+  .shop-action-note{font-size:8.5px}
+  .shop-action-btn{min-height:39px;font-size:11px}
+  .shop-foot{padding:7px 3px 0;font-size:9.5px}
+  .shop-foot strong{font-size:14px}
+
+  @media(max-height:520px){
+    .shop-panel{padding:8px;gap:5px}
+    .shop-head-copy h2{font-size:18px}.shop-head-copy p{display:none}
+    .shop-head .swap-close{font-size:11px;padding:6px 11px}
+    .shop-body{grid-template-columns:minmax(205px,31%) minmax(0,69%);gap:7px}
+    .shop-merchant-card{padding:6px;gap:5px}
+    .shop-dialogue{padding:6px 7px 6px 11px;min-height:44px;font-size:10px;line-height:1.35}
+    .shop-dialogue:before{font-size:16px}
+    .shop-tabs{gap:4px;padding:2px}.shop-tab{min-height:30px;font-size:10px}
+    .shop-main{grid-template-columns:minmax(245px,1.3fr) minmax(205px,.8fr);gap:5px}
+    .shop-list{gap:4px}.shop-row{grid-template-columns:31px minmax(0,1fr) auto;gap:6px;padding:6px 7px;min-height:44px}
+    .shop-row .ico{font-size:20px}.shop-row b{font-size:10px}.shop-row small{font-size:7.5px}.shop-price{font-size:10px}.shop-owned{font-size:7px}
+    .shop-detail{padding:6px;gap:4px}.shop-detail-head{grid-template-columns:31px minmax(0,1fr) auto;gap:5px}.shop-detail-icon{width:31px;height:31px;font-size:19px}
+    .shop-detail-name b{font-size:11px}.shop-detail-name small{font-size:7px}.shop-detail-price{font-size:11px}
+    .shop-detail-desc{padding:5px 6px;min-height:28px;font-size:8px}
+    .shop-compare-title{font-size:7.5px;margin-bottom:3px}.shop-compare-grid{grid-template-columns:1fr;gap:3px}
+    .shop-compare-card{grid-template-columns:27px minmax(0,1fr);gap:5px;padding:3px 5px;min-height:35px}.shop-compare-thumb{width:27px;height:30px}
+    .shop-compare-name{font-size:8px}.shop-current-equip{font-size:6.5px}.shop-diff{font-size:6.5px;padding:1px 4px}.shop-nochange{font-size:7px}
+    .shop-action-row{grid-template-columns:minmax(0,1fr) 88px}.shop-action-note{font-size:7px}.shop-action-btn{min-height:31px;font-size:9px}
+    .shop-foot{padding-top:4px;font-size:8px}.shop-foot strong{font-size:12px}
+  }
+  @media(max-height:410px){
+    .shop-body{grid-template-columns:minmax(190px,30%) minmax(0,70%)}
+    .shop-main{grid-template-columns:minmax(225px,1.32fr) minmax(190px,.78fr)}
+    .shop-dialogue{font-size:9px;min-height:38px}
+    .shop-detail-desc{display:none}
+    .shop-compare-card{grid-template-columns:25px minmax(0,1fr);min-height:31px;padding:2px 4px}
+    .shop-compare-thumb{width:25px;height:27px}
+    .shop-compare-name{font-size:7.5px}.shop-current-equip,.shop-diff{font-size:6px}
+    .shop-action-note{font-size:6.5px}
+  }
 </style>
 </head>
 <body>
@@ -1684,7 +1769,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.31</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.31a</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2238,7 +2323,7 @@
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2764,13 +2849,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
     updateHeader();
   };
 
@@ -6013,7 +6098,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
       updateHeader();
       return;
     }
@@ -6021,7 +6106,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
   }
 
   async function attemptEscape(){
@@ -6318,7 +6403,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -6326,7 +6411,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -6450,7 +6535,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -6509,7 +6594,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -6533,7 +6618,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
     updateHeader();
     toast("戦闘テストを終了");
   }
