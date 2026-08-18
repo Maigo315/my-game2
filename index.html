@@ -1951,7 +1951,7 @@
   }
 
 
-  /* v0.32e: cleaner slot cards + horizontal waiting roster */
+  /* v0.32f: cleaner slot cards + horizontal waiting roster */
   .party-manage-head-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
   .party-manage-head-actions .small-btn{min-width:150px}
   .party-organize-slot{
@@ -2118,7 +2118,7 @@
 
 
 
-  /* v0.32e final overrides: restore party slot info + unify waiting cards */
+  /* v0.32f final overrides: restore party slot info + unify waiting cards */
   .party-organize-slot .party-slot-name{display:none !important}
   .party-organize-slot .party-slot-meta{
     display:block !important;
@@ -2295,7 +2295,7 @@
 
 
 
-  /* v0.32e final fixes: compact waiting screen, truly shared slot cards */
+  /* v0.32f final fixes: compact waiting screen, truly shared slot cards */
   .party-manage-shell.waiting-view-mode{
     grid-template-rows:auto auto 102px !important;
   }
@@ -2425,6 +2425,187 @@
     .party-organize-slot .party-mini-hp i{min-width:14px;height:3px !important}
   }
 
+
+
+  /* v0.32f: one shared card design + compact Milesta waiting strip */
+  .party-manage-shell.waiting-view-mode{
+    grid-template-rows:auto 168px 102px !important;
+    gap:7px;
+  }
+  .party-manage-shell.waiting-view-mode .party-waiting-view{
+    display:grid !important;
+    grid-template-rows:24px 132px !important;
+    gap:4px !important;
+    min-height:0 !important;
+    max-height:none !important;
+    height:168px !important;
+    padding:5px 8px 6px !important;
+    align-self:stretch !important;
+    overflow:hidden !important;
+  }
+  .party-waiting-view-head{
+    min-height:0 !important;
+    height:24px !important;
+    padding:0 2px !important;
+    margin:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:8px !important;
+  }
+  .party-waiting-view-head > div{
+    display:flex !important;
+    align-items:center !important;
+    gap:6px !important;
+    min-width:0;
+    font-size:10px !important;
+    line-height:1 !important;
+  }
+  .party-waiting-view-head strong{
+    font-size:10px !important;
+    line-height:1 !important;
+    white-space:nowrap;
+  }
+  .party-waiting-view-head span{
+    font-size:8px !important;
+    line-height:1 !important;
+    padding:2px 6px !important;
+  }
+  .party-waiting-view-head #partyWaitingCloseBtn{
+    min-height:22px !important;
+    padding:3px 10px !important;
+    font-size:8px !important;
+    border-radius:9px !important;
+  }
+  .party-wait-list{
+    display:grid !important;
+    grid-auto-flow:column !important;
+    grid-auto-columns:118px !important;
+    grid-template-columns:none !important;
+    gap:6px !important;
+    height:132px !important;
+    min-height:0 !important;
+    max-height:132px !important;
+    padding:0 1px 4px !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    align-items:stretch !important;
+    align-content:stretch !important;
+    touch-action:pan-x !important;
+  }
+
+  /* Shared organize/waiting card appearance. */
+  .party-organize-slot,
+  .party-wait-card.party-organize-slot{
+    min-width:0 !important;
+    height:100% !important;
+    min-height:0 !important;
+    padding:4px !important;
+    border-radius:9px !important;
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    grid-template-rows:minmax(0,1fr) auto !important;
+    gap:3px !important;
+    align-items:stretch !important;
+    text-align:center !important;
+  }
+  .party-organize-slot .party-slot-thumb,
+  .party-wait-card.party-organize-slot .party-slot-thumb{
+    width:100% !important;
+    height:100% !important;
+    min-height:0 !important;
+    aspect-ratio:auto !important;
+    margin:0 !important;
+    padding:3px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    overflow:hidden !important;
+    background:rgba(6,16,26,.35) !important;
+    border-radius:8px !important;
+  }
+  .party-organize-slot .party-slot-thumb img,
+  .party-wait-card.party-organize-slot .party-slot-thumb img{
+    width:100% !important;
+    height:100% !important;
+    max-width:100% !important;
+    max-height:100% !important;
+    object-fit:contain !important;
+    object-position:center center !important;
+    transform:none !important;
+  }
+  .party-organize-slot .party-slot-name,
+  .party-wait-card.party-organize-slot .party-slot-name{display:none !important}
+  .party-organize-slot .party-slot-info,
+  .party-wait-card.party-organize-slot .party-slot-info{
+    display:grid !important;
+    grid-template-rows:auto auto auto !important;
+    gap:2px !important;
+    min-width:0 !important;
+  }
+  .party-organize-slot .party-slot-meta,
+  .party-wait-card.party-organize-slot .party-slot-meta{
+    display:block !important;
+    margin:0 !important;
+    color:#d6c979 !important;
+    font-size:7px !important;
+    line-height:1.05 !important;
+    text-align:center !important;
+  }
+  .party-organize-slot .party-mini-hp,
+  .party-wait-card.party-organize-slot .party-mini-hp{
+    display:grid !important;
+    grid-template-columns:14px minmax(0,1fr) 28px !important;
+    gap:2px !important;
+    align-items:center !important;
+    margin:0 !important;
+    color:#aab9c7 !important;
+    font-size:6px !important;
+    line-height:1 !important;
+  }
+  .party-organize-slot .party-mini-hp b,
+  .party-wait-card.party-organize-slot .party-mini-hp b{font-size:6px !important;text-align:left}
+  .party-organize-slot .party-mini-hp i,
+  .party-wait-card.party-organize-slot .party-mini-hp i{
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:4px !important;
+    border-radius:999px !important;
+    background:#263746 !important;
+    overflow:hidden !important;
+  }
+  .party-organize-slot .party-mini-hp span,
+  .party-wait-card.party-organize-slot .party-mini-hp span{
+    min-width:0 !important;
+    text-align:right !important;
+    font-size:6px !important;
+    font-variant-numeric:tabular-nums;
+  }
+  .party-wait-empty{
+    height:100% !important;
+    min-width:150px !important;
+    min-height:0 !important;
+    padding:8px !important;
+  }
+
+  @media(max-height:520px){
+    .party-manage-shell.waiting-view-mode{grid-template-rows:auto 148px 88px !important}
+    .party-manage-shell.waiting-view-mode .party-waiting-view{height:148px !important;grid-template-rows:22px 116px !important}
+    .party-waiting-view-head{height:22px !important}
+    .party-wait-list{height:116px !important;max-height:116px !important;grid-auto-columns:104px !important}
+    .party-organize-slot .party-slot-meta,
+    .party-wait-card.party-organize-slot .party-slot-meta{font-size:6px !important}
+    .party-organize-slot .party-mini-hp,
+    .party-wait-card.party-organize-slot .party-mini-hp{grid-template-columns:12px minmax(0,1fr) 26px !important;font-size:5px !important}
+    .party-organize-slot .party-mini-hp b,
+    .party-organize-slot .party-mini-hp span,
+    .party-wait-card.party-organize-slot .party-mini-hp b,
+    .party-wait-card.party-organize-slot .party-mini-hp span{font-size:5px !important}
+    .party-organize-slot .party-mini-hp i,
+    .party-wait-card.party-organize-slot .party-mini-hp i{height:3px !important}
+  }
+
 </style>
 </head>
 <body>
@@ -2440,7 +2621,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32e</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32f</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -3002,7 +3183,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.32e" : "ミレスタ・仲間編成 v0.32e";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.32f" : "ミレスタ・仲間編成 v0.32f";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -3496,7 +3677,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.32e" : "ミレスタ・仲間編成 v0.32e";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.32f" : "ミレスタ・仲間編成 v0.32f";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
