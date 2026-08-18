@@ -1633,7 +1633,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.25</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.26</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2139,12 +2139,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.25" : "ミレスタ・仲間編成 v0.25";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.26" : "ミレスタ・仲間編成 v0.26";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.25"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2653,7 +2653,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.25";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.26";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2661,7 +2661,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.25" : "ミレスタ・仲間編成 v0.25";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.26" : "ミレスタ・仲間編成 v0.26";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -2670,13 +2670,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.25";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.25";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
     updateHeader();
   };
 
@@ -2834,7 +2834,7 @@
     Object.entries(profile.plannedSkills).forEach(([lv,list])=>{
       if(Number(lv)<=level) ids.push(...list);
     });
-    return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","heal","blaze","tackle","polish"].includes(id));
+    return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","flare","gigaFlare","lastFlare","blaze","blaze2","endBlaze","ice","frost","gigaFrost","lastFrost","cold","cold2","endCold","petitThunder","thunder","gigaThunder","heavenlyThunder","stone","quake","gigaQuake","earthWrath","sonic","wind","gigaWind","annihilationWindBlade","holy","gigaHoly","judgmentLance","heavenlyLight","bigBang","dark","gigaDark","finalDarkHammer","hellDark","apocalypse","touch","pleasure","gigaPleasure","megidoPleasure","pleasureOne","erode","gigaErode","lastErode","ruinErosion","poison","neoPoison","blind","neoBlind","silence","neoSilence","death","allDeath","eraser","heal","tackle","polish"].includes(id));
   }
 
   // v0.24 formal weapon prototype: seven weapon identities + critical/evasion foundations.
@@ -2860,7 +2860,7 @@
     light_shoes:{id:"light_shoes",slot:"accessory",name:"身軽なシューズ",icon:"👟",mods:{},evasion:5,desc:"回避率+5.0%。物理攻撃に対する回避を目に見えて高める。"},
     magic_earrings:{id:"magic_earrings",slot:"accessory",name:"魔法のイヤリング",icon:"💎",mods:{magic:4},resist:{silence:1},desc:"魔力+4 / 封印耐性+1段階。魔法を扱う者向けのイヤリング。"},
     fate_ring:{id:"fate_ring",slot:"accessory",name:"運命の指輪",icon:"💍",mods:{},fate:4,desc:"運命値+4。運命値を大きく引き上げる指輪。"},
-    poison_gloves:{id:"poison_gloves",slot:"accessory",name:"毒手袋",icon:"🧤",mods:{},physicalPoisonRate:10,unavailable:true,desc:"物理攻撃時、10%の確率で毒状態にする。※毒付与の戦闘処理が未実装のため現在は保留。"}
+    poison_gloves:{id:"poison_gloves",slot:"accessory",name:"毒手袋",icon:"🧤",mods:{},physicalPoisonRate:10,unavailable:true,desc:"物理攻撃時、10%の確率で毒状態にする。※装備からの毒付与連携は現在保留。"}
   };
   const equipmentInventory={
     weapon:["bare","stone_claw","dagger","stone_axe","hinoki_staff","short_bow","whip","type_milesta"],
@@ -3007,15 +3007,96 @@
   };
   Object.values(roster).forEach(c=>ensureEquipment(c));
 
+  const MAGIC_RANK_MULTIPLIERS={E:1.00,D:1.20,C:1.50,B:1.80,A:2.20,S:2.70};
+  const MAGIC_ALL_TARGET_MULTIPLIER=.70;
+  const PLEASURE_RESIST_DAMAGE={E:1.75,D:1.40,C:1.00,B:.65,A:.35,S:.15};
+  const STATUS_BASE_RATE={single:.65,all:.50,deathSingle:.30,deathAll:.20};
+
+  function magicSkill(id,name,icon,cost,target,element,rank,extra={}){
+    const all=target==="enemyAll";
+    return {id,name,icon,cost,target,kind:"magic",element,rank,
+      rankMultiplier:MAGIC_RANK_MULTIPLIERS[rank]||1,
+      targetMultiplier:all?MAGIC_ALL_TARGET_MULTIPLIER:1,
+      desc:`敵${all?"全体":"1体"}に${element?({fire:"炎",ice:"氷",thunder:"雷",earth:"地",wind:"風",light:"光",dark:"闇",pleasure:"快楽"}[element]||element)+"属性":"無属性"}の魔法ダメージ`,
+      animation:element==="fire"?"fire":"magicshot",...extra};
+  }
+  function statusSkill(id,name,icon,cost,target,status,baseRate,extra={}){
+    const all=target==="enemyAll";
+    const label={poison:"毒",blind:"暗闇",silence:"封印",death:"即死"}[status]||status;
+    return {id,name,icon,cost,target,kind:"status",status,baseRate,
+      desc:`敵${all?"全体":"1体"}を一定確率で${label}${status==="death"?"させる":"状態にする"}`,...extra};
+  }
+
   const skills = {
-    fire:{
-      id:"fire",name:"ファイア",icon:"🔥",cost:5,target:"enemy",
-      desc:"敵1体に炎属性の魔法ダメージ",kind:"magic",element:"fire",power:24,animation:"fire"
-    },
-    blaze:{
-      id:"blaze",name:"ブレイズ",icon:"🔥",cost:10,target:"enemyAll",
-      desc:"敵全体に炎属性の魔法ダメージ",kind:"magic",element:"fire",power:16,animation:"fire"
-    },
+    // Standard attack magic: (18 + MAG×0.70) × rank × target modifier × MDEF × resistance × variance.
+    // E/D/C/B/A/S = 1.00/1.20/1.50/1.80/2.20/2.70. All-target = 0.70.
+    fire:magicSkill("fire","ファイア","🔥",4,"enemy","fire","E"),
+    flare:magicSkill("flare","フレア","🔥",10,"enemy","fire","C"),
+    gigaFlare:magicSkill("gigaFlare","ギガフレア","🔥",18,"enemy","fire","A"),
+    lastFlare:magicSkill("lastFlare","ラストフレア","🔥",28,"enemy","fire","S"),
+    blaze:magicSkill("blaze","ブレイズ","🔥",6,"enemyAll","fire","E"),
+    blaze2:magicSkill("blaze2","ブレイズⅡ","🔥",15,"enemyAll","fire","C"),
+    endBlaze:magicSkill("endBlaze","エンドブレイズ","🔥",40,"enemyAll","fire","S"),
+
+    ice:magicSkill("ice","アイス","❄️",4,"enemy","ice","E"),
+    frost:magicSkill("frost","フロスト","❄️",10,"enemy","ice","C"),
+    gigaFrost:magicSkill("gigaFrost","ギガフロスト","❄️",18,"enemy","ice","A"),
+    lastFrost:magicSkill("lastFrost","ラストフロスト","❄️",28,"enemy","ice","S"),
+    cold:magicSkill("cold","コールド","🧊",6,"enemyAll","ice","E"),
+    cold2:magicSkill("cold2","コールドⅡ","🧊",15,"enemyAll","ice","C"),
+    endCold:magicSkill("endCold","エンドコールド","🧊",40,"enemyAll","ice","S"),
+
+    // Thunder trades damage for Shock. Shock uses thunder resistance and cannot be duration-refreshed.
+    petitThunder:magicSkill("petitThunder","プチサンダー","⚡",6,"enemy","thunder","E",{rankMultiplier:.60,shockRate:.40,desc:"敵1体に低威力の雷ダメージ。40%を基準に感電させる"}),
+    thunder:magicSkill("thunder","サンダー","⚡",13,"enemyAll","thunder","D",{rankMultiplier:.80,shockRate:.40,desc:"敵全体に低威力の雷ダメージ。40%を基準に感電させる"}),
+    gigaThunder:magicSkill("gigaThunder","ギガサンダー","⚡",27,"enemyAll","thunder","B",{rankMultiplier:1.30,shockRate:.45,desc:"敵全体に雷ダメージ。45%を基準に感電させる"}),
+    heavenlyThunder:magicSkill("heavenlyThunder","天の轟雷","⚡",65,"enemyAll","thunder","S",{shockRate:.50,desc:"敵全体にS級の雷ダメージ。50%を基準に感電させる高消費MP魔法"}),
+
+    stone:magicSkill("stone","ストーン","🪨",4,"enemy","earth","E"),
+    quake:magicSkill("quake","クエイク","🪨",10,"enemyAll","earth","D"),
+    gigaQuake:magicSkill("gigaQuake","ギガクエイク","🪨",21,"enemyAll","earth","B"),
+    earthWrath:magicSkill("earthWrath","大地の怒り","🪨",40,"enemyAll","earth","S"),
+
+    sonic:magicSkill("sonic","ソニック","🌪️",4,"enemy","wind","E"),
+    wind:magicSkill("wind","ウィンド","🌪️",10,"enemyAll","wind","D"),
+    gigaWind:magicSkill("gigaWind","ギガウィンド","🌪️",21,"enemyAll","wind","B"),
+    annihilationWindBlade:magicSkill("annihilationWindBlade","殲滅の風刃","🌪️",40,"enemyAll","wind","S"),
+
+    holy:magicSkill("holy","ホーリー","✨",10,"enemy","light","C"),
+    gigaHoly:magicSkill("gigaHoly","ギガホーリー","✨",18,"enemy","light","A"),
+    judgmentLance:magicSkill("judgmentLance","裁きの聖槍","✨",28,"enemy","light","S"),
+    heavenlyLight:magicSkill("heavenlyLight","天の光","🌟",15,"enemyAll","light","C"),
+    bigBang:magicSkill("bigBang","ビッグバン","🌟",40,"enemyAll","light","S"),
+
+    dark:magicSkill("dark","ダーク","🌑",10,"enemy","dark","C"),
+    gigaDark:magicSkill("gigaDark","ギガダーク","🌑",18,"enemy","dark","A"),
+    finalDarkHammer:magicSkill("finalDarkHammer","終焉の闇槌","🌑",28,"enemy","dark","S"),
+    hellDark:magicSkill("hellDark","獄の闇","🌘",15,"enemyAll","dark","C"),
+    apocalypse:magicSkill("apocalypse","アポカリプス","🌘",40,"enemyAll","dark","S"),
+
+    // Pleasure has a wider resistance curve: E175/D140/C100/B65/A35/S15%.
+    touch:magicSkill("touch","タッチ","💗",4,"enemy","pleasure","E"),
+    pleasure:magicSkill("pleasure","プレジャー","💗",10,"enemyAll","pleasure","D"),
+    gigaPleasure:magicSkill("gigaPleasure","ギガプレジャー","💗",24,"enemyAll","pleasure","B",{rankMultiplier:2.00,desc:"敵全体に強めの快楽ダメージ。快楽耐性の影響が大きい"}),
+    megidoPleasure:magicSkill("megidoPleasure","メギドプレジャー","💗",40,"enemyAll","pleasure","S"),
+    pleasureOne:magicSkill("pleasureOne","プレジャー・ワン","💗",18,"enemy","pleasure","A"),
+
+    // Erode series: extreme gamble. The lower bound stays at 1% even at high rank.
+    erode:magicSkill("erode","イロード","🎲",15,"enemyAll",null,"C",{gambleRange:[.01,2.20],desc:"敵全体に無属性ダメージ。威力が1～220%まで激しく変動する"}),
+    gigaErode:magicSkill("gigaErode","ギガイロード","🎲",27,"enemyAll",null,"A",{gambleRange:[.01,2.40],desc:"敵全体に無属性ダメージ。威力が1～240%まで激しく変動する"}),
+    lastErode:magicSkill("lastErode","ラストイロード","🎲",40,"enemyAll",null,"S",{gambleRange:[.01,2.60],desc:"敵全体に無属性ダメージ。威力が1～260%まで激しく変動する"}),
+    ruinErosion:magicSkill("ruinErosion","破滅の侵蝕","🎲",28,"enemy",null,"S",{gambleRange:[.01,3.00],desc:"敵1体に無属性ダメージ。威力が1～300%まで激しく変動する"}),
+
+    poison:statusSkill("poison","ポイズン","☠️",5,"enemy","poison",STATUS_BASE_RATE.single),
+    neoPoison:statusSkill("neoPoison","ネオポイズン","☠️",10,"enemyAll","poison",STATUS_BASE_RATE.all),
+    blind:statusSkill("blind","ブラインド","🌫️",5,"enemy","blind",STATUS_BASE_RATE.single),
+    neoBlind:statusSkill("neoBlind","ネオブラインド","🌫️",10,"enemyAll","blind",STATUS_BASE_RATE.all),
+    silence:statusSkill("silence","サイレンス","🔇",5,"enemy","silence",STATUS_BASE_RATE.single),
+    neoSilence:statusSkill("neoSilence","ネオサイレンス","🔇",10,"enemyAll","silence",STATUS_BASE_RATE.all),
+    death:statusSkill("death","デス","☠️",12,"enemy","death",STATUS_BASE_RATE.deathSingle),
+    allDeath:statusSkill("allDeath","オールデス","☠️",24,"enemyAll","death",STATUS_BASE_RATE.deathAll),
+    eraser:{id:"eraser",name:"イレイザー",icon:"🫧",cost:15,target:"enemyAll",kind:"dispel",desc:"敵全体のバフ・強化状態をすべて解除する"},
+
     tackle:{
       id:"tackle",name:"体当たり",icon:"💥",cost:3,target:"enemy",
       desc:"敵1体に強めの物理ダメージ。自分も反動ダメージ",kind:"physical",power:1.55,recoilRate:.10,animation:"impact"
@@ -3036,11 +3117,14 @@
 
   // v0.20: the full future plan lives in characterProfiles. Only implemented skills are activated for now.
   const levelSkillTable = {
-    hero:{1:["fire"],2:["heal"],6:["blaze"]},
+    hero:{1:["fire"],2:["heal"],6:["blaze"],12:["death"],16:["flare"],24:["heavenlyLight"],28:["pleasureOne"],41:["allDeath"],60:["endBlaze"]},
     slime:{2:["tackle"]},
     dog:{4:["polish"]},
-    fairy:{1:["heal"]},
-    momo:{1:["heal"]}
+    fairy:{1:["heal"],3:["ice"],12:["wind"],30:["gigaFrost"],65:["endCold"]},
+    momo:{1:["heal"]},
+    arachne:{2:["poison"],5:["touch"],14:["dark"],29:["gigaPleasure"],36:["gigaDark"],42:["eraser"]},
+    slimebes:{6:["silence"],11:["blaze"]},
+    harpy:{3:["sonic"],13:["wind"],36:["gigaWind"],84:["annihilationWindBlade"]}
   };
 
   function skillsLearnedAtLevel(c,level){
@@ -3121,13 +3205,13 @@
     return [...new Set([...state.battleActive,...state.battleReserve])];
   }
 
-  // v0.20 condition container. Poison may persist between battles; battle-only states do not.
+  // v0.26 condition container. Poison / Blind / Silence / Shock are battle states and clear when battle ends.
   function conditionsOf(c){
-    if(!c.conditions) c.conditions={poison:false,blind:false,silence:false,berserk:false,mount:false,aura:false};
+    if(!c.conditions) c.conditions={poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false};
     return c.conditions;
   }
 
-  function clearBattleOnlyStates(c,{preservePoison=true}={}){
+  function clearBattleOnlyStates(c,{preservePoison=false}={}){
     if(!c) return;
     c.defending=false;
     c.atkBuff=1;c.atkBuffRounds=0;
@@ -3136,6 +3220,7 @@
     c.mdefBuff=1;c.mdefBuffRounds=0;
     c.spdBuff=1;c.spdBuffRounds=0;
     c._usedHealingMagicThisRound=false;
+    c.shockRecoverFails=0;
     const cond=conditionsOf(c);
     Object.keys(cond).forEach(key=>{
       if(key==="poison" && preservePoison) return;
@@ -3144,7 +3229,7 @@
   }
 
   function clearBattleEndStates(){
-    travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:true}));
+    travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:false}));
   }
 
   function battleStatusEffectMarkup(c){
@@ -3159,6 +3244,7 @@
     if(cond.poison) chips.push('<span class="status-effect-chip poison">☠ 毒</span>');
     if(cond.blind) chips.push('<span class="status-effect-chip bad">暗闇</span>');
     if(cond.silence) chips.push('<span class="status-effect-chip bad">封印</span>');
+    if(cond.shock) chips.push('<span class="status-effect-chip bad">⚡ 感電</span>');
     if(cond.berserk) chips.push('<span class="status-effect-chip bad">狂乱</span>');
     if(cond.mount) chips.push('<span class="status-effect-chip buff">マウント</span>');
     if(cond.aura) chips.push('<span class="status-effect-chip buff">オーラ</span>');
@@ -3511,6 +3597,65 @@
     });
   }
 
+  async function processTurnEndStatuses(){
+    // Poison / Blind / Silence persist until cured or battle end. Shock alone has natural recovery.
+    // Reapplying an existing status never refreshes or extends it.
+    const enemyPoisoned=[...livingEnemies()].filter(e=>conditionsOf(e).poison);
+    for(const enemy of enemyPoisoned){
+      const dmg=Math.max(1,Math.ceil(enemy.hpMax*.20));
+      enemy.hp=Math.max(0,enemy.hp-dmg);
+      const killed=enemy.hp<=0;
+      if(killed && !enemy.defeatOrder) enemy.defeatOrder=++state.battleDefeatCounter;
+      setMessage(`☠ ${enemy.displayName} は毒で ${dmg} ダメージ！${killed?` ${enemy.displayName} を倒した！`:""}`);
+      await animateEnemyDamage(enemy,killed,"magicshot","☠");
+    }
+    if(livingEnemies().length===0){ winBattle(); return true; }
+
+    const allyPoisoned=[...livingActiveSlots()].filter(({c})=>conditionsOf(c).poison);
+    for(const {i,c} of allyPoisoned){
+      if(S(c).hp<=0) continue;
+      const dmg=Math.max(1,Math.ceil(S(c).hpMax*.20));
+      S(c).hp=Math.max(0,S(c).hp-dmg);
+      renderBattleParty();
+      flashPartyValue(i,dmg,"damage");
+      setMessage(`☠ ${c.name} は毒で ${dmg} ダメージ！`);
+      await wait(BASE_TIME.message);
+      if(S(c).hp<=0){
+        const outName=c.name;
+        const replaced=autoReplaceSlot(i);
+        renderBattleParty();
+        if(replaced){
+          setMessage(`${outName} は毒で戦闘不能。控えの ${roster[state.battleActive[i]].name} が戦線に入った。`);
+          await wait(BASE_TIME.message);
+        }else if(livingActiveSlots().length===0){
+          loseBattle();
+          return true;
+        }
+      }
+    }
+
+    const shockTargets=[
+      ...livingEnemies().map(e=>({entity:e,label:e.displayName,isAlly:false})),
+      ...livingActiveSlots().map(({c})=>({entity:c,label:c.name,isAlly:true}))
+    ].filter(x=>conditionsOf(x.entity).shock);
+    for(const x of shockTargets){
+      const fails=Number(x.entity.shockRecoverFails)||0;
+      const recovered=fails>=2 || Math.random()<.50;
+      if(recovered){
+        conditionsOf(x.entity).shock=false;
+        x.entity.shockRecoverFails=0;
+        setMessage(`⚡ ${x.label} の感電が治った。`);
+      }else{
+        x.entity.shockRecoverFails=fails+1;
+        setMessage(`⚡ ${x.label} はまだ感電している。`);
+      }
+      if(x.isAlly) renderBattleParty();
+      else renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+      await wait(BASE_TIME.short);
+    }
+    return false;
+  }
+
   async function processTurnEndTraits(){
     const active=[...livingActiveSlots()];
     for(const {c} of active){
@@ -3580,6 +3725,84 @@
     const m=Math.max(1,Number(magic)||1);
     const raw=Math.max(0,(Number(basePower)||0)+m*(Number(magicScale)||0));
     return Math.max(minDamage,Math.round(raw*defenseDamageFactor(m,mdef,1)*damageVariance()));
+  }
+
+  function resistanceRankFor(target,key){
+    if(!target || !key) return "C";
+    if(target.stats){
+      const profile=profileFor(target);
+      const base=profile?.resist?.[key] || "C";
+      const delta=equipmentResistanceDelta(ensureEquipment(target))[key]||0;
+      return shiftedResistanceRank(base,delta);
+    }
+    return target.resist?.[key] || enemyData[target.id]?.resist?.[key] || "C";
+  }
+  function elementResistanceMultiplier(target,element){
+    if(!element) return 1;
+    const rank=resistanceRankFor(target,element);
+    if(element==="pleasure") return PLEASURE_RESIST_DAMAGE[rank] ?? 1;
+    return RESISTANCE_RANKS[rank]?.damage ?? 1;
+  }
+  function statusResistanceMultiplier(target,status){
+    const key=status==="shock" ? "thunder" : status;
+    const rank=resistanceRankFor(target,key);
+    return RESISTANCE_RANKS[rank]?.status ?? 1;
+  }
+  function spellDamage(actor,target,sk){
+    const magic=Math.max(1,effectiveMagic(actor)||1);
+    const mdef=Math.max(0,Number(target?.mdef)||0);
+    const rank=Number(sk.rankMultiplier)||1;
+    const targetMod=Number(sk.targetMultiplier)||1;
+    const special=Number(sk.powerMultiplier)||1;
+    const raw=(18+magic*.70)*rank*targetMod*special;
+    const defense=defenseDamageFactor(magic,mdef,1);
+    const resist=elementResistanceMultiplier(target,sk.element);
+    const partyBoost=partyElementDamageMultiplier(sk.element);
+    const variance=Array.isArray(sk.gambleRange)
+      ? sk.gambleRange[0]+Math.random()*(sk.gambleRange[1]-sk.gambleRange[0])
+      : damageVariance();
+    return Math.max(1,Math.round(raw*defense*resist*partyBoost*variance));
+  }
+  function statusName(status){
+    return {poison:"毒",blind:"暗闇",silence:"封印",shock:"感電",death:"即死"}[status]||status;
+  }
+  function statusIcon(status){
+    return {poison:"☠",blind:"🌫️",silence:"🔇",shock:"⚡",death:"☠"}[status]||"✨";
+  }
+  function statusChancePercent(target,status,baseRate){
+    return clampRate((Number(baseRate)||0)*statusResistanceMultiplier(target,status)*100);
+  }
+  function tryInflictStatus(target,status,baseRate){
+    if(!target) return {success:false,reason:"invalid",rate:0};
+    const cond=conditionsOf(target);
+    if(status==="death" && target.statusDeathImmune) return {success:false,reason:"immune",rate:0};
+    if(status!=="death" && cond[status]) return {success:false,reason:"already",rate:statusChancePercent(target,status,baseRate)};
+    if(cond.mount){
+      cond.mount=false;
+      return {success:false,reason:"mount",rate:statusChancePercent(target,status,baseRate)};
+    }
+    const rate=statusChancePercent(target,status,baseRate);
+    if(Math.random()*100>=rate) return {success:false,reason:"resist",rate};
+    if(status==="death"){
+      if(target.stats) S(target).hp=0;
+      else target.hp=0;
+      return {success:true,reason:"death",rate};
+    }
+    cond[status]=true;
+    if(status==="shock") target.shockRecoverFails=0;
+    return {success:true,reason:"applied",rate};
+  }
+  function enemyStatusSuffix(enemy){
+    const cond=conditionsOf(enemy);
+    const parts=[];
+    if(cond.poison) parts.push("☠毒");
+    if(cond.blind) parts.push("🌫暗");
+    if(cond.silence) parts.push("🔇封");
+    if(cond.shock) parts.push("⚡感");
+    return parts.length?` [${parts.join(" ")}]`:"";
+  }
+  function blindedPhysicalMiss(actor){
+    return !!conditionsOf(actor).blind && Math.random()<.70;
   }
   function physicalEvasionRate(target){
     if(target?.stats) return equipmentExtras(target).evasion;
@@ -3663,9 +3886,10 @@
       btn.disabled=true;
       return;
     }
-    $("skillBtnLabel").textContent="スキル";
-    $("skillCostLabel").textContent=`${list.length}種`;
-    btn.disabled=state.battlePhase!=="input" || state.battleEnded || S(actor).hp<=0;
+    const sealed=conditionsOf(actor).silence;
+    $("skillBtnLabel").textContent=sealed?"封印中":"スキル";
+    $("skillCostLabel").textContent=sealed?"使用不可":`${list.length}種`;
+    btn.disabled=sealed || state.battlePhase!=="input" || state.battleEnded || S(actor).hp<=0;
   }
 
   function closeSkillMenu(){
@@ -3702,6 +3926,10 @@
     cancelScheduledTurnStart();
     const actor=roster[state.battleActive[state.battleActorSlot]];
     const list=knownSkills(actor);
+    if(conditionsOf(actor).silence){
+      setMessage(`🔇 ${actor.name} は封印されていてスキルを使えません。`);
+      return;
+    }
     if(!list.length){
       setMessage(`${actor.name} のスキルはまだ未設定です。`);
       return;
@@ -3812,6 +4040,10 @@
     const actor=roster[state.battleActive[state.battleActorSlot]];
     const sk=skills[skillId];
     if(!sk || !learnedSkillIds(actor).includes(skillId)) return;
+    if(conditionsOf(actor).silence){
+      setMessage(`🔇 ${actor.name} は封印されていてスキルを使えません。`);
+      return;
+    }
     if(S(actor).mp<sk.cost){
       setMessage(`${sk.name} を使うMPが足りません。（必要MP ${sk.cost}）`);
       return;
@@ -4052,7 +4284,9 @@
           mdef:base.stats.mdef||4,spd:base.stats.spd||5,exp:base.exp||10,
           critRate:clampRate(base.critRate||0),evasionRate:clampRate(base.evasionRate||0),
           critMultiplier:Number(base.critMultiplier)||BASE_CRITICAL_MULTIPLIER,
-          bowInstantKillImmune:!!base.bowInstantKillImmune,defeatOrder:0
+          bowInstantKillImmune:!!base.bowInstantKillImmune,statusDeathImmune:!!base.statusDeathImmune,
+          conditions:{poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false},
+          shockRecoverFails:0,defeatOrder:0
         };
       });
     }
@@ -4067,7 +4301,7 @@
       div.className="enemy";
       div.dataset.enemyUid=e.uid;
       const img=document.createElement("img"); img.src=e.img; img.alt=e.displayName;
-      const name=document.createElement("span"); name.className="enemy-name"; name.textContent=e.displayName;
+      const name=document.createElement("span"); name.className="enemy-name"; name.textContent=e.displayName+enemyStatusSuffix(e);
       const hpNum=document.createElement("span"); hpNum.className="enemy-hp-num"; hpNum.textContent=`${e.hp}/${e.hpMax}`;
       const hpWrap=document.createElement("span"); hpWrap.className="enemy-hp-wrap";
       const hp=document.createElement("i"); hp.className="enemy-hp"; hp.style.width=`${Math.max(0,Math.round(e.hp/e.hpMax*100))}%`;
@@ -4198,6 +4432,7 @@
   function chooseAutoAction(slot){
     const actor=roster[state.battleActive[slot]];
     if(!actor || S(actor).hp<=0) return null;
+    if(conditionsOf(actor).silence) return makeAttackAction();
     const firstSkillId=learnedSkillIds(actor)[0] || null;
     const sk=firstSkillId ? skills[firstSkillId] : null;
     const target=lowestHpEnemy();
@@ -4420,7 +4655,7 @@
     setMessage(`${actor.name} の${skillName||"攻撃"}！`);
     await wait(BASE_TIME.actionLead);
 
-    if(physicalAttackMisses(target)){
+    if(blindedPhysicalMiss(actor) || physicalAttackMisses(target)){
       setMessage(`${actor.name} の${skillName||"攻撃"}！ ${target.displayName} はひらりとかわした！`);
       await wait(BASE_TIME.short);
       return {dmg:0,killed:false,missed:true,critical:false};
@@ -4478,7 +4713,7 @@
     let total=0,defeated=0,missed=0,criticals=0;
     const traitContext=makeTraitActionContext();
     for(const target of targets){
-      if(physicalAttackMisses(target)){
+      if(blindedPhysicalMiss(actor) || physicalAttackMisses(target)){
         missed++;
         setMessage(`➰ ${target.displayName} は鞭撃をかわした！`);
         await wait(BASE_TIME.short);
@@ -4506,6 +4741,11 @@
   async function resolveSkill(actor,action,slot){
     const sk=skills[action.skill];
     if(!sk) return;
+    if(conditionsOf(actor).silence){
+      setMessage(`🔇 ${actor.name} は封印されていて ${sk.name} を使えない！`);
+      await wait(BASE_TIME.message);
+      return;
+    }
     if(S(actor).mp<sk.cost){
       setMessage(`${actor.name} はMPが足りず、${sk.name} を使えなかった。`);
       await wait(BASE_TIME.message);
@@ -4516,45 +4756,116 @@
     if(sk.kind==="heal") actor._usedHealingMagicThisRound=true;
     renderBattleParty();
 
-    if(sk.id==="fire"){
-      let target=enemyByUid(action.targetUid);
-      if(!target || target.hp<=0) target=livingEnemies()[0]||null;
-      if(!target) return;
-
-      animateActor("cast");
-      setMessage(`${actor.name} は ${sk.name} を唱えた！`);
-      await wait(BASE_TIME.actionLead);
-
-      const magicPower=effectiveMagic(actor)||18;
-      const dmg=Math.max(1,Math.round(magicDamage(magicPower,target.mdef||4,sk.power,.35,2)*partyElementDamageMultiplier(sk.element)));
-      target.hp=Math.max(0,target.hp-dmg);
-      const killed=target.hp<=0;
-      setMessage(`🔥 ${sk.name}！ ${target.displayName} に ${dmg} の炎ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
-      await animateEnemyDamage(target,killed,"fire","🔥");
-      return;
-    }
-
-    if(sk.id==="blaze"){
-      const targets=[...livingEnemies()];
+    if(sk.kind==="magic"){
+      let targets=[];
+      if(sk.target==="enemyAll") targets=[...livingEnemies()];
+      else{
+        let target=enemyByUid(action.targetUid);
+        if(!target || target.hp<=0) target=livingEnemies()[0]||null;
+        if(target) targets=[target];
+      }
       if(!targets.length) return;
 
       animateActor("cast");
-      setMessage(`🔥 ${actor.name} は ${sk.name} を唱えた！`);
+      setMessage(`${sk.icon||"✨"} ${actor.name} は ${sk.name} を唱えた！`);
       await wait(BASE_TIME.actionLead);
 
-      const magicPower=effectiveMagic(actor)||18;
-      const results=targets.map(target=>{
-        const dmg=Math.max(1,Math.round(magicDamage(magicPower,target.mdef||4,sk.power,.25,2)*partyElementDamageMultiplier(sk.element)));
+      const results=[];
+      for(const target of targets){
+        const dmg=spellDamage(actor,target,sk);
         target.hp=Math.max(0,target.hp-dmg);
         const killed=target.hp<=0;
         if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
-        return {target,dmg,killed};
-      });
+        let shock=null;
+        if(!killed && Number(sk.shockRate)>0) shock=tryInflictStatus(target,"shock",sk.shockRate);
+        results.push({target,dmg,killed,shock});
+      }
 
-      const total=results.reduce((sum,r)=>sum+r.dmg,0);
-      const defeated=results.filter(r=>r.killed).length;
-      setMessage(`🔥 ${sk.name}！ 敵全体に炎ダメージ、合計 ${total}！${defeated?` ${defeated}体を倒した！`:""}`);
-      await Promise.all(results.map(r=>animateEnemyDamage(r.target,r.killed,"fire","🔥")));
+      if(sk.target==="enemyAll"){
+        const total=results.reduce((sum,r)=>sum+r.dmg,0);
+        const defeated=results.filter(r=>r.killed).length;
+        const shocked=results.filter(r=>r.shock?.success).length;
+        setMessage(`${sk.icon||"✨"} ${sk.name}！ 敵全体に合計 ${total} ダメージ！${shocked?` ${shocked}体が感電！`:""}${defeated?` ${defeated}体を倒した！`:""}`);
+        await Promise.all(results.map(r=>animateEnemyDamage(r.target,r.killed,sk.animation||"magicshot",sk.icon||"✦")));
+      }else{
+        const r=results[0];
+        setMessage(`${sk.icon||"✨"} ${sk.name}！ ${r.target.displayName} に ${r.dmg} ダメージ。${r.shock?.success?"⚡ 感電した！ ":""}${r.killed?`${r.target.displayName} を倒した！`:""}`);
+        await animateEnemyDamage(r.target,r.killed,sk.animation||"magicshot",sk.icon||"✦");
+      }
+      if(results.some(r=>r.shock?.success) && !results.some(r=>r.killed)) renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+      return;
+    }
+
+    if(sk.kind==="status"){
+      let targets=[];
+      if(sk.target==="enemyAll") targets=[...livingEnemies()];
+      else{
+        let target=enemyByUid(action.targetUid);
+        if(!target || target.hp<=0) target=livingEnemies()[0]||null;
+        if(target) targets=[target];
+      }
+      if(!targets.length) return;
+
+      animateActor("cast");
+      setMessage(`${sk.icon||"✨"} ${actor.name} は ${sk.name} を唱えた！`);
+      await wait(BASE_TIME.actionLead);
+      const results=targets.map(target=>({target,result:tryInflictStatus(target,sk.status,sk.baseRate)}));
+
+      if(sk.status==="death"){
+        for(const r of results){
+          if(r.result.success){
+            if(!r.target.defeatOrder) r.target.defeatOrder=++state.battleDefeatCounter;
+            await animateEnemyDamage(r.target,true,"magicshot","☠");
+          }else{
+            const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${r.target.uid}"]`);
+            if(el) spawnFx("magicshot","☠",el);
+          }
+        }
+      }else{
+        results.forEach(r=>{
+          const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${r.target.uid}"]`);
+          if(el) spawnFx("magicshot",statusIcon(sk.status),el);
+        });
+        await wait(BASE_TIME.hit);
+        renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+      }
+
+      const success=results.filter(r=>r.result.success).length;
+      const already=results.filter(r=>r.result.reason==="already").length;
+      const immune=results.filter(r=>r.result.reason==="immune").length;
+      if(sk.target==="enemyAll"){
+        setMessage(`${sk.icon||"✨"} ${sk.name}！ ${success}体に${statusName(sk.status)}が決まった。${already?` ${already}体はすでに同状態。`:""}${immune?` ${immune}体は無効。`:""}`);
+      }else{
+        const r=results[0];
+        const msg=r.result.success
+          ? (sk.status==="death"?`${r.target.displayName} を即死させた！`:`${r.target.displayName} は${statusName(sk.status)}状態になった！`)
+          : r.result.reason==="already"?`${r.target.displayName} はすでに${statusName(sk.status)}状態。`
+          : r.result.reason==="immune"?`${r.target.displayName} には効かなかった。`
+          : `${r.target.displayName} は${statusName(sk.status)}を免れた。`;
+        setMessage(`${sk.icon||"✨"} ${sk.name}！ ${msg}`);
+      }
+      return;
+    }
+
+    if(sk.kind==="dispel"){
+      const targets=[...livingEnemies()];
+      if(!targets.length) return;
+      animateActor("cast");
+      setMessage(`🫧 ${actor.name} は ${sk.name} を唱えた！`);
+      await wait(BASE_TIME.actionLead);
+      let removed=0;
+      targets.forEach(target=>{
+        let did=clearEnemyBuffs(target);
+        const cond=conditionsOf(target);
+        if(cond.mount){cond.mount=false;did=true;}
+        if(cond.aura){cond.aura=false;did=true;}
+        if(did) removed++;
+        const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${target.uid}"]`);
+        if(el) spawnFx("buff","🫧",el);
+      });
+      setMessage(`🫧 ${sk.name}！ 敵全体の強化効果を解除した。${removed?`（${removed}体）`:"（解除できる効果なし）"}`);
+      await wait(BASE_TIME.buff);
+      renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
       return;
     }
 
@@ -4687,6 +4998,11 @@
 
   async function executeEnemyAction(enemy){
     if(state.battleEnded || !enemy || enemy.hp<=0) return;
+    if(conditionsOf(enemy).shock){
+      setMessage(`⚡ ${enemy.displayName} は感電していて動けない！`);
+      await wait(BASE_TIME.enemyAfter);
+      return;
+    }
     state.battlePhase="enemy";
     clearEnemyActing();
     const enemyEl=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${enemy.uid}"]`);
@@ -4706,7 +5022,7 @@
     const c=target.c;
     const traitContext=makeTraitActionContext();
 
-    if(physicalAttackMisses(c)){
+    if(blindedPhysicalMiss(enemy) || physicalAttackMisses(c)){
       setMessage(`${enemy.displayName} の攻撃！ ${c.name} はひらりとかわした！`);
       await wait(BASE_TIME.enemyAfter);
       clearEnemyActing();
@@ -4789,7 +5105,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.25";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
       updateHeader();
       return;
     }
@@ -4797,7 +5113,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.25";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
   }
 
   async function attemptEscape(){
@@ -4863,6 +5179,11 @@
       if(state.battleEnded || S(actor).hp<=0) continue;
       state.battleActorSlot=i;
       updateActorPortrait();
+      if(conditionsOf(actor).shock){
+        setMessage(`⚡ ${actor.name} は感電していて身を守れない！`);
+        await wait(BASE_TIME.message);
+        continue;
+      }
       actor.defending=true;
       animateActor("buff");
       renderBattleParty();
@@ -4895,6 +5216,12 @@
       updateActorPortrait();
       renderBattleParty();
 
+      if(conditionsOf(actor).shock){
+        setMessage(`⚡ ${actor.name} は感電していて動けない！`);
+        await wait(BASE_TIME.message);
+        continue;
+      }
+
       if(action.type==="attack"){
         const result=await resolveBasicAttack(actor,action);
         await wait(BASE_TIME.short);
@@ -4916,6 +5243,8 @@
     }
 
     clearEnemyActing();
+    const statusEndedBattle=await processTurnEndStatuses();
+    if(statusEndedBattle || state.battleEnded) return;
     tickBattleBuffs();
     await processTurnEndTraits();
 
@@ -5067,7 +5396,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.25";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -5075,7 +5404,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.25";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -5199,7 +5528,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.25";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -5257,7 +5586,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.25";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -5281,7 +5610,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.25";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -5388,7 +5717,7 @@
     state.escapeAttempts=0;
     state.escapeBaseRate=null;
     renderFormation(e.target.value,0,true);
-    travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:true}));
+    travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:false}));
     const startTraitNotices=applyBattleStartTraits();
     startCommandInput();
     if(startTraitNotices.length) toast(startTraitNotices.join(" / "));
@@ -5407,7 +5736,7 @@
     state.escapeAttempts=0;
     state.escapeBaseRate=null;
     renderFormation(state.battleFormationArea,state.battleFormationIndex-1,true);
-    travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:true}));
+    travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:false}));
     const startTraitNotices=applyBattleStartTraits();
     startCommandInput();
     if(startTraitNotices.length) toast(startTraitNotices.join(" / "));
@@ -5426,7 +5755,7 @@
     state.escapeAttempts=0;
     state.escapeBaseRate=null;
     renderFormation(state.battleFormationArea,state.battleFormationIndex+1,true);
-    travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:true}));
+    travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:false}));
     const startTraitNotices=applyBattleStartTraits();
     startCommandInput();
     if(startTraitNotices.length) toast(startTraitNotices.join(" / "));
