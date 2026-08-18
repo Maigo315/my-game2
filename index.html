@@ -1951,7 +1951,7 @@
   }
 
 
-  /* v0.32c: cleaner slot cards + horizontal waiting roster */
+  /* v0.32d: cleaner slot cards + horizontal waiting roster */
   .party-manage-head-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
   .party-manage-head-actions .small-btn{min-width:150px}
   .party-organize-slot{
@@ -2116,6 +2116,183 @@
     .party-wait-card .party-mini-hp{grid-template-columns:16px minmax(0,1fr) auto;font-size:8px}
   }
 
+
+
+  /* v0.32d final overrides: restore party slot info + unify waiting cards */
+  .party-organize-slot .party-slot-name{display:none !important}
+  .party-organize-slot .party-slot-meta{
+    display:block !important;
+    font-size:8px !important;
+    text-align:center;
+    color:#d6c979;
+    line-height:1.1;
+    margin-bottom:1px;
+  }
+  .party-organize-slot .party-slot-info{
+    display:grid !important;
+    gap:3px;
+    min-width:0;
+  }
+  .party-organize-slot .party-mini-hp{
+    display:grid !important;
+    grid-template-columns:18px minmax(0,1fr) 42px !important;
+    gap:3px;
+    margin-top:0;
+    font-size:7px !important;
+    align-items:center;
+  }
+  .party-organize-slot .party-mini-hp i{
+    display:block;
+    width:100%;
+    height:4px !important;
+  }
+  .party-organize-slot .party-slot-thumb{
+    width:100%;
+    max-width:100%;
+    aspect-ratio:1/1;
+    padding:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:rgba(6,16,26,.35);
+  }
+  .party-organize-slot .party-slot-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:contain !important;
+    object-position:center center !important;
+    transform:none !important;
+  }
+
+  .party-waiting-view{
+    padding:8px 10px 10px !important;
+    overflow:hidden;
+  }
+  .party-manage-shell.waiting-view-mode .party-waiting-view{
+    display:grid;
+    grid-template-rows:auto minmax(0,1fr);
+    gap:6px;
+  }
+  .party-waiting-view-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    padding:0 2px 2px !important;
+  }
+  .party-waiting-view-head > div{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:11px !important;
+    font-weight:1000;
+    min-width:0;
+  }
+  .party-waiting-view-head strong{font-size:11px;white-space:nowrap}
+  .party-waiting-view-head span{
+    padding:2px 7px;
+    border-radius:999px;
+    background:#172635;
+    color:#afbdc9;
+    font-size:9px;
+    font-weight:900;
+  }
+  .party-wait-list{
+    display:grid !important;
+    grid-auto-flow:column;
+    grid-auto-columns:minmax(116px,132px);
+    grid-template-columns:none !important;
+    gap:8px;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    align-items:stretch;
+    align-content:stretch;
+    min-height:0;
+    max-height:100%;
+    padding:2px 2px 8px;
+    scrollbar-width:thin;
+    overscroll-behavior:contain;
+    touch-action:pan-x;
+    -webkit-overflow-scrolling:touch;
+  }
+  .party-wait-card{
+    min-width:0;
+    height:auto !important;
+    min-height:0 !important;
+    display:grid !important;
+    grid-template-columns:1fr;
+    grid-template-rows:minmax(0,1fr) auto;
+    gap:5px;
+    align-items:stretch;
+    text-align:center;
+    padding:5px !important;
+  }
+  .party-wait-card .party-slot-thumb{
+    width:100%;
+    max-width:100%;
+    aspect-ratio:1/1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    padding:4px;
+    background:rgba(6,16,26,.35);
+    margin:0 auto;
+  }
+  .party-wait-card .party-slot-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:contain !important;
+    object-position:center center !important;
+    transform:none !important;
+  }
+  .party-wait-card .party-slot-name{display:none !important}
+  .party-wait-card .party-slot-meta{
+    display:block !important;
+    font-size:8px !important;
+    text-align:center;
+    color:#d6c979;
+    line-height:1.1;
+    margin-bottom:1px;
+  }
+  .party-wait-card .party-slot-info{
+    display:grid !important;
+    gap:3px;
+    min-width:0;
+  }
+  .party-wait-card .party-mini-hp{
+    display:grid !important;
+    grid-template-columns:18px minmax(0,1fr) 42px !important;
+    gap:3px;
+    margin-top:0;
+    font-size:7px !important;
+    align-items:center;
+  }
+  .party-wait-card .party-mini-hp i{
+    display:block;
+    width:100%;
+    height:4px !important;
+  }
+  .party-wait-empty{
+    min-width:180px;
+    min-height:110px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:12px 10px;
+  }
+  @media(max-height:520px){
+    .party-organize-slot .party-slot-meta,
+    .party-wait-card .party-slot-meta{font-size:7px !important}
+    .party-organize-slot .party-mini-hp,
+    .party-wait-card .party-mini-hp{grid-template-columns:16px minmax(0,1fr) 38px !important;font-size:6px !important}
+    .party-organize-slot .party-mini-hp i,
+    .party-wait-card .party-mini-hp i{height:3px !important}
+    .party-wait-list{grid-auto-columns:minmax(104px,120px);gap:6px}
+  }
+
 </style>
 </head>
 <body>
@@ -2131,7 +2308,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32c</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32d</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2565,7 +2742,7 @@
     currentShop:null,
     shopMode:"buy",
     shopSelectedKey:null,
-    travelMerchantMet:localStorage.getItem("milesta_travel_merchant_met")==="1",
+    travelMerchantMet:false,
     caveUnlocked: localStorage.getItem("milesta_cave_unlocked") === "1",
     selectedArea: "plains",
     run: null,
@@ -2693,7 +2870,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.32c" : "ミレスタ・仲間編成 v0.32c";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.32d" : "ミレスタ・仲間編成 v0.32d";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -3187,7 +3364,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.32c" : "ミレスタ・仲間編成 v0.32c";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.32d" : "ミレスタ・仲間編成 v0.32d";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4253,7 +4430,7 @@
       img.src=TRAVEL_MERCHANT_IMG; img.alt="旅の商人"; img.classList.add("show");
       const first=!state.travelMerchantMet;
       $("shopMerchantLine").textContent=first?"おや？お主は……ククク、これは面白い。私は旅の商人だ。さあ、買って行くといい":"ここで会ったのも何かの縁だ……。さあ、買って行くといい";
-      if(first){state.travelMerchantMet=true;localStorage.setItem("milesta_travel_merchant_met","1");}
+      if(first){state.travelMerchantMet=true;}
     }else{
       sil.style.webkitMaskImage=`url("${MOB_MERCHANT_IMG}")`; sil.style.maskImage=`url("${MOB_MERCHANT_IMG}")`; sil.classList.add("show");
       $("shopMerchantLine").textContent="いらっしゃいませ。必要なものがあれば、どうぞご覧ください。";
