@@ -1633,7 +1633,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.27</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.28</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2141,12 +2141,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.27" : "ミレスタ・仲間編成 v0.27";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.28" : "ミレスタ・仲間編成 v0.28";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2637,7 +2637,7 @@
       return `<div class="character-skill-card">`+
         `<div class="character-skill-icon">${sk.icon||"✨"}</div>`+
         `<div class="character-skill-main"><div class="character-skill-name">${sk.name}</div><div class="character-skill-desc">${sk.desc||""}</div></div>`+
-        `<div class="character-skill-cost">MP ${sk.cost||0}</div></div>`;
+        `<div class="character-skill-cost">${sk.kind==="passive"?"PASSIVE":`MP ${sk.cost||0}`}</div></div>`;
     }).join("") : `<div class="character-skill-empty">習得済みスキルはありません</div>`;
 
     renderEquipmentTab(c);
@@ -2655,7 +2655,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.27";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.28";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2663,7 +2663,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.27" : "ミレスタ・仲間編成 v0.27";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.28" : "ミレスタ・仲間編成 v0.28";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -2672,13 +2672,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
     updateHeader();
   };
 
@@ -2783,7 +2783,7 @@
       base:{hpMax:54,mpMax:23,atk:13,def:15,magic:13,mdef:3,spd:2},
       final:{hpMax:540,mpMax:340,atk:250,def:300,magic:240,mdef:160,spd:120},
       resist:{fire:"E",ice:"C",light:"C",dark:"C",thunder:"D",wind:"C",earth:"B",pleasure:"B",poison:"B",blind:"C",silence:"C",death:"C"},
-      trait:{id:"stickyHeal",name:"ネバネバヒール",icon:"💗",chance:.25,trigger:"turnEndAfterHealingMagic",desc:"回復魔法を使用したターン終了時、25%の確率で自身の魔力が1.4倍になる（3ラウンド）。",effect:{type:"battleBuff",stat:"magic",multiplier:1.40,duration:3,stacking:"refresh"}},
+      trait:{id:"stickyHeal",name:"ネバネバヒール",icon:"💗",chance:.25,trigger:"turnEndAfterHealingMagic",desc:"回復魔法を使用したターン終了時、25%の確率で自身の魔力が1.3倍になる（5ラウンド）。",effect:{type:"battleBuff",stat:"magic",multiplier:1.30,duration:5,stacking:"refresh"}},
       plannedSkills:{1:["heal"],4:["allHeal"],18:["allHeal2"],25:["allBlock"],41:["fairyHeal"],50:["gigaRaise"]}
     },
     arachne:{
@@ -2836,7 +2836,7 @@
     Object.entries(profile.plannedSkills).forEach(([lv,list])=>{
       if(Number(lv)<=level) ids.push(...list);
     });
-    return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","flare","gigaFlare","lastFlare","blaze","blaze2","endBlaze","ice","frost","gigaFrost","lastFrost","cold","cold2","endCold","petitThunder","thunder","gigaThunder","heavenlyThunder","stone","quake","gigaQuake","earthWrath","sonic","wind","gigaWind","annihilationWindBlade","holy","gigaHoly","judgmentLance","heavenlyLight","bigBang","dark","gigaDark","finalDarkHammer","hellDark","apocalypse","touch","pleasure","gigaPleasure","megidoPleasure","pleasureOne","erode","gigaErode","lastErode","ruinErosion","poison","neoPoison","blind","neoBlind","silence","neoSilence","death","allDeath","eraser","heal","highHeal","gigaHeal","lastHeal","allHeal","allHeal2","fairyHeal","eternal","raise","raise2","gigaRaise","miracleFestival","cure","fresh","allFresh","mount","allMount","aura","lastAura","polish","allPolish","warGodAura","guard","allGuard","guardianBlessing","magic","allMagic","demonSpiritFlow","block","allBlock","spiritKingBlessing","quick","allQuick","heroicTailwind","berserk","fortune","escape","supply","neoSupply","stealth","return","tackle"].includes(id));
+    return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","flare","gigaFlare","lastFlare","blaze","blaze2","endBlaze","ice","frost","gigaFrost","lastFrost","cold","cold2","endCold","petitThunder","thunder","gigaThunder","heavenlyThunder","stone","quake","gigaQuake","earthWrath","sonic","wind","gigaWind","annihilationWindBlade","holy","gigaHoly","judgmentLance","heavenlyLight","bigBang","dark","gigaDark","finalDarkHammer","hellDark","apocalypse","touch","pleasure","gigaPleasure","megidoPleasure","pleasureOne","erode","gigaErode","lastErode","ruinErosion","poison","neoPoison","blind","neoBlind","silence","neoSilence","death","allDeath","eraser","heal","highHeal","gigaHeal","lastHeal","allHeal","allHeal2","fairyHeal","eternal","raise","raise2","gigaRaise","miracleFestival","cure","fresh","allFresh","mount","allMount","aura","lastAura","polish","allPolish","warGodAura","guard","allGuard","guardianBlessing","magic","allMagic","demonSpiritFlow","block","allBlock","spiritKingBlessing","quick","allQuick","heroicTailwind","berserk","fortune","escape","supply","neoSupply","stealth","return","tackle","counterStance","doubleAttack","autoFresh","canceller","unyieldingHeart","powerCharge","magicConcentration","explosiveFist","swordDance","terraCrash","stardust","magicBarrier","dragonSpiral","nephilimLaser"].includes(id));
   }
 
   // v0.24 formal weapon prototype: seven weapon identities + critical/evasion foundations.
@@ -3100,9 +3100,29 @@
     eraser:{id:"eraser",name:"イレイザー",icon:"🫧",cost:15,target:"enemyAll",kind:"dispel",desc:"敵全体のバフ・強化状態をすべて解除する"},
 
     tackle:{
-      id:"tackle",name:"体当たり",icon:"💥",cost:3,target:"enemy",
-      desc:"敵1体に強めの物理ダメージ。自分も反動ダメージ",kind:"physical",power:1.55,recoilRate:.10,animation:"impact"
+      id:"tackle",name:"体当たり",icon:"💥",cost:4,target:"enemy",
+      desc:"敵1体に1.5倍の物理ダメージ。使用後、自身に最大HP10%の反動ダメージ",kind:"physical",power:1.50,recoilRate:.10,animation:"impact"
     },
+
+    // Physical passives. These never appear as selectable battle commands.
+    counterStance:{id:"counterStance",name:"カウンタースタンス",icon:"↩️",cost:0,target:"passive",kind:"passive",battleUse:false,chance:.20,desc:"物理攻撃を受けた各ヒット時、20%で通常攻撃による反撃。1回の敵行動につき最大1回"},
+    doubleAttack:{id:"doubleAttack",name:"連続攻撃",icon:"⚔️",cost:0,target:"passive",kind:"passive",battleUse:false,chance:.15,desc:"通常攻撃後、15%の確率でもう一度だけ通常攻撃する。反撃からは発動しない"},
+    autoFresh:{id:"autoFresh",name:"オートフレッシュ",icon:"✨",cost:0,target:"passive",kind:"passive",battleUse:false,chance:.20,desc:"ターン終了時、自身に状態異常が残っていれば20%で全て解除"},
+    canceller:{id:"canceller",name:"キャンセラー",icon:"🚫",cost:0,target:"passive",kind:"passive",battleUse:false,chance:.08,desc:"敵の魔法を受ける時、8%の確率で自分へのダメージと効果を完全無効化"},
+    unyieldingHeart:{id:"unyieldingHeart",name:"不屈の心",icon:"❤️‍🔥",cost:0,target:"passive",kind:"passive",battleUse:false,desc:"戦闘勝利時、自身が戦闘不能ならHP1で復活"},
+
+    // Charge skills stack multiplicatively with ordinary stat buffs. MP costs are provisional until separately finalized.
+    powerCharge:{id:"powerCharge",name:"パワーチャージ",icon:"💪",cost:8,target:"self",kind:"charge",chargeStat:"atk",multiplier:2.00,duration:2,provisionalCost:true,desc:"次のターン終了時まで自身の攻撃力を2倍。通常の攻撃力バフと重複する"},
+    magicConcentration:{id:"magicConcentration",name:"魔力集中",icon:"🧠",cost:8,target:"self",kind:"charge",chargeStat:"magic",multiplier:2.00,duration:2,provisionalCost:true,desc:"次のターン終了時まで自身の魔力を2倍。通常の魔力バフと重複する"},
+
+    // Weapon-exclusive techniques.
+    explosiveFist:{id:"explosiveFist",name:"爆裂拳",icon:"🥊",cost:24,target:"enemyRandom",kind:"multiPhysical",requiredWeaponTypes:["fist"],hits:5,hitPower:.60,canCrit:true,desc:"拳専用。敵全体から1ヒットごとにランダム対象を選び、60%威力×5回。各ヒット会心・回避判定"},
+    swordDance:{id:"swordDance",name:"剣の舞",icon:"🗡️",cost:24,target:"enemyRandom",kind:"multiPhysical",requiredWeaponTypes:["sword"],hits:4,hitPower:.75,canCrit:true,desc:"剣専用。敵全体から1ヒットごとにランダム対象を選び、75%威力×4回。各ヒット会心・回避判定"},
+    terraCrash:{id:"terraCrash",name:"テラクラッシュ",icon:"🪓",cost:20,target:"enemy",kind:"physicalSpecial",requiredWeaponTypes:["axe","hammer"],power:1.50,forceCrit:true,canCrit:true,animation:"heavy",fxSymbol:"💥",desc:"斧・槌専用。敵1体に150%威力の物理攻撃。必ずクリティカル"},
+    stardust:{id:"stardust",name:"スターダスト",icon:"🏹",cost:24,target:"enemy",kind:"physicalSpecial",requiredWeaponTypes:["bow"],power:2.20,canCrit:true,dispelOnHit:true,animation:"arrow",fxSymbol:"✨",desc:"弓専用。敵1体に220%威力の物理大ダメージ。命中時、対象のバフを全て解除"},
+    magicBarrier:{id:"magicBarrier",name:"魔力障壁",icon:"🪄",cost:38,target:"allyAll",kind:"magicBarrier",requiredWeaponTypes:["staff"],reduction:.60,duration:2,priority:"defense",desc:"杖専用。味方前衛全員が受ける魔法ダメージを60%軽減。使用ラウンド＋次ラウンドまで。防御系の高優先度"},
+    dragonSpiral:{id:"dragonSpiral",name:"龍螺旋",icon:"➰",cost:24,target:"enemyRandom",kind:"multiPhysical",requiredWeaponTypes:["whip"],hits:6,hitPower:.50,canCrit:true,desc:"鞭専用。敵全体から1ヒットごとにランダム対象を選び、50%威力×6回。各ヒット会心・回避判定"},
+    nephilimLaser:{id:"nephilimLaser",name:"ネフィリムレーザー",icon:"🔫",cost:48,target:"enemyAll",kind:"physicalAll",requiredWeaponTypes:["gun"],power:2.20,defenseInfluence:.50,canCrit:false,shockRate:.35,animation:"gun",fxSymbol:"✹",desc:"銃専用。敵全体に220%威力の無属性物理大ダメージ。防御影響50%、会心なし、35%を基準に感電"},
 
     // Recovery magic. Lower tiers intentionally age out as HP rises.
     heal:{id:"heal",name:"ヒール",icon:"💚",cost:3,target:"ally",fieldUse:"ally",kind:"heal",healBase:25,healMagic:.45,desc:"味方1人のHPを回復（25＋MAG×0.45）",animation:"heal"},
@@ -3157,14 +3177,14 @@
 
   // v0.20: the full future plan lives in characterProfiles. Only implemented skills are activated for now.
   const levelSkillTable = {
-    hero:{1:["fire"],2:["heal"],6:["blaze"],12:["death"],16:["flare"],19:["allMagic"],24:["heavenlyLight"],28:["pleasureOne"],32:["lastHeal"],37:["gigaRaise"],41:["allDeath"],50:["heroicTailwind"],60:["endBlaze"]},
+    hero:{1:["fire"],2:["heal"],6:["blaze"],12:["death"],16:["flare"],19:["allMagic"],24:["heavenlyLight"],28:["pleasureOne"],32:["lastHeal"],37:["gigaRaise"],41:["allDeath"],50:["heroicTailwind"],60:["endBlaze"],75:["canceller"]},
     slime:{2:["tackle"],8:["guard"],11:["cold"],25:["allGuard"],32:["raise2"],44:["allMount"],70:["lastAura"]},
-    dog:{4:["polish"],6:["cure"],21:["allQuick"]},
+    dog:{4:["polish"],6:["cure"],21:["allQuick"],33:["counterStance"],55:["doubleAttack"]},
     fairy:{1:["heal"],3:["ice"],12:["wind"],18:["highHeal"],30:["gigaFrost"],36:["fairyHeal"],65:["endCold"],84:["eternal"]},
     slug:{1:["cure"],15:["raise"],38:["stealth"],51:["guardianBlessing"]},
     momo:{1:["heal"],4:["allHeal"],18:["allHeal2"],25:["allBlock"],41:["fairyHeal"],50:["gigaRaise"]},
     arachne:{2:["poison"],5:["touch"],14:["dark"],16:["allQuick"],29:["gigaPleasure"],36:["gigaDark"],42:["eraser"]},
-    slimebes:{6:["silence"],11:["blaze"],31:["fresh"]},
+    slimebes:{6:["silence"],11:["blaze"],31:["fresh"],40:["counterStance"],57:["unyieldingHeart"]},
     harpy:{3:["sonic"],10:["allHeal"],13:["wind"],24:["return"],36:["gigaWind"],41:["aura"],84:["annihilationWindBlade"]}
   };
 
@@ -3246,7 +3266,7 @@
     return [...new Set([...state.battleActive,...state.battleReserve])];
   }
 
-  // v0.27 condition container. Poison / Blind / Silence / Shock are battle states and clear when battle ends.
+  // v0.28 condition container. Poison / Blind / Silence / Shock are battle states and clear when battle ends.
   function conditionsOf(c){
     if(!c.conditions) c.conditions={poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false};
     return c.conditions;
@@ -3260,6 +3280,9 @@
     c.magicBuff=1;c.magicBuffRounds=0;
     c.mdefBuff=1;c.mdefBuffRounds=0;
     c.spdBuff=1;c.spdBuffRounds=0;
+    c.powerChargeMultiplier=1;c.powerChargeRounds=0;
+    c.magicConcentrationMultiplier=1;c.magicConcentrationRounds=0;
+    c.magicBarrierRounds=0;
     c._usedHealingMagicThisRound=false;
     c.shockRecoverFails=0;
     c.berserkRounds=0;
@@ -3282,6 +3305,9 @@
     if(c.magicBuffRounds>0) chips.push(`<span class="status-effect-chip buff">MAG↑ ${c.magicBuffRounds}R</span>`);
     if(c.mdefBuffRounds>0) chips.push(`<span class="status-effect-chip buff">MDEF↑ ${c.mdefBuffRounds}R</span>`);
     if(c.spdBuffRounds>0) chips.push(`<span class="status-effect-chip buff">SPD↑ ${c.spdBuffRounds}R</span>`);
+    if(c.powerChargeRounds>0) chips.push(`<span class="status-effect-chip buff">💪 CHARGE ${c.powerChargeRounds}R</span>`);
+    if(c.magicConcentrationRounds>0) chips.push(`<span class="status-effect-chip buff">🧠 FOCUS ${c.magicConcentrationRounds}R</span>`);
+    if(c.magicBarrierRounds>0) chips.push(`<span class="status-effect-chip buff">🪄 障壁 ${c.magicBarrierRounds}R</span>`);
     const cond=conditionsOf(c);
     if(cond.poison) chips.push('<span class="status-effect-chip poison">☠ 毒</span>');
     if(cond.blind) chips.push('<span class="status-effect-chip bad">暗闇</span>');
@@ -3551,13 +3577,13 @@
   function livingActiveSlots(){ return state.battleActive.map((id,i)=>({id,i,c:roster[id]})).filter(x=>S(x.c).hp>0); }
   function livingEnemies(){ return state.battleEnemies.filter(e=>e.hp>0); }
   function setMessage(text){ $("battleMessage").textContent=text; }
-  function effectiveAtk(c){ return Math.round(S(c).atk*(c.atkBuff||1)*(conditionsOf(c).berserk?1.60:1)); }
+  function effectiveAtk(c){ return Math.round(S(c).atk*(c.atkBuff||1)*(conditionsOf(c).berserk?1.60:1)*((c.powerChargeRounds||0)>0?(c.powerChargeMultiplier||2):1)); }
   function effectiveDef(c){ return Math.round(S(c).def*(c.defBuff||1)); }
-  function effectiveMagic(c){ return Math.round(S(c).magic*(c.magicBuff||1)); }
+  function effectiveMagic(c){ return Math.round(S(c).magic*(c.magicBuff||1)*((c.magicConcentrationRounds||0)>0?(c.magicConcentrationMultiplier||2):1)); }
   function effectiveMdef(c){ return Math.round(S(c).mdef*(c.mdefBuff||1)); }
   function effectiveSpd(c){ return Math.round(S(c).spd*(c.spdBuff||1)); }
   function traitOf(c){ return characterProfiles[c?.profileId]?.trait || null; }
-  function makeTraitActionContext(){ return {triggeredTraits:new Set()}; }
+  function makeTraitActionContext(){ return {triggeredTraits:new Set(),triggeredPassives:new Set()}; }
   function traitRoll(trait){ return !!trait && Number(trait.chance)>0 && Math.random()<Number(trait.chance); }
 
 
@@ -3600,11 +3626,20 @@
     return removed;
   }
 
-  function consumeAuraAgainstEnemyMagic(target){
+  // Enemy-magic defensive hook. Current prototype enemies still use physical attacks only,
+  // but future enemy magic routes through this helper: Aura first, then Canceller, then Magic Barrier for damage.
+  function enemyMagicDefense(target,{hasDamage=true}={}){
     const cond=conditionsOf(target);
-    if(!cond.aura) return false;
-    cond.aura=false;
-    return true;
+    if(cond.aura){
+      cond.aura=false;
+      return {blocked:true,reason:"aura",damageMultiplier:0};
+    }
+    const cancel=skills.canceller;
+    if(hasPassive(target,"canceller") && Math.random()<(Number(cancel?.chance)||.08)){
+      return {blocked:true,reason:"canceller",damageMultiplier:0};
+    }
+    const barrierActive=hasDamage && Number(target?.magicBarrierRounds)>0;
+    return {blocked:false,reason:barrierActive?"magicBarrier":"none",damageMultiplier:barrierActive?(1-(Number(skills.magicBarrier?.reduction)||.60)):1};
   }
 
   function battleAllies(includeReserve=false){
@@ -3620,6 +3655,13 @@
       const roundsKey=`${key}Rounds`;
       if(Number(enemy[roundsKey])>0){ enemy[roundsKey]=0; removed=true; }
     });
+    [["powerChargeMultiplier","powerChargeRounds"],["magicConcentrationMultiplier","magicConcentrationRounds"]].forEach(([valueKey,roundKey])=>{
+      if(Number(enemy[roundKey])>0){ enemy[roundKey]=0; enemy[valueKey]=1; removed=true; }
+    });
+    if(Number(enemy.magicBarrierRounds)>0){ enemy.magicBarrierRounds=0; removed=true; }
+    const cond=conditionsOf(enemy);
+    if(cond.mount){cond.mount=false;removed=true;}
+    if(cond.aura){cond.aura=false;removed=true;}
     if(enemy.buffs && typeof enemy.buffs==="object"){
       if(Object.keys(enemy.buffs).length) removed=true;
       enemy.buffs={};
@@ -3659,6 +3701,21 @@
     return true;
   }
 
+  async function maybeTriggerCounterStance(defender,slot,attacker,context){
+    const passive=skills.counterStance;
+    if(!defender || !attacker || attacker.hp<=0 || S(defender).hp<=0 || !hasPassive(defender,"counterStance")) return false;
+    if(!context) context=makeTraitActionContext();
+    const key=`counterStance:${defender.id}`;
+    if(context.triggeredPassives?.has(key)) return false;
+    if(Math.random()>=(Number(passive?.chance)||.20)) return false;
+    context.triggeredPassives?.add(key);
+    setMessage(`↩️ ${defender.name} の「カウンタースタンス」！ ${attacker.displayName} に反撃！`);
+    await wait(BASE_TIME.short);
+    const result=await resolveBasicAttack(defender,{type:"attack",targetUid:attacker.uid},{allowDoubleAttack:false,isCounter:true});
+    if(result?.battleWon && !state.battleEnded) winBattle();
+    return true;
+  }
+
   function partyElementDamageMultiplier(element){
     if(!element) return 1;
     let bonus=0;
@@ -3695,6 +3752,13 @@
           if(c[roundKey]<=0){ c[roundKey]=0; c[buffKey]=1; }
         }
       });
+      [["powerChargeMultiplier","powerChargeRounds"],["magicConcentrationMultiplier","magicConcentrationRounds"]].forEach(([valueKey,roundKey])=>{
+        if((c[roundKey]||0)>0){
+          c[roundKey]--;
+          if(c[roundKey]<=0){ c[roundKey]=0; c[valueKey]=1; }
+        }
+      });
+      if((c.magicBarrierRounds||0)>0){ c.magicBarrierRounds--; if(c.magicBarrierRounds<0)c.magicBarrierRounds=0; }
       if(conditionsOf(c).berserk && (c.berserkRounds||0)>0){
         c.berserkRounds--;
         if(c.berserkRounds<=0){ c.berserkRounds=0; conditionsOf(c).berserk=false; }
@@ -3761,6 +3825,23 @@
     return false;
   }
 
+  async function processTurnEndPassives(){
+    for(const {c,i} of [...livingActiveSlots()]){
+      if(!hasPassive(c,"autoFresh") || S(c).hp<=0) continue;
+      const cond=conditionsOf(c);
+      if(!["poison","blind","silence","shock","berserk"].some(k=>cond[k])) continue;
+      const passive=skills.autoFresh;
+      if(Math.random()>=(Number(passive?.chance)||.20)) continue;
+      const removed=clearNegativeConditions(c);
+      if(!removed) continue;
+      renderBattleParty();
+      const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`);
+      if(card) spawnFx("heal","✨",card);
+      setMessage(`✨ ${c.name} の「オートフレッシュ」！ 状態異常をすべて解除した。`);
+      await wait(BASE_TIME.short);
+    }
+  }
+
   async function processTurnEndTraits(){
     const active=[...livingActiveSlots()];
     for(const {c} of active){
@@ -3791,7 +3872,7 @@
         flashPartyValue(i,"","buff","MAG↑");
         const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`);
         if(card) spawnFx("buff","💗",card);
-        setMessage(`💗 ${c.name} の「ネバネバヒール」！ 魔力が1.4倍になった！（3ラウンド）`);
+        setMessage(`💗 ${c.name} の「ネバネバヒール」！ 魔力が${trait.effect.multiplier.toFixed(1)}倍になった！（${trait.effect.duration}ラウンド）`);
         await wait(BASE_TIME.buff);
       }
       c._usedHealingMagicThisRound=false;
@@ -3809,6 +3890,17 @@
       if(amount<=0) return;
       S(c).hp+=amount;
       notes.push(`${c.name}「再生ナメクジ」+${amount}HP`);
+    });
+    return notes;
+  }
+
+  function applyVictoryPassives(){
+    const notes=[];
+    travelPartyIds().forEach(id=>{
+      const c=roster[id];
+      if(!c || S(c).hp>0 || !hasPassive(c,"unyieldingHeart")) return;
+      S(c).hp=1;
+      notes.push(`${c.name}「不屈の心」HP1で復活`);
     });
     return notes;
   }
@@ -3974,6 +4066,17 @@
   function knownSkills(actor){
     return learnedSkillIds(actor).map(id=>skills[id]).filter(Boolean);
   }
+  function hasSkill(actor,skillId){ return !!actor && learnedSkillIds(actor).includes(skillId); }
+  function hasPassive(actor,skillId){ return hasSkill(actor,skillId) && skills[skillId]?.kind==="passive"; }
+  function weaponRequirementMet(actor,sk){
+    if(!sk?.requiredWeaponTypes?.length) return true;
+    const type=equippedWeapon(actor)?.weaponType;
+    return sk.requiredWeaponTypes.includes(type);
+  }
+  function weaponRequirementText(sk){
+    if(!sk?.requiredWeaponTypes?.length) return "";
+    return sk.requiredWeaponTypes.map(t=>weaponTypeLabels[t]||t).join("・");
+  }
 
   function currentSkill(){
     const actor=roster[state.battleActive[state.battleActorSlot]];
@@ -4051,15 +4154,18 @@
     box.innerHTML="";
 
     list.forEach(sk=>{
-      const usable=S(actor).mp>=sk.cost;
+      const enoughMp=S(actor).mp>=sk.cost;
+      const weaponOk=weaponRequirementMet(actor,sk);
+      const usable=enoughMp && weaponOk;
       const btn=document.createElement("button");
       btn.className="skill-option";
       btn.disabled=!usable;
-      const targetLabel=sk.target==="enemyAll" ? "敵全体" : sk.target==="allyAll" ? "味方全員" : sk.target==="ally" ? "味方1人" : sk.target==="self" ? "自分" : sk.target==="none" ? "探索専用" : "敵1体";
+      const targetLabel=sk.target==="enemyAll" ? "敵全体" : sk.target==="enemyRandom" ? "ランダム敵" : sk.target==="allyAll" ? "味方全員" : sk.target==="ally" ? "味方1人" : sk.target==="self" ? "自分" : sk.target==="none" ? "探索専用" : "敵1体";
+      const note=!enoughMp?"MP不足":!weaponOk?`要：${weaponRequirementText(sk)}`:targetLabel;
       btn.innerHTML=`<span class="skill-option-icon">${sk.icon||"✨"}</span>`+
         `<span class="skill-option-main"><span class="skill-option-name">${sk.name}</span>`+
         `<span class="skill-option-desc">${sk.desc||""}</span></span>`+
-        `<span class="skill-option-meta">MP ${sk.cost}<small>${usable?targetLabel:"MP不足"}</small></span>`;
+        `<span class="skill-option-meta">MP ${sk.cost}<small>${note}</small></span>`;
       btn.onclick=()=>selectSkill(sk.id);
       box.appendChild(btn);
     });
@@ -4153,9 +4259,13 @@
       setMessage(`${sk.name} を使うMPが足りません。（必要MP ${sk.cost}）`);
       return;
     }
+    if(!weaponRequirementMet(actor,sk)){
+      setMessage(`${sk.name} は ${weaponRequirementText(sk)} を装備している時だけ使えます。`);
+      return;
+    }
 
     closeSkillMenu();
-    if(sk.target==="enemyAll"){
+    if(sk.target==="enemyAll" || sk.target==="enemyRandom"){
       state.battleTargetMode=null;
       if(!livingEnemies().length){ setMessage("スキルの対象がいません。"); return; }
       queueAction({type:"skill",skill:sk.id});
@@ -4212,6 +4322,7 @@
       const sk=skills[action.skill];
       if(!sk) return "✨ スキル";
       if(sk.target==="enemyAll") return `${sk.icon} ${sk.name}→敵全体`;
+      if(sk.target==="enemyRandom") return `${sk.icon} ${sk.name}→ランダム敵`;
       if(sk.target==="allyAll") return `${sk.icon} ${sk.name}→味方全員`;
       if(sk.target==="self") return `${sk.icon} ${sk.name}→自分`;
       if(sk.target==="enemy"){
@@ -4803,6 +4914,7 @@
     // Bow execution is a weapon-specific roll and deliberately ignores the normal death-status resistance system.
     if(isBasic && profile.bowInstantKillRate>0 && !target.bowInstantKillImmune && Math.random()*100<profile.bowInstantKillRate){
       target.hp=0;
+      if(!target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
       setMessage(`🏹 ${actor.name} の一矢が急所を射抜いた！ ${target.displayName} を一撃で倒した！`);
       await animateEnemyDamage(target,true,"impact","🎯");
       if(isBasic) await maybeTriggerOrangeGel(actor,target,options.traitContext);
@@ -4813,11 +4925,12 @@
     const defenseInfluence=isBasic?profile.defenseInfluence:1;
     let dmg=physicalDamage(effectiveAtk(actor),target.def,attackPower,1,defenseInfluence);
     const canCrit=isBasic ? profile.canCrit : options.canCrit!==false;
-    const critical=canCrit && rollCritical(criticalRateForActor(actor));
+    const critical=canCrit && (options.forceCrit===true || rollCritical(criticalRateForActor(actor)));
     if(critical) dmg=Math.max(1,Math.round(dmg*criticalMultiplierForActor(actor)));
 
     target.hp=Math.max(0,target.hp-dmg);
     const killed=target.hp<=0;
+    if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
     const critText=critical?" 会心の一撃！":"";
     setMessage(`${actor.name} の${skillName||"攻撃"}！${critText} ${target.displayName} に ${dmg} ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
     const hitFx=isBasic?profile.fx:{kind:fxKind,symbol:fxSymbol};
@@ -4826,8 +4939,10 @@
     return {dmg,killed,missed:false,critical};
   }
 
-  async function resolveBasicAttack(actor,action){
+  async function resolveBasicAttack(actor,action,options={}){
     const profile=weaponAttackProfile(actor);
+    const traitContext=options.traitContext || makeTraitActionContext();
+    let result;
     if(!profile.attackAll){
       let target=enemyByUid(action?.targetUid);
       if(!target || target.hp<=0){
@@ -4838,43 +4953,114 @@
         }
       }
       if(!target) return {battleWon:true};
-      const traitContext=makeTraitActionContext();
-      const result=await resolveAttack(actor,target,null,1,"slash","⚔",{basic:true,traitContext});
-      return {battleWon:livingEnemies().length===0,result};
+      const hit=await resolveAttack(actor,target,null,1,"slash","⚔",{basic:true,traitContext});
+      result={battleWon:livingEnemies().length===0,result:hit};
+    }else{
+      const targets=[...livingEnemies()];
+      if(!targets.length) return {battleWon:true};
+      animateActor("attack");
+      setMessage(`➰ ${actor.name} の鞭撃！ 敵全体を薙ぎ払う！`);
+      await wait(BASE_TIME.actionLead);
+
+      let total=0,defeated=0,missed=0,criticals=0;
+      for(const target of targets){
+        if(blindedPhysicalMiss(actor) || physicalAttackMisses(target)){
+          missed++;
+          setMessage(`➰ ${target.displayName} は鞭撃をかわした！`);
+          await wait(BASE_TIME.short);
+          continue;
+        }
+        let dmg=physicalDamage(effectiveAtk(actor),target.def,profile.power,1,profile.defenseInfluence);
+        const critical=profile.canCrit && rollCritical(criticalRateForActor(actor));
+        if(critical){
+          criticals++;
+          dmg=Math.max(1,Math.round(dmg*criticalMultiplierForActor(actor)));
+        }
+        target.hp=Math.max(0,target.hp-dmg);
+        const killed=target.hp<=0;
+        if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
+        total+=dmg;
+        if(killed) defeated++;
+        setMessage(`➰ ${target.displayName} に ${dmg} ダメージ。${critical?" 会心！":""}${killed?` ${target.displayName} を倒した！`:""}`);
+        await animateEnemyDamage(target,killed,profile.fx.kind,profile.fx.symbol,critical,dmg);
+        await maybeTriggerOrangeGel(actor,target,traitContext);
+      }
+      const notes=[defeated?`${defeated}体撃破`:"",missed?`${missed}体回避`:"",criticals?`${criticals}回会心`:""].filter(Boolean).join(" / ");
+      setMessage(`➰ ${actor.name} の鞭撃：合計 ${total} ダメージ${notes?`（${notes}）`:""}`);
+      result={battleWon:livingEnemies().length===0,total,defeated,missed};
     }
 
-    const targets=[...livingEnemies()];
-    if(!targets.length) return {battleWon:true};
-    animateActor("attack");
-    setMessage(`➰ ${actor.name} の鞭撃！ 敵全体を薙ぎ払う！`);
-    await wait(BASE_TIME.actionLead);
+    // 連続攻撃 is checked only after a player-selected normal attack, never after a counter or its own follow-up.
+    if(options.allowDoubleAttack!==false && !options.isCounter && !result.battleWon && hasPassive(actor,"doubleAttack") && Math.random()<(Number(skills.doubleAttack?.chance)||.15)){
+      setMessage(`⚔️ ${actor.name} の「連続攻撃」！ もう一度通常攻撃！`);
+      await wait(BASE_TIME.short);
+      const follow=await resolveBasicAttack(actor,action,{allowDoubleAttack:false,isFollowup:true,traitContext});
+      result.battleWon=!!follow?.battleWon;
+      result.followup=follow;
+    }
+    return result;
+  }
 
-    let total=0,defeated=0,missed=0,criticals=0;
-    const traitContext=makeTraitActionContext();
-    for(const target of targets){
+  async function resolveRandomMultiPhysicalSkill(actor,sk){
+    const hits=Math.max(1,Number(sk.hits)||1);
+    animateActor("attack");
+    setMessage(`${sk.icon||"⚔️"} ${actor.name} は ${sk.name} を放った！`);
+    await wait(BASE_TIME.actionLead);
+    let total=0,landed=0,missed=0,criticals=0,defeated=0;
+    for(let hit=1;hit<=hits;hit++){
+      const pool=livingEnemies();
+      if(!pool.length) break;
+      const target=choose(pool);
       if(blindedPhysicalMiss(actor) || physicalAttackMisses(target)){
         missed++;
-        setMessage(`➰ ${target.displayName} は鞭撃をかわした！`);
+        setMessage(`${sk.icon||"⚔️"} ${sk.name} ${hit}撃目！ ${target.displayName} はかわした！`);
         await wait(BASE_TIME.short);
         continue;
       }
-      let dmg=physicalDamage(effectiveAtk(actor),target.def,profile.power,1,profile.defenseInfluence);
-      const critical=profile.canCrit && rollCritical(criticalRateForActor(actor));
-      if(critical){
-        criticals++;
-        dmg=Math.max(1,Math.round(dmg*criticalMultiplierForActor(actor)));
-      }
+      let dmg=physicalDamage(effectiveAtk(actor),target.def,Number(sk.hitPower)||1,1,Number(sk.defenseInfluence)||1);
+      const critical=sk.canCrit!==false && rollCritical(criticalRateForActor(actor));
+      if(critical){ criticals++; dmg=Math.max(1,Math.round(dmg*criticalMultiplierForActor(actor))); }
       target.hp=Math.max(0,target.hp-dmg);
       const killed=target.hp<=0;
-      total+=dmg;
-      if(killed) defeated++;
-      setMessage(`➰ ${target.displayName} に ${dmg} ダメージ。${critical?" 会心！":""}${killed?` ${target.displayName} を倒した！`:""}`);
-      await animateEnemyDamage(target,killed,profile.fx.kind,profile.fx.symbol,critical,dmg);
-      await maybeTriggerOrangeGel(actor,target,traitContext);
+      if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
+      total+=dmg; landed++; if(killed)defeated++;
+      setMessage(`${sk.icon||"⚔️"} ${sk.name} ${hit}撃目！${critical?" 会心！":""} ${target.displayName} に ${dmg} ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
+      await animateEnemyDamage(target,killed,"impact",sk.icon||"✦",critical,dmg);
     }
-    const notes=[defeated?`${defeated}体撃破`:"",missed?`${missed}体回避`:"",criticals?`${criticals}回会心`:""].filter(Boolean).join(" / ");
-    setMessage(`➰ ${actor.name} の鞭撃：合計 ${total} ダメージ${notes?`（${notes}）`:""}`);
-    return {battleWon:livingEnemies().length===0,total,defeated,missed};
+    const notes=[`${landed}/${hits}ヒット`,criticals?`${criticals}回会心`:"",defeated?`${defeated}体撃破`:"",missed?`${missed}回回避`:""].filter(Boolean).join(" / ");
+    setMessage(`${sk.icon||"⚔️"} ${sk.name}：合計 ${total} ダメージ（${notes}）`);
+    return {total,landed,missed,criticals,defeated};
+  }
+
+  async function resolveAllPhysicalSkill(actor,sk){
+    const targets=[...livingEnemies()];
+    if(!targets.length) return {total:0};
+    animateActor("attack");
+    setMessage(`${sk.icon||"⚔️"} ${actor.name} は ${sk.name} を放った！`);
+    await wait(BASE_TIME.actionLead);
+    let total=0,defeated=0,missed=0,shocked=0;
+    for(const target of targets){
+      if(blindedPhysicalMiss(actor) || physicalAttackMisses(target)){
+        missed++;
+        setMessage(`${sk.icon||"⚔️"} ${target.displayName} は攻撃をかわした！`);
+        await wait(BASE_TIME.short);
+        continue;
+      }
+      let dmg=physicalDamage(effectiveAtk(actor),target.def,Number(sk.power)||1,1,Number(sk.defenseInfluence)||1);
+      const critical=sk.canCrit!==false && rollCritical(criticalRateForActor(actor));
+      if(critical) dmg=Math.max(1,Math.round(dmg*criticalMultiplierForActor(actor)));
+      target.hp=Math.max(0,target.hp-dmg);
+      const killed=target.hp<=0;
+      if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
+      let shock=null;
+      if(!killed && Number(sk.shockRate)>0) shock=tryInflictStatus(target,"shock",sk.shockRate);
+      if(shock?.success) shocked++;
+      total+=dmg; if(killed) defeated++;
+      await animateEnemyDamage(target,killed,sk.animation||"impact",sk.fxSymbol||sk.icon||"✦",critical,dmg);
+    }
+    renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+    setMessage(`${sk.icon||"⚔️"} ${sk.name}！ 敵全体に合計 ${total} ダメージ！${shocked?` ${shocked}体が感電！`:""}${defeated?` ${defeated}体を倒した！`:""}${missed?` ${missed}体は回避。`:""}`);
+    return {total,defeated,missed,shocked};
   }
 
   async function resolveSkill(actor,action,slot){
@@ -4887,6 +5073,11 @@
     }
     if(S(actor).mp<sk.cost){
       setMessage(`${actor.name} はMPが足りず、${sk.name} を使えなかった。`);
+      await wait(BASE_TIME.message);
+      return;
+    }
+    if(!weaponRequirementMet(actor,sk)){
+      setMessage(`${actor.name} は必要な武器（${weaponRequirementText(sk)}）を装備していないため、${sk.name} を使えなかった。`);
       await wait(BASE_TIME.message);
       return;
     }
@@ -5024,7 +5215,7 @@
       await wait(BASE_TIME.actionLead);
       await resolveAttack(actor,target,"体当たり",sk.power,"impact","💥");
 
-      const recoil=Math.max(3,Math.round(S(actor).hpMax*sk.recoilRate));
+      const recoil=Math.max(1,Math.round(S(actor).hpMax*sk.recoilRate));
       S(actor).hp=Math.max(0,S(actor).hp-recoil);
       renderBattleParty();
       flashPartyValue(slot,recoil,"recoil");
@@ -5040,6 +5231,64 @@
           await wait(BASE_TIME.message);
         }
       }
+      return;
+    }
+
+    if(sk.kind==="multiPhysical"){
+      await resolveRandomMultiPhysicalSkill(actor,sk);
+      return;
+    }
+
+    if(sk.kind==="physicalSpecial"){
+      let target=enemyByUid(action.targetUid);
+      if(!target || target.hp<=0) target=livingEnemies()[0]||null;
+      if(!target) return;
+      const result=await resolveAttack(actor,target,sk.name,Number(sk.power)||1,sk.animation||"impact",sk.fxSymbol||sk.icon||"✦",{canCrit:sk.canCrit!==false,forceCrit:!!sk.forceCrit});
+      if(sk.dispelOnHit && !result?.missed){
+        const removed=clearEnemyBuffs(target);
+        if(removed){
+          const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${target.uid}"]`);
+          if(el) spawnFx("buff","✨",el);
+          setMessage(`🏹 ${sk.name} が ${target.displayName} の強化効果をすべて吹き飛ばした！`);
+          await wait(BASE_TIME.short);
+          renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+        }
+      }
+      return;
+    }
+
+    if(sk.kind==="physicalAll"){
+      await resolveAllPhysicalSkill(actor,sk);
+      return;
+    }
+
+    if(sk.kind==="charge"){
+      if(sk.chargeStat==="atk"){
+        actor.powerChargeMultiplier=Number(sk.multiplier)||2;
+        actor.powerChargeRounds=Number(sk.duration)||2;
+      }else{
+        actor.magicConcentrationMultiplier=Number(sk.multiplier)||2;
+        actor.magicConcentrationRounds=Number(sk.duration)||2;
+      }
+      animateActor("buff");
+      renderBattleParty();
+      setMessage(`${sk.icon||"✨"} ${actor.name} は ${sk.name}！ 次のターン終了時まで${sk.chargeStat==="atk"?"攻撃力":"魔力"}が${Number(sk.multiplier).toFixed(1)}倍！`);
+      await wait(BASE_TIME.buff);
+      return;
+    }
+
+    if(sk.kind==="magicBarrier"){
+      const targets=livingActiveSlots();
+      animateActor("buff");
+      await wait(BASE_TIME.actionLead);
+      targets.forEach(({i,c})=>{
+        c.magicBarrierRounds=Math.max(Number(c.magicBarrierRounds)||0,Number(sk.duration)||2);
+        const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`);
+        if(card) spawnFx("buff","🪄",card);
+      });
+      renderBattleParty();
+      setMessage(`🪄 ${sk.name}！ 味方前衛全員が受ける魔法ダメージを60%軽減（2ラウンド）。`);
+      await wait(BASE_TIME.buff);
       return;
     }
 
@@ -5289,6 +5538,10 @@
     setMessage(`${enemy.displayName} の攻撃！${critical?" 会心！":""} ${c.name} に ${dmg} ダメージ。${c.defending?"（防御で軽減）":""}`);
     await wait(BASE_TIME.enemyAfter);
     await maybeTriggerSlimeBody(c,target.i,traitContext);
+    if(S(c).hp>0){
+      await maybeTriggerCounterStance(c,target.i,enemy,traitContext);
+      if(state.battleEnded){ clearEnemyActing(); return; }
+    }
 
     if(S(c).hp<=0){
       const outgoingName=c.name;
@@ -5353,7 +5606,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
       updateHeader();
       return;
     }
@@ -5361,7 +5614,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
   }
 
   async function attemptEscape(){
@@ -5439,7 +5692,25 @@
       await wait(BASE_TIME.message);
     }
 
-    const turnOrder=buildTurnOrder().filter(turn=>!(turn.side==="ally" && turn.action?.type==="defend"));
+    // Defense-priority skills (currently Magic Barrier) resolve before normal SPD initiative, like Defend.
+    const prioritySkillTurns=livingActiveSlots().filter(({i})=>{
+      const action=state.battleActions[i];
+      return action?.type==="skill" && skills[action.skill]?.priority==="defense";
+    });
+    for(const {i,c:actor} of prioritySkillTurns){
+      if(state.battleEnded || S(actor).hp<=0) continue;
+      state.battleActorSlot=i;
+      updateActorPortrait();
+      if(conditionsOf(actor).shock){
+        setMessage(`⚡ ${actor.name} は感電していて ${skills[state.battleActions[i].skill]?.name||"防御スキル"} を使えない！`);
+        await wait(BASE_TIME.message);
+        continue;
+      }
+      await resolveSkill(actor,state.battleActions[i],i);
+      if(state.battleEnded) return;
+    }
+
+    const turnOrder=buildTurnOrder().filter(turn=>!(turn.side==="ally" && (turn.action?.type==="defend" || (turn.action?.type==="skill" && skills[turn.action.skill]?.priority==="defense"))));
 
     for(const turn of turnOrder){
       if(state.battleEnded) return;
@@ -5493,6 +5764,8 @@
     clearEnemyActing();
     const statusEndedBattle=await processTurnEndStatuses();
     if(statusEndedBattle || state.battleEnded) return;
+    await processTurnEndPassives();
+    if(state.battleEnded) return;
     tickBattleBuffs();
     await processTurnEndTraits();
 
@@ -5596,6 +5869,8 @@
     updateExecuteButton();
     clearEnemyActing();
     const victoryTraitNotes=applyVictoryTraits();
+    const victoryPassiveNotes=applyVictoryPassives();
+    victoryTraitNotes.push(...victoryPassiveNotes);
     clearBattleEndStates();
     renderBattleParty();
     $("battleActorCaption").textContent="VICTORY";
@@ -5644,7 +5919,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -5652,7 +5927,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -5776,7 +6051,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -5835,7 +6110,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -5859,7 +6134,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
     updateHeader();
     toast("戦闘テストを終了");
   }
