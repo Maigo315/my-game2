@@ -1633,7 +1633,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.28a</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.29</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2141,12 +2141,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.28a" : "ミレスタ・仲間編成 v0.28a";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.29" : "ミレスタ・仲間編成 v0.29";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.29"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2655,7 +2655,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.28a";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.29";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2663,7 +2663,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.28a" : "ミレスタ・仲間編成 v0.28a";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.29" : "ミレスタ・仲間編成 v0.29";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -2672,13 +2672,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.29";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.29";
     updateHeader();
   };
 
@@ -3266,7 +3266,7 @@
     return [...new Set([...state.battleActive,...state.battleReserve])];
   }
 
-  // v0.28a condition container. Poison / Blind / Silence / Shock are battle states and clear when battle ends.
+  // v0.29 condition container. Poison / Blind / Silence / Shock are battle states and clear when battle ends.
   function conditionsOf(c){
     if(!c.conditions) c.conditions={poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false};
     return c.conditions;
@@ -3521,14 +3521,34 @@
       .filter(Boolean);
   }
 
+  // v0.29 formal early-enemy set. Enemy stats are independent from recruitable-character growth stats.
+  // Resistances intentionally mirror the recruitable profile. Critical / evasion remain 0.0% by default.
   const enemyData = {
-    // v0.24: current enemies intentionally remain at 0.0% critical / evasion. Set per species later.
-    // bowInstantKillImmune is independent from the status-effect death resistance table.
-    slime:{name:"スライム娘",img:IMG.slime,exp:10,critRate:0,evasionRate:0,bowInstantKillImmune:false,stats:{hp:34,atk:10,def:4,mdef:3,spd:7}},
-    dog:{name:"犬娘",img:IMG.dog,exp:14,critRate:0,evasionRate:0,bowInstantKillImmune:false,stats:{hp:46,atk:13,def:6,mdef:4,spd:11}},
-    slug:{name:"ナメクジ娘",img:IMG.slug,exp:17,critRate:0,evasionRate:0,bowInstantKillImmune:false,stats:{hp:58,atk:12,def:9,mdef:6,spd:4}},
-    fairy:{name:"フェアリー",img:IMG.fairy,exp:13,critRate:0,evasionRate:0,bowInstantKillImmune:false,stats:{hp:31,atk:11,def:3,mdef:7,spd:14}},
-    momo:{name:"モモイロナメクジ",img:IMG.momo,exp:28,critRate:0,evasionRate:0,bowInstantKillImmune:false,stats:{hp:82,atk:16,def:10,mdef:8,spd:5}}
+    slime:{
+      name:"スライム娘",img:IMG.slime,exp:10,gold:4,critRate:0,evasionRate:0,
+      bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.slime.resist},
+      skills:[],ai:"basic",stats:{hp:34,mp:5,atk:10,def:4,magic:3,mdef:3,spd:5}
+    },
+    dog:{
+      name:"犬娘",img:IMG.dog,exp:14,gold:6,critRate:0,evasionRate:0,
+      bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.dog.resist},
+      skills:[],ai:"basic",stats:{hp:46,mp:3,atk:13,def:6,magic:1,mdef:4,spd:11}
+    },
+    slug:{
+      name:"ナメクジ娘",img:IMG.slug,exp:18,gold:7,critRate:0,evasionRate:0,
+      bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.slug.resist},
+      skills:[],ai:"basic",stats:{hp:55,mp:4,atk:11,def:14,magic:2,mdef:3,spd:3}
+    },
+    fairy:{
+      name:"フェアリー",img:IMG.fairy,exp:15,gold:7,critRate:0,evasionRate:0,
+      bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.fairy.resist},
+      skills:["heal","ice"],ai:"fairySupport",stats:{hp:30,mp:12,atk:7,def:3,magic:10,mdef:8,spd:14}
+    },
+    momo:{
+      name:"モモイロナメクジ",img:IMG.momo,exp:28,gold:12,critRate:0,evasionRate:0,
+      bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.momo.resist},
+      skills:["allHeal"],ai:"momoHealer",stats:{hp:78,mp:24,atk:14,def:17,magic:10,mdef:4,spd:3}
+    }
   };
 
   const battleFormations = {
@@ -4532,8 +4552,10 @@
         return {
           uid:`${id}_${i}_${Date.now()}`,
           id,name:base.name,displayName:base.name+suffix,img:base.img,
-          hp:base.stats.hp,hpMax:base.stats.hp,atk:base.stats.atk,def:base.stats.def,
-          mdef:base.stats.mdef||4,spd:base.stats.spd||5,exp:base.exp||10,
+          hp:base.stats.hp,hpMax:base.stats.hp,mp:base.stats.mp||0,mpMax:base.stats.mp||0,
+          atk:base.stats.atk,def:base.stats.def,magic:base.stats.magic||0,
+          mdef:base.stats.mdef||0,spd:base.stats.spd||1,exp:base.exp||0,gold:base.gold||0,
+          skills:[...(base.skills||[])],ai:base.ai||"basic",resist:{...(base.resist||{})},
           critRate:clampRate(base.critRate||0),evasionRate:clampRate(base.evasionRate||0),
           critMultiplier:Number(base.critMultiplier)||BASE_CRITICAL_MULTIPLIER,
           bowInstantKillImmune:!!base.bowInstantKillImmune,statusDeathImmune:!!base.statusDeathImmune,
@@ -5506,29 +5528,184 @@
     await wait(BASE_TIME.heal);
   }
 
-  async function executeEnemyAction(enemy){
-    if(state.battleEnded || !enemy || enemy.hp<=0) return;
-    if(conditionsOf(enemy).shock){
-      setMessage(`⚡ ${enemy.displayName} は感電していて動けない！`);
-      await wait(BASE_TIME.enemyAfter);
-      return;
-    }
-    state.battlePhase="enemy";
-    clearEnemyActing();
-    const enemyEl=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${enemy.uid}"]`);
-    if(enemyEl) enemyEl.classList.add("acting");
-    renderBattleParty();
-    setMessage(`${enemy.displayName} が行動！`);
-    await wait(BASE_TIME.enemyLead);
+  function enemySkillAvailable(enemy,skillId){
+    const sk=skills[skillId];
+    return !!sk && (enemy.skills||[]).includes(skillId) && !conditionsOf(enemy).silence && (Number(enemy.mp)||0)>=Number(sk.cost||0);
+  }
 
-    const targets=livingActiveSlots();
+  function enemyLowestHpRatio(){
+    const living=livingEnemies();
+    if(!living.length) return 1;
+    return Math.min(...living.map(e=>e.hp/Math.max(1,e.hpMax)));
+  }
+
+  function chooseEnemyAiAction(enemy){
+    if(conditionsOf(enemy).silence) return {type:"attack"};
+
+    if(enemy.ai==="fairySupport"){
+      const low=enemyLowestHpRatio()<=.50;
+      const canHeal=enemySkillAvailable(enemy,"heal") && livingEnemies().some(e=>e.hp<e.hpMax);
+      const canIce=enemySkillAvailable(enemy,"ice");
+      const roll=Math.random();
+      if(low){
+        if(canHeal){
+          if(roll<.45) return {type:"skill",skillId:"heal"};
+          if(canIce && roll<.55) return {type:"skill",skillId:"ice"};
+        }else if(canIce && roll<.10){
+          return {type:"skill",skillId:"ice"};
+        }
+      }else if(canIce && roll<.15){
+        return {type:"skill",skillId:"ice"};
+      }
+      return {type:"attack"};
+    }
+
+    if(enemy.ai==="momoHealer"){
+      const living=livingEnemies();
+      const damaged=living.some(e=>e.hp<e.hpMax);
+      if(damaged && enemySkillAvailable(enemy,"allHeal")){
+        const minRatio=enemyLowestHpRatio();
+        const solo=living.length===1;
+        let chance=0;
+        if(minRatio<=.50) chance=solo?.40:.70;
+        else if(minRatio<=.80) chance=solo?.25:.45;
+        if(chance>0 && Math.random()<chance) return {type:"skill",skillId:"allHeal"};
+      }
+      return {type:"attack"};
+    }
+
+    return {type:"attack"};
+  }
+
+  function enemyHealAmount(enemy,sk){
+    if(sk.fullHeal) return Infinity;
+    const magic=Math.max(0,Number(enemy.magic)||0);
+    const base=Number(sk.healBase)||0;
+    const magicRate=Number(sk.healMagic)||0;
+    const scale=Number(sk.healScale)||1;
+    return Math.max(1,Math.round((base+magic*magicRate)*scale));
+  }
+
+  function enemySpellDamage(enemy,target,sk){
+    const magic=Math.max(1,Number(enemy.magic)||1);
+    const mdef=Math.max(0,effectiveMdef(target)||0);
+    const rank=Number(sk.rankMultiplier)||1;
+    const targetMod=Number(sk.targetMultiplier)||1;
+    const special=Number(sk.powerMultiplier)||1;
+    const raw=(18+magic*.70)*rank*targetMod*special;
+    const defense=defenseDamageFactor(magic,mdef,1);
+    const resist=elementResistanceMultiplier(target,sk.element);
+    const variance=Array.isArray(sk.gambleRange)
+      ? sk.gambleRange[0]+Math.random()*(sk.gambleRange[1]-sk.gambleRange[0])
+      : damageVariance();
+    return Math.max(1,Math.round(raw*defense*resist*variance));
+  }
+
+  async function handleAllyKoFromEnemy(target,slot){
+    if(S(target).hp>0) return false;
+    const outgoingName=target.name;
+    const replaced=autoReplaceSlot(slot);
+    renderBattleParty();
+    updateActorPortrait();
+    if(replaced){
+      const incoming=roster[state.battleActive[slot]];
+      setMessage(`${outgoingName} は戦闘不能。控えの ${incoming.name} が戦線に入った。`);
+      await wait(BASE_TIME.message);
+    }else if(livingActiveSlots().length===0){
+      loseBattle();
+      return true;
+    }
+    return false;
+  }
+
+  async function executeEnemyHealSkill(enemy,skillId){
+    const sk=skills[skillId];
+    if(!sk || !enemySkillAvailable(enemy,skillId)) return false;
+    let targets=[];
+    if(sk.target==="allyAll") targets=livingEnemies().filter(e=>e.hp<e.hpMax);
+    else{
+      const target=[...livingEnemies()].filter(e=>e.hp<e.hpMax).sort((a,b)=>(a.hp/a.hpMax)-(b.hp/b.hpMax))[0];
+      if(target) targets=[target];
+    }
+    if(!targets.length) return false;
+
+    enemy.mp=Math.max(0,(Number(enemy.mp)||0)-Number(sk.cost||0));
+    setMessage(`💚 ${enemy.displayName} は ${sk.name} を唱えた！`);
+    await wait(BASE_TIME.actionLead);
+    const baseAmount=enemyHealAmount(enemy,sk);
+    let total=0;
+    targets.forEach(target=>{
+      const amount=Math.min(target.hpMax-target.hp,sk.fullHeal?(target.hpMax-target.hp):baseAmount);
+      if(amount<=0) return;
+      target.hp+=amount;
+      total+=amount;
+      const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${target.uid}"]`);
+      if(el) spawnFx("heal","✨",el);
+    });
+    await wait(BASE_TIME.short);
+    renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+    if(sk.target==="allyAll") setMessage(`💚 ${sk.name}！ 敵全体を合計 ${total} 回復した。`);
+    else setMessage(`💚 ${sk.name}！ ${targets[0].displayName} のHPが ${total} 回復した。`);
+    await wait(BASE_TIME.heal);
+    return true;
+  }
+
+  async function executeEnemyMagicSkill(enemy,skillId){
+    const sk=skills[skillId];
+    if(!sk || sk.kind!=="magic" || !enemySkillAvailable(enemy,skillId)) return false;
+    let targets=livingActiveSlots();
+    if(!targets.length){
+      if(!autoDeployReserves()){ loseBattle(); return true; }
+      targets=livingActiveSlots();
+    }
+    if(!targets.length){ loseBattle(); return true; }
+    const picked=choose(targets);
+    const target=picked.c;
+    const slot=picked.i;
+
+    enemy.mp=Math.max(0,(Number(enemy.mp)||0)-Number(sk.cost||0));
+    setMessage(`${sk.icon||"✨"} ${enemy.displayName} は ${sk.name} を唱えた！`);
+    await wait(BASE_TIME.actionLead);
+
+    const barrierWasActive=Number(target.magicBarrierRounds)>0;
+    const defendWasActive=!!target.defending;
+    const defense=enemyMagicDefense(target,{hasDamage:true});
+    const cardBefore=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
+    if(defense.blocked){
+      if(cardBefore) spawnFx("magicshot",defense.reason==="aura"?"🔮":"🚫",cardBefore);
+      renderBattleParty();
+      setMessage(defense.reason==="aura"
+        ? `🔮 ${target.name} のオーラが ${sk.name} を完全に防いだ！`
+        : `🚫 ${target.name} のキャンセラー！ ${sk.name} を完全に無効化した！`);
+      await wait(BASE_TIME.enemyAfter);
+      return true;
+    }
+
+    const baseDamage=enemySpellDamage(enemy,target,sk);
+    const dmg=Math.max(1,Math.round(baseDamage*defense.damageMultiplier));
+    S(target).hp=Math.max(0,S(target).hp-dmg);
+    renderBattleParty();
+    flashPartyValue(slot,dmg,"damage");
+    const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
+    if(card) spawnFx(sk.animation||"magicshot",sk.icon||"✦",card);
+    const reduced=[];
+    if(barrierWasActive) reduced.push("魔力障壁");
+    if(defendWasActive) reduced.push("防御");
+    setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ ${target.name} に ${dmg} ダメージ。${reduced.length?`（${reduced.join("＋")}で軽減）`:""}`);
+    await wait(BASE_TIME.enemyAfter);
+    await handleAllyKoFromEnemy(target,slot);
+    return true;
+  }
+
+  async function executeEnemyBasicAttack(enemy,enemyEl){
+    let targets=livingActiveSlots();
     if(targets.length===0){
       if(!autoDeployReserves()){ loseBattle(); return; }
+      targets=livingActiveSlots();
     }
-    const refreshedTargets=livingActiveSlots();
-    if(refreshedTargets.length===0){ loseBattle(); return; }
+    if(targets.length===0){ loseBattle(); return; }
 
-    const target=choose(refreshedTargets);
+    const target=choose(targets);
     const c=target.c;
     const traitContext=makeTraitActionContext();
 
@@ -5556,20 +5733,31 @@
       if(state.battleEnded){ clearEnemyActing(); return; }
     }
 
-    if(S(c).hp<=0){
-      const outgoingName=c.name;
-      const replaced=autoReplaceSlot(target.i);
-      renderBattleParty();
-      updateActorPortrait();
-      if(replaced){
-        const incoming=roster[state.battleActive[target.i]];
-        setMessage(`${outgoingName} は戦闘不能。控えの ${incoming.name} が戦線に入った。`);
-        await wait(BASE_TIME.message);
-      }else if(livingActiveSlots().length===0){
-        loseBattle();
-        return;
-      }
+    await handleAllyKoFromEnemy(c,target.i);
+  }
+
+  async function executeEnemyAction(enemy){
+    if(state.battleEnded || !enemy || enemy.hp<=0) return;
+    if(conditionsOf(enemy).shock){
+      setMessage(`⚡ ${enemy.displayName} は感電していて動けない！`);
+      await wait(BASE_TIME.enemyAfter);
+      return;
     }
+    state.battlePhase="enemy";
+    clearEnemyActing();
+    const enemyEl=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${enemy.uid}"]`);
+    if(enemyEl) enemyEl.classList.add("acting");
+    renderBattleParty();
+    setMessage(`${enemy.displayName} が行動！`);
+    await wait(BASE_TIME.enemyLead);
+
+    const action=chooseEnemyAiAction(enemy);
+    if(action.type==="skill"){
+      const sk=skills[action.skillId];
+      if(sk?.kind==="heal" && await executeEnemyHealSkill(enemy,action.skillId)) return;
+      if(sk?.kind==="magic" && await executeEnemyMagicSkill(enemy,action.skillId)) return;
+    }
+    await executeEnemyBasicAttack(enemy,enemyEl);
   }
 
   function clamp(min,max,value){ return Math.max(min,Math.min(max,value)); }
@@ -5619,7 +5807,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.29";
       updateHeader();
       return;
     }
@@ -5627,7 +5815,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.29";
   }
 
   async function attemptEscape(){
@@ -5882,8 +6070,8 @@
     hideBattleContinue();
 
     if(state.battleFromRun){
-      const gain=12+rand(19);
-      const expGain=state.battleEnemies.reduce((sum,e)=>sum+(e.exp||10),0);
+      const gain=state.battleEnemies.reduce((sum,e)=>sum+(e.gold||0),0);
+      const expGain=state.battleEnemies.reduce((sum,e)=>sum+(e.exp||0),0);
       const leveled=awardExperience(expGain);
 
       state.gold+=gain;
@@ -5924,7 +6112,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.29";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -5932,7 +6120,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.29";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -6056,7 +6244,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.29";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -6115,7 +6303,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.29";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -6139,7 +6327,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.29";
     updateHeader();
     toast("戦闘テストを終了");
   }
