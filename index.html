@@ -1633,7 +1633,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.26</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.27</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2061,7 +2061,8 @@
     equipmentPickerScrollTop: 0,
     exploreSkillActorId: null,
     exploreSkillId: null,
-    pendingRecruitCandidate: null
+    pendingRecruitCandidate: null,
+    fortuneCasts: 0
   };
 
   const IMG = {
@@ -2084,6 +2085,7 @@
     heal:   {icon:"❤", label:"回復", color:"#3d7355"},
     shop:   {icon:"🛒", label:"レア店", color:"#53608b"},
     event:  {icon:"？", label:"イベント", color:"#664c7c"},
+    empty:  {icon:"·", label:"何もない", color:"#40505a"},
     goal:   {icon:"★", label:"最奥", color:"#8d7136"}
   };
 
@@ -2139,12 +2141,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.26" : "ミレスタ・仲間編成 v0.26";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.27" : "ミレスタ・仲間編成 v0.27";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2653,7 +2655,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.26";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.27";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2661,7 +2663,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.26" : "ミレスタ・仲間編成 v0.26";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.27" : "ミレスタ・仲間編成 v0.27";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -2670,13 +2672,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
     updateHeader();
   };
 
@@ -2834,7 +2836,7 @@
     Object.entries(profile.plannedSkills).forEach(([lv,list])=>{
       if(Number(lv)<=level) ids.push(...list);
     });
-    return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","flare","gigaFlare","lastFlare","blaze","blaze2","endBlaze","ice","frost","gigaFrost","lastFrost","cold","cold2","endCold","petitThunder","thunder","gigaThunder","heavenlyThunder","stone","quake","gigaQuake","earthWrath","sonic","wind","gigaWind","annihilationWindBlade","holy","gigaHoly","judgmentLance","heavenlyLight","bigBang","dark","gigaDark","finalDarkHammer","hellDark","apocalypse","touch","pleasure","gigaPleasure","megidoPleasure","pleasureOne","erode","gigaErode","lastErode","ruinErosion","poison","neoPoison","blind","neoBlind","silence","neoSilence","death","allDeath","eraser","heal","tackle","polish"].includes(id));
+    return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","flare","gigaFlare","lastFlare","blaze","blaze2","endBlaze","ice","frost","gigaFrost","lastFrost","cold","cold2","endCold","petitThunder","thunder","gigaThunder","heavenlyThunder","stone","quake","gigaQuake","earthWrath","sonic","wind","gigaWind","annihilationWindBlade","holy","gigaHoly","judgmentLance","heavenlyLight","bigBang","dark","gigaDark","finalDarkHammer","hellDark","apocalypse","touch","pleasure","gigaPleasure","megidoPleasure","pleasureOne","erode","gigaErode","lastErode","ruinErosion","poison","neoPoison","blind","neoBlind","silence","neoSilence","death","allDeath","eraser","heal","highHeal","gigaHeal","lastHeal","allHeal","allHeal2","fairyHeal","eternal","raise","raise2","gigaRaise","miracleFestival","cure","fresh","allFresh","mount","allMount","aura","lastAura","polish","allPolish","warGodAura","guard","allGuard","guardianBlessing","magic","allMagic","demonSpiritFlow","block","allBlock","spiritKingBlessing","quick","allQuick","heroicTailwind","berserk","fortune","escape","supply","neoSupply","stealth","return","tackle"].includes(id));
   }
 
   // v0.24 formal weapon prototype: seven weapon identities + critical/evasion foundations.
@@ -3101,30 +3103,69 @@
       id:"tackle",name:"体当たり",icon:"💥",cost:3,target:"enemy",
       desc:"敵1体に強めの物理ダメージ。自分も反動ダメージ",kind:"physical",power:1.55,recoilRate:.10,animation:"impact"
     },
-    polish:{
-      id:"polish",name:"ポリッシュ",icon:"✨",cost:4,target:"ally",
-      desc:"味方1人の攻撃力をアップ",kind:"buff",buff:"atk",multiplier:1.40,duration:3,animation:"buff"
-    },
-    quick:{
-      id:"quick",name:"クイック",icon:"💨",cost:4,target:"ally",
-      desc:"味方1人の素早さをアップ",kind:"buff",buff:"spd",multiplier:1.40,duration:3,animation:"buff"
-    },
-    heal:{
-      id:"heal",name:"ヒール",icon:"💚",cost:5,target:"ally",fieldUse:"ally",
-      desc:"味方1人のHPを回復",kind:"heal",base:24,variance:7,animation:"heal"
-    }
+
+    // Recovery magic. Lower tiers intentionally age out as HP rises.
+    heal:{id:"heal",name:"ヒール",icon:"💚",cost:3,target:"ally",fieldUse:"ally",kind:"heal",healBase:25,healMagic:.45,desc:"味方1人のHPを回復（25＋MAG×0.45）",animation:"heal"},
+    highHeal:{id:"highHeal",name:"ハイヒール",icon:"💚",cost:7,target:"ally",fieldUse:"ally",kind:"heal",healBase:45,healMagic:.85,desc:"味方1人のHPを大きく回復（45＋MAG×0.85）",animation:"heal"},
+    gigaHeal:{id:"gigaHeal",name:"ギガヒール",icon:"💚",cost:12,target:"ally",fieldUse:"ally",kind:"heal",healBase:70,healMagic:1.35,desc:"味方1人のHPを大きく回復（70＋MAG×1.35）",animation:"heal"},
+    lastHeal:{id:"lastHeal",name:"ラストヒール",icon:"💚",cost:21,target:"ally",fieldUse:"ally",kind:"heal",fullHeal:true,desc:"味方1人のHPを全回復",animation:"heal"},
+    allHeal:{id:"allHeal",name:"オルヒール",icon:"💚",cost:6,target:"allyAll",fieldUse:"allyAll",kind:"heal",healBase:25,healMagic:.45,healScale:.70,desc:"味方全員をヒールの70%ぶん回復",animation:"heal"},
+    allHeal2:{id:"allHeal2",name:"オルヒールⅡ",icon:"💚",cost:12,target:"allyAll",fieldUse:"allyAll",kind:"heal",healBase:45,healMagic:.85,healScale:.70,desc:"味方全員をハイヒールの70%ぶん回復",animation:"heal"},
+    fairyHeal:{id:"fairyHeal",name:"フェアリーヒール",icon:"🧚",cost:20,target:"allyAll",fieldUse:"allyAll",kind:"heal",healBase:70,healMagic:1.35,healScale:.70,desc:"味方全員をギガヒールの70%ぶん回復",animation:"heal"},
+    eternal:{id:"eternal",name:"エターナル",icon:"🌈",cost:46,target:"allyAll",fieldUse:"allyAll",kind:"heal",fullHeal:true,desc:"味方全員のHPを全回復",animation:"heal"},
+
+    raise:{id:"raise",name:"レイズ",icon:"🕊️",cost:8,target:"ally",fieldUse:"allyKO",kind:"revive",revivePercent:.20,desc:"戦闘不能の味方1人を最大HP20%で復活"},
+    raise2:{id:"raise2",name:"レイズⅡ",icon:"🕊️",cost:20,target:"allyAll",fieldUse:"allyAllKO",kind:"revive",revivePercent:.20,desc:"戦闘不能の味方全員を最大HP20%で復活"},
+    gigaRaise:{id:"gigaRaise",name:"ギガレイズ",icon:"✨",cost:32,target:"ally",fieldUse:"allyKO",kind:"revive",revivePercent:1,desc:"戦闘不能の味方1人をHP全回復で復活"},
+    miracleFestival:{id:"miracleFestival",name:"奇跡の祝祭",icon:"🌟",cost:110,target:"allyAll",fieldUse:"miracle",kind:"revive",revivePercent:1,fullPartyHeal:true,desc:"味方全員の戦闘不能を解除し、全員のHPを全回復"},
+
+    cure:{id:"cure",name:"キュア",icon:"🌿",cost:4,target:"ally",fieldUse:"allyCleanse",kind:"cleanse",statuses:["poison"],desc:"味方1人の毒を解除"},
+    fresh:{id:"fresh",name:"フレッシュ",icon:"✨",cost:11,target:"ally",fieldUse:"allyCleanse",kind:"cleanse",allStatus:true,desc:"味方1人の状態異常をすべて解除"},
+    allFresh:{id:"allFresh",name:"オールフレッシュ",icon:"✨",cost:22,target:"allyAll",fieldUse:"allyAllCleanse",kind:"cleanse",allStatus:true,desc:"味方全員の状態異常をすべて解除"},
+
+    mount:{id:"mount",name:"マウント",icon:"🛡️",cost:15,target:"ally",kind:"barrier",barrier:"mount",desc:"味方1人に、状態異常を1回無効化するマウントを付与"},
+    allMount:{id:"allMount",name:"オールマウント",icon:"🛡️",cost:38,target:"allyAll",kind:"barrier",barrier:"mount",desc:"味方全員に、状態異常を1回無効化するマウントを付与"},
+    aura:{id:"aura",name:"オーラ",icon:"🔮",cost:18,target:"ally",kind:"barrier",barrier:"aura",desc:"味方1人に、敵の魔法を1回完全無効化するオーラを付与"},
+    lastAura:{id:"lastAura",name:"ラストオーラ",icon:"🔮",cost:45,target:"allyAll",kind:"barrier",barrier:"aura",desc:"味方全員に、敵の魔法を1回完全無効化するオーラを付与"},
+
+    // Standard buffs: 1.30x for 5 rounds. Ultimate buffs: 1.50x for 4 rounds.
+    polish:{id:"polish",name:"ポリッシュ",icon:"✨",cost:6,target:"ally",kind:"buff",buff:"atk",multiplier:1.30,duration:5,desc:"味方1人の攻撃力を1.3倍（5ラウンド）",animation:"buff"},
+    allPolish:{id:"allPolish",name:"オールポリッシュ",icon:"✨",cost:14,target:"allyAll",kind:"buff",buff:"atk",multiplier:1.30,duration:5,desc:"味方全員の攻撃力を1.3倍（5ラウンド）",animation:"buff"},
+    warGodAura:{id:"warGodAura",name:"戦神の覇気",icon:"🔥",cost:21,target:"allyAll",kind:"buff",buff:"atk",multiplier:1.50,duration:4,desc:"味方全員の攻撃力を1.5倍（4ラウンド）",animation:"buff"},
+    guard:{id:"guard",name:"ガード",icon:"🛡️",cost:6,target:"ally",kind:"buff",buff:"def",multiplier:1.30,duration:5,desc:"味方1人の防御力を1.3倍（5ラウンド）",animation:"buff"},
+    allGuard:{id:"allGuard",name:"オールガード",icon:"🛡️",cost:14,target:"allyAll",kind:"buff",buff:"def",multiplier:1.30,duration:5,desc:"味方全員の防御力を1.3倍（5ラウンド）",animation:"buff"},
+    guardianBlessing:{id:"guardianBlessing",name:"守護神の加護",icon:"🛡️",cost:21,target:"allyAll",kind:"buff",buff:"def",multiplier:1.50,duration:4,desc:"味方全員の防御力を1.5倍（4ラウンド）",animation:"buff"},
+    magic:{id:"magic",name:"マジック",icon:"🔷",cost:6,target:"ally",kind:"buff",buff:"magic",multiplier:1.30,duration:5,desc:"味方1人の魔力を1.3倍（5ラウンド）",animation:"buff"},
+    allMagic:{id:"allMagic",name:"オールマジック",icon:"🔷",cost:14,target:"allyAll",kind:"buff",buff:"magic",multiplier:1.30,duration:5,desc:"味方全員の魔力を1.3倍（5ラウンド）",animation:"buff"},
+    demonSpiritFlow:{id:"demonSpiritFlow",name:"魔祖の霊流",icon:"🔷",cost:21,target:"allyAll",kind:"buff",buff:"magic",multiplier:1.50,duration:4,desc:"味方全員の魔力を1.5倍（4ラウンド）",animation:"buff"},
+    block:{id:"block",name:"ブロック",icon:"🔶",cost:6,target:"ally",kind:"buff",buff:"mdef",multiplier:1.30,duration:5,desc:"味方1人の魔法防御力を1.3倍（5ラウンド）",animation:"buff"},
+    allBlock:{id:"allBlock",name:"オールブロック",icon:"🔶",cost:14,target:"allyAll",kind:"buff",buff:"mdef",multiplier:1.30,duration:5,desc:"味方全員の魔法防御力を1.3倍（5ラウンド）",animation:"buff"},
+    spiritKingBlessing:{id:"spiritKingBlessing",name:"精霊王の祝福",icon:"🔶",cost:21,target:"allyAll",kind:"buff",buff:"mdef",multiplier:1.50,duration:4,desc:"味方全員の魔法防御力を1.5倍（4ラウンド）",animation:"buff"},
+    quick:{id:"quick",name:"クイック",icon:"💨",cost:6,target:"ally",kind:"buff",buff:"spd",multiplier:1.30,duration:5,desc:"味方1人の素早さを1.3倍（5ラウンド）",animation:"buff"},
+    allQuick:{id:"allQuick",name:"オールクイック",icon:"💨",cost:14,target:"allyAll",kind:"buff",buff:"spd",multiplier:1.30,duration:5,desc:"味方全員の素早さを1.3倍（5ラウンド）",animation:"buff"},
+    heroicTailwind:{id:"heroicTailwind",name:"英雄の追風",icon:"💨",cost:21,target:"allyAll",kind:"buff",buff:"spd",multiplier:1.50,duration:4,desc:"味方全員の素早さを1.5倍（4ラウンド）",animation:"buff"},
+
+    berserk:{id:"berserk",name:"バーサーク",icon:"💢",cost:15,target:"self",kind:"berserk",multiplier:1.60,duration:5,desc:"自身を5ラウンド狂乱状態にし、攻撃力1.6倍。以後は自動で通常攻撃"},
+    fortune:{id:"fortune",name:"フォーチュン",icon:"🍀",cost:50,target:"self",kind:"fortune",desc:"この戦闘の加入率を、元の最終加入率ぶん（最大+1ポイント）上昇。重ね掛け可、最終70%上限"},
+    escape:{id:"escape",name:"エスケープ",icon:"🏃",cost:48,target:"self",kind:"escape",desc:"通常戦闘から100%逃走する"},
+    supply:{id:"supply",name:"サプライ",icon:"🔹",cost:80,target:"ally",fieldUse:"allyMP",kind:"mpTransfer",restoreMp:80,desc:"自分のMP80を消費し、味方1人のMPを80回復"},
+    neoSupply:{id:"neoSupply",name:"ネオサプライ",icon:"💠",cost:200,target:"allyAll",fieldUse:"frontAllMP",kind:"mpTransfer",restoreMp:50,desc:"自分のMP200を消費し、前衛4人のMPを50ずつ回復"},
+    stealth:{id:"stealth",name:"ステルス",icon:"🥷",cost:30,target:"none",fieldUse:"stealth",battleUse:false,kind:"stealth",successRate:.35,desc:"探索中、未踏の全戦闘マスを個別に35%判定し、成功したマスを空マス化。1マップ1回"},
+    return:{id:"return",name:"リターン",icon:"🌀",cost:8,target:"none",fieldUse:"return",battleUse:false,kind:"return",desc:"探索を終了してミレスタへ帰還する"}
+
   };
 
   // v0.20: the full future plan lives in characterProfiles. Only implemented skills are activated for now.
   const levelSkillTable = {
-    hero:{1:["fire"],2:["heal"],6:["blaze"],12:["death"],16:["flare"],24:["heavenlyLight"],28:["pleasureOne"],41:["allDeath"],60:["endBlaze"]},
-    slime:{2:["tackle"]},
-    dog:{4:["polish"]},
-    fairy:{1:["heal"],3:["ice"],12:["wind"],30:["gigaFrost"],65:["endCold"]},
-    momo:{1:["heal"]},
-    arachne:{2:["poison"],5:["touch"],14:["dark"],29:["gigaPleasure"],36:["gigaDark"],42:["eraser"]},
-    slimebes:{6:["silence"],11:["blaze"]},
-    harpy:{3:["sonic"],13:["wind"],36:["gigaWind"],84:["annihilationWindBlade"]}
+    hero:{1:["fire"],2:["heal"],6:["blaze"],12:["death"],16:["flare"],19:["allMagic"],24:["heavenlyLight"],28:["pleasureOne"],32:["lastHeal"],37:["gigaRaise"],41:["allDeath"],50:["heroicTailwind"],60:["endBlaze"]},
+    slime:{2:["tackle"],8:["guard"],11:["cold"],25:["allGuard"],32:["raise2"],44:["allMount"],70:["lastAura"]},
+    dog:{4:["polish"],6:["cure"],21:["allQuick"]},
+    fairy:{1:["heal"],3:["ice"],12:["wind"],18:["highHeal"],30:["gigaFrost"],36:["fairyHeal"],65:["endCold"],84:["eternal"]},
+    slug:{1:["cure"],15:["raise"],38:["stealth"],51:["guardianBlessing"]},
+    momo:{1:["heal"],4:["allHeal"],18:["allHeal2"],25:["allBlock"],41:["fairyHeal"],50:["gigaRaise"]},
+    arachne:{2:["poison"],5:["touch"],14:["dark"],16:["allQuick"],29:["gigaPleasure"],36:["gigaDark"],42:["eraser"]},
+    slimebes:{6:["silence"],11:["blaze"],31:["fresh"]},
+    harpy:{3:["sonic"],10:["allHeal"],13:["wind"],24:["return"],36:["gigaWind"],41:["aura"],84:["annihilationWindBlade"]}
   };
 
   function skillsLearnedAtLevel(c,level){
@@ -3205,7 +3246,7 @@
     return [...new Set([...state.battleActive,...state.battleReserve])];
   }
 
-  // v0.26 condition container. Poison / Blind / Silence / Shock are battle states and clear when battle ends.
+  // v0.27 condition container. Poison / Blind / Silence / Shock are battle states and clear when battle ends.
   function conditionsOf(c){
     if(!c.conditions) c.conditions={poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false};
     return c.conditions;
@@ -3221,6 +3262,7 @@
     c.spdBuff=1;c.spdBuffRounds=0;
     c._usedHealingMagicThisRound=false;
     c.shockRecoverFails=0;
+    c.berserkRounds=0;
     const cond=conditionsOf(c);
     Object.keys(cond).forEach(key=>{
       if(key==="poison" && preservePoison) return;
@@ -3245,7 +3287,7 @@
     if(cond.blind) chips.push('<span class="status-effect-chip bad">暗闇</span>');
     if(cond.silence) chips.push('<span class="status-effect-chip bad">封印</span>');
     if(cond.shock) chips.push('<span class="status-effect-chip bad">⚡ 感電</span>');
-    if(cond.berserk) chips.push('<span class="status-effect-chip bad">狂乱</span>');
+    if(cond.berserk) chips.push(`<span class="status-effect-chip bad">狂乱${c.berserkRounds>0?` ${c.berserkRounds}R`:''}</span>`);
     if(cond.mount) chips.push('<span class="status-effect-chip buff">マウント</span>');
     if(cond.aura) chips.push('<span class="status-effect-chip buff">オーラ</span>');
     return chips.join('');
@@ -3384,12 +3426,19 @@
     return state.battleActive.reduce((sum,id)=>sum+(roster[id]?.fate||0),0);
   }
 
-  function recruitmentChance(speciesId,fateTotal=activeFateTotal()){
+  function baseRecruitmentChance(speciesId,fateTotal=activeFateTotal()){
     const info=speciesRecruitment[speciesId];
     if(!info) return 0;
     const cfg=recruitRanks[info.rank];
     if(!cfg) return 0;
     return cfg.base * (1 + cfg.cap * fateTotal / (100 + fateTotal));
+  }
+
+  function recruitmentChance(speciesId,fateTotal=activeFateTotal()){
+    const original=baseRecruitmentChance(speciesId,fateTotal);
+    if(original<=0) return 0;
+    const perCast=Math.min(original,.01);
+    return Math.min(.70,original+(Number(state.fortuneCasts)||0)*perCast);
   }
 
   function pctText(rate){
@@ -3502,7 +3551,7 @@
   function livingActiveSlots(){ return state.battleActive.map((id,i)=>({id,i,c:roster[id]})).filter(x=>S(x.c).hp>0); }
   function livingEnemies(){ return state.battleEnemies.filter(e=>e.hp>0); }
   function setMessage(text){ $("battleMessage").textContent=text; }
-  function effectiveAtk(c){ return Math.round(S(c).atk*(c.atkBuff||1)); }
+  function effectiveAtk(c){ return Math.round(S(c).atk*(c.atkBuff||1)*(conditionsOf(c).berserk?1.60:1)); }
   function effectiveDef(c){ return Math.round(S(c).def*(c.defBuff||1)); }
   function effectiveMagic(c){ return Math.round(S(c).magic*(c.magicBuff||1)); }
   function effectiveMdef(c){ return Math.round(S(c).mdef*(c.mdefBuff||1)); }
@@ -3510,6 +3559,58 @@
   function traitOf(c){ return characterProfiles[c?.profileId]?.trait || null; }
   function makeTraitActionContext(){ return {triggeredTraits:new Set()}; }
   function traitRoll(trait){ return !!trait && Number(trait.chance)>0 && Math.random()<Number(trait.chance); }
+
+
+  function healAmountForSkill(actor,sk){
+    if(sk.fullHeal) return Infinity;
+    const mag=Math.max(0,effectiveMagic(actor)||0);
+    const base=Number(sk.healBase)||0;
+    const magicRate=Number(sk.healMagic)||0;
+    const scale=Number(sk.healScale)||1;
+    return Math.max(1,Math.round((base+mag*magicRate)*scale));
+  }
+
+  const BUFF_INFO={
+    atk:{value:"atkBuff",rounds:"atkBuffRounds",label:"ATK↑",name:"攻撃力"},
+    def:{value:"defBuff",rounds:"defBuffRounds",label:"DEF↑",name:"防御力"},
+    magic:{value:"magicBuff",rounds:"magicBuffRounds",label:"MAG↑",name:"魔力"},
+    mdef:{value:"mdefBuff",rounds:"mdefBuffRounds",label:"MDEF↑",name:"魔法防御力"},
+    spd:{value:"spdBuff",rounds:"spdBuffRounds",label:"SPD↑",name:"素早さ"}
+  };
+
+  function applyStatBuff(target,sk){
+    const info=BUFF_INFO[sk.buff];
+    if(!info || !target) return {applied:false,reason:"invalid",info};
+    const current=Number(target[info.value])||1;
+    if(current>Number(sk.multiplier)) return {applied:false,reason:"stronger",info};
+    target[info.value]=Number(sk.multiplier)||1;
+    target[info.rounds]=Number(sk.duration)||0;
+    return {applied:true,reason:current===Number(sk.multiplier)?"refresh":"applied",info};
+  }
+
+  function clearNegativeConditions(target,{poisonOnly=false}={}){
+    const cond=conditionsOf(target);
+    const keys=poisonOnly?["poison"]:["poison","blind","silence","shock","berserk"];
+    let removed=0;
+    keys.forEach(key=>{
+      if(cond[key]){ cond[key]=false; removed++; }
+    });
+    if(!cond.shock) target.shockRecoverFails=0;
+    if(!cond.berserk) target.berserkRounds=0;
+    return removed;
+  }
+
+  function consumeAuraAgainstEnemyMagic(target){
+    const cond=conditionsOf(target);
+    if(!cond.aura) return false;
+    cond.aura=false;
+    return true;
+  }
+
+  function battleAllies(includeReserve=false){
+    const ids=includeReserve?travelPartyIds():state.battleActive;
+    return ids.map((id,i)=>({id,i:state.battleActive.indexOf(id),c:roster[id]})).filter(x=>x.c);
+  }
 
   function clearEnemyBuffs(enemy){
     if(!enemy) return false;
@@ -3594,6 +3695,10 @@
           if(c[roundKey]<=0){ c[roundKey]=0; c[buffKey]=1; }
         }
       });
+      if(conditionsOf(c).berserk && (c.berserkRounds||0)>0){
+        c.berserkRounds--;
+        if(c.berserkRounds<=0){ c.berserkRounds=0; conditionsOf(c).berserk=false; }
+      }
     });
   }
 
@@ -3665,7 +3770,7 @@
       if(!damaged.length || !traitRoll(trait)) continue;
       const target=choose(damaged);
       const heal=skills.heal;
-      const healPower=Math.round(heal.base + effectiveMagic(c)*.25 + rand(heal.variance));
+      const healPower=healAmountForSkill(c,heal);
       const amount=Math.min(S(target.c).hpMax-S(target.c).hp,healPower);
       if(amount<=0) continue;
       S(target.c).hp+=amount;
@@ -3879,7 +3984,7 @@
     const btn=$("skillBtn");
     if(!btn) return;
     const actor=roster[state.battleActive[state.battleActorSlot]];
-    const list=knownSkills(actor);
+    const list=knownSkills(actor).filter(sk=>sk.battleUse!==false);
     if(!list.length){
       $("skillBtnLabel").textContent="スキル未設定";
       $("skillCostLabel").textContent="";
@@ -3925,7 +4030,7 @@
     if(state.battlePhase!=="input" || state.battleEnded) return;
     cancelScheduledTurnStart();
     const actor=roster[state.battleActive[state.battleActorSlot]];
-    const list=knownSkills(actor);
+    const list=knownSkills(actor).filter(sk=>sk.battleUse!==false);
     if(conditionsOf(actor).silence){
       setMessage(`🔇 ${actor.name} は封印されていてスキルを使えません。`);
       return;
@@ -3950,7 +4055,7 @@
       const btn=document.createElement("button");
       btn.className="skill-option";
       btn.disabled=!usable;
-      const targetLabel=sk.target==="enemyAll" ? "敵全体" : sk.target==="ally" ? "味方1人" : "敵1体";
+      const targetLabel=sk.target==="enemyAll" ? "敵全体" : sk.target==="allyAll" ? "味方全員" : sk.target==="ally" ? "味方1人" : sk.target==="self" ? "自分" : sk.target==="none" ? "探索専用" : "敵1体";
       btn.innerHTML=`<span class="skill-option-icon">${sk.icon||"✨"}</span>`+
         `<span class="skill-option-main"><span class="skill-option-name">${sk.name}</span>`+
         `<span class="skill-option-desc">${sk.desc||""}</span></span>`+
@@ -4065,7 +4170,25 @@
       return;
     }
 
-    state.battleTargetMode={kind:"ally",source:"skill",skill:sk.id,actorSlot:state.battleActorSlot};
+    if(sk.target==="allyAll" || sk.target==="self"){
+      state.battleTargetMode=null;
+      queueAction({type:"skill",skill:sk.id,targetId:sk.target==="self"?actor.id:null,targetSlot:sk.target==="self"?state.battleActorSlot:null});
+      return;
+    }
+
+    if(sk.kind==="revive" && sk.target==="ally"){
+      const candidates=travelPartyIds().map(id=>roster[id]).filter(c=>c && S(c).hp<=0);
+      if(!candidates.length){ setMessage("戦闘不能の仲間がいません。"); return; }
+      if(candidates.length===1){
+        const c=candidates[0];
+        queueAction({type:"skill",skill:sk.id,targetId:c.id,targetSlot:state.battleActive.indexOf(c.id)});
+        return;
+      }
+      modal(`${sk.icon} ${sk.name}`,"復活させる仲間を選んでください。",candidates.map(c=>[c.name,()=>{closeModal();queueAction({type:"skill",skill:sk.id,targetId:c.id,targetSlot:state.battleActive.indexOf(c.id)});}]).concat([["やめる",closeModal]]));
+      return;
+    }
+
+    state.battleTargetMode={kind:"ally",source:"skill",skill:sk.id,actorSlot:state.battleActorSlot,allowKO:false};
     renderBattleParty();
     updateActorPortrait();
     updateExecuteButton();
@@ -4089,6 +4212,8 @@
       const sk=skills[action.skill];
       if(!sk) return "✨ スキル";
       if(sk.target==="enemyAll") return `${sk.icon} ${sk.name}→敵全体`;
+      if(sk.target==="allyAll") return `${sk.icon} ${sk.name}→味方全員`;
+      if(sk.target==="self") return `${sk.icon} ${sk.name}→自分`;
       if(sk.target==="enemy"){
         const target=enemyByUid(action.targetUid);
         return `${sk.icon} ${sk.name}→${target && target.hp>0 ? target.displayName : "敵"}`;
@@ -4112,7 +4237,9 @@
       if(st.hp<=0) btn.classList.add("ko");
       if(c.defending) btn.classList.add("defending");
       if(c.atkBuffRounds>0) btn.classList.add("buff-atk");
-      if(state.battleTargetMode && state.battleTargetMode.kind==="ally" && st.hp>0) btn.classList.add("targetable");
+      const targetMode=state.battleTargetMode;
+      const targetAllowed=!!(targetMode && targetMode.kind==="ally" && (st.hp>0 || targetMode.allowKO));
+      if(targetAllowed) btn.classList.add("targetable");
       btn.dataset.slot=String(slot);
 
       let turnText="";
@@ -4125,7 +4252,7 @@
         turnText="行動中";
       }
 
-      const targetSelectText=(state.battleTargetMode && state.battleTargetMode.kind==="ally" && st.hp>0)
+      const targetSelectText=(state.battleTargetMode && state.battleTargetMode.kind==="ally" && targetAllowed)
         ? `👆 ${targetModeName()}の対象`
         : (st.hp<=0 ? "行動不可" : actionLabel(action,c));
 
@@ -4146,7 +4273,7 @@
           return;
         }
         if(state.battleTargetMode && state.battleTargetMode.kind==="ally"){
-          if(st.hp<=0){
+          if(st.hp<=0 && !state.battleTargetMode.allowKO){
             setMessage("戦闘不能の仲間は対象にできません。");
             return;
           }
@@ -4158,6 +4285,7 @@
           return;
         }
         if(st.hp>0){
+          if(conditionsOf(c).berserk){ setMessage(`💢 ${c.name} は狂乱状態で自動行動します。`); return; }
           state.battleActorSlot=slot;
           updateActorPortrait();
           renderBattleParty();
@@ -4514,8 +4642,12 @@
     state.battleTargetMode=null;
     state.battleActive.forEach(id=>roster[id].defending=false);
     state.battleActive.forEach((id,slot)=>{ if(S(roster[id]).hp<=0) autoReplaceSlot(slot); });
+    livingActiveSlots().forEach(({i,c})=>{
+      if(conditionsOf(c).berserk) state.battleActions[i]=makeAttackAction();
+    });
 
-    const first=livingActiveSlots()[0];
+    const living=livingActiveSlots();
+    const first=living.find(x=>!state.battleActions[x.i]) || living[0];
     if(!first){ loseBattle(); return; }
     state.battleActorSlot=first.i;
     setCommandsEnabled(true);
@@ -4524,6 +4656,13 @@
     renderBattleParty();
     updateExecuteButton();
     updateAutoButtons();
+
+    if(commandsReady() && living.length && living.every(x=>conditionsOf(x.c).berserk)){
+      setCommandsEnabled(false);
+      setMessage(`ROUND ${state.battleRound}：狂乱中の仲間が自動で襲いかかる！`);
+      scheduleTurnStart(420);
+      return;
+    }
 
     if(state.battleAutoContinuous){
       setMessage(`ROUND ${state.battleRound}：AUTOが行動を選択します。`);
@@ -4853,17 +4992,23 @@
       animateActor("cast");
       setMessage(`🫧 ${actor.name} は ${sk.name} を唱えた！`);
       await wait(BASE_TIME.actionLead);
-      let removed=0;
+      let removed=0,blocked=0;
       targets.forEach(target=>{
-        let did=clearEnemyBuffs(target);
         const cond=conditionsOf(target);
-        if(cond.mount){cond.mount=false;did=true;}
-        if(cond.aura){cond.aura=false;did=true;}
+        const blockedByAura=!!cond.aura;
+        let did=false;
+        if(blockedByAura){
+          cond.aura=false;
+          blocked++;
+        }else{
+          did=clearEnemyBuffs(target);
+          if(cond.mount){cond.mount=false;did=true;}
+        }
         if(did) removed++;
         const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${target.uid}"]`);
-        if(el) spawnFx("buff","🫧",el);
+        if(el) spawnFx("buff",blockedByAura?"🔮":"🫧",el);
       });
-      setMessage(`🫧 ${sk.name}！ 敵全体の強化効果を解除した。${removed?`（${removed}体）`:"（解除できる効果なし）"}`);
+      setMessage(`🫧 ${sk.name}！ ${blocked?`${blocked}体はオーラだけを消費して無効化。 `:""}${removed?`${removed}体の強化効果を解除した。`:blocked?"":"解除できる効果はなかった。"}`);
       await wait(BASE_TIME.buff);
       renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
       return;
@@ -4898,70 +5043,173 @@
       return;
     }
 
-    if(sk.kind==="buff" && sk.target==="ally"){
-      let targetSlot=action.targetSlot;
-      let target=roster[action.targetId || state.battleActive[targetSlot]];
-      const stillActive=target && state.battleActive[targetSlot]===target.id;
-      if(!target || S(target).hp<=0 || !stillActive){
-        const alt=livingActiveSlots()[0];
-        targetSlot=alt?alt.i:null;
-        target=alt?alt.c:null;
-      }
-      if(!target) return;
-
+    if(sk.kind==="buff"){
+      const targets=sk.target==="allyAll"
+        ? livingActiveSlots()
+        : (()=>{
+            let targetSlot=action.targetSlot;
+            let target=roster[action.targetId || state.battleActive[targetSlot]];
+            const stillActive=target && state.battleActive[targetSlot]===target.id;
+            if(!target || S(target).hp<=0 || !stillActive){
+              const alt=livingActiveSlots()[0];
+              targetSlot=alt?alt.i:null; target=alt?alt.c:null;
+            }
+            return target?[{i:targetSlot,c:target}]:[];
+          })();
+      if(!targets.length) return;
       animateActor("buff");
       setMessage(`✨ ${actor.name} は ${sk.name} を使った！`);
       await wait(BASE_TIME.actionLead);
-
-      const buffInfo={
-        atk:{value:"atkBuff",rounds:"atkBuffRounds",label:"ATK↑",name:"攻撃力"},
-        def:{value:"defBuff",rounds:"defBuffRounds",label:"DEF↑",name:"防御力"},
-        magic:{value:"magicBuff",rounds:"magicBuffRounds",label:"MAG↑",name:"魔力"},
-        mdef:{value:"mdefBuff",rounds:"mdefBuffRounds",label:"MDEF↑",name:"魔防"},
-        spd:{value:"spdBuff",rounds:"spdBuffRounds",label:"SPD↑",name:"素早さ"}
-      }[sk.buff];
-      if(!buffInfo) return;
-      target[buffInfo.value]=sk.multiplier;
-      target[buffInfo.rounds]=sk.duration;
+      let applied=0,stronger=0;
+      targets.forEach(({i,c})=>{
+        const result=applyStatBuff(c,sk);
+        if(result.applied){
+          applied++;
+          flashPartyValue(i,"","buff",result.info.label);
+          const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`);
+          if(card) spawnFx("buff",sk.buff==="spd"?"💨":"✨",card);
+        }else if(result.reason==="stronger") stronger++;
+      });
       renderBattleParty();
-      flashPartyValue(targetSlot,"","buff",buffInfo.label);
-      const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${targetSlot}"]`);
-      if(card) spawnFx("buff",sk.id==="quick"?"💨":"✨",card);
-      setMessage(`${sk.id==="quick"?"💨":"✨"} ${target.name} の${buffInfo.name}が上がった！（${sk.duration}ラウンド）`);
+      const info=BUFF_INFO[sk.buff];
+      setMessage(`${sk.icon||"✨"} ${info?.name||"能力"}アップ！ ${applied}人に×${sk.multiplier.toFixed(2)}（${sk.duration}ラウンド）。${stronger?` ${stronger}人はより強い効果を維持。`:""}`);
       await wait(BASE_TIME.buff);
       return;
     }
 
-    if(sk.id==="heal"){
-      let targetSlot=action.targetSlot;
-      let target=roster[action.targetId || state.battleActive[targetSlot]];
-      const stillActive=target && state.battleActive[targetSlot]===target.id;
-      if(!target || S(target).hp<=0 || !stillActive){
-        const alternatives=livingActiveSlots().sort((a,b)=>(S(a.c).hp/S(a.c).hpMax)-(S(b.c).hp/S(b.c).hpMax));
-        if(alternatives.length){
-          targetSlot=alternatives[0].i;
-          target=alternatives[0].c;
-        }
-      }
-      if(!target) return;
-
+    if(sk.kind==="heal"){
+      const targets=sk.target==="allyAll"
+        ? livingActiveSlots().filter(x=>S(x.c).hp<S(x.c).hpMax)
+        : (()=>{
+            let targetSlot=action.targetSlot;
+            let target=roster[action.targetId || state.battleActive[targetSlot]];
+            const stillActive=target && state.battleActive[targetSlot]===target.id;
+            if(!target || S(target).hp<=0 || !stillActive){
+              const alternatives=livingActiveSlots().sort((a,b)=>(S(a.c).hp/S(a.c).hpMax)-(S(b.c).hp/S(b.c).hpMax));
+              if(alternatives.length){ targetSlot=alternatives[0].i; target=alternatives[0].c; }
+            }
+            return target?[{i:targetSlot,c:target}]:[];
+          })();
+      if(!targets.length){ setMessage(`${sk.name} の回復対象がいなかった。`); return; }
       animateActor("cast");
       setMessage(`💚 ${actor.name} は ${sk.name} を唱えた！`);
       await wait(BASE_TIME.actionLead);
-
-      const healPower=Math.round(sk.base + (S(actor).magic||15)*.25 + rand(sk.variance));
-      const amount=Math.min(S(target).hpMax-S(target).hp,healPower);
-      S(target).hp=Math.min(S(target).hpMax,S(target).hp+amount);
+      const baseAmount=healAmountForSkill(actor,sk);
+      let total=0;
+      targets.forEach(({i,c})=>{
+        const missing=S(c).hpMax-S(c).hp;
+        const amount=Math.min(missing,sk.fullHeal?missing:baseAmount);
+        if(amount<=0) return;
+        S(c).hp+=amount; total+=amount;
+        flashPartyValue(i,amount,"heal");
+        const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`);
+        if(card) spawnFx("heal","✨",card);
+      });
       renderBattleParty();
-      flashPartyValue(targetSlot,amount,"heal");
-      const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${targetSlot}"]`);
-      if(card) spawnFx("heal","✨",card);
-      setMessage(`💚 ${target.name} のHPが ${amount} 回復した。`);
+      setMessage(`💚 ${sk.name}！ ${sk.target==="allyAll"?`味方全員を合計 ${total} 回復。`:`${targets[0].c.name} のHPが ${total} 回復した。`}`);
+      await wait(BASE_TIME.heal);
+      return;
+    }
+
+    if(sk.kind==="revive"){
+      const targets=sk.target==="allyAll"
+        ? battleAllies(true).filter(x=>S(x.c).hp<=0)
+        : (()=>{ const c=roster[action.targetId]; return c&&S(c).hp<=0?[{i:state.battleActive.indexOf(c.id),c}]:[]; })();
+      const healEveryone=!!sk.fullPartyHeal;
+      if(!targets.length && !healEveryone){ setMessage(`${sk.name} の対象になる戦闘不能者がいなかった。`); return; }
+      animateActor("cast");
+      setMessage(`🕊️ ${actor.name} は ${sk.name} を唱えた！`);
+      await wait(BASE_TIME.actionLead);
+      let revived=0;
+      targets.forEach(({c})=>{
+        const hp=Math.max(1,Math.round(S(c).hpMax*(Number(sk.revivePercent)||.20)));
+        S(c).hp=Math.min(S(c).hpMax,hp); revived++;
+      });
+      if(healEveryone){ battleAllies(true).forEach(({c})=>{ S(c).hp=S(c).hpMax; }); }
+      renderBattleParty();
+      setMessage(sk.fullPartyHeal?`🌟 奇跡が起きた！ ${revived}人を復活させ、味方全員のHPが全回復！`:`🕊️ ${sk.name}！ ${revived}人が復活した！`);
+      await wait(BASE_TIME.heal);
+      return;
+    }
+
+    if(sk.kind==="cleanse"){
+      const targets=sk.target==="allyAll"
+        ? livingActiveSlots()
+        : (()=>{ const c=roster[action.targetId || state.battleActive[action.targetSlot]]; return c?[{i:state.battleActive.indexOf(c.id),c}]:[]; })();
+      if(!targets.length) return;
+      animateActor("cast");
+      await wait(BASE_TIME.actionLead);
+      let removed=0;
+      targets.forEach(({c})=>{ removed+=clearNegativeConditions(c,{poisonOnly:Array.isArray(sk.statuses)&&sk.statuses.length===1&&sk.statuses[0]==="poison"}); });
+      renderBattleParty();
+      setMessage(`${sk.icon} ${sk.name}！ ${removed?`${removed}個の状態異常を解除した。`:"解除できる状態異常はなかった。"}`);
+      await wait(BASE_TIME.buff);
+      return;
+    }
+
+    if(sk.kind==="barrier"){
+      const targets=sk.target==="allyAll"
+        ? livingActiveSlots()
+        : (()=>{ const c=roster[action.targetId || state.battleActive[action.targetSlot]]; return c&&S(c).hp>0?[{i:state.battleActive.indexOf(c.id),c}]:[]; })();
+      if(!targets.length) return;
+      animateActor("buff");
+      await wait(BASE_TIME.actionLead);
+      targets.forEach(({i,c})=>{
+        conditionsOf(c)[sk.barrier]=true;
+        const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`);
+        if(card) spawnFx("buff",sk.barrier==="aura"?"🔮":"🛡️",card);
+      });
+      renderBattleParty();
+      setMessage(`${sk.icon} ${sk.name}！ ${sk.target==="allyAll"?"味方全員":"対象"}に${sk.barrier==="aura"?"オーラ":"マウント"}を付与した。`);
+      await wait(BASE_TIME.buff);
+      return;
+    }
+
+    if(sk.kind==="berserk"){
+      const cond=conditionsOf(actor);
+      cond.berserk=true;
+      actor.berserkRounds=sk.duration;
+      animateActor("buff");
+      renderBattleParty();
+      setMessage(`💢 ${actor.name} は狂乱状態になった！ 攻撃力1.6倍・${sk.duration}ラウンド、自動で通常攻撃する。`);
+      await wait(BASE_TIME.buff);
+      return;
+    }
+
+    if(sk.kind==="fortune"){
+      state.fortuneCasts=(Number(state.fortuneCasts)||0)+1;
+      animateActor("buff");
+      setMessage(`🍀 フォーチュン！ この戦闘の加入率が上昇した。（重ね掛け ${state.fortuneCasts}回 / 最終70%上限）`);
+      await wait(BASE_TIME.buff);
+      return;
+    }
+
+    if(sk.kind==="escape"){
+      setMessage(`🏃 ${actor.name} はエスケープを唱えた！`);
+      await wait(BASE_TIME.message);
+      finishEscape();
+      return;
+    }
+
+    if(sk.kind==="mpTransfer"){
+      const targets=sk.target==="allyAll"
+        ? livingActiveSlots()
+        : (()=>{ const c=roster[action.targetId || state.battleActive[action.targetSlot]]; return c&&S(c).hp>0?[{i:state.battleActive.indexOf(c.id),c}]:[]; })();
+      if(!targets.length) return;
+      animateActor("cast");
+      await wait(BASE_TIME.actionLead);
+      let total=0;
+      targets.forEach(({i,c})=>{
+        const amount=Math.min(S(c).mpMax-S(c).mp,Number(sk.restoreMp)||0);
+        S(c).mp+=amount; total+=amount;
+        if(i>=0) flashPartyValue(i,amount,"heal");
+      });
+      renderBattleParty();
+      setMessage(`🔹 ${sk.name}！ ${sk.target==="allyAll"?`前衛へ合計 ${total} MP供給。`:`${targets[0].c.name} のMPが ${total} 回復。`}`);
       await wait(BASE_TIME.heal);
       return;
     }
   }
-
   async function resolveBattleItem(actor,action,slot){
     const item=ITEMS[action.item];
     if(!item) return;
@@ -5105,7 +5353,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
       updateHeader();
       return;
     }
@@ -5113,7 +5361,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
   }
 
   async function attemptEscape(){
@@ -5396,7 +5644,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -5404,7 +5652,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -5528,7 +5776,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -5581,12 +5829,13 @@
     state.battleDefeatCounter=0;
     state.escapeAttempts=0;
     state.escapeBaseRate=null;
+    state.fortuneCasts=0;
     hideRecruitOverlay();
     hideBattleContinue();
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -5610,7 +5859,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.26";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.27";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -5886,7 +6135,8 @@
       visited:new Set(["L0N0"]),
       runGold:0,
       runExp:0,
-      resolved:new Set()
+      resolved:new Set(),
+      stealthUsed:false
     };
     $("exploreAreaLabel").textContent="🌿 ミレスタ平原";
     showScreen("exploreScreen");
@@ -5990,6 +6240,25 @@
     });
   }
 
+  function fieldSkillHasTarget(actor,sk){
+    if(!actor || !sk || S(actor).hp<=0 || S(actor).mp<sk.cost) return false;
+    const party=travelPartyIds().map(id=>roster[id]).filter(Boolean);
+    switch(sk.fieldUse){
+      case "return": return true;
+      case "stealth": return !!state.run && !state.run.stealthUsed && state.run.nodes.some(n=>n.type==="battle" && !state.run.visited.has(n.id));
+      case "ally": return party.some(c=>S(c).hp>0 && S(c).hp<S(c).hpMax);
+      case "allyAll": return party.some(c=>S(c).hp>0 && S(c).hp<S(c).hpMax);
+      case "allyKO": return party.some(c=>S(c).hp<=0);
+      case "allyAllKO": return party.some(c=>S(c).hp<=0);
+      case "miracle": return party.some(c=>S(c).hp<=0 || S(c).hp<S(c).hpMax);
+      case "allyCleanse": return party.some(c=>["poison","blind","silence","shock","berserk"].some(k=>conditionsOf(c)[k]));
+      case "allyAllCleanse": return party.some(c=>["poison","blind","silence","shock","berserk"].some(k=>conditionsOf(c)[k]));
+      case "allyMP": return party.some(c=>S(c).hp>0 && S(c).mp<S(c).mpMax);
+      case "frontAllMP": return state.battleActive.some(id=>{const c=roster[id];return c&&S(c).hp>0&&S(c).mp<S(c).mpMax;});
+      default:return true;
+    }
+  }
+
   function renderExploreSkillList(){
     state.exploreSkillActorId=null;
     state.exploreSkillId=null;
@@ -6005,15 +6274,11 @@
     }
     entries.forEach(({actor,skill:sk})=>{
       const st=S(actor);
-      const validTargets=sk.fieldUse==="return" || [...state.battleActive,...state.battleReserve].some(id=>{
-        const ts=S(roster[id]);
-        return sk.kind!=="heal" || (ts.hp>0 && ts.hp<ts.hpMax);
-      });
-      const usable=st.hp>0 && st.mp>=sk.cost && validTargets;
+      const usable=fieldSkillHasTarget(actor,sk);
       const btn=document.createElement("button");
       btn.className="skill-option";
       btn.disabled=!usable;
-      const note=st.hp<=0?"戦闘不能":st.mp<sk.cost?"MP不足":!validTargets?"回復対象なし":"探索で使用";
+      const note=st.hp<=0?"戦闘不能":st.mp<sk.cost?"MP不足":!usable?(sk.fieldUse==="stealth"&&state.run?.stealthUsed?"使用済み":"対象なし"):"探索で使用";
       btn.innerHTML=`<span class="skill-option-icon">${sk.icon||"✨"}</span>`+
         `<span class="skill-option-main"><span class="skill-option-name">${sk.name}</span>`+
         `<span class="skill-option-desc">${actor.name}　MP ${st.mp}/${st.mpMax}<br>${sk.desc||""}</span></span>`+
@@ -6023,27 +6288,71 @@
     });
   }
 
+  function useExploreAllSkill(actor,sk){
+    const ast=S(actor);
+    if(ast.hp<=0 || ast.mp<sk.cost || !fieldSkillHasTarget(actor,sk)) return;
+    const party=travelPartyIds().map(id=>roster[id]).filter(Boolean);
+    ast.mp-=sk.cost;
+    let count=0,total=0;
+    if(sk.kind==="heal"){
+      const power=healAmountForSkill(actor,sk);
+      party.filter(c=>S(c).hp>0).forEach(c=>{ const amount=Math.min(S(c).hpMax-S(c).hp,sk.fullHeal?S(c).hpMax-S(c).hp:power); if(amount>0){S(c).hp+=amount;total+=amount;count++;} });
+    }else if(sk.kind==="revive"){
+      party.filter(c=>S(c).hp<=0).forEach(c=>{ S(c).hp=Math.max(1,Math.round(S(c).hpMax*(Number(sk.revivePercent)||.20))); count++; });
+      if(sk.fullPartyHeal) party.forEach(c=>{S(c).hp=S(c).hpMax;});
+    }else if(sk.kind==="cleanse"){
+      party.forEach(c=>{ const n=clearNegativeConditions(c,{poisonOnly:false}); total+=n; if(n)count++; });
+    }else if(sk.kind==="mpTransfer"){
+      state.battleActive.map(id=>roster[id]).filter(c=>c&&S(c).hp>0).forEach(c=>{const amount=Math.min(S(c).mpMax-S(c).mp,sk.restoreMp);S(c).mp+=amount;total+=amount;count++;});
+    }
+    updateRunHud();
+    renderExploreSkillList();
+    const text=sk.kind==="heal"?`${count}人・合計HP ${total} 回復`:sk.kind==="revive"?`${count}人を復活${sk.fullPartyHeal?"＋全員全回復":""}`:sk.kind==="cleanse"?`${total}個の状態異常を解除`:`合計MP ${total} 回復`;
+    toast(`${actor.name} の${sk.name}：${text}`);
+  }
+
   function selectExploreSkill(actorId,skillId){
     const actor=roster[actorId],sk=skills[skillId];
     if(!actor || !sk || !sk.fieldUse) return;
     state.exploreSkillActorId=actorId;
     state.exploreSkillId=skillId;
+    const ast=S(actor);
+    if(ast.hp<=0){ toast(`${actor.name} は戦闘不能でスキルを使えません`); return; }
+    if(ast.mp<sk.cost){ toast(`${actor.name} のMPが足りません`); return; }
     if(sk.fieldUse==="return"){
-      const ast=S(actor);
-      if(ast.hp<=0){ toast(`${actor.name} は戦闘不能でスキルを使えません`); return; }
-      if(ast.mp<sk.cost){ toast(`${actor.name} のMPが足りません`); return; }
       modal("🌀 リターン",`${actor.name}がリターンを使用します。\nMPを ${sk.cost} 消費してミレスタへ帰還しますか？`,[
-        ["帰還する",()=>{
-          ast.mp-=sk.cost;
-          closeModal();
-          closeExploreSkillMenu();
-          finishRun("リターンでミレスタへ帰還しました");
-        }],
+        ["帰還する",()=>{ ast.mp-=sk.cost; closeModal(); closeExploreSkillMenu(); finishRun("リターンでミレスタへ帰還しました"); }],
         ["やめる",closeModal]
       ]);
       return;
     }
+    if(sk.fieldUse==="stealth"){
+      if(state.run.stealthUsed){ toast("このマップではすでにステルスを使用しています"); return; }
+      const battles=state.run.nodes.filter(n=>n.type==="battle" && !state.run.visited.has(n.id));
+      if(!battles.length){ toast("未踏の戦闘マスがありません"); return; }
+      ast.mp-=sk.cost;
+      state.run.stealthUsed=true;
+      let erased=0;
+      battles.forEach(n=>{ if(Math.random()<sk.successRate){n.type="empty";erased++;} });
+      renderMap(); updateRunHud(); renderExploreSkillList();
+      toast(`ステルス：戦闘マス ${erased}個が静まり返った`);
+      return;
+    }
+    if(["allyAll","allyAllKO","miracle","allyAllCleanse","frontAllMP"].includes(sk.fieldUse)){
+      useExploreAllSkill(actor,sk); return;
+    }
     renderExploreSkillTargets();
+  }
+
+  function fieldTargetUsable(sk,c){
+    const st=S(c);
+    switch(sk.fieldUse){
+      case "ally": return st.hp>0 && st.hp<st.hpMax;
+      case "allyKO": return st.hp<=0;
+      case "allyCleanse": return ["poison","blind","silence","shock","berserk"].some(k=>conditionsOf(c)[k]);
+      case "allyMP": return st.hp>0 && st.mp<st.mpMax;
+      default:return false;
+    }
   }
 
   function renderExploreSkillTargets(){
@@ -6060,7 +6369,7 @@
     [...state.battleActive,...state.battleReserve].forEach(id=>{
       const c=roster[id],st=S(c);
       const pos=activeSet.has(id)?"バトルメンバー":"控え";
-      const canUse=ast.hp>0 && ast.mp>=sk.cost && (sk.kind!=="heal" || (st.hp>0 && st.hp<st.hpMax));
+      const canUse=ast.hp>0 && ast.mp>=sk.cost && fieldTargetUsable(sk,c);
       const card=document.createElement("button");
       card.className="item-target-card";
       card.disabled=!canUse;
@@ -6077,18 +6386,20 @@
     const ast=S(actor),tst=S(target);
     if(ast.hp<=0){ toast(`${actor.name} は戦闘不能でスキルを使えません`); renderExploreSkillTargets(); return; }
     if(ast.mp<sk.cost){ toast(`${actor.name} のMPが足りません`); renderExploreSkillTargets(); return; }
+    if(!fieldTargetUsable(sk,target)){ toast("その対象には今は使えません"); return; }
+    ast.mp-=sk.cost;
+    let text="";
     if(sk.kind==="heal"){
-      if(tst.hp<=0){ toast("戦闘不能の仲間はヒールの対象にできません"); return; }
-      if(tst.hp>=tst.hpMax){ toast(`${target.name} のHPは満タンです`); return; }
-      const healPower=Math.round(sk.base + (ast.magic||15)*.25 + rand(sk.variance));
-      const amount=Math.min(tst.hpMax-tst.hp,healPower);
-      ast.mp-=sk.cost;
-      tst.hp=Math.min(tst.hpMax,tst.hp+amount);
-      updateRunHud();
-      renderExploreSkillTargets();
-      toast(`${actor.name} の${sk.name}：${target.name} のHPが ${amount} 回復`);
-      return;
+      const power=healAmountForSkill(actor,sk),amount=Math.min(tst.hpMax-tst.hp,sk.fullHeal?tst.hpMax-tst.hp:power);
+      tst.hp+=amount; text=`${target.name} のHPが ${amount} 回復`;
+    }else if(sk.kind==="revive"){
+      const amount=Math.max(1,Math.round(tst.hpMax*(Number(sk.revivePercent)||.20))); tst.hp=Math.min(tst.hpMax,amount); text=`${target.name} がHP ${tst.hp}で復活`;
+    }else if(sk.kind==="cleanse"){
+      const removed=clearNegativeConditions(target,{poisonOnly:Array.isArray(sk.statuses)&&sk.statuses[0]==="poison"}); text=`${target.name} の状態異常を ${removed}個解除`;
+    }else if(sk.kind==="mpTransfer"){
+      const amount=Math.min(tst.mpMax-tst.mp,sk.restoreMp); tst.mp+=amount; text=`${target.name} のMPが ${amount} 回復`;
     }
+    updateRunHud(); renderExploreSkillTargets(); toast(`${actor.name} の${sk.name}：${text}`);
   }
 
   function openExploreSkillMenu(){
@@ -6231,6 +6542,11 @@
         if(bonus){state.gold+=bonus;state.run.runGold+=bonus;}
         modal("？ "+title, body+(bonus?`\n\n${bonus}G を見つけた。`:""),
           [["進む",()=>{closeModal();updateRunHud();}]]);
+        break;
+      }
+      case "empty":{
+        updateRunHud();
+        toast("何も起こらなかった");
         break;
       }
       case "goal":
