@@ -455,6 +455,48 @@
     margin-bottom:6px;border:1px solid #4a667e;border-radius:8px;background:#172b3d;color:#dce8f0;
     padding:5px 8px;font-size:9px;font-weight:900;cursor:pointer;
   }
+
+  /* v0.31c exploration item flow: item -> target, with battle/reserve split */
+  .explore-item-panel{width:min(760px,96vw);overflow:hidden}
+  #exploreItemTargetView[hidden],#exploreItemListView[hidden]{display:none!important}
+  .explore-field-item-list{max-height:min(410px,65vh);overflow:auto}
+  .explore-item-summary{margin-bottom:6px;min-height:46px}
+  .explore-item-party-columns{display:grid;grid-template-columns:40% 60%;gap:7px;min-height:0}
+  .explore-item-party-column{min-width:0;border:1px solid #314d63;border-radius:10px;background:#0c1722;padding:6px;overflow:hidden}
+  .explore-item-party-column.battle{border-color:#6e6336}
+  .explore-item-party-column.reserve{border-color:#3e5e7d}
+  .explore-item-column-head{height:22px;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:0 2px 5px;color:#dce7ef;font-size:9px;font-weight:1000}
+  .explore-item-column-head span{color:#95a9ba;font-size:8px}
+  .explore-item-target-list{display:grid;gap:4px;align-content:start}
+  .explore-item-target-card{width:100%;min-width:0;height:48px;display:grid;grid-template-columns:38px minmax(0,1fr);gap:6px;align-items:center;padding:4px 6px;border:1px solid #365269;border-radius:8px;background:#111f2c;color:inherit;text-align:left;cursor:pointer}
+  .explore-item-target-card:hover:not(:disabled){border-color:#7bd89c;filter:brightness(1.08)}
+  .explore-item-target-card:disabled{opacity:.38;filter:grayscale(.45);cursor:not-allowed}
+  .explore-item-target-thumb{width:38px;height:38px;border-radius:7px;overflow:hidden;background:#09141e;border:1px solid #29445a;display:flex;align-items:center;justify-content:center}
+  .explore-item-target-thumb img{width:100%;height:100%;object-fit:contain}
+  .explore-item-target-thumb span{font-size:20px}
+  .explore-item-target-main{min-width:0}
+  .explore-item-target-name{font-size:10px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+  .explore-item-mini-resource{display:grid;grid-template-columns:16px minmax(0,1fr) 55px;gap:3px;align-items:center;margin-top:1px}
+  .explore-item-mini-resource b{font-size:6px;color:#9fb0bf}
+  .explore-item-mini-resource span:last-child{text-align:right;font-size:7px;color:#e5edf4;font-weight:900}
+  .explore-item-mini-bar{height:4px;border-radius:999px;background:#263746;overflow:hidden}
+  .explore-item-mini-bar i{display:block;height:100%;background:linear-gradient(90deg,#48b972,#79df9a)}
+  .explore-item-mini-bar.mp i{background:linear-gradient(90deg,#4c78c7,#6ba1f0)}
+  .explore-item-target-empty{height:40px;display:flex;align-items:center;justify-content:center;border:1px dashed #30475a;border-radius:8px;color:#667b8e;font-size:8px}
+  @media(max-height:520px){
+    .explore-item-panel{padding:8px}
+    .explore-item-summary{min-height:38px;padding:5px 7px;margin-bottom:4px}
+    .explore-item-party-columns{gap:5px}
+    .explore-item-party-column{padding:4px}
+    .explore-item-column-head{height:18px;font-size:8px;padding-bottom:3px}
+    .explore-item-target-list{gap:3px}
+    .explore-item-target-card{height:37px;grid-template-columns:29px minmax(0,1fr);gap:4px;padding:3px 4px}
+    .explore-item-target-thumb{width:29px;height:29px}
+    .explore-item-target-name{font-size:8px;margin-bottom:0}
+    .explore-item-mini-resource{grid-template-columns:13px minmax(0,1fr) 44px;gap:2px}
+    .explore-item-mini-resource b{font-size:5px}.explore-item-mini-resource span:last-child{font-size:6px}
+    .explore-item-mini-bar{height:3px}
+  }
   .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
   .equipment-slots,.equipment-preview{border:1px solid #2d465a;border-radius:10px;background:#0d1823;padding:7px;min-width:0}
   .equipment-slot-list{display:grid;gap:5px}
@@ -1808,11 +1850,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.31b</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.31c</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
-    <div class="resource"><span class="badge">🧪 <span id="potionText">2</span></span></div>
   </header>
 
   <main id="homeScreen" class="screen active">
@@ -1977,7 +2018,7 @@
       <div class="party-list" id="explorePartyList"></div>
       <button class="reserve-chip" id="exploreReserveBtn">👥 パーティ編成</button>
       <button class="reserve-chip" id="exploreSkillBtn">✨ スキル</button>
-      <button class="reserve-chip" id="exploreItemBtn">🧪 アイテム　ポーション ×2</button>
+      <button class="reserve-chip" id="exploreItemBtn">🧪 アイテム</button>
       <div class="run-info">
         <div class="statbox">進行<strong id="floorText">入口</strong></div>
         <div class="statbox">獲得G<strong id="runGoldText">0</strong></div>
@@ -2106,21 +2147,34 @@
 </div>
 
 <div class="swap-modal" id="exploreItemModal">
-  <div class="swap-panel skill-select-panel">
+  <div class="swap-panel skill-select-panel explore-item-panel">
     <div class="swap-head">
       <h2>探索中のアイテム</h2>
-      <p>使用するアイテムを選択</p>
+      <p id="exploreItemLead">使用するアイテムを選択</p>
       <button class="swap-close" id="exploreItemCloseBtn">閉じる</button>
     </div>
-    <button class="field-item-btn" id="exploreReturnFeatherBtn" type="button">
-      <span class="icon">🪶</span>
-      <span><strong>帰還の羽</strong><small>探索を終了し、ミレスタへ即座に帰還する。戦闘中は使用不可。</small></span>
-      <span class="field-item-count" id="returnFeatherCount">×1</span>
-    </button>
-    <div class="skill-list" id="exploreFieldItemList" style="max-height:150px;margin-bottom:7px"></div>
-    <div class="item-summary-note" id="exploreItemSummary"></div>
-    <div class="item-target-grid" id="exploreItemTargets"></div>
-    <div class="swap-note">ポーションはバトルメンバーと控えの両方に使用できます。帰還の羽は探索中のみ使用できます。</div>
+    <div id="exploreItemListView">
+      <button class="field-item-btn" id="exploreReturnFeatherBtn" type="button">
+        <span class="icon">🪶</span>
+        <span><strong>帰還の羽</strong><small>探索を終了し、ミレスタへ即座に帰還する。</small></span>
+        <span class="field-item-count" id="returnFeatherCount">×1</span>
+      </button>
+      <div class="skill-list explore-field-item-list" id="exploreFieldItemList"></div>
+    </div>
+    <div id="exploreItemTargetView" hidden>
+      <button class="explore-skill-back" id="exploreItemBackBtn" type="button">← アイテム一覧へ</button>
+      <div class="item-summary-note explore-item-summary" id="exploreItemSummary"></div>
+      <div class="explore-item-party-columns">
+        <section class="explore-item-party-column battle">
+          <div class="explore-item-column-head">⚔ バトルメンバー <span id="exploreItemBattleCount">0 / 4</span></div>
+          <div class="explore-item-target-list" id="exploreItemBattleTargets"></div>
+        </section>
+        <section class="explore-item-party-column reserve">
+          <div class="explore-item-column-head">🛡 控え <span id="exploreItemReserveCount">0 / 6</span></div>
+          <div class="explore-item-target-list" id="exploreItemReserveTargets"></div>
+        </section>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2312,7 +2366,7 @@
   }
   function updateHeader(){
     $("goldText").textContent = state.gold;
-    $("potionText").textContent = state.potions;
+    const potionText=$("potionText"); if(potionText) potionText.textContent = state.potions;
     const exploreItemBtn=$("exploreItemBtn");
     if(exploreItemBtn) exploreItemBtn.textContent=`🧪 アイテム`;
     const featherCount=$("returnFeatherCount");
@@ -2362,7 +2416,7 @@
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31c"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2888,13 +2942,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31c";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31c";
     updateHeader();
   };
 
@@ -6136,7 +6190,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31c";
       updateHeader();
       return;
     }
@@ -6144,7 +6198,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31c";
   }
 
   async function attemptEscape(){
@@ -6441,7 +6495,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31c";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -6449,7 +6503,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31c";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -6573,7 +6627,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31c";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -6632,7 +6686,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31c";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -6656,7 +6710,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31c";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -7210,14 +7264,49 @@
   }
 
   function fieldItemTargetUsable(itemId,c){ const st=S(c); if(itemId==="potion")return st.hp>0&&st.hp<st.hpMax;if(itemId==="antidote")return st.hp>0&&!!conditionsOf(c).poison;if(itemId==="lifeStone")return st.hp<=0;return false; }
-  function renderExploreItemMenu(){
-    const featherBtn=$("exploreReturnFeatherBtn"),featherCount=$("returnFeatherCount"); if(featherCount)featherCount.textContent=`×${state.returnFeathers}`;if(featherBtn)featherBtn.disabled=state.returnFeathers<=0;
-    const choices=$("exploreFieldItemList"); choices.innerHTML=""; ["potion","antidote","lifeStone"].forEach(id=>{const item=ITEMS[id],count=itemCount(id);const b=document.createElement("button");b.className="skill-option";b.disabled=count<=0;b.innerHTML=`<span class="skill-option-icon">${item.icon}</span><span class="skill-option-main"><span class="skill-option-name">${item.name}</span><span class="skill-option-desc">${item.desc}</span></span><span class="skill-option-meta">× ${count}<small>${id===state.exploreItemId?"選択中":"対象を選ぶ"}</small></span>`;b.onclick=()=>{state.exploreItemId=id;renderExploreItemMenu();};choices.appendChild(b);});
-    const item=ITEMS[state.exploreItemId]||ITEMS.potion; $("exploreItemSummary").innerHTML=`<span style="font-size:24px">${item.icon}</span><span><strong>${item.name} ×${itemCount(item.id)}</strong><br>${item.desc}</span>`;
-    const box=$("exploreItemTargets");box.innerHTML="";const activeSet=new Set(state.battleActive);[...state.battleActive,...state.battleReserve].forEach(id=>{const c=roster[id],st=S(c),pos=activeSet.has(id)?"バトルメンバー":"控え",canUse=itemCount(item.id)>0&&fieldItemTargetUsable(item.id,c);const card=document.createElement("button");card.className="item-target-card";card.disabled=!canUse;card.innerHTML=`<span class="item-target-name">${c.name}</span><span class="item-target-pos">${pos}</span><span class="item-target-hp"><b>HP</b><span class="skill-party-bar"><i style="width:${hpPct(c)}%"></i></span><span>${st.hp}/${st.hpMax}</span></span>`;card.onclick=()=>useExploreFieldItem(id);box.appendChild(card);});
+  function renderExploreItemList(){
+    $("exploreItemListView").hidden=false;
+    $("exploreItemTargetView").hidden=true;
+    $("exploreItemLead").textContent="使用するアイテムを選択";
+    const featherBtn=$("exploreReturnFeatherBtn"),featherCount=$("returnFeatherCount");
+    if(featherCount) featherCount.textContent=`×${state.returnFeathers}`;
+    if(featherBtn) featherBtn.disabled=state.returnFeathers<=0;
+    const choices=$("exploreFieldItemList"); choices.innerHTML="";
+    ["potion","antidote","lifeStone"].forEach(id=>{
+      const item=ITEMS[id],count=itemCount(id);
+      const b=document.createElement("button");
+      b.className="skill-option"; b.disabled=count<=0;
+      b.innerHTML=`<span class="skill-option-icon">${item.icon}</span><span class="skill-option-main"><span class="skill-option-name">${item.name}</span><span class="skill-option-desc">${item.desc}</span></span><span class="skill-option-meta">× ${count}<small>対象を選ぶ</small></span>`;
+      b.onclick=()=>{state.exploreItemId=id;renderExploreItemTargets();};
+      choices.appendChild(b);
+    });
   }
-  function openExploreItemMenu(){ if(!state.run)return;renderExploreItemMenu();$("exploreItemModal").classList.add("show"); }
-  function useExploreFieldItem(id){ const c=roster[id],item=ITEMS[state.exploreItemId];if(!c||!item||itemCount(item.id)<=0)return;const st=S(c);if(!fieldItemTargetUsable(item.id,c)){toast("その対象には今は使えません");return;}removeItemCount(item.id,1);let text="";if(item.id==="potion"){const amount=Math.min(item.heal,st.hpMax-st.hp);st.hp+=amount;text=`HPが ${amount} 回復`;}else if(item.id==="antidote"){conditionsOf(c).poison=false;text="毒が消えた";}else if(item.id==="lifeStone"){st.hp=Math.max(1,Math.floor(st.hpMax*.20));text=`HP ${st.hp}で復活`;}updateRunHud();renderExploreItemMenu();toast(`${c.name}：${text}`); }
+  function exploreItemTargetCard(c,item){
+    const st=S(c),canUse=itemCount(item.id)>0&&fieldItemTargetUsable(item.id,c);
+    const card=document.createElement("button"); card.className="explore-item-target-card"; card.disabled=!canUse;
+    const portrait=c.img?`<img src="${c.img}" alt="">`:`<span>👤</span>`;
+    const hp=Math.max(0,Math.min(100,st.hpMax?st.hp/st.hpMax*100:0));
+    const mp=Math.max(0,Math.min(100,st.mpMax?st.mp/st.mpMax*100:0));
+    card.innerHTML=`<span class="explore-item-target-thumb">${portrait}</span><span class="explore-item-target-main"><span class="explore-item-target-name">${c.name}</span><span class="explore-item-mini-resource"><b>HP</b><span class="explore-item-mini-bar"><i style="width:${hp}%"></i></span><span>${st.hp}/${st.hpMax}</span></span><span class="explore-item-mini-resource"><b>MP</b><span class="explore-item-mini-bar mp"><i style="width:${mp}%"></i></span><span>${st.mp}/${st.mpMax}</span></span></span>`;
+    card.onclick=()=>useExploreFieldItem(c.id);
+    return card;
+  }
+  function renderExploreItemTargets(){
+    const item=ITEMS[state.exploreItemId]||ITEMS.potion;
+    $("exploreItemListView").hidden=true;
+    $("exploreItemTargetView").hidden=false;
+    $("exploreItemLead").textContent="使用する相手を選択";
+    $("exploreItemSummary").innerHTML=`<span style="font-size:24px">${item.icon}</span><span><strong>${item.name} ×${itemCount(item.id)}</strong><br>${item.desc}</span>`;
+    $("exploreItemBattleCount").textContent=`${state.battleActive.length} / 4`;
+    $("exploreItemReserveCount").textContent=`${state.battleReserve.length} / 6`;
+    const battle=$("exploreItemBattleTargets"),reserve=$("exploreItemReserveTargets"); battle.innerHTML="";reserve.innerHTML="";
+    state.battleActive.forEach(id=>{const c=roster[id];if(c)battle.appendChild(exploreItemTargetCard(c,item));});
+    state.battleReserve.forEach(id=>{const c=roster[id];if(c)reserve.appendChild(exploreItemTargetCard(c,item));});
+    if(!state.battleActive.length) battle.innerHTML='<div class="explore-item-target-empty">バトルメンバーなし</div>';
+    if(!state.battleReserve.length) reserve.innerHTML='<div class="explore-item-target-empty">控えなし</div>';
+  }
+  function openExploreItemMenu(){ if(!state.run)return;renderExploreItemList();$("exploreItemModal").classList.add("show"); }
+  function useExploreFieldItem(id){ const c=roster[id],item=ITEMS[state.exploreItemId];if(!c||!item||itemCount(item.id)<=0)return;const st=S(c);if(!fieldItemTargetUsable(item.id,c)){toast("その対象には今は使えません");return;}removeItemCount(item.id,1);let text="";if(item.id==="potion"){const amount=Math.min(item.heal,st.hpMax-st.hp);st.hp+=amount;text=`HPが ${amount} 回復`;}else if(item.id==="antidote"){conditionsOf(c).poison=false;text="毒が消えた";}else if(item.id==="lifeStone"){st.hp=Math.max(1,Math.floor(st.hpMax*.20));text=`HP ${st.hp}で復活`;}updateRunHud();renderExploreItemTargets();toast(`${c.name}：${text}`); }
 
   function useReturnFeather(){
     if(!state.run || state.returnFeathers<=0) return;
@@ -7239,6 +7328,7 @@
   $("exploreSkillBackBtn").onclick=renderExploreSkillList;
   $("exploreSkillModal").addEventListener("click",e=>{ if(e.target===$("exploreSkillModal")) closeExploreSkillMenu(); });
   $("exploreItemBtn").onclick=openExploreItemMenu;
+  $("exploreItemBackBtn").onclick=renderExploreItemList;
   $("exploreItemCloseBtn").onclick=closeExploreItemMenu;
   $("exploreItemModal").addEventListener("click",e=>{ if(e.target===$("exploreItemModal")) closeExploreItemMenu(); });
 
