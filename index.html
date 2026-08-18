@@ -456,46 +456,42 @@
     padding:5px 8px;font-size:9px;font-weight:900;cursor:pointer;
   }
 
-  /* v0.31d exploration item flow: card grid target picker */
-  .explore-item-panel{width:min(800px,96vw);overflow:hidden}
+  /* v0.31e exploration item flow: portrait + status strip target picker */
+  .explore-item-panel{width:min(980px,96vw);overflow:hidden}
   #exploreItemTargetView[hidden],#exploreItemListView[hidden]{display:none!important}
   .explore-field-item-list{max-height:min(410px,65vh);overflow:auto}
-  .explore-item-summary{margin-bottom:6px;min-height:44px}
-  .explore-item-party-columns{display:grid;grid-template-columns:1fr;gap:6px;min-height:0}
-  .explore-item-party-column{min-width:0;border:1px solid #314d63;border-radius:10px;background:#0c1722;padding:6px;overflow:hidden}
-  .explore-item-party-column.battle{border-color:#6e6336}
-  .explore-item-party-column.reserve{border-color:#3e5e7d}
-  .explore-item-column-head{height:20px;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:0 2px 4px;color:#dce7ef;font-size:9px;font-weight:1000}
-  .explore-item-column-head span{color:#95a9ba;font-size:8px}
-  .explore-item-party-column.battle .explore-item-target-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
-  .explore-item-party-column.reserve .explore-item-target-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
-  .explore-item-target-card{min-width:0;display:grid;grid-template-rows:auto minmax(42px,1fr) auto auto;gap:3px;align-items:center;padding:5px;border:1px solid #365269;border-radius:9px;background:#111f2c;color:inherit;text-align:center;cursor:pointer;overflow:hidden}
-  .explore-item-target-card:hover:not(:disabled){border-color:#7bd89c;filter:brightness(1.08)}
-  .explore-item-target-card:disabled{opacity:.38;filter:grayscale(.45);cursor:not-allowed}
-  .explore-item-target-name{font-size:9px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .explore-item-target-thumb{width:100%;min-height:42px;max-height:64px;border-radius:7px;overflow:hidden;background:#09141e;border:1px solid #29445a;display:flex;align-items:center;justify-content:center}
+  #exploreItemTargetView{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 8px;align-items:center;min-height:0}
+  #exploreItemTargetView .explore-skill-back{margin:0;white-space:nowrap;align-self:stretch}
+  .explore-item-summary{margin:0;min-height:42px;padding:6px 9px}
+  .explore-item-target-strip{grid-column:1/-1;display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;align-items:start;min-height:0;padding:7px;border:1px solid #314d63;border-radius:11px;background:#0c1722;overflow:hidden}
+  .explore-item-target-card{min-width:0;border:0;background:transparent;color:inherit;padding:0;cursor:pointer;text-align:center;display:grid;grid-template-rows:auto auto;gap:5px;overflow:visible}
+  .explore-item-target-card:hover:not(:disabled) .explore-item-target-thumb,.explore-item-target-card:hover:not(:disabled) .explore-item-target-stats{border-color:#7bd89c;filter:brightness(1.08)}
+  .explore-item-target-card:disabled{opacity:.35;filter:grayscale(.45);cursor:not-allowed}
+  .explore-item-target-card.reserve-start{position:relative}
+  .explore-item-target-card.reserve-start:before{content:"";position:absolute;left:-3px;top:3px;bottom:3px;width:1px;background:#506981;opacity:.8}
+  .explore-item-target-thumb{width:100%;aspect-ratio:1/1;border-radius:9px;overflow:hidden;background:#09141e;border:1px solid #29445a;display:flex;align-items:center;justify-content:center;transition:.15s}
   .explore-item-target-thumb img{width:100%;height:100%;object-fit:contain;object-position:center center}
-  .explore-item-target-thumb span{font-size:24px}
-  .explore-item-target-main{display:contents}
-  .explore-item-mini-resource{display:grid;grid-template-columns:15px minmax(0,1fr) auto;gap:3px;align-items:center;width:100%;margin:0}
-  .explore-item-mini-resource b{font-size:6px;color:#9fb0bf}
-  .explore-item-mini-resource span:last-child{text-align:right;font-size:7px;color:#e5edf4;font-weight:900;white-space:nowrap}
-  .explore-item-mini-bar{height:4px;border-radius:999px;background:#263746;overflow:hidden}
+  .explore-item-target-thumb span{font-size:28px}
+  .explore-item-target-stats{min-width:0;padding:5px 4px;border:1px solid #365269;border-radius:8px;background:#111f2c;transition:.15s}
+  .explore-item-target-name{display:block;margin-bottom:4px;font-size:9px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .explore-item-mini-resource{display:grid;grid-template-columns:16px minmax(0,1fr);gap:2px 3px;align-items:center;width:100%;margin-top:3px}
+  .explore-item-mini-resource b{font-size:6px;color:#9fb0bf;text-align:left}
+  .explore-item-mini-resource .value{text-align:right;font-size:7px;color:#e5edf4;font-weight:900;white-space:nowrap;grid-column:2}
+  .explore-item-mini-bar{grid-column:1/-1;height:4px;border-radius:999px;background:#263746;overflow:hidden}
   .explore-item-mini-bar i{display:block;height:100%;background:linear-gradient(90deg,#48b972,#79df9a)}
   .explore-item-mini-bar.mp i{background:linear-gradient(90deg,#4c78c7,#6ba1f0)}
-  .explore-item-target-empty{grid-column:1/-1;height:38px;display:flex;align-items:center;justify-content:center;border:1px dashed #30475a;border-radius:8px;color:#667b8e;font-size:8px}
+  .explore-item-target-empty{grid-column:1/-1;height:78px;display:flex;align-items:center;justify-content:center;border:1px dashed #30475a;border-radius:8px;color:#667b8e;font-size:9px}
   @media(max-height:520px){
     .explore-item-panel{padding:8px}
-    .explore-item-summary{min-height:34px;padding:4px 6px;margin-bottom:4px}
-    .explore-item-party-columns{gap:4px}
-    .explore-item-party-column{padding:4px}
-    .explore-item-column-head{height:17px;font-size:8px;padding-bottom:2px}
-    .explore-item-party-column.battle .explore-item-target-list,.explore-item-party-column.reserve .explore-item-target-list{gap:3px}
-    .explore-item-target-card{grid-template-rows:auto minmax(28px,1fr) auto auto;gap:2px;padding:3px}
-    .explore-item-target-name{font-size:7px}
-    .explore-item-target-thumb{min-height:28px;max-height:40px}
-    .explore-item-mini-resource{grid-template-columns:12px minmax(0,1fr) auto;gap:2px}
-    .explore-item-mini-resource b{font-size:5px}.explore-item-mini-resource span:last-child{font-size:6px}
+    #exploreItemTargetView{gap:4px 6px}
+    .explore-item-summary{min-height:34px;padding:4px 6px}
+    .explore-item-target-strip{gap:3px;padding:5px}
+    .explore-item-target-card{gap:3px}
+    .explore-item-target-thumb{border-radius:7px}
+    .explore-item-target-stats{padding:3px 3px;border-radius:7px}
+    .explore-item-target-name{font-size:8px;margin-bottom:2px}
+    .explore-item-mini-resource{grid-template-columns:14px minmax(0,1fr);gap:1px 2px;margin-top:2px}
+    .explore-item-mini-resource b{font-size:5px}.explore-item-mini-resource .value{font-size:6px}
     .explore-item-mini-bar{height:3px}
   }
   .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
@@ -1851,7 +1847,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.31d</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.31e</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2165,16 +2161,7 @@
     <div id="exploreItemTargetView" hidden>
       <button class="explore-skill-back" id="exploreItemBackBtn" type="button">← アイテム一覧へ</button>
       <div class="item-summary-note explore-item-summary" id="exploreItemSummary"></div>
-      <div class="explore-item-party-columns">
-        <section class="explore-item-party-column battle">
-          <div class="explore-item-column-head">⚔ バトルメンバー <span id="exploreItemBattleCount">0 / 4</span></div>
-          <div class="explore-item-target-list" id="exploreItemBattleTargets"></div>
-        </section>
-        <section class="explore-item-party-column reserve">
-          <div class="explore-item-column-head">🛡 控え <span id="exploreItemReserveCount">0 / 6</span></div>
-          <div class="explore-item-target-list" id="exploreItemReserveTargets"></div>
-        </section>
-      </div>
+      <div class="explore-item-target-strip" id="exploreItemTargets"></div>
     </div>
   </div>
 </div>
@@ -2417,7 +2404,7 @@
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31d"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31e"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2943,13 +2930,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31e";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31e";
     updateHeader();
   };
 
@@ -6191,7 +6178,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31e";
       updateHeader();
       return;
     }
@@ -6199,7 +6186,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31e";
   }
 
   async function attemptEscape(){
@@ -6496,7 +6483,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31e";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -6504,7 +6491,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31e";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -6628,7 +6615,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31e";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -6687,7 +6674,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31e";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -6711,7 +6698,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31e";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -7283,13 +7270,13 @@
       choices.appendChild(b);
     });
   }
-  function exploreItemTargetCard(c,item){
+  function exploreItemTargetCard(c,item,isReserveStart=false){
     const st=S(c),canUse=itemCount(item.id)>0&&fieldItemTargetUsable(item.id,c);
-    const card=document.createElement("button"); card.className="explore-item-target-card"; card.disabled=!canUse;
+    const card=document.createElement("button"); card.className="explore-item-target-card"+(isReserveStart?" reserve-start":""); card.disabled=!canUse;
     const portrait=c.img?`<img src="${c.img}" alt="">`:`<span>👤</span>`;
     const hp=Math.max(0,Math.min(100,st.hpMax?st.hp/st.hpMax*100:0));
     const mp=Math.max(0,Math.min(100,st.mpMax?st.mp/st.mpMax*100:0));
-    card.innerHTML=`<span class="explore-item-target-name">${c.name}</span><span class="explore-item-target-thumb">${portrait}</span><span class="explore-item-mini-resource"><b>HP</b><span class="explore-item-mini-bar"><i style="width:${hp}%"></i></span><span>${st.hp}/${st.hpMax}</span></span><span class="explore-item-mini-resource"><b>MP</b><span class="explore-item-mini-bar mp"><i style="width:${mp}%"></i></span><span>${st.mp}/${st.mpMax}</span></span>`;
+    card.innerHTML=`<span class="explore-item-target-thumb">${portrait}</span><span class="explore-item-target-stats"><span class="explore-item-target-name">${c.name}</span><span class="explore-item-mini-resource"><b>HP</b><span class="value">${st.hp}/${st.hpMax}</span><span class="explore-item-mini-bar"><i style="width:${hp}%"></i></span></span><span class="explore-item-mini-resource"><b>MP</b><span class="value">${st.mp}/${st.mpMax}</span><span class="explore-item-mini-bar mp"><i style="width:${mp}%"></i></span></span></span>`;
     card.onclick=()=>useExploreFieldItem(c.id);
     return card;
   }
@@ -7299,13 +7286,12 @@
     $("exploreItemTargetView").hidden=false;
     $("exploreItemLead").textContent="使用する相手を選択";
     $("exploreItemSummary").innerHTML=`<span style="font-size:24px">${item.icon}</span><span><strong>${item.name} ×${itemCount(item.id)}</strong><br>${item.desc}</span>`;
-    $("exploreItemBattleCount").textContent=`${state.battleActive.length} / 4`;
-    $("exploreItemReserveCount").textContent=`${state.battleReserve.length} / 6`;
-    const battle=$("exploreItemBattleTargets"),reserve=$("exploreItemReserveTargets"); battle.innerHTML="";reserve.innerHTML="";
-    state.battleActive.forEach(id=>{const c=roster[id];if(c)battle.appendChild(exploreItemTargetCard(c,item));});
-    state.battleReserve.forEach(id=>{const c=roster[id];if(c)reserve.appendChild(exploreItemTargetCard(c,item));});
-    if(!state.battleActive.length) battle.innerHTML='<div class="explore-item-target-empty">バトルメンバーなし</div>';
-    if(!state.battleReserve.length) reserve.innerHTML='<div class="explore-item-target-empty">控えなし</div>';
+    const targets=$("exploreItemTargets"); targets.innerHTML="";
+    let added=0;
+    state.battleActive.forEach(id=>{const c=roster[id];if(c){targets.appendChild(exploreItemTargetCard(c,item,false));added++;}});
+    let reserveFirst=true;
+    state.battleReserve.forEach(id=>{const c=roster[id];if(c){targets.appendChild(exploreItemTargetCard(c,item,reserveFirst&&added>0));reserveFirst=false;added++;}});
+    if(!added) targets.innerHTML='<div class="explore-item-target-empty">対象にできる仲間がいません</div>';
   }
   function openExploreItemMenu(){ if(!state.run)return;renderExploreItemList();$("exploreItemModal").classList.add("show"); }
   function useExploreFieldItem(id){ const c=roster[id],item=ITEMS[state.exploreItemId];if(!c||!item||itemCount(item.id)<=0)return;const st=S(c);if(!fieldItemTargetUsable(item.id,c)){toast("その対象には今は使えません");return;}removeItemCount(item.id,1);let text="";if(item.id==="potion"){const amount=Math.min(item.heal,st.hpMax-st.hp);st.hp+=amount;text=`HPが ${amount} 回復`;}else if(item.id==="antidote"){conditionsOf(c).poison=false;text="毒が消えた";}else if(item.id==="lifeStone"){st.hp=Math.max(1,Math.floor(st.hpMax*.20));text=`HP ${st.hp}で復活`;}updateRunHud();renderExploreItemTargets();toast(`${c.name}：${text}`); }
