@@ -1754,6 +1754,45 @@
     .shop-compare-name{font-size:7.5px}.shop-current-equip,.shop-diff{font-size:6px}
     .shop-action-note{font-size:6.5px}
   }
+
+
+  /* v0.31b: simplify equipment comparison and enlarge readable information */
+  .shop-detail{grid-template-rows:auto auto minmax(0,1fr) auto}
+  .shop-compare{overflow:hidden}
+  .shop-compare-grid{grid-template-columns:1fr;gap:7px;height:100%;align-content:start}
+  .shop-compare-card{grid-template-columns:42px minmax(0,1fr);gap:9px;padding:8px 9px;min-height:58px}
+  .shop-compare-thumb{width:42px;height:46px}
+  .shop-compare-name{font-size:12px;gap:6px}
+  .shop-favorite{font-size:8px;padding:1px 5px}
+  .shop-diff-line{margin-top:6px;gap:5px}
+  .shop-diff{font-size:10px;padding:2px 7px}
+  .shop-nochange{font-size:10px}
+  .shop-action-row{grid-template-columns:minmax(0,1fr) 112px}
+  .shop-action-note:empty{display:block}
+  .shop-foot{justify-content:flex-start}
+  .shop-rule,.shop-current-equip,.shop-compare-title{display:none!important}
+
+  @media(max-height:520px){
+    .shop-compare-grid{gap:4px}
+    .shop-compare-card{grid-template-columns:34px minmax(0,1fr);gap:7px;padding:5px 7px;min-height:43px}
+    .shop-compare-thumb{width:34px;height:37px}
+    .shop-compare-name{font-size:10px}
+    .shop-favorite{font-size:7px}
+    .shop-diff-line{margin-top:4px;gap:3px}
+    .shop-diff{font-size:8px;padding:1px 5px}
+    .shop-nochange{font-size:8px}
+    .shop-action-row{grid-template-columns:minmax(0,1fr) 94px}
+  }
+  @media(max-height:410px){
+    .shop-compare-grid{gap:3px}
+    .shop-compare-card{grid-template-columns:30px minmax(0,1fr);gap:5px;padding:3px 5px;min-height:36px}
+    .shop-compare-thumb{width:30px;height:32px}
+    .shop-compare-name{font-size:9px}
+    .shop-diff-line{margin-top:2px}
+    .shop-diff{font-size:7px;padding:1px 4px}
+    .shop-nochange{font-size:7.5px}
+  }
+
 </style>
 </head>
 <body>
@@ -1769,7 +1808,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.31a</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.31b</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2168,7 +2207,7 @@
         </div>
       </section>
     </div>
-    <div class="shop-foot"><span>所持金</span><strong id="shopGold">0 G</strong><span class="shop-rule">装備売却50% / 消耗品売却25% / 一部売却不可</span></div>
+    <div class="shop-foot"><span>所持金</span><strong id="shopGold">0 G</strong></div>
   </div>
 </div>
 
@@ -2323,7 +2362,7 @@
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2849,13 +2888,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
     updateHeader();
   };
 
@@ -3849,11 +3888,10 @@
     const cards=ids.map(id=>{
       const c=roster[id],slot=item.slot,preview=equipmentPreviewState(c,slot,item.id);
       const chips=SHOP_COMPARE_STATS.map(([key,label,format])=>shopDiffChip(label,preview.cur[key]||0,preview.pre[key]||0,format)).filter(Boolean);
-      const current=equipmentCatalog[ensureEquipment(c)[slot]]?.name||"装備なし";
       const favored=item.slot==="weapon" && item.weaponType && favoriteWeaponTypes(c).includes(item.weaponType);
-      return `<div class="shop-compare-card"><div class="shop-compare-thumb">${c.img?`<img src="${c.img}" alt="${c.name}">`:"👤"}</div><div class="shop-compare-info"><div class="shop-compare-name">${c.name}${favored?`<span class="shop-favorite">得意</span>`:""}</div><div class="shop-current-equip">現在：${current}</div><div class="shop-diff-line">${chips.length?chips.join(""):`<span class="shop-nochange">主要能力は変化なし</span>`}</div></div></div>`;
+      return `<div class="shop-compare-card"><div class="shop-compare-thumb">${c.img?`<img src="${c.img}" alt="${c.name}">`:"👤"}</div><div class="shop-compare-info"><div class="shop-compare-name">${c.name}${favored?`<span class="shop-favorite">得意</span>`:""}</div><div class="shop-diff-line">${chips.length?chips.join(""):`<span class="shop-nochange">主要能力は変化なし</span>`}</div></div></div>`;
     }).join("");
-    return `<div class="shop-compare-title">BATTLE MEMBER 装備比較 <span>現在装備 → 選択装備</span></div><div class="shop-compare-grid">${cards}</div>`;
+    return `<div class="shop-compare-grid">${cards}</div>`;
   }
   function renderShopDetail(entry,mode){
     const box=$("shopDetail"); if(!box)return;
@@ -3866,7 +3904,7 @@
     let middle="";
     if(entry.kind==="equip") middle=`<div class="shop-compare">${shopEquipCompareHtml(d)}</div>`;
     else middle=`<div class="shop-compare"><div class="shop-consumable-info"><div class="shop-info-row"><span>所持数</span><strong>×${owned}</strong></div><div class="shop-info-row"><span>使用区分</span><strong>${d.battleUse?"戦闘・探索":"探索・特殊"}</strong></div><div class="shop-info-row"><span>売却価格</span><strong>${d.sellable===false?"売却不可":`${sellPriceFor(entry)} G`}</strong></div></div></div>`;
-    const note=mode==="buy"?(can?"1個購入します。":"所持金が足りません。"):(entry.kind==="equip"?`売却可能 ×${free}（装備中の品は売れません）`:`所持 ×${owned}`);
+    const note=mode==="buy"?(can?"":"所持金が足りません。"):(entry.kind==="equip"?`売却可能 ×${free}（装備中の品は売れません）`:`所持 ×${owned}`);
     box.innerHTML=`<div class="shop-detail-head"><div class="shop-detail-icon">${d.icon||"📦"}</div><div class="shop-detail-name"><b>${d.name}</b><small>${entry.kind==="equip"?EQUIPMENT_SLOT_LABELS[d.slot]||"装備":"アイテム"}</small></div><div class="shop-detail-price">${price} G</div></div><div class="shop-detail-desc">${d.desc||"説明はありません。"}</div>${middle}<div class="shop-action-row"><div class="shop-action-note">${note}</div><button class="shop-action-btn${mode==="sell"?" sell":""}" ${can?"":"disabled"}>${mode==="buy"?"購入する":"売却する"}</button></div>`;
     const btn=box.querySelector(".shop-action-btn"); if(btn)btn.onclick=()=>mode==="buy"?buyShopEntry(entry):sellShopEntry(entry);
   }
@@ -6098,7 +6136,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
       updateHeader();
       return;
     }
@@ -6106,7 +6144,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
   }
 
   async function attemptEscape(){
@@ -6403,7 +6441,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -6411,7 +6449,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -6535,7 +6573,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -6594,7 +6632,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -6618,7 +6656,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.31b";
     updateHeader();
     toast("戦闘テストを終了");
   }
