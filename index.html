@@ -1913,6 +1913,39 @@
     .explore-item-target-strip{gap:5px;padding:5px}.explore-item-target-group{gap:3px;padding:3px}
   }
 
+  /* v0.32a: roomy Milesta organize + separate waiting roster */
+  .party-manage-head-actions{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+  .party-manage-shell .party-manage-grid{
+    grid-template-columns:minmax(0,2fr) minmax(0,3fr);grid-template-rows:minmax(0,1fr);
+  }
+  .party-manage-shell .party-manage-column.battle{grid-column:1;grid-row:1}
+  .party-manage-shell .party-manage-column.reserve{grid-column:2;grid-row:1}
+  .party-manage-shell:not(.waiting-view-mode) .party-manage-grid{display:grid}
+  .party-waiting-view{display:none;min-height:0;padding:8px;border-radius:14px;background:rgba(15,27,39,.94);border:1px solid #4b5364;overflow:hidden}
+  .party-manage-shell.waiting-view-mode .party-manage-grid{display:none}
+  .party-manage-shell.waiting-view-mode .party-waiting-view{display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:7px}
+  .party-waiting-view-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:1px 2px 4px}
+  .party-waiting-view-head>div{display:flex;align-items:center;gap:8px;font-size:12px}
+  .party-waiting-view-head span{padding:2px 7px;border-radius:999px;background:#172635;color:#afbdc9;font-size:9px;font-weight:900}
+  .party-manage-shell.explore-mode #partyWaitingOpenBtn{display:none}
+  .party-manage-shell.waiting-view-mode #partyWaitingOpenBtn{display:none}
+  .party-wait-drop{display:block!important;min-height:34px;margin:0;border:1px dashed #657181;border-radius:9px;background:#121a24;color:#93a3b2;font-size:9px;font-weight:900;cursor:pointer}
+  .party-wait-drop.ready{border-color:#d4bd62;color:#f2dc82;background:#292615}
+  .party-wait-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-auto-flow:row;grid-auto-columns:auto;gap:7px;overflow-y:auto;overflow-x:hidden;align-content:start;min-height:0;scrollbar-width:thin}
+  .party-wait-card{height:84px;grid-template-columns:56px minmax(0,1fr);padding:6px}
+  .party-wait-card .party-slot-thumb{width:56px;height:70px}
+  .party-wait-card .party-slot-name{font-size:10px}.party-wait-card .party-slot-meta{font-size:8px}
+  .party-wait-empty{grid-column:1/-1;padding:22px 8px}
+  .party-organize-slot .party-slot-thumb.hero-thumb img{object-fit:contain;object-position:center center;transform:none}
+  .party-organize-slot .party-mini-hp{grid-template-columns:14px minmax(0,1fr) 40px}
+  .party-organize-slot .party-mini-hp i{width:100%}
+  @media(max-height:520px){
+    .party-manage-head-actions{gap:4px}.party-manage-head-actions .small-btn{padding:6px 8px;font-size:9px}
+    .party-wait-list{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+    .party-wait-card{height:58px;grid-template-columns:42px minmax(0,1fr);padding:4px}.party-wait-card .party-slot-thumb{width:42px;height:48px}
+    .party-organize-slot .party-mini-hp{grid-template-columns:11px minmax(0,1fr) 34px}
+  }
+
 </style>
 </head>
 <body>
@@ -1928,7 +1961,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32aa</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -1957,7 +1990,10 @@
           <h2 id="partyManageTitle">仲間編成</h2>
           <p id="partyManageDesc">仲間を選んで、移動先の枠をタップ。主人公は探索パーティから外せませんが、控えには移動できます。</p>
         </div>
-        <button class="small-btn" id="partyBackBtn">← ミレスタへ</button>
+        <div class="party-manage-head-actions">
+          <button class="small-btn" id="partyWaitingOpenBtn">🏠 ミレスタ待機</button>
+          <button class="small-btn" id="partyBackBtn">← ミレスタへ</button>
+        </div>
       </header>
 
       <div class="party-manage-grid" id="partyManageGrid">
@@ -1971,12 +2007,16 @@
           <div class="party-slot-list reserve-slots" id="partyReserveSlots"></div>
         </section>
 
-        <section class="party-manage-column waiting" id="partyWaitingColumn">
-          <div class="party-column-head"><strong>🏠 ミレスタ待機</strong><span id="partyWaitingCount">0</span></div>
-          <button class="party-wait-drop" id="partyWaitDrop">選択中の仲間を待機させる</button>
-          <div class="party-wait-list" id="partyWaitingList"></div>
-        </section>
       </div>
+
+      <section class="party-waiting-view" id="partyWaitingView">
+        <div class="party-waiting-view-head">
+          <div><strong>🏠 ミレスタ待機</strong><span id="partyWaitingCount">0</span></div>
+          <button class="small-btn" id="partyWaitingCloseBtn">← 編成へ戻る</button>
+        </div>
+        <button class="party-wait-drop" id="partyWaitDrop">選択中の仲間をミレスタ待機へ</button>
+        <div class="party-wait-list" id="partyWaitingList"></div>
+      </section>
 
       <footer class="party-detail-panel" id="partyDetailPanel">
         <div class="party-detail-portrait" id="partyDetailPortrait"><span>👤</span></div>
@@ -2386,6 +2426,7 @@
     escapeBaseRate: null,
     partySelection: null,
     partyManageContext: "milesta",
+    partyWaitingViewOpen: false,
     partyDetailCharacterId: "hero",
     characterDetailTab: "status",
     equipmentSlot: "weapon",
@@ -2465,27 +2506,30 @@
     state.partyManageContext=context;
     const exploring=context==="explore";
     $("partyManageShell").classList.toggle("explore-mode",exploring);
+    if(exploring) state.partyWaitingViewOpen=false;
+    $("partyManageShell").classList.toggle("waiting-view-mode",!exploring && state.partyWaitingViewOpen);
     $("partyManageKicker").textContent=exploring ? "EXPEDITION PARTY ORGANIZE" : "MILESTA PARTY ORGANIZE";
     $("partyManageTitle").textContent=exploring ? "探索パーティ編成" : "仲間編成";
     $("partyManageDesc").textContent=exploring
       ? "同行中の10枠を入れ替えます。1人目をタップして選び、次に移動先の枠をタップしてください。主人公も控えへ移動できます。"
-      : "バトル4枠・控え6枠・ミレスタ待機を整理します。主人公はバトルと控えの間だけ移動でき、待機にはできません。";
+      : "探索に同行する10枠を整理します。待機中の仲間は「ミレスタ待機」から管理できます。主人公はバトルと控えの間だけ移動できます。";
     $("partyBackBtn").textContent=exploring ? "← 探索へ" : "← ミレスタへ";
   }
 
   function openPartyManage(context="milesta"){
     state.partySelection=null;
+    state.partyWaitingViewOpen=false;
     configurePartyManageScreen(context);
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.32" : "ミレスタ・仲間編成 v0.32";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.32a" : "ミレスタ・仲間編成 v0.32a";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32a"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -2675,13 +2719,6 @@
 
     const waits=state.partyManageContext==="explore" ? [] : waitingSpeciesIds();
     if(state.partyManageContext!=="explore"){
-      const drop=document.createElement("button");
-      drop.className="party-wait-card wait-drop-inline";
-      drop.textContent="＋ ミレスタ待機へ";
-      drop.disabled=!state.partySelection || state.partySelection.group==="waiting" || state.partySelection.id==="hero";
-      drop.onclick=moveSelectedToWaiting;
-      waiting.appendChild(drop);
-
       if(!waits.length){
         const empty=document.createElement("div"); empty.className="party-wait-empty"; empty.textContent="待機中の仲間はいません"; waiting.appendChild(empty);
       }else{
@@ -2703,7 +2740,10 @@
     $("partyBattleCount").textContent=`${state.battleActive.length} / 4`;
     $("partyReserveCount").textContent=`${state.battleReserve.length} / 6`;
     $("partyWaitingCount").textContent=String(waits.length);
-    $("partyWaitDrop").classList.toggle("ready",state.partyManageContext!=="explore" && !!state.partySelection && state.partySelection.group!=="waiting");
+    const waitDrop=$("partyWaitDrop");
+    const canWait=state.partyManageContext!=="explore" && !!state.partySelection && state.partySelection.group!=="waiting" && state.partySelection.id!=="hero";
+    waitDrop.classList.toggle("ready",canWait);
+    waitDrop.disabled=!canWait;
     if(refreshDetail) updatePartyDetail(state.partySelection?.id || state.battleActive[0] || state.battleReserve[0] || "hero");
   }
 
@@ -2888,7 +2928,7 @@
     const compareTabs=`<div class="equipment-compare-tabs"><button class="equipment-compare-tab${compareMode==="stats"?" active":""}" data-equip-compare="stats">能力</button><button class="equipment-compare-tab${compareMode==="resist"?" active":""}" data-equip-compare="resist">耐性</button></div>`;
     const compareBody=compareMode==="resist" ? `<div class="equipment-resistance-grid">${resistanceHtml}</div>` : `<div class="equipment-stat-grid">${statHtml}</div>`;
     const favoriteText=favorites.length?favorites.map(type=>`${weaponTypeIcons[type]||""} ${weaponTypeLabels[type]||type}`).join(" / "):"未設定";
-    host.innerHTML=`<div class="equipment-combined"><div class="equipment-slots"><div class="equipment-slot-list">${slotsHtml}</div><div class="equipment-favorite">得意武器種：${favoriteText}　※正の能力補正+10%（最低+1）</div></div><div class="equipment-preview">${compareTabs}${compareBody}</div></div>`;
+    host.innerHTML=`<div class="equipment-combined"><div class="equipment-slots"><div class="equipment-slot-list">${slotsHtml}</div><div class="equipment-favorite">得意武器種：${favoriteText}</div></div><div class="equipment-preview">${compareTabs}${compareBody}</div></div>`;
     host.querySelectorAll("[data-equip-slot]").forEach(b=>b.onclick=()=>{state.equipmentSlot=b.dataset.equipSlot;state.equipmentPreviewId=c.equipment[state.equipmentSlot];state.equipmentPickerScrollTop=0;state.equipmentPickerOpen=true;renderEquipmentTab(c);renderEquipmentPicker(c,state.equipmentSlot);});
     host.querySelectorAll("[data-equip-compare]").forEach(b=>b.onclick=()=>{state.equipmentCompareMode=b.dataset.equipCompare;renderEquipmentTab(c);});
   }
@@ -2967,7 +3007,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.31";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.32a";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2975,22 +3015,33 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.32" : "ミレスタ・仲間編成 v0.32";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.32a" : "ミレスタ・仲間編成 v0.32a";
   };
 
+  $("partyWaitingOpenBtn").onclick=()=>{
+    if(state.partyManageContext==="explore") return;
+    state.partyWaitingViewOpen=true;
+    configurePartyManageScreen("milesta");
+    renderPartyManage(false);
+  };
+  $("partyWaitingCloseBtn").onclick=()=>{
+    state.partyWaitingViewOpen=false;
+    configurePartyManageScreen("milesta");
+    renderPartyManage(false);
+  };
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
   $("partyBackBtn").onclick=()=>{
     state.partySelection=null;
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32a";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32a";
     updateHeader();
   };
 
@@ -6214,7 +6265,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32a";
       updateHeader();
       return;
     }
@@ -6222,7 +6273,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32a";
   }
 
   async function attemptEscape(){
@@ -6519,7 +6570,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32a";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -6527,7 +6578,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32a";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -6651,7 +6702,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32a";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -6710,7 +6761,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32a";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -6734,7 +6785,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32a";
     updateHeader();
     toast("戦闘テストを終了");
   }
