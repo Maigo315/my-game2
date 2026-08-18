@@ -1928,7 +1928,7 @@
   .party-waiting-view-head>div{display:flex;align-items:center;gap:8px;font-size:12px}
   .party-waiting-view-head span{padding:2px 7px;border-radius:999px;background:#172635;color:#afbdc9;font-size:9px;font-weight:900}
   .party-manage-shell.explore-mode #partyWaitingOpenBtn,.party-manage-shell.explore-mode #partyWaitSelectedBtn{display:none}
-  .party-manage-shell.waiting-view-mode #partyWaitingOpenBtn,.party-manage-shell.waiting-view-mode #partyWaitSelectedBtn{visibility:hidden;pointer-events:none}
+  .party-manage-shell.waiting-view-mode #partyWaitingOpenBtn,.party-manage-shell.waiting-view-mode #partyWaitSelectedBtn{display:none}
   .party-waiting-open-btn{min-width:156px;border-color:#6875a6;background:linear-gradient(#3d4d7a,#263554);color:#f1f3ff;font-weight:1000}
   .party-wait-selected-btn{min-width:174px;border-color:#9b8140;background:linear-gradient(#57491f,#332b17);color:#fff0a2;font-weight:1000}
   .party-wait-selected-btn:disabled{opacity:.34;filter:grayscale(.45);cursor:default}
@@ -1950,6 +1950,172 @@
     .party-organize-slot .party-mini-hp{grid-template-columns:11px minmax(0,1fr) 34px}
   }
 
+
+  /* v0.32c: cleaner slot cards + horizontal waiting roster */
+  .party-manage-head-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+  .party-manage-head-actions .small-btn{min-width:150px}
+  .party-organize-slot{
+    grid-template-rows:minmax(0,1fr) auto;
+    gap:5px;
+    padding:5px;
+  }
+  .party-organize-slot .party-slot-thumb{
+    width:100%;
+    max-width:100%;
+    aspect-ratio:1/1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    padding:4px;
+    background:rgba(6,16,26,.35);
+  }
+  .party-organize-slot .party-slot-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    object-position:center center;
+  }
+  .party-organize-slot .party-slot-name,
+  .party-organize-slot .party-slot-meta{display:none}
+  .party-organize-slot .party-slot-info{display:grid;gap:3px;min-width:0}
+  .party-organize-slot .party-mini-hp{
+    grid-template-columns:18px minmax(0,1fr) 42px;
+    gap:3px;
+    font-size:7px;
+    align-items:center;
+    margin-top:0;
+  }
+  .party-organize-slot .party-mini-hp i{height:4px;width:100%}
+
+  .party-waiting-view{
+    padding:8px 10px 10px;
+    overflow:hidden;
+  }
+  .party-manage-shell.waiting-view-mode .party-waiting-view{
+    display:grid;
+    grid-template-rows:auto minmax(0,1fr);
+    gap:6px;
+  }
+  .party-waiting-view-head{
+    padding:0 2px 2px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .party-waiting-view-head > div{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:14px;
+    font-weight:1000;
+  }
+  .party-waiting-view-head span{
+    padding:2px 8px;
+    border-radius:999px;
+    background:#172635;
+    color:#afbdc9;
+    font-size:10px;
+    font-weight:900;
+  }
+  .party-wait-list{
+    display:grid;
+    grid-auto-flow:column;
+    grid-auto-columns:minmax(150px,168px);
+    grid-template-columns:none;
+    gap:10px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    align-items:stretch;
+    align-content:stretch;
+    min-height:0;
+    max-height:100%;
+    padding:2px 2px 8px;
+    scrollbar-width:thin;
+    overscroll-behavior:contain;
+    touch-action:pan-x;
+    -webkit-overflow-scrolling:touch;
+  }
+  .party-wait-card{
+    min-width:0;
+    min-height:196px;
+    height:auto;
+    display:grid;
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto auto auto;
+    gap:6px;
+    align-content:start;
+    padding:9px 8px;
+    text-align:center;
+  }
+  .party-wait-card .party-slot-thumb{
+    width:100%;
+    aspect-ratio:1/1;
+    height:auto;
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    padding:4px;
+    background:rgba(6,16,26,.35);
+  }
+  .party-wait-card .party-slot-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    object-position:center center;
+  }
+  .party-wait-card .party-slot-info{
+    display:grid;
+    gap:4px;
+    min-width:0;
+  }
+  .party-wait-card .party-slot-name{
+    display:block;
+    font-size:14px;
+    font-weight:1000;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .party-wait-card .party-slot-meta{
+    display:block;
+    font-size:10px;
+    color:#d6c979;
+  }
+  .party-wait-card .party-mini-hp{
+    grid-template-columns:18px minmax(0,1fr) auto;
+    gap:3px;
+    font-size:9px;
+    align-items:center;
+    margin-top:0;
+  }
+  .party-wait-card .party-mini-hp i{height:4px}
+  .party-wait-empty{
+    min-width:220px;
+    min-height:140px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:20px 10px;
+  }
+
+  @media(max-height:520px){
+    .party-manage-head-actions .small-btn{min-width:136px}
+    .party-organize-slot{padding:4px;gap:3px}
+    .party-organize-slot .party-slot-thumb{padding:3px}
+    .party-organize-slot .party-mini-hp{grid-template-columns:15px minmax(0,1fr) 38px;font-size:6px}
+    .party-organize-slot .party-mini-hp i{height:3px}
+    .party-wait-list{grid-auto-columns:minmax(128px,148px);gap:8px}
+    .party-wait-card{min-height:164px;padding:7px 6px;gap:5px}
+    .party-wait-card .party-slot-name{font-size:12px}
+    .party-wait-card .party-slot-meta{font-size:9px}
+    .party-wait-card .party-mini-hp{grid-template-columns:16px minmax(0,1fr) auto;font-size:8px}
+  }
+
 </style>
 </head>
 <body>
@@ -1965,7 +2131,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32ba</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32c</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2516,7 +2682,7 @@
     $("partyManageTitle").textContent=exploring ? "探索パーティ編成" : "仲間編成";
     $("partyManageDesc").textContent=exploring
       ? "同行中の10枠を入れ替えます。1人目をタップして選び、次に移動先の枠をタップしてください。主人公も控えへ移動できます。"
-      : "探索に同行する10枠を整理します。同行する10枠を整理します。選択中の仲間は「ミレスタに待機させる」で預けられ、「待機から呼び出す」で戻せます。主人公はバトルと控えの間だけ移動できます。";
+      : "探索に探索に同行する10枠を整理します。選択中の仲間は「ミレスタに待機させる」で預けられ、「待機から呼び出す」で戻せます。主人公はバトルと控えの間だけ移動できます。";
     $("partyBackBtn").textContent=exploring ? "← 探索へ" : "← ミレスタへ";
   }
 
@@ -2527,7 +2693,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.32b" : "ミレスタ・仲間編成 v0.32b";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.32c" : "ミレスタ・仲間編成 v0.32c";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -2567,11 +2733,10 @@
 
   function partyCardHtml(c){
     const st=S(c);
-    const heroTag=c.id==="hero" ? "・同行固定" : "";
     return `${partyThumbHtml(c)}
       <span class="party-slot-info">
         <span class="party-slot-name">${c.name}</span>
-        <span class="party-slot-meta">Lv${c.level}${heroTag}</span>
+        <span class="party-slot-meta">Lv${c.level}</span>
         <span class="party-mini-hp"><b>HP</b><i style="--hp:${hpPct(c)}%"></i><span>${st.hp}/${st.hpMax}</span></span>
         <span class="party-mini-hp mp"><b>MP</b><i style="--hp:${mpPct(c)}%"></i><span>${st.mp}/${st.mpMax}</span></span>
       </span>`;
@@ -3022,7 +3187,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.32b" : "ミレスタ・仲間編成 v0.32b";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.32c" : "ミレスタ・仲間編成 v0.32c";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
