@@ -1633,7 +1633,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.28</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.28a</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2141,12 +2141,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.28" : "ミレスタ・仲間編成 v0.28";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.28a" : "ミレスタ・仲間編成 v0.28a";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroBattleMember(){
     const activeIndex=state.battleActive.indexOf("hero");
@@ -2655,7 +2655,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.28";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.28a";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -2663,7 +2663,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.28" : "ミレスタ・仲間編成 v0.28";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.28a" : "ミレスタ・仲間編成 v0.28a";
   };
 
   $("partyWaitDrop").onclick=moveSelectedToWaiting;
@@ -2672,13 +2672,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
     updateHeader();
   };
 
@@ -3266,7 +3266,7 @@
     return [...new Set([...state.battleActive,...state.battleReserve])];
   }
 
-  // v0.28 condition container. Poison / Blind / Silence / Shock are battle states and clear when battle ends.
+  // v0.28a condition container. Poison / Blind / Silence / Shock are battle states and clear when battle ends.
   function conditionsOf(c){
     if(!c.conditions) c.conditions={poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false};
     return c.conditions;
@@ -3313,7 +3313,7 @@
     if(cond.blind) chips.push('<span class="status-effect-chip bad">暗闇</span>');
     if(cond.silence) chips.push('<span class="status-effect-chip bad">封印</span>');
     if(cond.shock) chips.push('<span class="status-effect-chip bad">⚡ 感電</span>');
-    if(cond.berserk) chips.push(`<span class="status-effect-chip bad">狂乱${c.berserkRounds>0?` ${c.berserkRounds}R`:''}</span>`);
+    if(cond.berserk) chips.push(`<span class="status-effect-chip buff">狂乱${c.berserkRounds>0?` ${c.berserkRounds}R`:''}</span>`);
     if(cond.mount) chips.push('<span class="status-effect-chip buff">マウント</span>');
     if(cond.aura) chips.push('<span class="status-effect-chip buff">オーラ</span>');
     return chips.join('');
@@ -3616,18 +3616,18 @@
 
   function clearNegativeConditions(target,{poisonOnly=false}={}){
     const cond=conditionsOf(target);
-    const keys=poisonOnly?["poison"]:["poison","blind","silence","shock","berserk"];
+    // Berserk is a beneficial special state: Fresh / Auto Fresh do not remove it.
+    const keys=poisonOnly?["poison"]:["poison","blind","silence","shock"];
     let removed=0;
     keys.forEach(key=>{
       if(cond[key]){ cond[key]=false; removed++; }
     });
     if(!cond.shock) target.shockRecoverFails=0;
-    if(!cond.berserk) target.berserkRounds=0;
     return removed;
   }
 
-  // Enemy-magic defensive hook. Current prototype enemies still use physical attacks only,
-  // but future enemy magic routes through this helper: Aura first, then Canceller, then Magic Barrier for damage.
+  // Enemy-magic defensive hook. Resolution order is Aura -> Canceller -> Magic Barrier -> Defend.
+  // Magic Barrier and Defend reduce damage only; non-damage effects are untouched unless Aura/Canceller blocks the spell.
   function enemyMagicDefense(target,{hasDamage=true}={}){
     const cond=conditionsOf(target);
     if(cond.aura){
@@ -3639,7 +3639,13 @@
       return {blocked:true,reason:"canceller",damageMultiplier:0};
     }
     const barrierActive=hasDamage && Number(target?.magicBarrierRounds)>0;
-    return {blocked:false,reason:barrierActive?"magicBarrier":"none",damageMultiplier:barrierActive?(1-(Number(skills.magicBarrier?.reduction)||.60)):1};
+    const barrierMultiplier=barrierActive?(1-(Number(skills.magicBarrier?.reduction)||.60)):1;
+    const defendMultiplier=hasDamage && target?.defending ? .50 : 1;
+    return {
+      blocked:false,
+      reason:barrierActive?"magicBarrier":(defendMultiplier<1?"defend":"none"),
+      damageMultiplier:barrierMultiplier*defendMultiplier
+    };
   }
 
   function battleAllies(includeReserve=false){
@@ -3662,6 +3668,7 @@
     const cond=conditionsOf(enemy);
     if(cond.mount){cond.mount=false;removed=true;}
     if(cond.aura){cond.aura=false;removed=true;}
+    if(cond.berserk){ cond.berserk=false; enemy.berserkRounds=0; removed=true; }
     if(enemy.buffs && typeof enemy.buffs==="object"){
       if(Object.keys(enemy.buffs).length) removed=true;
       enemy.buffs={};
@@ -3743,10 +3750,11 @@
     return notices;
   }
 
-  function tickBattleBuffs(){
+  function tickBattleBuffs(skipRoundDecrement=new Set()){
     state.battleActive.concat(state.battleReserve).forEach(id=>{
       const c=roster[id]; if(!c) return;
       [["atkBuff","atkBuffRounds"],["defBuff","defBuffRounds"],["magicBuff","magicBuffRounds"],["mdefBuff","mdefBuffRounds"],["spdBuff","spdBuffRounds"]].forEach(([buffKey,roundKey])=>{
+        if(skipRoundDecrement.has(`${c.id}:${roundKey}`)) return;
         if((c[roundKey]||0)>0){
           c[roundKey]--;
           if(c[roundKey]<=0){ c[roundKey]=0; c[buffKey]=1; }
@@ -3829,7 +3837,7 @@
     for(const {c,i} of [...livingActiveSlots()]){
       if(!hasPassive(c,"autoFresh") || S(c).hp<=0) continue;
       const cond=conditionsOf(c);
-      if(!["poison","blind","silence","shock","berserk"].some(k=>cond[k])) continue;
+      if(!["poison","blind","silence","shock"].some(k=>cond[k])) continue;
       const passive=skills.autoFresh;
       if(Math.random()>=(Number(passive?.chance)||.20)) continue;
       const removed=clearNegativeConditions(c);
@@ -3844,6 +3852,8 @@
 
   async function processTurnEndTraits(){
     const active=[...livingActiveSlots()];
+    // Buffs newly granted by an end-of-round trait begin at their full duration next round.
+    const skipRoundDecrement=new Set();
     for(const {c} of active){
       const trait=traitOf(c);
       if(trait?.id!=="healingFairy") continue;
@@ -3868,6 +3878,7 @@
       if(trait?.id==="stickyHeal" && c._usedHealingMagicThisRound && traitRoll(trait)){
         c.magicBuff=trait.effect.multiplier;
         c.magicBuffRounds=trait.effect.duration;
+        skipRoundDecrement.add(`${c.id}:magicBuffRounds`);
         renderBattleParty();
         flashPartyValue(i,"","buff","MAG↑");
         const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`);
@@ -3878,6 +3889,7 @@
       c._usedHealingMagicThisRound=false;
     }
     state.battleActive.concat(state.battleReserve).forEach(id=>{ if(roster[id]) roster[id]._usedHealingMagicThisRound=false; });
+    return skipRoundDecrement;
   }
 
   function applyVictoryTraits(){
@@ -3974,12 +3986,13 @@
     const cond=conditionsOf(target);
     if(status==="death" && target.statusDeathImmune) return {success:false,reason:"immune",rate:0};
     if(status!=="death" && cond[status]) return {success:false,reason:"already",rate:statusChancePercent(target,status,baseRate)};
-    if(cond.mount){
-      cond.mount=false;
-      return {success:false,reason:"mount",rate:statusChancePercent(target,status,baseRate)};
-    }
     const rate=statusChancePercent(target,status,baseRate);
     if(Math.random()*100>=rate) return {success:false,reason:"resist",rate};
+    // Mount is consumed only when the status would otherwise have succeeded.
+    if(cond.mount){
+      cond.mount=false;
+      return {success:false,reason:"mount",rate};
+    }
     if(status==="death"){
       if(target.stats) S(target).hp=0;
       else target.hp=0;
@@ -5606,7 +5619,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
       updateHeader();
       return;
     }
@@ -5614,7 +5627,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
   }
 
   async function attemptEscape(){
@@ -5674,40 +5687,31 @@
     setCommandsEnabled(false);
     updateExecuteButton();
 
-    // 防御はSPDに関係なく、ラウンド開始時に最優先で成立する。
-    const defenseTurns=livingActiveSlots().filter(({i})=>state.battleActions[i]?.type==="defend");
-    for(const {i,c:actor} of defenseTurns){
+    // Defend and defense-priority skills resolve before normal initiative.
+    // Within this defensive phase, faster allies act first.
+    const defensePriorityTurns=livingActiveSlots().map(({i,c})=>({i,c,action:state.battleActions[i]}))
+      .filter(x=>x.action?.type==="defend" || (x.action?.type==="skill" && skills[x.action.skill]?.priority==="defense"))
+      .sort((a,b)=>effectiveSpd(b.c)-effectiveSpd(a.c));
+    for(const {i,c:actor,action} of defensePriorityTurns){
       if(state.battleEnded || S(actor).hp<=0) continue;
       state.battleActorSlot=i;
       updateActorPortrait();
       if(conditionsOf(actor).shock){
-        setMessage(`⚡ ${actor.name} は感電していて身を守れない！`);
+        const label=action.type==="defend"?"身を守れない":`${skills[action.skill]?.name||"防御スキル"} を使えない`;
+        setMessage(`⚡ ${actor.name} は感電していて${label}！`);
         await wait(BASE_TIME.message);
         continue;
       }
-      actor.defending=true;
-      animateActor("buff");
-      renderBattleParty();
-      setMessage(`${actor.name} は身を守った。このラウンド中に受けるダメージを半減します。`);
-      await wait(BASE_TIME.message);
-    }
-
-    // Defense-priority skills (currently Magic Barrier) resolve before normal SPD initiative, like Defend.
-    const prioritySkillTurns=livingActiveSlots().filter(({i})=>{
-      const action=state.battleActions[i];
-      return action?.type==="skill" && skills[action.skill]?.priority==="defense";
-    });
-    for(const {i,c:actor} of prioritySkillTurns){
-      if(state.battleEnded || S(actor).hp<=0) continue;
-      state.battleActorSlot=i;
-      updateActorPortrait();
-      if(conditionsOf(actor).shock){
-        setMessage(`⚡ ${actor.name} は感電していて ${skills[state.battleActions[i].skill]?.name||"防御スキル"} を使えない！`);
+      if(action.type==="defend"){
+        actor.defending=true;
+        animateActor("buff");
+        renderBattleParty();
+        setMessage(`${actor.name} は身を守った。`);
         await wait(BASE_TIME.message);
-        continue;
+      }else{
+        await resolveSkill(actor,action,i);
+        if(state.battleEnded) return;
       }
-      await resolveSkill(actor,state.battleActions[i],i);
-      if(state.battleEnded) return;
     }
 
     const turnOrder=buildTurnOrder().filter(turn=>!(turn.side==="ally" && (turn.action?.type==="defend" || (turn.action?.type==="skill" && skills[turn.action.skill]?.priority==="defense"))));
@@ -5766,8 +5770,9 @@
     if(statusEndedBattle || state.battleEnded) return;
     await processTurnEndPassives();
     if(state.battleEnded) return;
-    tickBattleBuffs();
-    await processTurnEndTraits();
+    const endTurnBuffSkips=await processTurnEndTraits();
+    if(state.battleEnded) return;
+    tickBattleBuffs(endTurnBuffSkips);
 
     if(!state.battleEnded){
       state.battleRound++;
@@ -5919,7 +5924,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -5927,7 +5932,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -6051,7 +6056,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -6110,7 +6115,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -6134,7 +6139,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.28a";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -6526,8 +6531,8 @@
       case "allyKO": return party.some(c=>S(c).hp<=0);
       case "allyAllKO": return party.some(c=>S(c).hp<=0);
       case "miracle": return party.some(c=>S(c).hp<=0 || S(c).hp<S(c).hpMax);
-      case "allyCleanse": return party.some(c=>["poison","blind","silence","shock","berserk"].some(k=>conditionsOf(c)[k]));
-      case "allyAllCleanse": return party.some(c=>["poison","blind","silence","shock","berserk"].some(k=>conditionsOf(c)[k]));
+      case "allyCleanse": return party.some(c=>["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]));
+      case "allyAllCleanse": return party.some(c=>["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]));
       case "allyMP": return party.some(c=>S(c).hp>0 && S(c).mp<S(c).mpMax);
       case "frontAllMP": return state.battleActive.some(id=>{const c=roster[id];return c&&S(c).hp>0&&S(c).mp<S(c).mpMax;});
       default:return true;
@@ -6624,7 +6629,7 @@
     switch(sk.fieldUse){
       case "ally": return st.hp>0 && st.hp<st.hpMax;
       case "allyKO": return st.hp<=0;
-      case "allyCleanse": return ["poison","blind","silence","shock","berserk"].some(k=>conditionsOf(c)[k]);
+      case "allyCleanse": return ["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]);
       case "allyMP": return st.hp>0 && st.mp<st.mpMax;
       default:return false;
     }
