@@ -460,7 +460,7 @@
   .explore-skill-list-wrap{max-height:min(355px,55vh);overflow:auto;scrollbar-width:thin}
   .explore-skill-actor-card.no-field-skills{opacity:.32;filter:grayscale(.5);cursor:not-allowed}
 
-  /* v0.34j exploration skill polish: stable scrolling + result preview animations */
+  /* v0.34k exploration skill polish: stable scrolling + result preview animations */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw);height:min(650px,calc(100vh - 24px - var(--safe-top) - var(--safe-bottom)));
     max-height:94%;overflow:hidden;display:flex;flex-direction:column;
@@ -497,7 +497,7 @@
     .explore-skill-list-wrap{padding-bottom:14px}
   }
 
-  /* v0.34j: exploration skill actor picker vertical balance */
+  /* v0.34k: exploration skill actor picker vertical balance */
   #exploreSkillActorView{flex:0 0 auto !important;padding-top:34px}
   #exploreSkillActorView .explore-item-target-strip{margin-bottom:12px}
   #exploreSkillActorView:not([hidden]) ~ .swap-note{margin-top:0;align-self:stretch}
@@ -3047,6 +3047,91 @@
     .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-mini-hp i{height:3px !important}
   }
 
+
+  /* v0.34k: exploration skill modal uses one stable compact layout on phones */
+  #exploreSkillModal .swap-panel{
+    width:min(980px,96vw) !important;
+    height:min(600px,calc(100vh - 18px - var(--safe-top) - var(--safe-bottom))) !important;
+    max-height:calc(100vh - 18px - var(--safe-top) - var(--safe-bottom)) !important;
+    padding:10px !important;
+    overflow:hidden !important;
+  }
+  #exploreSkillModal .swap-head{margin-bottom:7px !important;gap:8px !important}
+  #exploreSkillModal .swap-head h2{font-size:16px !important}
+  #exploreSkillModal .swap-head p{font-size:10px !important}
+  #exploreSkillModal .swap-close{padding:6px 11px !important;font-size:10px !important}
+  #exploreSkillModal .explore-skill-back{
+    margin-bottom:6px !important;
+    padding:6px 9px !important;
+    min-height:34px !important;
+    font-size:10px !important;
+  }
+  #exploreSkillModal .explore-skill-actor-summary{
+    margin-bottom:7px !important;
+    padding:7px 9px !important;
+    font-size:10px !important;
+  }
+  #exploreSkillModal .explore-skill-actor-summary strong{font-size:13px !important}
+  #exploreSkillModal #exploreSkillListView{min-height:0 !important;overflow:hidden !important}
+  #exploreSkillModal .explore-skill-list-wrap{
+    flex:1 !important;
+    min-height:0 !important;
+    max-height:none !important;
+    gap:6px !important;
+    padding:1px 3px 16px !important;
+    overflow-y:auto !important;
+    overscroll-behavior:contain !important;
+  }
+  #exploreSkillModal .skill-option{
+    min-height:58px !important;
+    grid-template-columns:38px minmax(0,1fr) auto !important;
+    gap:8px !important;
+    padding:6px 8px !important;
+    border-radius:10px !important;
+  }
+  #exploreSkillModal .skill-option-icon{
+    width:36px !important;
+    height:36px !important;
+    font-size:20px !important;
+    border-radius:9px !important;
+  }
+  #exploreSkillModal .skill-option-name{font-size:12px !important;line-height:1.15 !important}
+  #exploreSkillModal .skill-option-desc{font-size:9px !important;line-height:1.35 !important;margin-top:2px !important}
+  #exploreSkillModal .skill-option-meta{font-size:10px !important;min-width:68px !important}
+  #exploreSkillModal .skill-option-meta small{font-size:8px !important;margin-top:2px !important}
+  #exploreSkillModal .swap-note{
+    flex:0 0 auto !important;
+    margin-top:6px !important;
+    padding:0 6px !important;
+    font-size:9px !important;
+    line-height:1.45 !important;
+  }
+  #exploreSkillModal #exploreSkillActorView{
+    flex:0 0 auto !important;
+    padding-top:22px !important;
+  }
+  #exploreSkillModal #exploreSkillActorView .explore-item-target-strip{margin-bottom:9px !important}
+  /* Cancel the older max-height:520px size jump for this modal only. */
+  @media(max-height:520px){
+    #exploreSkillModal .swap-panel{
+      height:calc(100vh - 18px - var(--safe-top) - var(--safe-bottom)) !important;
+      padding:10px !important;
+    }
+    #exploreSkillModal .swap-head h2{font-size:16px !important}
+    #exploreSkillModal .swap-head p{font-size:10px !important}
+    #exploreSkillModal .explore-skill-back{font-size:10px !important;padding:6px 9px !important}
+    #exploreSkillModal .explore-skill-actor-summary{font-size:10px !important;padding:7px 9px !important}
+    #exploreSkillModal .skill-option{min-height:58px !important;grid-template-columns:38px minmax(0,1fr) auto !important;padding:6px 8px !important;gap:8px !important}
+    #exploreSkillModal .skill-option-icon{width:36px !important;height:36px !important;font-size:20px !important}
+    #exploreSkillModal .skill-option-name{font-size:12px !important}
+    #exploreSkillModal .skill-option-desc{font-size:9px !important}
+    #exploreSkillModal .skill-option-meta{font-size:10px !important}
+    #exploreSkillModal .skill-option-meta small{font-size:8px !important}
+    #exploreSkillModal #exploreSkillActorView{padding-top:22px !important}
+    #exploreSkillModal #exploreSkillActorView .explore-item-target-strip{margin-bottom:9px !important}
+    #exploreSkillModal .swap-note{font-size:9px !important}
+  }
+
 </style>
 </head>
 <body>
@@ -3062,10 +3147,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34j</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34k</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34j</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34k</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
   </header>
 
   <main id="homeScreen" class="screen active">
@@ -3497,7 +3582,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.34j";
+  const DEV_VERSION = "v0.34k";
   const state = {
     gold: 100,
     items:{
@@ -3659,13 +3744,13 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34j" : "ミレスタ・仲間編成 v0.34j";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34k" : "ミレスタ・仲間編成 v0.34k";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34k"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4157,7 +4242,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34j";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34k";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -4165,7 +4250,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34j" : "ミレスタ・仲間編成 v0.34j";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34k" : "ミレスタ・仲間編成 v0.34k";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4198,13 +4283,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34k";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34k";
     updateHeader();
   };
 
@@ -4697,13 +4782,13 @@
     eternal:{id:"eternal",name:"エターナル",icon:"🌈",cost:46,target:"allyAll",fieldUse:"allyAll",kind:"heal",fullHeal:true,desc:"前列の味方4人のHPを全回復",animation:"heal"},
 
     raise:{id:"raise",name:"レイズ",icon:"🕊️",cost:8,target:"ally",fieldUse:"allyKO",kind:"revive",revivePercent:.20,desc:"戦闘不能の味方1人を復活"},
-    raise2:{id:"raise2",name:"レイズⅡ",icon:"🕊️",cost:20,target:"allyAll",fieldUse:"allyAllKO",kind:"revive",revivePercent:.20,desc:"戦闘不能の味方全員を復活"},
+    raise2:{id:"raise2",name:"レイズⅡ",icon:"🕊️",cost:20,target:"allyAll",fieldUse:"allyAllKO",kind:"revive",revivePercent:.20,desc:"前列の味方4人の戦闘不能を復活"},
     gigaRaise:{id:"gigaRaise",name:"ギガレイズ",icon:"✨",cost:32,target:"ally",fieldUse:"allyKO",kind:"revive",revivePercent:1,desc:"戦闘不能の味方1人をHP全回復で復活"},
-    miracleFestival:{id:"miracleFestival",name:"奇跡の祝祭",icon:"🌟",cost:110,target:"allyAll",kind:"revive",revivePercent:1,fullPartyHeal:true,desc:"味方全員の戦闘不能を解除し、全員のHPを全回復"},
+    miracleFestival:{id:"miracleFestival",name:"奇跡の祝祭",icon:"🌟",cost:110,target:"allyAll",kind:"revive",revivePercent:1,fullPartyHeal:true,desc:"前列の味方4人の戦闘不能を解除し、HPを全回復"},
 
     cure:{id:"cure",name:"キュア",icon:"🌿",cost:4,target:"ally",fieldUse:"allyCleanse",kind:"cleanse",statuses:["poison"],desc:"味方1人の毒を解除"},
     fresh:{id:"fresh",name:"フレッシュ",icon:"✨",cost:11,target:"ally",fieldUse:"allyCleanse",kind:"cleanse",allStatus:true,desc:"味方1人の状態異常をすべて解除"},
-    allFresh:{id:"allFresh",name:"オールフレッシュ",icon:"✨",cost:22,target:"allyAll",fieldUse:"allyAllCleanse",kind:"cleanse",allStatus:true,desc:"味方全員の状態異常をすべて解除"},
+    allFresh:{id:"allFresh",name:"オールフレッシュ",icon:"✨",cost:22,target:"allyAll",fieldUse:"allyAllCleanse",kind:"cleanse",allStatus:true,desc:"前列の味方4人の状態異常をすべて解除"},
 
     mount:{id:"mount",name:"マウント",icon:"🛡️",cost:15,target:"ally",kind:"barrier",barrier:"mount",desc:"味方1人に、状態異常を1回無効化するマウントを付与"},
     allMount:{id:"allMount",name:"オールマウント",icon:"🛡️",cost:38,target:"allyAll",kind:"barrier",barrier:"mount",desc:"味方全員に、状態異常を1回無効化するマウントを付与"},
@@ -4737,7 +4822,7 @@
 
   };
 
-  // v0.34j: keep skill icon language consistent by role / element.
+  // v0.34k: keep skill icon language consistent by role / element.
   const SKILL_ELEMENT_ICONS={fire:"🔴",ice:"🔵",thunder:"🟡",earth:"🟤",wind:"🟢",light:"⚪",dark:"🟣",pleasure:"🩷"};
   function unifiedSkillIcon(sk){
     if(!sk) return "🔹";
@@ -5019,7 +5104,7 @@
     });
   }
 
-  // v0.34j development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
+  // v0.34k development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
   function devOwnedCharacterIds(){
     return [...new Set(["hero",...state.ownedSpecies])].filter(id=>roster[id]);
   }
@@ -7863,7 +7948,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34k";
       updateHeader();
       return;
     }
@@ -7871,7 +7956,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34k";
   }
 
   async function attemptEscape(){
@@ -8171,7 +8256,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34k";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -8179,7 +8264,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34k";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8313,7 +8398,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34k";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8374,7 +8459,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34k";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8399,7 +8484,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34k";
     updateHeader();
     toast("戦闘テストを終了");
   }
