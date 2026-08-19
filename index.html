@@ -3012,7 +3012,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34b</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34c</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -3029,6 +3029,7 @@
         <button class="menu-btn" id="dummyTalk"><span class="icon">💬</span>会話</button>
       </div>
       <button class="small-btn" id="battleTestBtn" style="margin-top:12px;width:100%">⚔ 戦闘を直接テスト</button>
+      <button class="small-btn" id="resetCaveBossBtn" style="margin-top:8px;width:100%;opacity:.82">🧪 開発用：洞窟ボス撃破状態をリセット</button>
     </section>
   </main>
 
@@ -3596,7 +3597,7 @@
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4129,18 +4130,30 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
     updateHeader();
   };
 
   $("backHome").onclick=()=>showScreen("homeScreen");
   $("battleTestBtn").onclick=()=>openBattle(false, "plains");
+  $("resetCaveBossBtn").onclick=()=>{
+    openModal("開発用リセット","小さな洞窟のボス撃破状態だけをリセットします。\n洞窟の発見状態や仲間・所持品などはそのままです。",[
+      {text:"リセットする",className:"action-btn",onclick:()=>{
+        state.caveBossDefeated=false;
+        localStorage.removeItem("milesta_cave_boss_defeated");
+        closeModal();
+        updateWorldInfo();
+        toast("魔界の尖兵を再びテストできるようになりました。");
+      }},
+      {text:"やめる",className:"small-btn",onclick:closeModal}
+    ]);
+  };
 
 
 
@@ -7653,7 +7666,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
       updateHeader();
       return;
     }
@@ -7661,7 +7674,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
   }
 
   async function attemptEscape(){
@@ -7961,7 +7974,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -7969,7 +7982,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8103,7 +8116,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8164,7 +8177,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8189,7 +8202,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
     updateHeader();
     toast("戦闘テストを終了");
   }
