@@ -460,7 +460,7 @@
   .explore-skill-list-wrap{max-height:min(355px,55vh);overflow:auto;scrollbar-width:thin}
   .explore-skill-actor-card.no-field-skills{opacity:.32;filter:grayscale(.5);cursor:not-allowed}
 
-  /* v0.34i exploration skill polish: stable scrolling + result preview animations */
+  /* v0.34j exploration skill polish: stable scrolling + result preview animations */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw);height:min(650px,calc(100vh - 24px - var(--safe-top) - var(--safe-bottom)));
     max-height:94%;overflow:hidden;display:flex;flex-direction:column;
@@ -495,6 +495,15 @@
   @media(max-height:520px){
     #exploreSkillModal .swap-panel{height:calc(100vh - 12px - var(--safe-top) - var(--safe-bottom));padding:8px}
     .explore-skill-list-wrap{padding-bottom:14px}
+  }
+
+  /* v0.34j: exploration skill actor picker vertical balance */
+  #exploreSkillActorView{flex:0 0 auto !important;padding-top:34px}
+  #exploreSkillActorView .explore-item-target-strip{margin-bottom:12px}
+  #exploreSkillActorView:not([hidden]) ~ .swap-note{margin-top:0;align-self:stretch}
+  @media(max-height:520px){
+    #exploreSkillActorView{padding-top:18px}
+    #exploreSkillActorView .explore-item-target-strip{margin-bottom:8px}
   }
 
   /* v0.32 exploration item flow: portrait + status strip target picker */
@@ -3053,10 +3062,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34i</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34j</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34i</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34j</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
   </header>
 
   <main id="homeScreen" class="screen active">
@@ -3488,7 +3497,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.34i";
+  const DEV_VERSION = "v0.34j";
   const state = {
     gold: 100,
     items:{
@@ -3650,13 +3659,13 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34i" : "ミレスタ・仲間編成 v0.34i";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34j" : "ミレスタ・仲間編成 v0.34j";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4148,7 +4157,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34i";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34j";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -4156,7 +4165,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34i" : "ミレスタ・仲間編成 v0.34i";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34j" : "ミレスタ・仲間編成 v0.34j";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4189,13 +4198,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
     updateHeader();
   };
 
@@ -4602,10 +4611,10 @@
     endCold:magicSkill("endCold","エンドコールド","🧊",40,"enemyAll","ice","S"),
 
     // Thunder trades damage for Shock. Shock uses thunder resistance and cannot be duration-refreshed.
-    petitThunder:magicSkill("petitThunder","プチサンダー","⚡",6,"enemy","thunder","E",{rankMultiplier:.60,shockRate:.40,desc:"敵1体に低威力の雷ダメージ。40%を基準に感電させる"}),
-    thunder:magicSkill("thunder","サンダー","⚡",13,"enemyAll","thunder","D",{rankMultiplier:.80,shockRate:.40,desc:"敵全体に低威力の雷ダメージ。40%を基準に感電させる"}),
-    gigaThunder:magicSkill("gigaThunder","ギガサンダー","⚡",27,"enemyAll","thunder","B",{rankMultiplier:1.30,shockRate:.45,desc:"敵全体に雷ダメージ。45%を基準に感電させる"}),
-    heavenlyThunder:magicSkill("heavenlyThunder","天の轟雷","⚡",65,"enemyAll","thunder","S",{shockRate:.50,desc:"敵全体にS級の雷ダメージ。50%を基準に感電させる高消費MP魔法"}),
+    petitThunder:magicSkill("petitThunder","プチサンダー","⚡",6,"enemy","thunder","E",{rankMultiplier:.60,shockRate:.40,desc:"敵1体に雷属性の魔法ダメージ。感電させることがある"}),
+    thunder:magicSkill("thunder","サンダー","⚡",13,"enemyAll","thunder","D",{rankMultiplier:.80,shockRate:.40,desc:"敵全体に雷属性の魔法ダメージ。感電させることがある"}),
+    gigaThunder:magicSkill("gigaThunder","ギガサンダー","⚡",27,"enemyAll","thunder","B",{rankMultiplier:1.30,shockRate:.45,desc:"敵全体に雷属性の魔法ダメージ。感電させることがある"}),
+    heavenlyThunder:magicSkill("heavenlyThunder","天の轟雷","⚡",65,"enemyAll","thunder","S",{shockRate:.50,desc:"敵全体に雷属性の魔法ダメージ。感電させることがある"}),
 
     stone:magicSkill("stone","ストーン","🪨",4,"enemy","earth","E"),
     quake:magicSkill("quake","クエイク","🪨",10,"enemyAll","earth","D"),
@@ -4632,15 +4641,15 @@
     // Pleasure has a wider resistance curve: E175/D140/C100/B65/A35/S15%.
     touch:magicSkill("touch","タッチ","💗",4,"enemy","pleasure","E"),
     pleasure:magicSkill("pleasure","プレジャー","💗",10,"enemyAll","pleasure","D"),
-    gigaPleasure:magicSkill("gigaPleasure","ギガプレジャー","💗",24,"enemyAll","pleasure","B",{rankMultiplier:2.00,desc:"敵全体に強めの快楽ダメージ。快楽耐性の影響が大きい"}),
+    gigaPleasure:magicSkill("gigaPleasure","ギガプレジャー","💗",24,"enemyAll","pleasure","B",{rankMultiplier:2.00}),
     megidoPleasure:magicSkill("megidoPleasure","メギドプレジャー","💗",40,"enemyAll","pleasure","S"),
     pleasureOne:magicSkill("pleasureOne","プレジャー・ワン","💗",18,"enemy","pleasure","A"),
 
     // Erode series: extreme gamble. The lower bound stays at 1% even at high rank.
-    erode:magicSkill("erode","イロード","🎲",15,"enemyAll",null,"C",{gambleRange:[.01,2.20],desc:"敵全体に無属性ダメージ。威力が1～220%まで激しく変動する"}),
-    gigaErode:magicSkill("gigaErode","ギガイロード","🎲",27,"enemyAll",null,"A",{gambleRange:[.01,2.40],desc:"敵全体に無属性ダメージ。威力が1～240%まで激しく変動する"}),
-    lastErode:magicSkill("lastErode","ラストイロード","🎲",40,"enemyAll",null,"S",{gambleRange:[.01,2.60],desc:"敵全体に無属性ダメージ。威力が1～260%まで激しく変動する"}),
-    ruinErosion:magicSkill("ruinErosion","破滅の侵蝕","🎲",28,"enemy",null,"S",{gambleRange:[.01,3.00],desc:"敵1体に無属性ダメージ。威力が1～300%まで激しく変動する"}),
+    erode:magicSkill("erode","イロード","🎲",15,"enemyAll",null,"C",{gambleRange:[.01,2.20],desc:"敵全体に無属性ダメージ。威力が大きく変動する"}),
+    gigaErode:magicSkill("gigaErode","ギガイロード","🎲",27,"enemyAll",null,"A",{gambleRange:[.01,2.40],desc:"敵全体に無属性ダメージ。威力が大きく変動する"}),
+    lastErode:magicSkill("lastErode","ラストイロード","🎲",40,"enemyAll",null,"S",{gambleRange:[.01,2.60],desc:"敵全体に無属性ダメージ。威力が大きく変動する"}),
+    ruinErosion:magicSkill("ruinErosion","破滅の侵蝕","🎲",28,"enemy",null,"S",{gambleRange:[.01,3.00],desc:"敵1体に無属性ダメージ。威力が大きく変動する"}),
 
     poison:statusSkill("poison","ポイズン","☠️",5,"enemy","poison",STATUS_BASE_RATE.single),
     neoPoison:statusSkill("neoPoison","ネオポイズン","☠️",10,"enemyAll","poison",STATUS_BASE_RATE.all),
@@ -4654,43 +4663,43 @@
 
     tackle:{
       id:"tackle",name:"体当たり",icon:"💥",cost:4,target:"enemy",
-      desc:"敵1体に1.5倍の物理ダメージ。使用後、自身に最大HP10%の反動ダメージ",kind:"physical",power:1.50,recoilRate:.10,animation:"impact"
+      desc:"敵1体に物理ダメージ。使用後、自身に反動ダメージ",kind:"physical",power:1.50,recoilRate:.10,animation:"impact"
     },
 
     // Physical passives. These never appear as selectable battle commands.
-    counterStance:{id:"counterStance",name:"カウンタースタンス",icon:"↩️",cost:0,target:"passive",kind:"passive",battleUse:false,chance:.20,desc:"物理攻撃を受けた各ヒット時、20%で通常攻撃による反撃。1回の敵行動につき最大1回"},
-    doubleAttack:{id:"doubleAttack",name:"連続攻撃",icon:"⚔️",cost:0,target:"passive",kind:"passive",battleUse:false,chance:.15,desc:"通常攻撃後、15%の確率でもう一度だけ通常攻撃する。反撃からは発動しない"},
-    autoFresh:{id:"autoFresh",name:"オートフレッシュ",icon:"✨",cost:0,target:"passive",kind:"passive",battleUse:false,chance:.20,desc:"ターン終了時、自身に状態異常が残っていれば20%で全て解除"},
-    canceller:{id:"canceller",name:"キャンセラー",icon:"🚫",cost:0,target:"passive",kind:"passive",battleUse:false,chance:.08,desc:"敵の魔法を受ける時、8%の確率で自分へのダメージと効果を完全無効化"},
+    counterStance:{id:"counterStance",name:"カウンタースタンス",icon:"↩️",cost:0,target:"passive",kind:"passive",battleUse:false,chance:.20,desc:"物理攻撃を受けた時、一定確率で通常攻撃による反撃を行う"},
+    doubleAttack:{id:"doubleAttack",name:"連続攻撃",icon:"⚔️",cost:0,target:"passive",kind:"passive",battleUse:false,chance:.15,desc:"通常攻撃後、一定確率でもう一度だけ通常攻撃する"},
+    autoFresh:{id:"autoFresh",name:"オートフレッシュ",icon:"✨",cost:0,target:"passive",kind:"passive",battleUse:false,chance:.20,desc:"ターン終了時、一定確率で自身の状態異常を全て解除する"},
+    canceller:{id:"canceller",name:"キャンセラー",icon:"🚫",cost:0,target:"passive",kind:"passive",battleUse:false,chance:.08,desc:"敵の魔法を受ける時、まれにダメージと効果を完全無効化する"},
     unyieldingHeart:{id:"unyieldingHeart",name:"不屈の心",icon:"❤️‍🔥",cost:0,target:"passive",kind:"passive",battleUse:false,desc:"戦闘勝利時、自身が戦闘不能ならHP1で復活"},
 
     // Charge skills stack multiplicatively with ordinary stat buffs. MP costs are provisional until separately finalized.
-    powerCharge:{id:"powerCharge",name:"パワーチャージ",icon:"💪",cost:8,target:"self",kind:"charge",chargeStat:"atk",multiplier:2.00,duration:2,provisionalCost:true,desc:"次のターン終了時まで自身の攻撃力を2倍。通常の攻撃力バフと重複する"},
-    magicConcentration:{id:"magicConcentration",name:"魔力集中",icon:"🧠",cost:8,target:"self",kind:"charge",chargeStat:"magic",multiplier:2.00,duration:2,provisionalCost:true,desc:"次のターン終了時まで自身の魔力を2倍。通常の魔力バフと重複する"},
+    powerCharge:{id:"powerCharge",name:"パワーチャージ",icon:"💪",cost:8,target:"self",kind:"charge",chargeStat:"atk",multiplier:2.00,duration:2,provisionalCost:true,desc:"次のターン終了時まで自身の攻撃力を上げる"},
+    magicConcentration:{id:"magicConcentration",name:"魔力集中",icon:"🧠",cost:8,target:"self",kind:"charge",chargeStat:"magic",multiplier:2.00,duration:2,provisionalCost:true,desc:"次のターン終了時まで自身の魔力を上げる"},
 
     // Weapon-exclusive techniques.
-    explosiveFist:{id:"explosiveFist",name:"爆裂拳",icon:"🥊",cost:24,target:"enemyRandom",kind:"multiPhysical",requiredWeaponTypes:["fist"],hits:5,hitPower:.60,canCrit:true,desc:"拳専用。敵全体から1ヒットごとにランダム対象を選び、60%威力×5回。各ヒット会心・回避判定"},
-    swordDance:{id:"swordDance",name:"剣の舞",icon:"🗡️",cost:24,target:"enemyRandom",kind:"multiPhysical",requiredWeaponTypes:["sword"],hits:4,hitPower:.75,canCrit:true,desc:"剣専用。敵全体から1ヒットごとにランダム対象を選び、75%威力×4回。各ヒット会心・回避判定"},
-    terraCrash:{id:"terraCrash",name:"テラクラッシュ",icon:"🪓",cost:20,target:"enemy",kind:"physicalSpecial",requiredWeaponTypes:["axe","hammer"],power:1.50,forceCrit:true,canCrit:true,animation:"heavy",fxSymbol:"💥",desc:"斧・槌専用。敵1体に150%威力の物理攻撃。必ずクリティカル"},
-    stardust:{id:"stardust",name:"スターダスト",icon:"🏹",cost:24,target:"enemy",kind:"physicalSpecial",requiredWeaponTypes:["bow"],power:2.20,canCrit:true,dispelOnHit:true,animation:"arrow",fxSymbol:"✨",desc:"弓専用。敵1体に220%威力の物理大ダメージ。命中時、対象のバフを全て解除"},
-    magicBarrier:{id:"magicBarrier",name:"魔力障壁",icon:"🪄",cost:38,target:"allyAll",kind:"magicBarrier",requiredWeaponTypes:["staff"],reduction:.60,duration:2,priority:"defense",desc:"杖専用。味方前衛全員が受ける魔法ダメージを60%軽減。使用ラウンド＋次ラウンドまで。防御系の高優先度"},
-    dragonSpiral:{id:"dragonSpiral",name:"龍螺旋",icon:"➰",cost:24,target:"enemyRandom",kind:"multiPhysical",requiredWeaponTypes:["whip"],hits:6,hitPower:.50,canCrit:true,desc:"鞭専用。敵全体から1ヒットごとにランダム対象を選び、50%威力×6回。各ヒット会心・回避判定"},
-    nephilimLaser:{id:"nephilimLaser",name:"ネフィリムレーザー",icon:"🔫",cost:48,target:"enemyAll",kind:"physicalAll",requiredWeaponTypes:["gun"],power:2.20,defenseInfluence:.50,canCrit:false,shockRate:.35,animation:"gun",fxSymbol:"✹",desc:"銃専用。敵全体に220%威力の無属性物理大ダメージ。防御影響50%、会心なし、35%を基準に感電"},
+    explosiveFist:{id:"explosiveFist",name:"爆裂拳",icon:"🥊",cost:24,target:"enemyRandom",kind:"multiPhysical",requiredWeaponTypes:["fist"],hits:5,hitPower:.60,canCrit:true,desc:"拳専用技。ランダムな敵に物理ダメージ。これを5回繰り返す"},
+    swordDance:{id:"swordDance",name:"剣の舞",icon:"🗡️",cost:24,target:"enemyRandom",kind:"multiPhysical",requiredWeaponTypes:["sword"],hits:4,hitPower:.75,canCrit:true,desc:"剣専用技。ランダムな敵に物理ダメージ。これを4回繰り返す"},
+    terraCrash:{id:"terraCrash",name:"テラクラッシュ",icon:"🪓",cost:20,target:"enemy",kind:"physicalSpecial",requiredWeaponTypes:["axe","hammer"],power:1.50,forceCrit:true,canCrit:true,animation:"heavy",fxSymbol:"💥",desc:"斧・槌専用技。敵1体に物理ダメージ。必ず会心"},
+    stardust:{id:"stardust",name:"スターダスト",icon:"🏹",cost:24,target:"enemy",kind:"physicalSpecial",requiredWeaponTypes:["bow"],power:2.20,canCrit:true,dispelOnHit:true,animation:"arrow",fxSymbol:"✨",desc:"弓専用技。敵1体に物理ダメージ。バフを全て解除する"},
+    magicBarrier:{id:"magicBarrier",name:"魔力障壁",icon:"🪄",cost:38,target:"allyAll",kind:"magicBarrier",requiredWeaponTypes:["staff"],reduction:.60,duration:2,priority:"defense",desc:"杖専用技。次のターンまで味方全員の魔法耐性を上げる"},
+    dragonSpiral:{id:"dragonSpiral",name:"龍螺旋",icon:"➰",cost:24,target:"enemyRandom",kind:"multiPhysical",requiredWeaponTypes:["whip"],hits:6,hitPower:.50,canCrit:true,desc:"鞭専用技。ランダムな敵に物理ダメージ。これを6回繰り返す"},
+    nephilimLaser:{id:"nephilimLaser",name:"ネフィリムレーザー",icon:"🔫",cost:48,target:"enemyAll",kind:"physicalAll",requiredWeaponTypes:["gun"],power:2.20,defenseInfluence:.50,canCrit:false,shockRate:.35,animation:"gun",fxSymbol:"✹",desc:"銃専用技。敵全体に無属性ダメージ。感電させることがある"},
 
     // Recovery magic. Lower tiers intentionally age out as HP rises.
-    heal:{id:"heal",name:"ヒール",icon:"💚",cost:3,target:"ally",fieldUse:"ally",kind:"heal",healBase:25,healMagic:.45,desc:"味方1人のHPを回復（25＋MAG×0.45）",animation:"heal"},
-    highHeal:{id:"highHeal",name:"ハイヒール",icon:"💚",cost:7,target:"ally",fieldUse:"ally",kind:"heal",healBase:45,healMagic:.85,desc:"味方1人のHPを大きく回復（45＋MAG×0.85）",animation:"heal"},
-    gigaHeal:{id:"gigaHeal",name:"ギガヒール",icon:"💚",cost:12,target:"ally",fieldUse:"ally",kind:"heal",healBase:70,healMagic:1.35,desc:"味方1人のHPを大きく回復（70＋MAG×1.35）",animation:"heal"},
+    heal:{id:"heal",name:"ヒール",icon:"💚",cost:3,target:"ally",fieldUse:"ally",kind:"heal",healBase:25,healMagic:.45,desc:"味方1人のHPを小さく回復",animation:"heal"},
+    highHeal:{id:"highHeal",name:"ハイヒール",icon:"💚",cost:7,target:"ally",fieldUse:"ally",kind:"heal",healBase:45,healMagic:.85,desc:"味方1人のHPを回復",animation:"heal"},
+    gigaHeal:{id:"gigaHeal",name:"ギガヒール",icon:"💚",cost:12,target:"ally",fieldUse:"ally",kind:"heal",healBase:70,healMagic:1.35,desc:"味方1人のHPを大きく回復",animation:"heal"},
     lastHeal:{id:"lastHeal",name:"ラストヒール",icon:"💚",cost:21,target:"ally",fieldUse:"ally",kind:"heal",fullHeal:true,desc:"味方1人のHPを全回復",animation:"heal"},
-    allHeal:{id:"allHeal",name:"オルヒール",icon:"💚",cost:6,target:"allyAll",fieldUse:"allyAll",kind:"heal",healBase:25,healMagic:.45,healScale:.70,desc:"味方全員をヒールの70%ぶん回復",animation:"heal"},
-    allHeal2:{id:"allHeal2",name:"オルヒールⅡ",icon:"💚",cost:12,target:"allyAll",fieldUse:"allyAll",kind:"heal",healBase:45,healMagic:.85,healScale:.70,desc:"味方全員をハイヒールの70%ぶん回復",animation:"heal"},
-    fairyHeal:{id:"fairyHeal",name:"フェアリーヒール",icon:"🧚",cost:20,target:"allyAll",fieldUse:"allyAll",kind:"heal",healBase:70,healMagic:1.35,healScale:.70,desc:"味方全員をギガヒールの70%ぶん回復",animation:"heal"},
-    eternal:{id:"eternal",name:"エターナル",icon:"🌈",cost:46,target:"allyAll",fieldUse:"allyAll",kind:"heal",fullHeal:true,desc:"味方全員のHPを全回復",animation:"heal"},
+    allHeal:{id:"allHeal",name:"オルヒール",icon:"💚",cost:6,target:"allyAll",fieldUse:"allyAll",kind:"heal",healBase:25,healMagic:.45,healScale:.70,desc:"前列の味方4人のHPを小さく回復",animation:"heal"},
+    allHeal2:{id:"allHeal2",name:"オルヒールⅡ",icon:"💚",cost:12,target:"allyAll",fieldUse:"allyAll",kind:"heal",healBase:45,healMagic:.85,healScale:.70,desc:"前列の味方4人のHPを回復",animation:"heal"},
+    fairyHeal:{id:"fairyHeal",name:"フェアリーヒール",icon:"🧚",cost:20,target:"allyAll",fieldUse:"allyAll",kind:"heal",healBase:70,healMagic:1.35,healScale:.70,desc:"前列の味方4人のHPを大きく回復",animation:"heal"},
+    eternal:{id:"eternal",name:"エターナル",icon:"🌈",cost:46,target:"allyAll",fieldUse:"allyAll",kind:"heal",fullHeal:true,desc:"前列の味方4人のHPを全回復",animation:"heal"},
 
-    raise:{id:"raise",name:"レイズ",icon:"🕊️",cost:8,target:"ally",fieldUse:"allyKO",kind:"revive",revivePercent:.20,desc:"戦闘不能の味方1人を最大HP20%で復活"},
-    raise2:{id:"raise2",name:"レイズⅡ",icon:"🕊️",cost:20,target:"allyAll",fieldUse:"allyAllKO",kind:"revive",revivePercent:.20,desc:"戦闘不能の味方全員を最大HP20%で復活"},
+    raise:{id:"raise",name:"レイズ",icon:"🕊️",cost:8,target:"ally",fieldUse:"allyKO",kind:"revive",revivePercent:.20,desc:"戦闘不能の味方1人を復活"},
+    raise2:{id:"raise2",name:"レイズⅡ",icon:"🕊️",cost:20,target:"allyAll",fieldUse:"allyAllKO",kind:"revive",revivePercent:.20,desc:"戦闘不能の味方全員を復活"},
     gigaRaise:{id:"gigaRaise",name:"ギガレイズ",icon:"✨",cost:32,target:"ally",fieldUse:"allyKO",kind:"revive",revivePercent:1,desc:"戦闘不能の味方1人をHP全回復で復活"},
-    miracleFestival:{id:"miracleFestival",name:"奇跡の祝祭",icon:"🌟",cost:110,target:"allyAll",fieldUse:"miracle",kind:"revive",revivePercent:1,fullPartyHeal:true,desc:"味方全員の戦闘不能を解除し、全員のHPを全回復"},
+    miracleFestival:{id:"miracleFestival",name:"奇跡の祝祭",icon:"🌟",cost:110,target:"allyAll",kind:"revive",revivePercent:1,fullPartyHeal:true,desc:"味方全員の戦闘不能を解除し、全員のHPを全回復"},
 
     cure:{id:"cure",name:"キュア",icon:"🌿",cost:4,target:"ally",fieldUse:"allyCleanse",kind:"cleanse",statuses:["poison"],desc:"味方1人の毒を解除"},
     fresh:{id:"fresh",name:"フレッシュ",icon:"✨",cost:11,target:"ally",fieldUse:"allyCleanse",kind:"cleanse",allStatus:true,desc:"味方1人の状態異常をすべて解除"},
@@ -4702,33 +4711,33 @@
     lastAura:{id:"lastAura",name:"ラストオーラ",icon:"🔮",cost:45,target:"allyAll",kind:"barrier",barrier:"aura",desc:"味方全員に、敵の魔法を1回完全無効化するオーラを付与"},
 
     // Standard buffs: 1.30x for 5 rounds. Ultimate buffs: 1.50x for 4 rounds.
-    polish:{id:"polish",name:"ポリッシュ",icon:"✨",cost:6,target:"ally",kind:"buff",buff:"atk",multiplier:1.30,duration:5,desc:"味方1人の攻撃力を1.3倍（5ラウンド）",animation:"buff"},
-    allPolish:{id:"allPolish",name:"オールポリッシュ",icon:"✨",cost:14,target:"allyAll",kind:"buff",buff:"atk",multiplier:1.30,duration:5,desc:"味方全員の攻撃力を1.3倍（5ラウンド）",animation:"buff"},
-    warGodAura:{id:"warGodAura",name:"戦神の覇気",icon:"🔥",cost:21,target:"allyAll",kind:"buff",buff:"atk",multiplier:1.50,duration:4,desc:"味方全員の攻撃力を1.5倍（4ラウンド）",animation:"buff"},
-    guard:{id:"guard",name:"ガード",icon:"🛡️",cost:6,target:"ally",kind:"buff",buff:"def",multiplier:1.30,duration:5,desc:"味方1人の防御力を1.3倍（5ラウンド）",animation:"buff"},
-    allGuard:{id:"allGuard",name:"オールガード",icon:"🛡️",cost:14,target:"allyAll",kind:"buff",buff:"def",multiplier:1.30,duration:5,desc:"味方全員の防御力を1.3倍（5ラウンド）",animation:"buff"},
-    guardianBlessing:{id:"guardianBlessing",name:"守護神の加護",icon:"🛡️",cost:21,target:"allyAll",kind:"buff",buff:"def",multiplier:1.50,duration:4,desc:"味方全員の防御力を1.5倍（4ラウンド）",animation:"buff"},
-    magic:{id:"magic",name:"マジック",icon:"🔷",cost:6,target:"ally",kind:"buff",buff:"magic",multiplier:1.30,duration:5,desc:"味方1人の魔力を1.3倍（5ラウンド）",animation:"buff"},
-    allMagic:{id:"allMagic",name:"オールマジック",icon:"🔷",cost:14,target:"allyAll",kind:"buff",buff:"magic",multiplier:1.30,duration:5,desc:"味方全員の魔力を1.3倍（5ラウンド）",animation:"buff"},
-    demonSpiritFlow:{id:"demonSpiritFlow",name:"魔祖の霊流",icon:"🔷",cost:21,target:"allyAll",kind:"buff",buff:"magic",multiplier:1.50,duration:4,desc:"味方全員の魔力を1.5倍（4ラウンド）",animation:"buff"},
-    block:{id:"block",name:"ブロック",icon:"🔶",cost:6,target:"ally",kind:"buff",buff:"mdef",multiplier:1.30,duration:5,desc:"味方1人の魔法防御力を1.3倍（5ラウンド）",animation:"buff"},
-    allBlock:{id:"allBlock",name:"オールブロック",icon:"🔶",cost:14,target:"allyAll",kind:"buff",buff:"mdef",multiplier:1.30,duration:5,desc:"味方全員の魔法防御力を1.3倍（5ラウンド）",animation:"buff"},
-    spiritKingBlessing:{id:"spiritKingBlessing",name:"精霊王の祝福",icon:"🔶",cost:21,target:"allyAll",kind:"buff",buff:"mdef",multiplier:1.50,duration:4,desc:"味方全員の魔法防御力を1.5倍（4ラウンド）",animation:"buff"},
-    quick:{id:"quick",name:"クイック",icon:"💨",cost:6,target:"ally",kind:"buff",buff:"spd",multiplier:1.30,duration:5,desc:"味方1人の素早さを1.3倍（5ラウンド）",animation:"buff"},
-    allQuick:{id:"allQuick",name:"オールクイック",icon:"💨",cost:14,target:"allyAll",kind:"buff",buff:"spd",multiplier:1.30,duration:5,desc:"味方全員の素早さを1.3倍（5ラウンド）",animation:"buff"},
-    heroicTailwind:{id:"heroicTailwind",name:"英雄の追風",icon:"💨",cost:21,target:"allyAll",kind:"buff",buff:"spd",multiplier:1.50,duration:4,desc:"味方全員の素早さを1.5倍（4ラウンド）",animation:"buff"},
+    polish:{id:"polish",name:"ポリッシュ",icon:"✨",cost:6,target:"ally",kind:"buff",buff:"atk",multiplier:1.30,duration:5,desc:"味方1人の攻撃力を一時的に上げる",animation:"buff"},
+    allPolish:{id:"allPolish",name:"オールポリッシュ",icon:"✨",cost:14,target:"allyAll",kind:"buff",buff:"atk",multiplier:1.30,duration:5,desc:"味方全員の攻撃力を一時的に上げる",animation:"buff"},
+    warGodAura:{id:"warGodAura",name:"戦神の覇気",icon:"🔥",cost:21,target:"allyAll",kind:"buff",buff:"atk",multiplier:1.50,duration:4,desc:"味方全員の攻撃力を一時的に大幅に上げる",animation:"buff"},
+    guard:{id:"guard",name:"ガード",icon:"🛡️",cost:6,target:"ally",kind:"buff",buff:"def",multiplier:1.30,duration:5,desc:"味方1人の防御力を一時的に上げる",animation:"buff"},
+    allGuard:{id:"allGuard",name:"オールガード",icon:"🛡️",cost:14,target:"allyAll",kind:"buff",buff:"def",multiplier:1.30,duration:5,desc:"味方全員の防御力を一時的に上げる",animation:"buff"},
+    guardianBlessing:{id:"guardianBlessing",name:"守護神の加護",icon:"🛡️",cost:21,target:"allyAll",kind:"buff",buff:"def",multiplier:1.50,duration:4,desc:"味方全員の防御力を一時的に大幅に上げる",animation:"buff"},
+    magic:{id:"magic",name:"マジック",icon:"🔷",cost:6,target:"ally",kind:"buff",buff:"magic",multiplier:1.30,duration:5,desc:"味方1人の魔力を一時的に上げる",animation:"buff"},
+    allMagic:{id:"allMagic",name:"オールマジック",icon:"🔷",cost:14,target:"allyAll",kind:"buff",buff:"magic",multiplier:1.30,duration:5,desc:"味方全員の魔力を一時的に上げる",animation:"buff"},
+    demonSpiritFlow:{id:"demonSpiritFlow",name:"魔祖の霊流",icon:"🔷",cost:21,target:"allyAll",kind:"buff",buff:"magic",multiplier:1.50,duration:4,desc:"味方全員の魔力を一時的に大幅に上げる",animation:"buff"},
+    block:{id:"block",name:"ブロック",icon:"🔶",cost:6,target:"ally",kind:"buff",buff:"mdef",multiplier:1.30,duration:5,desc:"味方1人の魔法防御力を一時的に上げる",animation:"buff"},
+    allBlock:{id:"allBlock",name:"オールブロック",icon:"🔶",cost:14,target:"allyAll",kind:"buff",buff:"mdef",multiplier:1.30,duration:5,desc:"味方全員の魔法防御力を一時的に上げる",animation:"buff"},
+    spiritKingBlessing:{id:"spiritKingBlessing",name:"精霊王の祝福",icon:"🔶",cost:21,target:"allyAll",kind:"buff",buff:"mdef",multiplier:1.50,duration:4,desc:"味方全員の魔法防御力を一時的に大幅に上げる",animation:"buff"},
+    quick:{id:"quick",name:"クイック",icon:"💨",cost:6,target:"ally",kind:"buff",buff:"spd",multiplier:1.30,duration:5,desc:"味方1人の素早さを一時的に上げる",animation:"buff"},
+    allQuick:{id:"allQuick",name:"オールクイック",icon:"💨",cost:14,target:"allyAll",kind:"buff",buff:"spd",multiplier:1.30,duration:5,desc:"味方全員の素早さを一時的に上げる",animation:"buff"},
+    heroicTailwind:{id:"heroicTailwind",name:"英雄の追風",icon:"💨",cost:21,target:"allyAll",kind:"buff",buff:"spd",multiplier:1.50,duration:4,desc:"味方全員の素早さを一時的に大幅に上げる",animation:"buff"},
 
-    berserk:{id:"berserk",name:"バーサーク",icon:"💢",cost:15,target:"self",kind:"berserk",multiplier:1.60,duration:5,desc:"自身を5ラウンド狂乱状態にし、攻撃力1.6倍。以後は自動で通常攻撃"},
-    fortune:{id:"fortune",name:"フォーチュン",icon:"🍀",cost:50,target:"self",kind:"fortune",desc:"この戦闘の加入率を、元の最終加入率ぶん（最大+1ポイント）上昇。重ね掛け可、最終70%上限"},
+    berserk:{id:"berserk",name:"バーサーク",icon:"💢",cost:15,target:"self",kind:"berserk",multiplier:1.60,duration:5,desc:"自身を一時的に狂乱状態にする"},
+    fortune:{id:"fortune",name:"フォーチュン",icon:"🍀",cost:50,target:"self",kind:"fortune",desc:"敵が仲間になる確率を上昇させる"},
     escape:{id:"escape",name:"エスケープ",icon:"🏃",cost:48,target:"self",kind:"escape",desc:"通常戦闘から100%逃走する"},
-    supply:{id:"supply",name:"サプライ",icon:"🔹",cost:80,target:"ally",fieldUse:"allyMP",kind:"mpTransfer",restoreMp:80,desc:"自分のMP80を消費し、味方1人のMPを80回復"},
-    neoSupply:{id:"neoSupply",name:"ネオサプライ",icon:"💠",cost:200,target:"allyAll",fieldUse:"frontAllMP",kind:"mpTransfer",restoreMp:50,desc:"自分のMP200を消費し、前衛4人のMPを50ずつ回復"},
-    stealth:{id:"stealth",name:"ステルス",icon:"🥷",cost:30,target:"none",fieldUse:"stealth",battleUse:false,kind:"stealth",successRate:.35,desc:"探索中、未踏の全戦闘マスを個別に35%判定し、成功したマスを空マス化。1マップ1回"},
+    supply:{id:"supply",name:"サプライ",icon:"🔹",cost:80,target:"ally",fieldUse:"allyMP",kind:"mpTransfer",restoreMp:80,desc:"自身のMPを味方1人に譲渡する"},
+    neoSupply:{id:"neoSupply",name:"ネオサプライ",icon:"💠",cost:200,target:"allyAll",fieldUse:"frontAllMP",kind:"mpTransfer",restoreMp:50,desc:"自身のMPを前列の味方4人に譲渡する"},
+    stealth:{id:"stealth",name:"ステルス",icon:"🥷",cost:30,target:"none",fieldUse:"stealth",battleUse:false,kind:"stealth",successRate:.35,desc:"マップ上の戦闘マスを一定確率で消滅させる"},
     return:{id:"return",name:"リターン",icon:"🌀",cost:8,target:"none",fieldUse:"return",battleUse:false,kind:"return",desc:"探索を終了してミレスタへ帰還する"}
 
   };
 
-  // v0.34i: keep skill icon language consistent by role / element.
+  // v0.34j: keep skill icon language consistent by role / element.
   const SKILL_ELEMENT_ICONS={fire:"🔴",ice:"🔵",thunder:"🟡",earth:"🟤",wind:"🟢",light:"⚪",dark:"🟣",pleasure:"🩷"};
   function unifiedSkillIcon(sk){
     if(!sk) return "🔹";
@@ -5010,7 +5019,7 @@
     });
   }
 
-  // v0.34i development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
+  // v0.34j development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
   function devOwnedCharacterIds(){
     return [...new Set(["hero",...state.ownedSpecies])].filter(id=>roster[id]);
   }
@@ -5271,11 +5280,11 @@
     phoenixTail:{id:"phoenixTail",name:"フェニックスの尾",icon:"🔥",price:1500,sellRate:.10,battleUse:true,fieldUse:true,effect:"revive",revivePercent:1,battleTarget:"ally",allowKO:true,desc:"味方1人の戦闘不能を解除し、HPを全回復"},
 
     // Five-round 1.3x buffs, identical to the standard buff spells.
-    polishDrink:{id:"polishDrink",name:"ポリッシュドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["atk"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の攻撃力を1.3倍（5ラウンド）"},
-    guardDrink:{id:"guardDrink",name:"ガードドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["def"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の防御力を1.3倍（5ラウンド）"},
-    magicDrink:{id:"magicDrink",name:"マジックドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["magic"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の魔力を1.3倍（5ラウンド）"},
-    blockDrink:{id:"blockDrink",name:"ブロックドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["mdef"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の魔法防御力を1.3倍（5ラウンド）"},
-    quickDrink:{id:"quickDrink",name:"クイックドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["spd"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の素早さを1.3倍（5ラウンド）"},
+    polishDrink:{id:"polishDrink",name:"ポリッシュドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["atk"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の攻撃力を一時的に上げる"},
+    guardDrink:{id:"guardDrink",name:"ガードドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["def"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の防御力を一時的に上げる"},
+    magicDrink:{id:"magicDrink",name:"マジックドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["magic"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の魔力を一時的に上げる"},
+    blockDrink:{id:"blockDrink",name:"ブロックドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["mdef"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の魔法防御力を一時的に上げる"},
+    quickDrink:{id:"quickDrink",name:"クイックドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["spd"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の素早さを一時的に上げる"},
     superDrink:{id:"superDrink",name:"スーパードリンク",icon:"🌈",price:2000,sellRate:.10,battleUse:true,effect:"buff",buffs:["atk","def","magic","mdef","spd"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の攻撃・防御・魔力・魔防・素早さを1.3倍（5ラウンド）"},
 
     // Non-magical battle utilities. Aura / Canceller do not stop these.
@@ -7854,7 +7863,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
       updateHeader();
       return;
     }
@@ -7862,7 +7871,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
   }
 
   async function attemptEscape(){
@@ -8162,7 +8171,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -8170,7 +8179,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8304,7 +8313,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8365,7 +8374,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8390,7 +8399,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34j";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -8878,7 +8887,7 @@
       btn.className="skill-option";
       btn.disabled=!usable;
       const note=st.hp<=0?"戦闘不能":st.mp<sk.cost?"MP不足":!usable?(sk.fieldUse==="stealth"&&state.run?.stealthUsed?"使用済み":"対象なし"):"探索で使用";
-      const fieldDesc=(sk.kind==="heal"&&sk.fieldUse==="allyAll") ? `${sk.desc||""}（探索中はバトルメンバー4人のみ）` : (sk.desc||"");
+      const fieldDesc=sk.desc||"";
       btn.innerHTML=`<span class="skill-option-icon">${sk.icon||"✨"}</span>`+
         `<span class="skill-option-main"><span class="skill-option-name">${sk.name}</span>`+
         `<span class="skill-option-desc">${fieldDesc}</span></span>`+
