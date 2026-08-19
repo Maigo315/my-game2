@@ -1951,7 +1951,7 @@
   }
 
 
-  /* v0.32f: cleaner slot cards + horizontal waiting roster */
+  /* v0.32g: cleaner slot cards + horizontal waiting roster */
   .party-manage-head-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
   .party-manage-head-actions .small-btn{min-width:150px}
   .party-organize-slot{
@@ -2118,7 +2118,7 @@
 
 
 
-  /* v0.32f final overrides: restore party slot info + unify waiting cards */
+  /* v0.32g final overrides: restore party slot info + unify waiting cards */
   .party-organize-slot .party-slot-name{display:none !important}
   .party-organize-slot .party-slot-meta{
     display:block !important;
@@ -2295,7 +2295,7 @@
 
 
 
-  /* v0.32f final fixes: compact waiting screen, truly shared slot cards */
+  /* v0.32g final fixes: compact waiting screen, truly shared slot cards */
   .party-manage-shell.waiting-view-mode{
     grid-template-rows:auto auto 102px !important;
   }
@@ -2427,7 +2427,7 @@
 
 
 
-  /* v0.32f: one shared card design + compact Milesta waiting strip */
+  /* v0.32g: one shared card design + compact Milesta waiting strip */
   .party-manage-shell.waiting-view-mode{
     grid-template-rows:auto 168px 102px !important;
     gap:7px;
@@ -2606,6 +2606,111 @@
     .party-wait-card.party-organize-slot .party-mini-hp i{height:3px !important}
   }
 
+
+
+  /* v0.32g: restore organize card look close to pre-tag-removal version */
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot{
+    min-width:0 !important;
+    height:100% !important;
+    min-height:0 !important;
+    padding:4px !important;
+    border-radius:9px !important;
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    grid-template-rows:minmax(0,1fr) auto !important;
+    gap:4px !important;
+    align-items:stretch !important;
+    text-align:center !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot.empty{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    font-size:8px !important;
+    letter-spacing:.05em !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-thumb{
+    width:100% !important;
+    height:auto !important;
+    aspect-ratio:1/1 !important;
+    max-height:none !important;
+    min-height:0 !important;
+    margin:0 auto !important;
+    align-self:center !important;
+    padding:4px !important;
+    border-radius:8px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    overflow:hidden !important;
+    background:rgba(6,16,26,.35) !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-thumb img{
+    width:100% !important;
+    height:100% !important;
+    max-width:100% !important;
+    max-height:100% !important;
+    object-fit:contain !important;
+    object-position:center center !important;
+    transform:none !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-thumb.hero-thumb img{
+    object-fit:contain !important;
+    object-position:center center !important;
+    transform:none !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-info{
+    display:block !important;
+    min-width:0 !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-name{
+    display:block !important;
+    font-size:9px !important;
+    font-weight:1000 !important;
+    text-align:center !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-meta{
+    display:block !important;
+    margin-top:2px !important;
+    color:#d6c979 !important;
+    font-size:6px !important;
+    text-align:center !important;
+    white-space:nowrap !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp{
+    display:grid !important;
+    grid-template-columns:14px minmax(0,1fr) auto !important;
+    gap:2px !important;
+    margin-top:2px !important;
+    font-size:6px !important;
+    align-items:center !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp i{
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:3px !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp b,
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp span{
+    font-size:6px !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp span{
+    text-align:right !important;
+    white-space:nowrap !important;
+  }
+  @media(max-height:520px){
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot{padding:3px !important;gap:2px !important}
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-name{font-size:7px !important}
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-meta{font-size:5px !important}
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp{grid-template-columns:11px minmax(0,1fr) auto !important;font-size:5px !important;margin-top:1px !important}
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp b,
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp span{font-size:5px !important}
+  }
+
 </style>
 </head>
 <body>
@@ -2621,7 +2726,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32f</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32g</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -3183,7 +3288,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.32f" : "ミレスタ・仲間編成 v0.32f";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.32g" : "ミレスタ・仲間編成 v0.32g";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -3223,10 +3328,11 @@
 
   function partyCardHtml(c){
     const st=S(c);
+    const heroTag=c.id==="hero" ? "・同行固定" : "";
     return `${partyThumbHtml(c)}
       <span class="party-slot-info">
         <span class="party-slot-name">${c.name}</span>
-        <span class="party-slot-meta">Lv${c.level}</span>
+        <span class="party-slot-meta">Lv${c.level}${heroTag}</span>
         <span class="party-mini-hp"><b>HP</b><i style="--hp:${hpPct(c)}%"></i><span>${st.hp}/${st.hpMax}</span></span>
         <span class="party-mini-hp mp"><b>MP</b><i style="--hp:${mpPct(c)}%"></i><span>${st.mp}/${st.mpMax}</span></span>
       </span>`;
@@ -3677,7 +3783,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.32f" : "ミレスタ・仲間編成 v0.32f";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.32g" : "ミレスタ・仲間編成 v0.32g";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
