@@ -133,7 +133,7 @@
   .edge.active{stroke:#d2c277;opacity:.9;stroke-width:5}
   .node circle{stroke:#aac0d2;stroke-width:4;filter:drop-shadow(0 4px 5px rgba(0,0,0,.35))}
   .node text{font-size:34px;text-anchor:middle;dominant-baseline:middle;pointer-events:none}
-  .node .label{font-size:15px;font-weight:800;paint-order:stroke;stroke:#081019;stroke-width:5px;stroke-linejoin:round}
+  .node .label{font-size:15px;font-weight:800;paint-order:normal;stroke:none;filter:drop-shadow(0 1px 1px rgba(3,8,12,.85))}
   .node.reachable{cursor:pointer}
   .node.reachable circle{stroke:#ffe589;stroke-width:7}
   .node.reachable:hover circle{filter:brightness(1.2) drop-shadow(0 0 10px rgba(255,225,117,.5))}
@@ -460,7 +460,7 @@
   .explore-skill-list-wrap{max-height:min(355px,55vh);overflow:auto;scrollbar-width:thin}
   .explore-skill-actor-card.no-field-skills{opacity:.32;filter:grayscale(.5);cursor:not-allowed}
 
-  /* v0.34l exploration skill polish: stable scrolling + result preview animations */
+  /* v0.34m exploration skill polish: stable scrolling + result preview animations */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw);height:min(650px,calc(100vh - 24px - var(--safe-top) - var(--safe-bottom)));
     max-height:94%;overflow:hidden;display:flex;flex-direction:column;
@@ -497,7 +497,7 @@
     .explore-skill-list-wrap{padding-bottom:14px}
   }
 
-  /* v0.34l: exploration skill actor picker vertical balance */
+  /* v0.34m: exploration skill actor picker vertical balance */
   #exploreSkillActorView{flex:0 0 auto !important;padding-top:34px}
   #exploreSkillActorView .explore-item-target-strip{margin-bottom:12px}
   #exploreSkillActorView:not([hidden]) ~ .swap-note{margin-top:0;align-self:stretch}
@@ -3048,7 +3048,7 @@
   }
 
 
-  /* v0.34l: exploration skill modal uses one stable compact layout on phones */
+  /* v0.34m: exploration skill modal uses one stable compact layout on phones */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw) !important;
     height:min(600px,calc(100vh - 18px - var(--safe-top) - var(--safe-bottom))) !important;
@@ -3133,13 +3133,13 @@
   }
 
 
-  /* v0.34l: keep Safari from re-autosizing text after orientation changes. */
+  /* v0.34m: keep Safari from re-autosizing text after orientation changes. */
   html,body,#app{
     -webkit-text-size-adjust:100% !important;
     text-size-adjust:100% !important;
   }
 
-  /* v0.34l: exploration skill modal uses one visual scale; only content height changes by view. */
+  /* v0.34m: exploration skill modal uses one visual scale; only content height changes by view. */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw) !important;
     height:min(600px,calc(100dvh - 18px - var(--safe-top) - var(--safe-bottom))) !important;
@@ -3200,10 +3200,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34l</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34m</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34l</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34m</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
   </header>
 
   <main id="homeScreen" class="screen active">
@@ -3635,7 +3635,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.34l";
+  const DEV_VERSION = "v0.34m";
   const state = {
     gold: 100,
     items:{
@@ -3797,13 +3797,13 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34l" : "ミレスタ・仲間編成 v0.34l";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34m" : "ミレスタ・仲間編成 v0.34m";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34l"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4295,7 +4295,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34l";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34m";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -4303,7 +4303,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34l" : "ミレスタ・仲間編成 v0.34l";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34m" : "ミレスタ・仲間編成 v0.34m";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4336,13 +4336,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34l";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34l";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
     updateHeader();
   };
 
@@ -4714,13 +4714,14 @@
   const PLEASURE_RESIST_DAMAGE={E:1.75,D:1.40,C:1.00,B:.65,A:.35,S:.15};
   const STATUS_BASE_RATE={single:.65,all:.50,deathSingle:.30,deathAll:.20};
 
+  const MAGIC_FX_SYMBOLS={fire:"🔥",ice:"❄️",thunder:"⚡",earth:"🪨",wind:"🌪️",light:"✨",dark:"🌑",pleasure:"💗"};
   function magicSkill(id,name,icon,cost,target,element,rank,extra={}){
     const all=target==="enemyAll";
     return {id,name,icon,cost,target,kind:"magic",element,rank,
       rankMultiplier:MAGIC_RANK_MULTIPLIERS[rank]||1,
       targetMultiplier:all?MAGIC_ALL_TARGET_MULTIPLIER:1,
       desc:`敵${all?"全体":"1体"}に${element?({fire:"炎",ice:"氷",thunder:"雷",earth:"地",wind:"風",light:"光",dark:"闇",pleasure:"快楽"}[element]||element)+"属性":"無属性"}の魔法ダメージ`,
-      animation:element==="fire"?"fire":"magicshot",...extra};
+      animation:element==="fire"?"fire":"magicshot",fxSymbol:MAGIC_FX_SYMBOLS[element]||icon,...extra};
   }
   function statusSkill(id,name,icon,cost,target,status,baseRate,extra={}){
     const all=target==="enemyAll";
@@ -4875,7 +4876,7 @@
 
   };
 
-  // v0.34l: keep skill icon language consistent by role / element.
+  // v0.34m: keep menu skill icons consistent by role / element; battle FX uses fxSymbol separately.
   const SKILL_ELEMENT_ICONS={fire:"🔴",ice:"🔵",thunder:"🟡",earth:"🟤",wind:"🟢",light:"⚪",dark:"🟣",pleasure:"🩷"};
   function unifiedSkillIcon(sk){
     if(!sk) return "🔹";
@@ -5157,7 +5158,7 @@
     });
   }
 
-  // v0.34l development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
+  // v0.34m development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
   function devOwnedCharacterIds(){
     return [...new Set(["hero",...state.ownedSpecies])].filter(id=>roster[id]);
   }
@@ -8001,7 +8002,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34l";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
       updateHeader();
       return;
     }
@@ -8009,7 +8010,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34l";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
   }
 
   async function attemptEscape(){
@@ -8309,7 +8310,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34l";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -8317,7 +8318,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34l";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8451,7 +8452,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34l";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8512,7 +8513,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34l";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8537,7 +8538,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34l";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
     updateHeader();
     toast("戦闘テストを終了");
   }
