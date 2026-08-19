@@ -2717,6 +2717,79 @@
     .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp i{height:3px !important}
   }
 
+
+  /* v0.32i: organize card spacing + full-length equal HP/MP bars */
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot{
+    gap:0 !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-info{
+    display:block !important;
+    min-width:0 !important;
+    margin-top:-2px !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-name{
+    font-size:10px !important;
+    line-height:1.02 !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-meta{
+    margin-top:0 !important;
+    font-size:7px !important;
+    line-height:1.02 !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp{
+    display:grid !important;
+    grid-template-columns:14px minmax(0,1fr) !important;
+    grid-template-areas:
+      "label value"
+      "bar bar" !important;
+    column-gap:3px !important;
+    row-gap:1px !important;
+    margin-top:1px !important;
+    font-size:7px !important;
+    line-height:1 !important;
+    align-items:center !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp b{
+    grid-area:label !important;
+    align-self:end !important;
+    font-size:7px !important;
+    line-height:1 !important;
+    text-align:left !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp i{
+    grid-area:bar !important;
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:4px !important;
+  }
+  .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp span{
+    grid-area:value !important;
+    justify-self:end !important;
+    align-self:end !important;
+    font-size:7px !important;
+    line-height:1 !important;
+    text-align:right !important;
+    white-space:nowrap !important;
+    font-variant-numeric:tabular-nums;
+  }
+  @media(max-height:520px){
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot{gap:0 !important}
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-info{margin-top:-1px !important}
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-name{font-size:8px !important}
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-slot-meta{font-size:6px !important}
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp{
+      grid-template-columns:12px minmax(0,1fr) !important;
+      column-gap:2px !important;
+      row-gap:1px !important;
+      font-size:6px !important;
+      margin-top:1px !important;
+    }
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp b,
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp span{font-size:6px !important}
+    .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp i{height:3px !important}
+  }
+
 </style>
 </head>
 <body>
@@ -2732,7 +2805,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32h</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32i</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
