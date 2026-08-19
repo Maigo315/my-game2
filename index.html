@@ -460,6 +460,43 @@
   .explore-skill-list-wrap{max-height:min(355px,55vh);overflow:auto;scrollbar-width:thin}
   .explore-skill-actor-card.no-field-skills{opacity:.32;filter:grayscale(.5);cursor:not-allowed}
 
+  /* v0.34i exploration skill polish: stable scrolling + result preview animations */
+  #exploreSkillModal .swap-panel{
+    width:min(980px,96vw);height:min(650px,calc(100vh - 24px - var(--safe-top) - var(--safe-bottom)));
+    max-height:94%;overflow:hidden;display:flex;flex-direction:column;
+  }
+  #exploreSkillModal .swap-head{flex:0 0 auto}
+  #exploreSkillActorView,#exploreSkillListView,#exploreSkillTargetView{min-height:0;flex:1}
+  #exploreSkillListView{display:flex;flex-direction:column;overflow:hidden}
+  #exploreSkillListView[hidden]{display:none!important}
+  #exploreSkillListView .explore-skill-back,#exploreSkillListView .explore-skill-actor-summary{flex:0 0 auto}
+  .explore-skill-list-wrap{flex:1;min-height:0;max-height:none!important;overflow-y:auto!important;overscroll-behavior:contain;scrollbar-width:thin;padding:1px 2px 18px;scroll-padding-bottom:18px}
+  #exploreSkillTargetView{overflow:hidden}
+  .explore-skill-effect-card{position:relative;pointer-events:none;cursor:default}
+  .explore-skill-effect-card .explore-item-mini-bar i{transition:width .58s cubic-bezier(.2,.8,.25,1)}
+  .explore-skill-effect-card.effect-hp .explore-item-target-thumb,
+  .explore-skill-effect-card.effect-hp .explore-item-target-stats{animation:fieldHealGlow .85s ease}
+  .explore-skill-effect-card.effect-mp .explore-item-target-thumb,
+  .explore-skill-effect-card.effect-mp .explore-item-target-stats{animation:fieldMpGlow .85s ease}
+  .explore-skill-effect-card.effect-revive .explore-item-target-thumb,
+  .explore-skill-effect-card.effect-revive .explore-item-target-stats{animation:fieldReviveGlow .9s ease}
+  .explore-skill-effect-card.effect-cleanse .explore-item-target-thumb,
+  .explore-skill-effect-card.effect-cleanse .explore-item-target-stats{animation:fieldCleanseGlow .8s ease}
+  .explore-skill-effect-gain{position:absolute;z-index:4;left:50%;top:42%;transform:translate(-50%,-50%);padding:2px 6px;border-radius:999px;background:rgba(8,24,16,.88);border:1px solid #62c982;color:#b6f6c9;font-size:10px;font-weight:1000;text-shadow:0 1px 2px #000;opacity:0;animation:fieldGainPop .85s ease forwards;white-space:nowrap}
+  .explore-skill-effect-card.effect-mp .explore-skill-effect-gain{background:rgba(10,24,45,.9);border-color:#5e91dc;color:#c9dcff}
+  .explore-skill-effect-card.effect-revive .explore-skill-effect-gain{background:rgba(43,38,12,.92);border-color:#ddc65e;color:#fff1a4}
+  .explore-skill-effect-card.effect-cleanse .explore-skill-effect-gain{background:rgba(13,35,24,.92);border-color:#6ccf91;color:#caffda}
+  .explore-item-target-group.effect-outside{opacity:.42;filter:grayscale(.25)}
+  @keyframes fieldHealGlow{0%{box-shadow:0 0 0 rgba(86,224,132,0)}35%{border-color:#78e39a;box-shadow:0 0 18px rgba(86,224,132,.72),inset 0 0 14px rgba(86,224,132,.18)}100%{box-shadow:0 0 0 rgba(86,224,132,0)}}
+  @keyframes fieldMpGlow{0%{box-shadow:0 0 0 rgba(91,143,230,0)}35%{border-color:#78a7f2;box-shadow:0 0 18px rgba(91,143,230,.72),inset 0 0 14px rgba(91,143,230,.18)}100%{box-shadow:0 0 0 rgba(91,143,230,0)}}
+  @keyframes fieldReviveGlow{0%{box-shadow:0 0 0 rgba(246,220,105,0)}35%{border-color:#ead668;box-shadow:0 0 21px rgba(246,220,105,.78),inset 0 0 15px rgba(246,220,105,.2)}100%{box-shadow:0 0 0 rgba(246,220,105,0)}}
+  @keyframes fieldCleanseGlow{0%{box-shadow:0 0 0 rgba(113,221,149,0)}35%{border-color:#86e1a4;box-shadow:0 0 17px rgba(113,221,149,.65)}100%{box-shadow:0 0 0 rgba(113,221,149,0)}}
+  @keyframes fieldGainPop{0%{opacity:0;transform:translate(-50%,8px) scale(.75)}20%{opacity:1;transform:translate(-50%,-7px) scale(1.08)}70%{opacity:1;transform:translate(-50%,-13px) scale(1)}100%{opacity:0;transform:translate(-50%,-22px) scale(.96)}}
+  @media(max-height:520px){
+    #exploreSkillModal .swap-panel{height:calc(100vh - 12px - var(--safe-top) - var(--safe-bottom));padding:8px}
+    .explore-skill-list-wrap{padding-bottom:14px}
+  }
+
   /* v0.32 exploration item flow: portrait + status strip target picker */
   .explore-item-panel{width:min(980px,96vw);overflow:hidden}
   #exploreItemTargetView[hidden],#exploreItemListView[hidden]{display:none!important}
@@ -3016,10 +3053,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34h</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34i</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34h</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34i</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
   </header>
 
   <main id="homeScreen" class="screen active">
@@ -3451,7 +3488,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.34h";
+  const DEV_VERSION = "v0.34i";
   const state = {
     gold: 100,
     items:{
@@ -3613,13 +3650,13 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34h" : "ミレスタ・仲間編成 v0.34h";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34i" : "ミレスタ・仲間編成 v0.34i";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4111,7 +4148,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34h";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34i";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -4119,7 +4156,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34h" : "ミレスタ・仲間編成 v0.34h";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34i" : "ミレスタ・仲間編成 v0.34i";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4152,13 +4189,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
     updateHeader();
   };
 
@@ -4691,6 +4728,22 @@
 
   };
 
+  // v0.34i: keep skill icon language consistent by role / element.
+  const SKILL_ELEMENT_ICONS={fire:"🔴",ice:"🔵",thunder:"🟡",earth:"🟤",wind:"🟢",light:"⚪",dark:"🟣",pleasure:"🩷"};
+  function unifiedSkillIcon(sk){
+    if(!sk) return "🔹";
+    if(sk.kind==="heal" || sk.kind==="cleanse") return "💚";
+    if(sk.kind==="revive") return "✨";
+    if(sk.kind==="magic") return SKILL_ELEMENT_ICONS[sk.element] || "⚫";
+    if(sk.kind==="status") return "🟣";
+    if(sk.kind==="dispel") return "⚪";
+    if(["buff","barrier","charge","magicBarrier","mpTransfer","fortune","stealth","return","escape","berserk"].includes(sk.kind)) return "🔹";
+    if(["physical","multiPhysical","physicalSpecial","physicalAll"].includes(sk.kind)) return "🟠";
+    if(sk.kind==="passive") return "🔸";
+    return sk.icon || "🔹";
+  }
+  Object.values(skills).forEach(sk=>{sk.icon=unifiedSkillIcon(sk);});
+
   // v0.20: the full future plan lives in characterProfiles. Only implemented skills are activated for now.
   const levelSkillTable = {
     hero:{1:["fire"],2:["heal"],6:["blaze"],12:["death"],16:["flare"],19:["allMagic"],24:["heavenlyLight"],28:["pleasureOne"],32:["lastHeal"],37:["gigaRaise"],41:["allDeath"],50:["heroicTailwind"],60:["endBlaze"],75:["canceller"]},
@@ -4957,7 +5010,7 @@
     });
   }
 
-  // v0.34h development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
+  // v0.34i development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
   function devOwnedCharacterIds(){
     return [...new Set(["hero",...state.ownedSpecies])].filter(id=>roster[id]);
   }
@@ -7801,7 +7854,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
       updateHeader();
       return;
     }
@@ -7809,7 +7862,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
   }
 
   async function attemptEscape(){
@@ -8109,7 +8162,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -8117,7 +8170,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8251,7 +8304,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8312,7 +8365,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8337,7 +8390,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34i";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -8734,6 +8787,9 @@
   }
 
   function closeExploreSkillMenu(){
+    const modalEl=$("exploreSkillModal");
+    if(modalEl?._effectTimer){clearTimeout(modalEl._effectTimer);modalEl._effectTimer=null;}
+    $("exploreSkillBackBtn").disabled=false;
     $("exploreSkillModal").classList.remove("show");
     state.exploreSkillActorId=null;
     state.exploreSkillId=null;
@@ -8750,13 +8806,16 @@
       case "return": return true;
       case "stealth": return !!state.run && !state.run.stealthUsed && state.run.nodes.some(n=>n.type==="battle" && !state.run.visited.has(n.id));
       case "ally": return party.some(c=>S(c).hp>0 && S(c).hp<S(c).hpMax);
-      case "allyAll": return party.some(c=>S(c).hp>0 && S(c).hp<S(c).hpMax);
+      case "allyAll": {
+        const targets=sk.kind==="heal" ? state.battleActive.map(id=>roster[id]).filter(Boolean) : party;
+        return targets.some(c=>S(c).hp>0 && S(c).hp<S(c).hpMax);
+      }
       case "allyKO": return party.some(c=>S(c).hp<=0);
       case "allyAllKO": return party.some(c=>S(c).hp<=0);
       case "miracle": return party.some(c=>S(c).hp<=0 || S(c).hp<S(c).hpMax);
       case "allyCleanse": return party.some(c=>["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]));
       case "allyAllCleanse": return party.some(c=>["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]));
-      case "allyMP": return party.some(c=>S(c).hp>0 && S(c).mp<S(c).mpMax);
+      case "allyMP": return party.some(c=>c.id!==actor.id && S(c).hp>0 && S(c).mp<S(c).mpMax);
       case "frontAllMP": return state.battleActive.some(id=>{const c=roster[id];return c&&S(c).hp>0&&S(c).mp<S(c).mpMax;});
       default:return true;
     }
@@ -8819,35 +8878,119 @@
       btn.className="skill-option";
       btn.disabled=!usable;
       const note=st.hp<=0?"戦闘不能":st.mp<sk.cost?"MP不足":!usable?(sk.fieldUse==="stealth"&&state.run?.stealthUsed?"使用済み":"対象なし"):"探索で使用";
+      const fieldDesc=(sk.kind==="heal"&&sk.fieldUse==="allyAll") ? `${sk.desc||""}（探索中はバトルメンバー4人のみ）` : (sk.desc||"");
       btn.innerHTML=`<span class="skill-option-icon">${sk.icon||"✨"}</span>`+
         `<span class="skill-option-main"><span class="skill-option-name">${sk.name}</span>`+
-        `<span class="skill-option-desc">${sk.desc||""}</span></span>`+
+        `<span class="skill-option-desc">${fieldDesc}</span></span>`+
         `<span class="skill-option-meta">MP ${sk.cost}<small>${note}</small></span>`;
       btn.onclick=()=>selectExploreSkill(actor.id,sk.id);
       box.appendChild(btn);
     });
   }
 
+  function captureExploreSkillPartyState(){
+    return Object.fromEntries(travelPartyIds().map(id=>{
+      const c=roster[id],st=c?S(c):null;
+      return c&&st ? [id,{hp:st.hp,hpMax:st.hpMax,mp:st.mp,mpMax:st.mpMax}] : null;
+    }).filter(Boolean));
+  }
+
+  function exploreSkillEffectCard(c,before,change){
+    const st=S(c),old=before||{hp:st.hp,hpMax:st.hpMax,mp:st.mp,mpMax:st.mpMax};
+    const card=document.createElement("button");
+    card.type="button";
+    card.className="explore-item-target-card explore-skill-effect-card";
+    const effectKind=change?.kind||"";
+    if(change?.amount>0 || effectKind==="cleanse") card.classList.add(`effect-${effectKind}`);
+    const portrait=c.img?`<img src="${c.img}" alt="">`:`<span>👤</span>`;
+    const hp=Math.max(0,Math.min(100,old.hpMax?old.hp/old.hpMax*100:0));
+    const mp=Math.max(0,Math.min(100,old.mpMax?old.mp/old.mpMax*100:0));
+    let gain="";
+    if(change?.amount>0){
+      const prefix=effectKind==="mp"?"MP +":effectKind==="revive"?"✨ +":"HP +";
+      gain=`<span class="explore-skill-effect-gain">${prefix}${change.amount}</span>`;
+    }else if(effectKind==="cleanse") gain='<span class="explore-skill-effect-gain">✨ 解除</span>';
+    card.innerHTML=`<span class="explore-item-target-thumb">${portrait}</span><span class="explore-item-target-stats"><span class="explore-item-target-name">${c.name}</span><span class="explore-item-mini-resource"><b>HP</b><span class="value hp-value">${old.hp}/${old.hpMax}</span><span class="explore-item-mini-bar"><i class="hp-fill" style="width:${hp}%"></i></span></span><span class="explore-item-mini-resource"><b>MP</b><span class="value mp-value">${old.mp}/${old.mpMax}</span><span class="explore-item-mini-bar mp"><i class="mp-fill" style="width:${mp}%"></i></span></span></span>${gain}`;
+    card.dataset.characterId=c.id;
+    return card;
+  }
+
+  function showExploreSkillEffect(actor,sk,before,changes,text,{battleOnly=false}={}){
+    $("exploreSkillLead").textContent=`${actor.name}：${sk.name} の効果`;
+    $("exploreSkillActorView").hidden=true;
+    $("exploreSkillListView").hidden=true;
+    $("exploreSkillTargetView").hidden=false;
+    $("exploreSkillBackBtn").disabled=true;
+    const ast=S(actor);
+    $("exploreSkillSummary").innerHTML=`<span style="font-size:24px">${sk.icon||"✨"}</span><span><strong>${actor.name}：${sk.name}</strong><br>${text}　MP ${ast.mp}/${ast.mpMax}</span>`;
+    const targets=$("exploreSkillTargets"); targets.innerHTML="";
+    const battle=document.createElement("div"); battle.className="explore-item-target-group battle";
+    const reserve=document.createElement("div"); reserve.className="explore-item-target-group reserve";
+    if(battleOnly) reserve.classList.add("effect-outside");
+    const changeMap=Object.fromEntries((changes||[]).map(ch=>[ch.id,ch]));
+    for(let i=0;i<4;i++){
+      const c=roster[state.battleActive[i]];
+      battle.appendChild(c?exploreSkillEffectCard(c,before[c.id],changeMap[c.id]):exploreItemEmptySlot());
+    }
+    for(let i=0;i<6;i++){
+      const c=roster[state.battleReserve[i]];
+      reserve.appendChild(c?exploreSkillEffectCard(c,before[c.id],changeMap[c.id]):exploreItemEmptySlot());
+    }
+    targets.append(battle,reserve);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      travelPartyIds().forEach(id=>{
+        const card=targets.querySelector(`[data-character-id="${id}"]`); if(!card)return;
+        const c=roster[id],st=c?S(c):null;if(!st)return;
+        const hpFill=card.querySelector(".hp-fill"),mpFill=card.querySelector(".mp-fill");
+        if(hpFill) hpFill.style.width=`${Math.max(0,Math.min(100,st.hpMax?st.hp/st.hpMax*100:0))}%`;
+        if(mpFill) mpFill.style.width=`${Math.max(0,Math.min(100,st.mpMax?st.mp/st.mpMax*100:0))}%`;
+        const hpValue=card.querySelector(".hp-value"),mpValue=card.querySelector(".mp-value");
+        if(hpValue) hpValue.textContent=`${st.hp}/${st.hpMax}`;
+        if(mpValue) mpValue.textContent=`${st.mp}/${st.mpMax}`;
+      });
+    }));
+    updateRunHud();
+    const modalEl=$("exploreSkillModal");
+    if(modalEl._effectTimer) clearTimeout(modalEl._effectTimer);
+    modalEl._effectTimer=setTimeout(()=>{
+      modalEl._effectTimer=null;
+      $("exploreSkillBackBtn").disabled=false;
+      if($("exploreSkillModal").classList.contains("show")) renderExploreSkillList();
+    },1050);
+  }
+
   function useExploreAllSkill(actor,sk){
     const ast=S(actor);
     if(ast.hp<=0 || ast.mp<sk.cost || !fieldSkillHasTarget(actor,sk)) return;
-    const party=travelPartyIds().map(id=>roster[id]).filter(Boolean);
+    const before=captureExploreSkillPartyState();
+    const travelParty=travelPartyIds().map(id=>roster[id]).filter(Boolean);
+    const battleParty=state.battleActive.map(id=>roster[id]).filter(Boolean);
+    const party=(sk.kind==="heal") ? battleParty : travelParty;
     ast.mp-=sk.cost;
     let count=0,total=0;
+    const changes=[];
     if(sk.kind==="heal"){
       const power=healAmountForSkill(actor,sk);
-      party.filter(c=>S(c).hp>0).forEach(c=>{ const amount=Math.min(S(c).hpMax-S(c).hp,sk.fullHeal?S(c).hpMax-S(c).hp:power); if(amount>0){S(c).hp+=amount;total+=amount;count++;} });
+      party.filter(c=>S(c).hp>0).forEach(c=>{
+        const amount=Math.min(S(c).hpMax-S(c).hp,sk.fullHeal?S(c).hpMax-S(c).hp:power);
+        if(amount>0){S(c).hp+=amount;total+=amount;count++;changes.push({id:c.id,kind:"hp",amount});}
+      });
     }else if(sk.kind==="revive"){
-      party.filter(c=>S(c).hp<=0).forEach(c=>{ S(c).hp=Math.max(1,Math.round(S(c).hpMax*(Number(sk.revivePercent)||.20))); count++; });
-      if(sk.fullPartyHeal) party.forEach(c=>{S(c).hp=S(c).hpMax;});
+      party.filter(c=>S(c).hp<=0).forEach(c=>{
+        const old=S(c).hp;S(c).hp=Math.max(1,Math.round(S(c).hpMax*(Number(sk.revivePercent)||.20)));
+        const amount=S(c).hp-old;count++;changes.push({id:c.id,kind:"revive",amount});
+      });
+      if(sk.fullPartyHeal) party.forEach(c=>{
+        const old=S(c).hp;S(c).hp=S(c).hpMax;const amount=S(c).hp-old;
+        if(amount>0 && !changes.some(ch=>ch.id===c.id)) changes.push({id:c.id,kind:"hp",amount});
+      });
     }else if(sk.kind==="cleanse"){
-      party.forEach(c=>{ const n=clearNegativeConditions(c,{poisonOnly:false}); total+=n; if(n)count++; });
+      party.forEach(c=>{ const n=clearNegativeConditions(c,{poisonOnly:false}); total+=n; if(n){count++;changes.push({id:c.id,kind:"cleanse",amount:n});} });
     }else if(sk.kind==="mpTransfer"){
-      state.battleActive.map(id=>roster[id]).filter(c=>c&&S(c).hp>0).forEach(c=>{const amount=Math.min(S(c).mpMax-S(c).mp,sk.restoreMp);S(c).mp+=amount;total+=amount;count++;});
+      battleParty.filter(c=>S(c).hp>0).forEach(c=>{const amount=Math.min(S(c).mpMax-S(c).mp,sk.restoreMp);if(amount>0){S(c).mp+=amount;total+=amount;count++;changes.push({id:c.id,kind:"mp",amount});}});
     }
-    updateRunHud();
-    renderExploreSkillList();
     const text=sk.kind==="heal"?`${count}人・合計HP ${total} 回復`:sk.kind==="revive"?`${count}人を復活${sk.fullPartyHeal?"＋全員全回復":""}`:sk.kind==="cleanse"?`${total}個の状態異常を解除`:`合計MP ${total} 回復`;
+    showExploreSkillEffect(actor,sk,before,changes,text,{battleOnly:sk.kind==="heal"||sk.kind==="mpTransfer"});
     toast(`${actor.name} の${sk.name}：${text}`);
   }
 
@@ -8884,20 +9027,21 @@
     renderExploreSkillTargets();
   }
 
-  function fieldTargetUsable(sk,c){
+  function fieldTargetUsable(sk,c,actor=null){
     const st=S(c);
     switch(sk.fieldUse){
       case "ally": return st.hp>0 && st.hp<st.hpMax;
       case "allyKO": return st.hp<=0;
       case "allyCleanse": return ["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]);
-      case "allyMP": return st.hp>0 && st.mp<st.mpMax;
+      case "allyMP": return (!actor || c.id!==actor.id) && st.hp>0 && st.mp<st.mpMax;
       default:return false;
     }
   }
 
   function exploreSkillTargetCard(c,actor,sk){
-    const st=S(c),ast=S(actor),canUse=ast.hp>0 && ast.mp>=sk.cost && fieldTargetUsable(sk,c);
+    const st=S(c),ast=S(actor),selfBlocked=sk.fieldUse==="allyMP"&&c.id===actor.id,canUse=ast.hp>0 && ast.mp>=sk.cost && fieldTargetUsable(sk,c,actor);
     const card=document.createElement("button"); card.className="explore-item-target-card"; card.disabled=!canUse;
+    if(selfBlocked) card.title="サプライは使用者自身には使えません";
     const portrait=c.img?`<img src="${c.img}" alt="">`:`<span>👤</span>`;
     const hp=Math.max(0,Math.min(100,st.hpMax?st.hp/st.hpMax*100:0));
     const mp=Math.max(0,Math.min(100,st.mpMax?st.mp/st.mpMax*100:0));
@@ -8914,7 +9058,8 @@
     $("exploreSkillListView").hidden=true;
     $("exploreSkillTargetView").hidden=false;
     const ast=S(actor);
-    $("exploreSkillSummary").innerHTML=`<span style="font-size:24px">${sk.icon||"✨"}</span><span><strong>${actor.name}：${sk.name}</strong><br>MP ${ast.mp}/${ast.mpMax}　消費MP ${sk.cost}　${sk.desc||""}</span>`;
+    const fieldDesc=(sk.kind==="heal"&&sk.fieldUse==="allyAll")?`${sk.desc||""}（探索中はバトルメンバー4人のみ）`:(sk.desc||"");
+    $("exploreSkillSummary").innerHTML=`<span style="font-size:24px">${sk.icon||"✨"}</span><span><strong>${actor.name}：${sk.name}</strong><br>MP ${ast.mp}/${ast.mpMax}　消費MP ${sk.cost}　${fieldDesc}</span>`;
     const targets=$("exploreSkillTargets"); targets.innerHTML="";
     const battle=document.createElement("div"); battle.className="explore-item-target-group battle";
     const reserve=document.createElement("div"); reserve.className="explore-item-target-group reserve";
@@ -8929,20 +9074,22 @@
     const ast=S(actor),tst=S(target);
     if(ast.hp<=0){ toast(`${actor.name} は戦闘不能でスキルを使えません`); renderExploreSkillTargets(); return; }
     if(ast.mp<sk.cost){ toast(`${actor.name} のMPが足りません`); renderExploreSkillTargets(); return; }
-    if(!fieldTargetUsable(sk,target)){ toast("その対象には今は使えません"); return; }
+    if(!fieldTargetUsable(sk,target,actor)){ toast(sk.fieldUse==="allyMP"&&target.id===actor.id?"サプライは使用者自身には使えません":"その対象には今は使えません"); return; }
+    const before=captureExploreSkillPartyState();
     ast.mp-=sk.cost;
-    let text="";
+    let text="",change=null;
     if(sk.kind==="heal"){
       const power=healAmountForSkill(actor,sk),amount=Math.min(tst.hpMax-tst.hp,sk.fullHeal?tst.hpMax-tst.hp:power);
-      tst.hp+=amount; text=`${target.name} のHPが ${amount} 回復`;
+      tst.hp+=amount; text=`${target.name} のHPが ${amount} 回復`; change={id:target.id,kind:"hp",amount};
     }else if(sk.kind==="revive"){
-      const amount=Math.max(1,Math.round(tst.hpMax*(Number(sk.revivePercent)||.20))); tst.hp=Math.min(tst.hpMax,amount); text=`${target.name} がHP ${tst.hp}で復活`;
+      const old=tst.hp,amount=Math.max(1,Math.round(tst.hpMax*(Number(sk.revivePercent)||.20))); tst.hp=Math.min(tst.hpMax,amount); text=`${target.name} がHP ${tst.hp}で復活`; change={id:target.id,kind:"revive",amount:tst.hp-old};
     }else if(sk.kind==="cleanse"){
-      const removed=clearNegativeConditions(target,{poisonOnly:Array.isArray(sk.statuses)&&sk.statuses[0]==="poison"}); text=`${target.name} の状態異常を ${removed}個解除`;
+      const removed=clearNegativeConditions(target,{poisonOnly:Array.isArray(sk.statuses)&&sk.statuses[0]==="poison"}); text=`${target.name} の状態異常を ${removed}個解除`; change={id:target.id,kind:"cleanse",amount:removed};
     }else if(sk.kind==="mpTransfer"){
-      const amount=Math.min(tst.mpMax-tst.mp,sk.restoreMp); tst.mp+=amount; text=`${target.name} のMPが ${amount} 回復`;
+      const amount=Math.min(tst.mpMax-tst.mp,sk.restoreMp); tst.mp+=amount; text=`${target.name} のMPが ${amount} 回復`; change={id:target.id,kind:"mp",amount};
     }
-    updateRunHud(); renderExploreSkillTargets(); toast(`${actor.name} の${sk.name}：${text}`);
+    showExploreSkillEffect(actor,sk,before,change?[change]:[],text,{battleOnly:false});
+    toast(`${actor.name} の${sk.name}：${text}`);
   }
 
   function openExploreSkillMenu(){
