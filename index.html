@@ -451,11 +451,14 @@
   .member-tags{display:flex;align-items:center;gap:3px;flex:0 0 auto}
   .explore-condition{padding:1px 4px;border-radius:999px;font-size:7px;font-weight:1000;white-space:nowrap}
   .explore-condition.poison{border:1px solid #7f5aa4;background:#2d1d3b;color:#dfc0ff}
-  #exploreSkillList[hidden],.explore-skill-target-section[hidden]{display:none!important}
+  #exploreSkillActorView[hidden],#exploreSkillListView[hidden],#exploreSkillTargetView[hidden]{display:none!important}
   .explore-skill-back{
     margin-bottom:6px;border:1px solid #4a667e;border-radius:8px;background:#172b3d;color:#dce8f0;
     padding:5px 8px;font-size:9px;font-weight:900;cursor:pointer;
   }
+  .explore-skill-actor-summary{margin:0 0 7px}
+  .explore-skill-list-wrap{max-height:min(355px,55vh);overflow:auto;scrollbar-width:thin}
+  .explore-skill-actor-card.no-field-skills{opacity:.32;filter:grayscale(.5);cursor:not-allowed}
 
   /* v0.32 exploration item flow: portrait + status strip target picker */
   .explore-item-panel{width:min(980px,96vw);overflow:hidden}
@@ -3013,10 +3016,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34f</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34g</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34f</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34g</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
   </header>
 
   <main id="homeScreen" class="screen active">
@@ -3343,17 +3346,24 @@
 </div>
 
 <div class="swap-modal" id="exploreSkillModal">
-  <div class="swap-panel skill-select-panel">
+  <div class="swap-panel skill-select-panel explore-item-panel">
     <div class="swap-head">
       <h2>探索中のスキル</h2>
-      <p id="exploreSkillLead">探索中に使うスキルを選択</p>
+      <p id="exploreSkillLead">スキルを使う仲間を選択</p>
       <button class="swap-close" id="exploreSkillCloseBtn">閉じる</button>
     </div>
-    <div class="skill-list" id="exploreSkillList"></div>
-    <div class="explore-skill-target-section" id="exploreSkillTargetSection" hidden>
+    <div id="exploreSkillActorView">
+      <div class="explore-item-target-strip" id="exploreSkillActors"></div>
+    </div>
+    <div id="exploreSkillListView" hidden>
+      <button class="explore-skill-back" id="exploreSkillActorBackBtn" type="button">← 使用者選択へ</button>
+      <div class="item-summary-note explore-skill-actor-summary" id="exploreSkillActorSummary"></div>
+      <div class="skill-list explore-skill-list-wrap" id="exploreSkillList"></div>
+    </div>
+    <div id="exploreSkillTargetView" hidden>
       <button class="explore-skill-back" id="exploreSkillBackBtn" type="button">← スキル一覧へ</button>
-      <div class="item-summary-note" id="exploreSkillSummary"></div>
-      <div class="item-target-grid" id="exploreSkillTargets"></div>
+      <div class="item-summary-note explore-item-summary" id="exploreSkillSummary"></div>
+      <div class="explore-item-target-strip" id="exploreSkillTargets"></div>
     </div>
     <div class="swap-note">探索中の回復スキルは、バトルメンバーと控えの両方に使用できます。戦闘外では毒によるHP減少は発生しません。</div>
   </div>
@@ -3440,7 +3450,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.34f";
+  const DEV_VERSION = "v0.34g";
   const state = {
     gold: 100,
     items:{
@@ -3601,13 +3611,13 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34f" : "ミレスタ・仲間編成 v0.34f";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34g" : "ミレスタ・仲間編成 v0.34g";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4099,7 +4109,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34f";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34g";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -4107,7 +4117,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34f" : "ミレスタ・仲間編成 v0.34f";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34g" : "ミレスタ・仲間編成 v0.34g";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4140,13 +4150,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
     updateHeader();
   };
 
@@ -7696,7 +7706,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
       updateHeader();
       return;
     }
@@ -7704,7 +7714,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
   }
 
   async function attemptEscape(){
@@ -8004,7 +8014,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -8012,7 +8022,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8146,7 +8156,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8207,7 +8217,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8232,7 +8242,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -8634,11 +8644,8 @@
     state.exploreSkillId=null;
   }
 
-  function explorationSkillEntries(){
-    return [...state.battleActive,...state.battleReserve].flatMap(id=>{
-      const c=roster[id];
-      return knownSkills(c).filter(sk=>sk.fieldUse).map(sk=>({actor:c,skill:sk}));
-    });
+  function fieldSkillsForActor(c){
+    return c ? knownSkills(c).filter(sk=>sk.fieldUse) : [];
   }
 
   function fieldSkillHasTarget(actor,sk){
@@ -8660,21 +8667,58 @@
     }
   }
 
-  function renderExploreSkillList(){
+  function exploreSkillPersonCard(c){
+    const st=S(c),skillsForField=fieldSkillsForActor(c),hasSkills=skillsForField.length>0;
+    const card=document.createElement("button");
+    card.className=`explore-item-target-card explore-skill-actor-card${hasSkills?"":" no-field-skills"}`;
+    card.disabled=!hasSkills;
+    const portrait=c.img?`<img src="${c.img}" alt="">`:`<span>👤</span>`;
+    const hp=Math.max(0,Math.min(100,st.hpMax?st.hp/st.hpMax*100:0));
+    const mp=Math.max(0,Math.min(100,st.mpMax?st.mp/st.mpMax*100:0));
+    card.innerHTML=`<span class="explore-item-target-thumb">${portrait}</span><span class="explore-item-target-stats"><span class="explore-item-target-name">${c.name}</span><span class="explore-item-mini-resource"><b>HP</b><span class="value">${st.hp}/${st.hpMax}</span><span class="explore-item-mini-bar"><i style="width:${hp}%"></i></span></span><span class="explore-item-mini-resource"><b>MP</b><span class="value">${st.mp}/${st.mpMax}</span><span class="explore-item-mini-bar mp"><i style="width:${mp}%"></i></span></span></span>`;
+    if(hasSkills) card.onclick=()=>selectExploreSkillActor(c.id);
+    return card;
+  }
+
+  function renderExploreSkillActors(){
     state.exploreSkillActorId=null;
     state.exploreSkillId=null;
-    $("exploreSkillLead").textContent="探索中に使うスキルを選択";
-    $("exploreSkillList").hidden=false;
-    $("exploreSkillTargetSection").hidden=true;
-    const box=$("exploreSkillList");
-    box.innerHTML="";
-    const entries=explorationSkillEntries();
+    $("exploreSkillLead").textContent="スキルを使う仲間を選択";
+    $("exploreSkillActorView").hidden=false;
+    $("exploreSkillListView").hidden=true;
+    $("exploreSkillTargetView").hidden=true;
+    const targets=$("exploreSkillActors"); targets.innerHTML="";
+    const battle=document.createElement("div"); battle.className="explore-item-target-group battle";
+    const reserve=document.createElement("div"); reserve.className="explore-item-target-group reserve";
+    for(let i=0;i<4;i++){ const c=roster[state.battleActive[i]]; battle.appendChild(c?exploreSkillPersonCard(c):exploreItemEmptySlot()); }
+    for(let i=0;i<6;i++){ const c=roster[state.battleReserve[i]]; reserve.appendChild(c?exploreSkillPersonCard(c):exploreItemEmptySlot()); }
+    targets.append(battle,reserve);
+  }
+
+  function selectExploreSkillActor(actorId){
+    const actor=roster[actorId]; if(!actor) return;
+    state.exploreSkillActorId=actorId;
+    state.exploreSkillId=null;
+    renderExploreSkillList();
+  }
+
+  function renderExploreSkillList(){
+    const actor=roster[state.exploreSkillActorId];
+    if(!actor){ renderExploreSkillActors(); return; }
+    state.exploreSkillId=null;
+    $("exploreSkillLead").textContent=`${actor.name}：使用するスキルを選択`;
+    $("exploreSkillActorView").hidden=true;
+    $("exploreSkillListView").hidden=false;
+    $("exploreSkillTargetView").hidden=true;
+    const st=S(actor);
+    $("exploreSkillActorSummary").innerHTML=`<span style="font-size:24px">${actor.img?`<img src="${actor.img}" alt="" style="width:36px;height:36px;object-fit:contain">`:"✨"}</span><span><strong>${actor.name}</strong><br>HP ${st.hp}/${st.hpMax}　MP ${st.mp}/${st.mpMax}</span>`;
+    const box=$("exploreSkillList"); box.innerHTML="";
+    const entries=fieldSkillsForActor(actor);
     if(!entries.length){
-      box.innerHTML='<div class="character-skill-empty">探索中に使用できるスキルを覚えている仲間はいません</div>';
+      box.innerHTML='<div class="character-skill-empty">探索中に使用できるスキルを覚えていません。</div>';
       return;
     }
-    entries.forEach(({actor,skill:sk})=>{
-      const st=S(actor);
+    entries.forEach(sk=>{
       const usable=fieldSkillHasTarget(actor,sk);
       const btn=document.createElement("button");
       btn.className="skill-option";
@@ -8682,7 +8726,7 @@
       const note=st.hp<=0?"戦闘不能":st.mp<sk.cost?"MP不足":!usable?(sk.fieldUse==="stealth"&&state.run?.stealthUsed?"使用済み":"対象なし"):"探索で使用";
       btn.innerHTML=`<span class="skill-option-icon">${sk.icon||"✨"}</span>`+
         `<span class="skill-option-main"><span class="skill-option-name">${sk.name}</span>`+
-        `<span class="skill-option-desc">${actor.name}　MP ${st.mp}/${st.mpMax}<br>${sk.desc||""}</span></span>`+
+        `<span class="skill-option-desc">${sk.desc||""}</span></span>`+
         `<span class="skill-option-meta">MP ${sk.cost}<small>${note}</small></span>`;
       btn.onclick=()=>selectExploreSkill(actor.id,sk.id);
       box.appendChild(btn);
@@ -8756,29 +8800,32 @@
     }
   }
 
+  function exploreSkillTargetCard(c,actor,sk){
+    const st=S(c),ast=S(actor),canUse=ast.hp>0 && ast.mp>=sk.cost && fieldTargetUsable(sk,c);
+    const card=document.createElement("button"); card.className="explore-item-target-card"; card.disabled=!canUse;
+    const portrait=c.img?`<img src="${c.img}" alt="">`:`<span>👤</span>`;
+    const hp=Math.max(0,Math.min(100,st.hpMax?st.hp/st.hpMax*100:0));
+    const mp=Math.max(0,Math.min(100,st.mpMax?st.mp/st.mpMax*100:0));
+    card.innerHTML=`<span class="explore-item-target-thumb">${portrait}</span><span class="explore-item-target-stats"><span class="explore-item-target-name">${c.name}</span><span class="explore-item-mini-resource"><b>HP</b><span class="value">${st.hp}/${st.hpMax}</span><span class="explore-item-mini-bar"><i style="width:${hp}%"></i></span></span><span class="explore-item-mini-resource"><b>MP</b><span class="value">${st.mp}/${st.mpMax}</span><span class="explore-item-mini-bar mp"><i style="width:${mp}%"></i></span></span></span>`;
+    card.onclick=()=>useExploreSkillOnTarget(c.id);
+    return card;
+  }
+
   function renderExploreSkillTargets(){
     const actor=roster[state.exploreSkillActorId],sk=skills[state.exploreSkillId];
-    if(!actor || !sk){ renderExploreSkillList(); return; }
+    if(!actor || !sk){ renderExploreSkillActors(); return; }
     $("exploreSkillLead").textContent=`${actor.name}：${sk.name} の対象を選択`;
-    $("exploreSkillList").hidden=true;
-    $("exploreSkillTargetSection").hidden=false;
+    $("exploreSkillActorView").hidden=true;
+    $("exploreSkillListView").hidden=true;
+    $("exploreSkillTargetView").hidden=false;
     const ast=S(actor);
     $("exploreSkillSummary").innerHTML=`<span style="font-size:24px">${sk.icon||"✨"}</span><span><strong>${actor.name}：${sk.name}</strong><br>MP ${ast.mp}/${ast.mpMax}　消費MP ${sk.cost}　${sk.desc||""}</span>`;
-    const box=$("exploreSkillTargets");
-    box.innerHTML="";
-    const activeSet=new Set(state.battleActive);
-    [...state.battleActive,...state.battleReserve].forEach(id=>{
-      const c=roster[id],st=S(c);
-      const pos=activeSet.has(id)?"バトルメンバー":"控え";
-      const canUse=ast.hp>0 && ast.mp>=sk.cost && fieldTargetUsable(sk,c);
-      const card=document.createElement("button");
-      card.className="item-target-card";
-      card.disabled=!canUse;
-      card.innerHTML=`<span class="item-target-name">${c.name}</span><span class="item-target-pos">${pos}</span>`+
-        `<span class="item-target-hp"><b>HP</b><span class="skill-party-bar"><i style="width:${hpPct(c)}%"></i></span><span>${st.hp}/${st.hpMax}</span></span>`;
-      card.onclick=()=>useExploreSkillOnTarget(id);
-      box.appendChild(card);
-    });
+    const targets=$("exploreSkillTargets"); targets.innerHTML="";
+    const battle=document.createElement("div"); battle.className="explore-item-target-group battle";
+    const reserve=document.createElement("div"); reserve.className="explore-item-target-group reserve";
+    for(let i=0;i<4;i++){ const c=roster[state.battleActive[i]]; battle.appendChild(c?exploreSkillTargetCard(c,actor,sk):exploreItemEmptySlot()); }
+    for(let i=0;i<6;i++){ const c=roster[state.battleReserve[i]]; reserve.appendChild(c?exploreSkillTargetCard(c,actor,sk):exploreItemEmptySlot()); }
+    targets.append(battle,reserve);
   }
 
   function useExploreSkillOnTarget(targetId){
@@ -8805,7 +8852,7 @@
 
   function openExploreSkillMenu(){
     if(!state.run) return;
-    renderExploreSkillList();
+    renderExploreSkillActors();
     $("exploreSkillModal").classList.add("show");
   }
 
@@ -8963,6 +9010,7 @@
   $("exploreReturnFeatherBtn").onclick=useReturnFeather;
   $("exploreSkillBtn").onclick=openExploreSkillMenu;
   $("exploreSkillCloseBtn").onclick=closeExploreSkillMenu;
+  $("exploreSkillActorBackBtn").onclick=renderExploreSkillActors;
   $("exploreSkillBackBtn").onclick=renderExploreSkillList;
   $("exploreSkillModal").addEventListener("click",e=>{ if(e.target===$("exploreSkillModal")) closeExploreSkillMenu(); });
   $("exploreItemBtn").onclick=openExploreItemMenu;
