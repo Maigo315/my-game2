@@ -3012,7 +3012,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34c</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34d</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -3597,7 +3597,7 @@
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4130,28 +4130,28 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
     updateHeader();
   };
 
   $("backHome").onclick=()=>showScreen("homeScreen");
   $("battleTestBtn").onclick=()=>openBattle(false, "plains");
   $("resetCaveBossBtn").onclick=()=>{
-    openModal("開発用リセット","小さな洞窟のボス撃破状態だけをリセットします。\n洞窟の発見状態や仲間・所持品などはそのままです。",[
-      {text:"リセットする",className:"action-btn",onclick:()=>{
+    modal("開発用リセット","小さな洞窟のボス撃破状態だけをリセットします。\n洞窟の発見状態や仲間・所持品などはそのままです。",[
+      ["リセットする",()=>{
         state.caveBossDefeated=false;
         localStorage.removeItem("milesta_cave_boss_defeated");
         closeModal();
         updateWorldInfo();
         toast("魔界の尖兵を再びテストできるようになりました。");
-      }},
-      {text:"やめる",className:"small-btn",onclick:closeModal}
+      }],
+      ["やめる",closeModal]
     ]);
   };
 
@@ -7666,7 +7666,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
       updateHeader();
       return;
     }
@@ -7674,7 +7674,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
   }
 
   async function attemptEscape(){
@@ -7974,7 +7974,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -7982,7 +7982,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8116,7 +8116,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8177,7 +8177,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8202,7 +8202,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
     updateHeader();
     toast("戦闘テストを終了");
   }
