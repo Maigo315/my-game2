@@ -51,6 +51,7 @@
   .grow{flex:1}
   .resource{display:flex;align-items:center;gap:7px;font-weight:700;font-size:13px}
   .badge{padding:5px 9px;border-radius:999px;background:#0d1722;border:1px solid #344d65}
+  .dev-badge{padding:5px 10px;border-radius:999px;border:1px solid #8d7a39;background:linear-gradient(#4f4320,#2e2816);color:#fff0a2;font-size:11px;font-weight:1000;letter-spacing:.08em;white-space:nowrap;box-shadow:inset 0 0 0 1px rgba(255,234,145,.12)}
   .screen{display:none;flex:1;min-height:0}
   .screen.active{display:flex}
 
@@ -347,13 +348,13 @@
   }
   .battle-status-card .status-name{font-weight:900;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .battle-status-card .status-turn{
-    font-size:9px;color:#f1dc84;align-self:center;white-space:nowrap;max-width:105px;overflow:hidden;text-overflow:ellipsis;
+    font-size:10px;color:#f1dc84;align-self:center;white-space:nowrap;max-width:118px;overflow:hidden;text-overflow:ellipsis;font-weight:1000;
   }
   .queued-action{
-    grid-column:1/-1;margin-top:2px;padding:2px 5px;border-radius:6px;background:#192738;
-    color:#d9e4ed;font-size:9px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    grid-column:1/-1;margin-top:3px;padding:3px 7px;border-radius:7px;background:#192738;
+    color:#d9e4ed;font-size:10px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.01em;
   }
-  .queued-action.ready{color:#f4df8b;background:#2b2a1c}
+  .queued-action.ready{color:#fff0a7;background:linear-gradient(#3b331b,#262215);border:1px solid rgba(236,211,108,.28)}
   .mini-bars{
     grid-column:1/-1;display:grid;grid-template-columns:24px 1fr 58px;gap:5px;
     align-items:center;margin-top:3px;font-size:9px;color:#bdcad6;
@@ -1148,10 +1149,10 @@
     .execute-btn{min-height:32px;font-size:11px}
     .battle-status-card{padding:4px 5px}
     .battle-status-card .status-name{font-size:10px}
-    .battle-status-card .status-turn{font-size:8px}
+    .battle-status-card .status-turn{font-size:9px}
     .status-effects{min-height:11px;gap:2px}
     .status-effect-chip{font-size:6px;padding:1px 4px}
-    .queued-action{font-size:8px}
+    .queued-action{font-size:9px}
     .mini-bars{margin-top:2px;font-size:8px;grid-template-columns:20px 1fr 54px;gap:3px}
     .mini-bars > span:last-child{font-size:10px}
     .mini-bar{height:4px}
@@ -1173,10 +1174,10 @@
     .execute-btn{min-height:28px;font-size:10px}
     .battle-status-card{padding:3px 4px}
     .battle-status-card .status-name{font-size:9px}
-    .battle-status-card .status-turn{font-size:7px}
+    .battle-status-card .status-turn{font-size:8px}
     .status-effects{min-height:9px}
     .status-effect-chip{font-size:5px;padding:0 3px}
-    .queued-action{font-size:7px;padding:1px 4px}
+    .queued-action{font-size:8px;padding:2px 5px}
     .mini-bars{font-size:7px;grid-template-columns:18px 1fr 49px;gap:2px;margin-top:1px}
     .mini-bars > span:last-child{font-size:9px}
     .battle-test-tools select{max-width:82px}
@@ -1232,7 +1233,7 @@
   .shop-compare-thumb{width:34px;height:39px;border-radius:7px;background:#09131c;border:1px solid #294155;display:flex;align-items:center;justify-content:center;overflow:hidden}.shop-compare-thumb img{width:100%;height:100%;object-fit:contain}.shop-compare-info{min-width:0}.shop-compare-name{display:flex;align-items:center;gap:4px;font-size:8px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.shop-favorite{flex:0 0 auto;padding:1px 4px;border-radius:999px;border:1px solid #87743d;background:#382f18;color:#f2db82;font-size:6px}.shop-current-equip{margin-top:1px;color:#788d9e;font-size:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.shop-diff-line{margin-top:3px;display:flex;flex-wrap:wrap;gap:2px}.shop-diff{padding:1px 4px;border-radius:999px;font-size:6px;font-weight:1000;white-space:nowrap;border:1px solid #3d5263;color:#91a2b0;background:#14212d}.shop-diff.up{border-color:#417457;color:#8ee4aa;background:#12271c}.shop-diff.down{border-color:#79464d;color:#ff9fa5;background:#2c171b}.shop-diff.same{color:#788b99}.shop-nochange{color:#748897;font-size:7px}
   .shop-consumable-info{display:grid;gap:4px}.shop-info-row{display:flex;justify-content:space-between;gap:8px;padding:6px 7px;border:1px solid #2f495d;border-radius:8px;background:#101c28;font-size:8px;color:#9fb0be}.shop-info-row strong{color:#e7eef4}
   .shop-action-row{display:grid;grid-template-columns:minmax(0,1fr) 94px;gap:6px;align-items:center}.shop-action-note{color:#7f93a4;font-size:7px;line-height:1.35}.shop-action-btn{min-height:34px;border:1px solid #b49b45;border-radius:9px;background:linear-gradient(#5b4b20,#382f17);color:#fff0a2;font-size:10px;font-weight:1000;cursor:pointer}.shop-action-btn.sell{border-color:#65809a;background:linear-gradient(#29455c,#192c3e);color:#e5f2fa}.shop-action-btn:disabled{opacity:.35;cursor:default}
-  .shop-foot{display:flex;align-items:center;gap:8px;border-top:1px solid #30485c;padding:6px 3px 0;color:#a9b8c4;font-size:8px}.shop-foot strong{color:#f2d875;font-size:12px}.shop-foot .shop-rule{margin-left:auto;color:#748999}
+  .shop-foot{display:flex;align-items:center;gap:8px;border-top:1px solid #30485c;padding:6px 3px 0;color:#a9b8c4;font-size:8px}.shop-foot strong{color:#f2d875;font-size:12px}.shop-foot .shop-rule{margin-left:auto;color:#748999}.shop-flash{margin-left:auto;padding:4px 9px;border-radius:999px;border:1px solid #446251;background:#132219;color:#a2e0b1;font-size:8px;font-weight:1000;opacity:0;transform:translateY(4px);transition:.18s;white-space:nowrap;pointer-events:none}.shop-flash.show{opacity:1;transform:translateY(0)}.shop-flash.sell{border-color:#4d6680;background:#152435;color:#bfd8ee}
   @media(max-height:520px){
     .shop-panel{padding:7px;gap:5px}.shop-head-copy h2{font-size:15px}.shop-head-copy p{display:none}.shop-body{grid-template-columns:minmax(155px,.31fr) minmax(0,.69fr);gap:5px}.shop-merchant-card{padding:5px;gap:4px}.shop-dialogue{padding:5px 6px 5px 9px;min-height:38px;font-size:8px;line-height:1.35}.shop-dialogue:before{font-size:14px}.shop-main{grid-template-columns:minmax(190px,.85fr) minmax(225px,1.15fr);gap:4px}.shop-tabs{gap:3px;padding:2px}.shop-tab{min-height:25px;font-size:8px}.shop-row{padding:4px 5px}.shop-row .ico{font-size:16px}.shop-row b{font-size:8px}.shop-row small,.shop-owned{font-size:6px}.shop-price{font-size:8px}.shop-detail{padding:5px;gap:4px}.shop-detail-head{grid-template-columns:28px minmax(0,1fr) auto;gap:4px}.shop-detail-icon{width:28px;height:28px;font-size:17px}.shop-detail-name b{font-size:9px}.shop-detail-price{font-size:9px}.shop-detail-desc{padding:4px 5px;min-height:25px;font-size:7px}.shop-compare-grid{gap:3px}.shop-compare-card{grid-template-columns:28px minmax(0,1fr);padding:3px}.shop-compare-thumb{width:28px;height:31px}.shop-compare-name{font-size:7px}.shop-current-equip,.shop-diff{font-size:5px}.shop-action-row{grid-template-columns:minmax(0,1fr) 78px}.shop-action-btn{min-height:28px;font-size:8px}.shop-foot{padding-top:4px;font-size:7px}.shop-foot strong{font-size:10px}
   }
@@ -3012,10 +3013,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34e</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34f</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34f</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
   </header>
 
   <main id="homeScreen" class="screen active">
@@ -3424,7 +3425,7 @@
         </div>
       </section>
     </div>
-    <div class="shop-foot"><span>所持金</span><strong id="shopGold">0 G</strong></div>
+    <div class="shop-foot"><span>所持金</span><strong id="shopGold">0 G</strong><span class="shop-flash" id="shopFlash" aria-live="polite"></span></div>
   </div>
 </div>
 
@@ -3439,6 +3440,7 @@
 
 <script>
 (() => {
+  const DEV_VERSION = "v0.34f";
   const state = {
     gold: 100,
     items:{
@@ -3552,7 +3554,15 @@
   }
   function toast(msg){
     const t=$("toast"); t.textContent=msg; t.classList.add("show");
-    clearTimeout(t._timer); t._timer=setTimeout(()=>t.classList.remove("show"),1800);
+    clearTimeout(t._timer); t._timer=setTimeout(()=>t.classList.remove("show"),2000);
+  }
+  function showShopFeedback(msg,kind="buy") {
+    const el=$("shopFlash");
+    if(!el) return;
+    el.textContent=msg;
+    el.className=`shop-flash show${kind==="sell"?" sell":""}`;
+    clearTimeout(el._timer);
+    el._timer=setTimeout(()=>{ if(el) el.className="shop-flash"; },1600);
   }
   function modal(title, body, actions=[["OK", closeModal]]){
     $("modalTitle").textContent=title;
@@ -3591,13 +3601,13 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34b" : "ミレスタ・仲間編成 v0.34b";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34f" : "ミレスタ・仲間編成 v0.34f";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4089,7 +4099,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.32b";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34f";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -4097,7 +4107,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34b" : "ミレスタ・仲間編成 v0.34b";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34f" : "ミレスタ・仲間編成 v0.34f";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4130,13 +4140,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
     updateHeader();
   };
 
@@ -5188,13 +5198,13 @@
     if(state.gold<price){ toast("お金が足りません"); return; }
     state.gold-=price;
     if(entry.kind==="item") addItemCount(entry.id,1); else addEquipmentOwned(entry.id,1);
-    state.shopSelectedKey=shopEntryKey(entry); renderShop(); updateHeader(); toast(`${d.name}を購入した`);
+    state.shopSelectedKey=shopEntryKey(entry); renderShop(); updateHeader(); showShopFeedback(`✅ ${d.name}を購入しました`,`buy`); toast(`✅ ${d.name}を購入しました`);
   }
   function sellShopEntry(entry){
     const d=shopEntryData(entry),price=sellPriceFor(entry);
     if(entry.kind==="item") { if(!removeItemCount(entry.id,1)) return; }
     else { if(freeEquipmentCount(entry.id)<=0) return; equipmentOwnedCounts[entry.id]--; }
-    state.gold+=price; state.shopSelectedKey=shopEntryKey(entry); renderShop(); updateHeader(); toast(`${d.name}を ${price}G で売却した`);
+    state.gold+=price; state.shopSelectedKey=shopEntryKey(entry); renderShop(); updateHeader(); showShopFeedback(`💠 ${d.name}を売却しました`,`sell`); toast(`💠 ${d.name}を ${price}G で売却しました`);
   }
   const SHOP_COMPARE_STATS=[
     ["hpMax","HP",v=>String(v)],["mpMax","MP",v=>String(v)],["atk","攻",v=>String(v)],["def","防",v=>String(v)],
@@ -5266,9 +5276,9 @@
     state.currentShop=key; state.shopMode="buy"; state.shopSelectedKey=null;
     $("shopTitle").textContent=key==="town"?"ミレスタ商店":key==="cave"?"洞窟の旅商人":"旅の商人";
     $("shopLead").textContent="商品を選ぶと、装備時の能力差をその場で確認できます。";
-    setShopMerchant(key); renderShop(); $("shopModal").classList.add("show");
+    setShopMerchant(key); renderShop(); const sf=$("shopFlash"); if(sf){sf.textContent=""; sf.className="shop-flash";} $("shopModal").classList.add("show");
   }
-  function closeShop(){ $("shopModal").classList.remove("show"); state.currentShop=null; state.shopSelectedKey=null; }
+  function closeShop(){ const sf=$("shopFlash"); if(sf){sf.textContent=""; sf.className="shop-flash";} $("shopModal").classList.remove("show"); state.currentShop=null; state.shopSelectedKey=null; }
   $("shopCloseBtn").onclick=closeShop;
   $("shopBuyTab").onclick=()=>{state.shopMode="buy";state.shopSelectedKey=null;renderShop();};
   $("shopSellTab").onclick=()=>{state.shopMode="sell";state.shopSelectedKey=null;renderShop();};
@@ -6049,6 +6059,28 @@
     setMessage(`${sk.icon} ${sk.name}：下の味方ステータスから対象を選んでください。`);
   }
 
+  function compactActionLabel(action,actor=null){
+    if(!action) return "未入力";
+    if(action.type==="defend") return "🛡️ 防御";
+    if(action.type==="attack") return actor && weaponAttackProfile(actor).attackAll ? "➰ 全体攻撃" : "⚔️ 攻撃";
+    if(action.type==="item"){
+      const item=ITEMS[action.item];
+      return `${item?.icon||"🧪"} ${item?.name||"アイテム"}`;
+    }
+    if(action.type==="skill"){
+      const sk=skills[action.skill];
+      return sk ? `${sk.icon||"✨"} ${sk.name}` : "✨ スキル";
+    }
+    if(action.type==="swap") return "↔ 交代";
+    return action.type;
+  }
+
+  function currentInputPrompt(){
+    const actor=roster[state.battleActive[state.battleActorSlot]];
+    if(!actor) return "";
+    return `${actor.name}の行動を選択中`;
+  }
+
   function actionLabel(action,actor=null){
     if(!action) return "未入力";
     if(action.type==="defend") return "🛡 防御";
@@ -6106,14 +6138,14 @@
       else if(state.battlePhase==="input"){
         if(state.battleTargetMode && state.battleTargetMode.kind==="ally") turnText="タップで対象";
         else if(slot===state.battleActorSlot) turnText="選択中";
-        else if(action) turnText="入力済";
+        else if(action) turnText="";
       }else if(slot===state.battleActorSlot && state.battlePhase==="resolve"){
         turnText="行動中";
       }
 
       const targetSelectText=(state.battleTargetMode && state.battleTargetMode.kind==="ally" && targetAllowed)
         ? `👆 ${targetModeName()}の対象`
-        : (st.hp<=0 ? "行動不可" : actionLabel(action,c));
+        : (st.hp<=0 ? "行動不可" : compactActionLabel(action,c));
 
       btn.innerHTML=`
         <span class="status-name">${c.name} <small>Lv${c.level}</small></span>
@@ -6158,7 +6190,7 @@
           updateActorPortrait();
           renderBattleParty();
           renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
-          setMessage(`${c.name} の行動を選び直せます。`);
+          setMessage(`${c.name}の行動を選択中`);
         }else{
           state.battleActorSlot=slot;
           updateActorPortrait();
@@ -6307,12 +6339,10 @@
       div.dataset.enemyUid=e.uid;
       const img=document.createElement("img"); img.src=e.img; img.alt=e.displayName;
       const name=document.createElement("span"); name.className="enemy-name"; name.textContent=e.displayName+enemyStatusSuffix(e);
-      const hpNum=document.createElement("span"); hpNum.className="enemy-hp-num"; hpNum.textContent=`${e.hp}/${e.hpMax}`;
       const hpWrap=document.createElement("span"); hpWrap.className="enemy-hp-wrap";
       const hp=document.createElement("i"); hp.className="enemy-hp"; hp.style.width=`${Math.max(0,Math.round(e.hp/e.hpMax*100))}%`;
       hpWrap.appendChild(hp);
-      if(e.boss) div.append(img,name,hpWrap);
-      else div.append(img,name,hpNum,hpWrap);
+      div.append(img,name,hpWrap);
 
       div.onclick=()=>{
         if(state.battlePhase==="input") cancelScheduledTurnStart();
@@ -6554,7 +6584,7 @@
       setMessage(`ROUND ${state.battleRound}：AUTOが行動を選択します。`);
       setTimeout(()=>fillAutoActions(),260);
     }else{
-      setMessage(`ROUND ${state.battleRound}：4人分の行動を選択してください。全員決まると自動で開始します。`);
+      setMessage(currentInputPrompt());
     }
   }
 
@@ -6585,11 +6615,11 @@
       updateActorPortrait();
       renderBattleParty();
       renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
-      setMessage(`${actor.name} の行動を登録。次は ${roster[state.battleActive[next]].name}。`);
+      setMessage(currentInputPrompt());
     }else{
       updateActorPortrait();
       renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
-      setMessage("全員の行動が決まりました。自動でターンを開始します。");
+      setMessage("全員の行動を選択済み。自動でターンを開始します。");
       scheduleTurnStart(520);
     }
   }
@@ -7666,7 +7696,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
       updateHeader();
       return;
     }
@@ -7674,7 +7704,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
   }
 
   async function attemptEscape(){
@@ -7974,7 +8004,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -7982,7 +8012,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8116,7 +8146,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8177,7 +8207,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8202,7 +8232,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34f";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -9145,7 +9175,7 @@ ${grantChestReward()}` ,[["閉じる",()=>{closeModal();updateRunHud();}]]); bre
         }else if(state.caveBossDefeated){
           modal("★ 小さな洞窟・最奥","魔界の尖兵がいた場所には、もう何もいない。\n洞窟の奥には静けさが戻っている。",[["ミレスタへ帰還",()=>{closeModal();finishRun("小さな洞窟からミレスタへ帰還しました");}]]);
         }else{
-          modal("★ 小さな洞窟・最奥","洞窟の最奥に、ただならぬ気配がある……。",[["進む",()=>{closeModal();openBattle(true,"caveBoss");}]]);
+          modal("★ 小さな洞窟・最奥","洞窟の最奥に、ただならぬ気配がある……。\n\nどうしますか？",[["挑む",()=>{closeModal();openBattle(true,"caveBoss");}],["ミレスタへ戻る",()=>{closeModal();finishRun("小さな洞窟の最奥からミレスタへ帰還しました");}]]);
         }
         break;
     }
