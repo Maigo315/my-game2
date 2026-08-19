@@ -51,7 +51,9 @@
   .grow{flex:1}
   .resource{display:flex;align-items:center;gap:7px;font-weight:700;font-size:13px}
   .badge{padding:5px 9px;border-radius:999px;background:#0d1722;border:1px solid #344d65}
-  .dev-badge{padding:5px 10px;border-radius:999px;border:1px solid #8d7a39;background:linear-gradient(#4f4320,#2e2816);color:#fff0a2;font-size:11px;font-weight:1000;letter-spacing:.08em;white-space:nowrap;box-shadow:inset 0 0 0 1px rgba(255,234,145,.12)}
+  .dev-badge{padding:5px 10px;border-radius:999px;border:1px solid #8d7a39;background:linear-gradient(#4f4320,#2e2816);color:#fff0a2;font-size:11px;font-weight:1000;letter-spacing:.08em;white-space:nowrap;box-shadow:inset 0 0 0 1px rgba(255,234,145,.12);cursor:pointer}
+  .dev-badge:hover{filter:brightness(1.14)}
+  .dev-badge:active{transform:translateY(1px)}
   .screen{display:none;flex:1;min-height:0}
   .screen.active{display:flex}
 
@@ -3258,6 +3260,52 @@
     .save-panel{padding:8px;gap:5px}.save-head h2{font-size:15px}.save-head p{display:none}.save-tabs{padding:2px}.save-tab{min-height:27px;font-size:9px}.save-slot-list{gap:5px}.save-slot{grid-template-columns:62px minmax(0,1fr) auto;min-height:68px;padding:6px 7px}.save-slot-main{grid-template-columns:minmax(150px,200px) minmax(0,1fr);gap:8px}.save-slot-index{font-size:11px}.save-slot-title{font-size:10px}.save-slot-meta{font-size:8px;margin-top:2px}.save-slot-date{font-size:7px}.save-slot-actions button{min-width:60px;padding:5px 7px;font-size:8px}.save-slot-actions button.danger{min-width:38px}.save-party-strip{gap:3px}.save-party-group{gap:3px}.save-party-divider{height:24px;margin:0 1px}.save-party-thumb{width:28px;height:28px;flex-basis:28px;border-radius:6px}
   }
 
+
+  /* v0.35a developer tools */
+  .debug-modal{
+    display:none;position:fixed;inset:0;z-index:245;background:rgba(0,0,0,.74);
+    align-items:center;justify-content:center;
+    padding-top:calc(8px + var(--safe-top));padding-bottom:calc(8px + var(--safe-bottom));
+    padding-left:calc(8px + var(--safe-left));padding-right:calc(8px + var(--safe-right));
+  }
+  .debug-modal.show{display:flex}
+  .debug-panel{
+    width:min(1040px,98vw);height:min(620px,94vh);min-height:320px;
+    display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:7px;overflow:hidden;
+    padding:10px;border:1px solid #8b7839;border-radius:17px;
+    background:linear-gradient(#202c38,#101820);box-shadow:0 24px 70px rgba(0,0,0,.64);
+  }
+  .debug-head{display:flex;align-items:center;gap:9px;padding:0 2px}
+  .debug-head-copy{min-width:0;flex:1}.debug-head h2{margin:0;font-size:18px;color:#fff0a5}.debug-head p{margin:2px 0 0;color:#9cabb8;font-size:9px}
+  .debug-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:3px;border:1px solid #384553;border-radius:10px;background:#0b1118}
+  .debug-tab{min-height:31px;border:1px solid #46596a;border-radius:7px;background:#162430;color:#afbdc9;font-size:9px;font-weight:1000;cursor:pointer}
+  .debug-tab.active{border-color:#d3bb58;background:linear-gradient(#584b20,#302918);color:#fff0a3}
+  .debug-body{min-height:0;overflow:hidden}
+  .debug-page{display:none;height:100%;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:1px}
+  .debug-page.active{display:grid;align-content:start;gap:7px}
+  .debug-section{border:1px solid #344b5e;border-radius:11px;background:#0d1822;padding:8px;min-width:0}
+  .debug-section-title{margin:0 0 6px;color:#d9c874;font-size:9px;font-weight:1000;letter-spacing:.08em}
+  .debug-control-row{display:grid;grid-template-columns:115px minmax(0,1fr) auto;gap:7px;align-items:center;margin-top:5px}
+  .debug-control-row:first-of-type{margin-top:0}
+  .debug-control-row>label{color:#9fb0bf;font-size:8px;font-weight:900}
+  .debug-control-row select,.debug-control-row input{
+    width:100%;min-width:0;height:32px;padding:0 8px;border:1px solid #456079;border-radius:8px;background:#132433;color:#eef5fb;font-size:9px;
+  }
+  .debug-button-row{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-start;align-items:center}
+  .debug-btn{min-height:31px;padding:5px 10px;border:1px solid #49647a;border-radius:8px;background:#173047;color:#e8f0f5;font-size:9px;font-weight:1000;cursor:pointer;white-space:nowrap}
+  .debug-btn:hover{filter:brightness(1.12)}.debug-btn:active{transform:translateY(1px)}
+  .debug-btn.gold{border-color:#a58d3e;background:#4b3f1d;color:#ffe991}.debug-btn.good{border-color:#507e62;background:#1d3d2a;color:#c9f2d7}.debug-btn.bad{border-color:#7b4b52;background:#3a2328;color:#ffc3c7}.debug-btn.blue{border-color:#52769a;background:#1b3650;color:#d6ebff}
+  .debug-status{min-height:34px;padding:7px 9px;border:1px solid #2d4557;border-radius:9px;background:#101e29;color:#b8c6d0;font-size:8px;line-height:1.5}
+  .debug-status strong{color:#eef5f9}.debug-status .on{color:#8ee0aa}.debug-status .off{color:#9aabba}
+  .debug-toggle-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .debug-toggle-card{padding:7px;border:1px solid #344e61;border-radius:9px;background:#101e2a;display:grid;gap:5px}
+  .debug-toggle-card span{font-size:8px;color:#9fb0be;font-weight:900}.debug-toggle-card button{width:100%}
+  .debug-foot{padding:5px 3px 0;border-top:1px solid #344552;color:#7f92a2;font-size:8px;display:flex;align-items:center;gap:8px}
+  .debug-foot strong{color:#d7c771}.debug-foot span:last-child{margin-left:auto}
+  @media(max-height:520px){
+    .debug-panel{height:calc(100vh - 10px - var(--safe-top) - var(--safe-bottom));padding:7px;gap:5px}.debug-head h2{font-size:14px}.debug-head p{display:none}.debug-tabs{padding:2px}.debug-tab{min-height:26px;font-size:8px}.debug-section{padding:6px}.debug-section-title{margin-bottom:4px}.debug-control-row{grid-template-columns:92px minmax(0,1fr) auto;gap:5px;margin-top:4px}.debug-control-row select,.debug-control-row input{height:27px;font-size:8px}.debug-btn{min-height:27px;padding:4px 7px;font-size:8px}.debug-status{min-height:28px;padding:5px 7px;font-size:7px}.debug-toggle-card{padding:5px;gap:3px}.debug-foot{font-size:7px;padding-top:3px}
+  }
+
 </style>
 </head>
 <body>
@@ -3273,10 +3321,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34r</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.35a</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34s</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.35a</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3288,7 +3336,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.34s</div>
+      <div class="title-version">DEV v0.35a</div>
     </section>
   </main>
 
@@ -3305,9 +3353,6 @@
         <button class="small-btn" id="saveLoadBtn">💾 セーブ／ロード</button>
         <button class="small-btn" id="returnTitleBtn">↩ タイトルに戻る</button>
       </div>
-      <button class="small-btn" id="battleTestBtn" style="margin-top:12px;width:100%">⚔ 戦闘を直接テスト</button>
-      <button class="small-btn" id="devSkillTestBtn" style="margin-top:8px;width:100%;opacity:.9">🧪 開発用：スキルテスト</button>
-      <button class="small-btn" id="resetCaveBossBtn" style="margin-top:8px;width:100%;opacity:.82">🧪 開発用：洞窟ボス撃破状態をリセット</button>
     </section>
   </main>
 
@@ -3709,6 +3754,87 @@
   </div>
 </div>
 
+
+<div class="debug-modal" id="debugModal">
+  <section class="debug-panel">
+    <div class="debug-head">
+      <div class="debug-head-copy"><h2>🧪 DEV TOOLS</h2><p>テスト状態は通常セーブに保存できます。必要な機能は今後ここへ追加します。</p></div>
+      <button class="swap-close" id="debugCloseBtn">閉じる</button>
+    </div>
+    <div class="debug-tabs">
+      <button class="debug-tab active" data-debug-tab="party">仲間・育成</button>
+      <button class="debug-tab" data-debug-tab="inventory">所持品・装備</button>
+      <button class="debug-tab" data-debug-tab="progress">進行</button>
+      <button class="debug-tab" data-debug-tab="battle">戦闘</button>
+    </div>
+    <div class="debug-body">
+      <div class="debug-page active" id="debugPageParty" data-debug-page="party">
+        <section class="debug-section">
+          <div class="debug-section-title">CHARACTER</div>
+          <div class="debug-control-row"><label>対象キャラ</label><select id="debugCharacterSelect"></select><div class="debug-button-row"><button class="debug-btn good" id="debugJoinBtn">加入</button><button class="debug-btn bad" id="debugLeaveBtn">離脱</button></div></div>
+          <div class="debug-status" id="debugCharacterStatus"></div>
+          <div class="debug-control-row"><label>レベル</label><input id="debugLevelInput" type="number" min="1" max="100" value="1"><div class="debug-button-row"><button class="debug-btn" id="debugSetLevelBtn">適用</button><button class="debug-btn" data-debug-level="1">Lv1</button><button class="debug-btn" data-debug-level="30">Lv30</button><button class="debug-btn gold" data-debug-level="100">MAX</button></div></div>
+        </section>
+        <section class="debug-section">
+          <div class="debug-section-title">BULK</div>
+          <div class="debug-button-row"><button class="debug-btn good" id="debugJoinAllBtn">全仲間加入</button><button class="debug-btn blue" id="debugHealAllBtn">HP・MP全回復</button><button class="debug-btn gold" id="debugSkillTestOpenBtn">スキルテスト</button></div>
+        </section>
+      </div>
+
+      <div class="debug-page" id="debugPageInventory" data-debug-page="inventory">
+        <section class="debug-section">
+          <div class="debug-section-title">GOLD</div>
+          <div class="debug-control-row"><label>変更量</label><input id="debugGoldAmount" type="number" min="1" value="1000"><div class="debug-button-row"><button class="debug-btn gold" id="debugGoldAddBtn">＋</button><button class="debug-btn bad" id="debugGoldSubBtn">－</button></div></div>
+        </section>
+        <section class="debug-section">
+          <div class="debug-section-title">ITEM</div>
+          <div class="debug-control-row"><label>アイテム</label><select id="debugItemSelect"></select><div></div></div>
+          <div class="debug-control-row"><label>個数</label><input id="debugItemAmount" type="number" min="1" value="10"><div class="debug-button-row"><button class="debug-btn good" id="debugItemAddBtn">追加</button><button class="debug-btn bad" id="debugItemSubBtn">減らす</button></div></div>
+        </section>
+        <section class="debug-section">
+          <div class="debug-section-title">EQUIPMENT</div>
+          <div class="debug-control-row"><label>装備</label><select id="debugEquipSelect"></select><div></div></div>
+          <div class="debug-control-row"><label>個数</label><input id="debugEquipAmount" type="number" min="1" value="1"><div class="debug-button-row"><button class="debug-btn good" id="debugEquipAddBtn">追加</button><button class="debug-btn bad" id="debugEquipSubBtn">減らす</button></div></div>
+          <div class="debug-status" id="debugInventoryStatus"></div>
+        </section>
+        <section class="debug-section"><div class="debug-section-title">BULK</div><div class="debug-button-row"><button class="debug-btn good" id="debugAllItemsBtn">全アイテム ＋10</button><button class="debug-btn good" id="debugAllEquipmentBtn">全装備 ＋1</button></div></section>
+      </div>
+
+      <div class="debug-page" id="debugPageProgress" data-debug-page="progress">
+        <section class="debug-section">
+          <div class="debug-section-title">PROGRESS FLAGS</div>
+          <div class="debug-toggle-grid">
+            <div class="debug-toggle-card"><span>小さな洞窟 解放</span><button class="debug-btn" id="debugCaveToggleBtn"></button></div>
+            <div class="debug-toggle-card"><span>洞窟ボス 撃破</span><button class="debug-btn" id="debugBossToggleBtn"></button></div>
+            <div class="debug-toggle-card"><span>旅商人 遭遇</span><button class="debug-btn" id="debugMerchantToggleBtn"></button></div>
+          </div>
+        </section>
+        <section class="debug-section"><div class="debug-section-title">QUICK SET</div><div class="debug-button-row"><button class="debug-btn good" id="debugProgressOpenBtn">現行進行をすべて解放</button><button class="debug-btn bad" id="debugProgressResetBtn">現行進行を初期状態へ</button></div></section>
+        <div class="debug-status">現在実装されている恒久進行フラグを操作します。ストーリーイベントを追加したら、このタブへフラグ確認・変更機能を拡張できます。</div>
+      </div>
+
+      <div class="debug-page" id="debugPageBattle" data-debug-page="battle">
+        <section class="debug-section">
+          <div class="debug-section-title">FORMATION TEST</div>
+          <div class="debug-control-row"><label>敵グループ</label><select id="debugFormationArea"></select><div></div></div>
+          <div class="debug-control-row"><label>編成</label><select id="debugFormationIndex"></select><div class="debug-button-row"><button class="debug-btn gold" id="debugBattleStartBtn">この編成で戦闘</button></div></div>
+          <div class="debug-status" id="debugFormationStatus"></div>
+        </section>
+        <section class="debug-section">
+          <div class="debug-section-title">BATTLE OPTIONS</div>
+          <div class="debug-toggle-grid">
+            <div class="debug-toggle-card"><span>勧誘判定 強制成功</span><button class="debug-btn" id="debugForceRecruitBtn"></button></div>
+            <div class="debug-toggle-card"><span>スキル確認</span><button class="debug-btn gold" id="debugBattleSkillBtn">スキルテストを開く</button></div>
+            <div class="debug-toggle-card"><span>全回復</span><button class="debug-btn blue" id="debugBattleHealBtn">HP・MP全回復</button></div>
+          </div>
+        </section>
+        <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
+      </div>
+    </div>
+    <div class="debug-foot"><strong>DEV v0.35a</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+  </section>
+</div>
+
 <div class="save-modal" id="saveModal">
   <section class="save-panel">
     <div class="save-head">
@@ -3734,7 +3860,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.34r";
+  const DEV_VERSION = "v0.35a";
   const SAVE_SCHEMA_VERSION = 1;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -3782,6 +3908,7 @@
     battleAutoStartTimer: null,
     battleTestSnapshot: null,
     devSkillTestSnapshot: null,
+    devForceRecruit: false,
     ownedSpecies: new Set(),
     recruitedWaiting: [],
     battleVictoryData: null,
@@ -3903,13 +4030,13 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34r" : "ミレスタ・仲間編成 v0.34r";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.35a" : "ミレスタ・仲間編成 v0.35a";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.35a"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -4405,7 +4532,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34q";
+    $("topSubtitle").textContent=`キャラ詳細・装備試作 ${DEV_VERSION}`;
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -4413,7 +4540,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34r" : "ミレスタ・仲間編成 v0.34r";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.35a" : "ミレスタ・仲間編成 v0.35a";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4446,30 +4573,18 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.35a";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.35a";
     updateHeader();
   };
 
   $("backHome").onclick=()=>showScreen("homeScreen");
-  $("battleTestBtn").onclick=()=>openBattle(false, "plains");
-  $("devSkillTestBtn").onclick=()=>openDevSkillTestMenu();
-  $("resetCaveBossBtn").onclick=()=>{
-    modal("開発用リセット","小さな洞窟のボス撃破状態だけをリセットします。\n洞窟の発見状態や仲間・所持品などはそのままです。",[
-      ["リセットする",()=>{
-        state.caveBossDefeated=false;
-        closeModal();
-        updateWorldInfo();
-        toast("魔界の尖兵を再びテストできるようになりました。");
-      }],
-      ["やめる",closeModal]
-    ]);
-  };
+  $("devBadge").onclick=()=>openDebugTools();
 
 
 
@@ -5686,7 +5801,7 @@
       if(!testMode && state.ownedSpecies.has(enemy.id)) return;
 
       const chance=recruitmentChance(enemy.id,fateTotal);
-      if(Math.random()<chance){
+      if(state.devForceRecruit || Math.random()<chance){
         successful.push({
           id:enemy.id,
           name:info.name,
@@ -5842,7 +5957,181 @@
     "returnFeather","holyWater","demonFireSeed","restCross","mysteriousMap","changeCube",
     "powerSeed","guardSeed","intellectSeed","spiritSeed","speedSeed","fateSeed","lifeSeed","magicSeed","allSeed"
   ];
-  function itemCount(id){ return Math.max(0,Number(state.items?.[id]||0)); }
+
+
+  // v0.35a unified developer panel. Debug state itself is intentionally not persisted,
+  // while game-state changes made through the panel can be saved normally.
+  const DEBUG_TABS=["party","inventory","progress","battle"];
+  let debugActiveTab="party";
+
+  function currentScreenId(){ return document.querySelector(".screen.active")?.id || "homeScreen"; }
+  function debugSelectedCharacter(){ return roster[$("debugCharacterSelect")?.value] || roster.hero; }
+  function naturalSkillIdsAtLevel(c,level){
+    const ids=[...(initialLearnedSkills[c.id]||[])];
+    Object.entries(levelSkillTable[c.id]||{}).forEach(([lv,list])=>{ if(Number(lv)<=level) ids.push(...list); });
+    return [...new Set(ids)].filter(id=>skills[id]);
+  }
+  function setCharacterLevelDev(c,level){
+    if(!c) return;
+    level=Math.max(1,Math.min(MAX_LEVEL,Math.round(Number(level)||1)));
+    if(state.devSkillTestSnapshot) restoreDevSkillTestState();
+    c.level=level;c.exp=0;
+    const seed=seedBonusOf(c);
+    const profile=profileFor(c);
+    let base;
+    if(profile){
+      base=formalStatsAtLevel(profile,level);
+    }else{
+      const lv1={...(initialStats[c.id]||c.stats)};
+      const g=c.growth || {hp:7,mp:2,atk:2,def:1,magic:1,mdef:1,spd:1};
+      base={
+        hpMax:(lv1.hpMax||1)+g.hp*(level-1),mpMax:(lv1.mpMax||0)+g.mp*(level-1),
+        atk:(lv1.atk||0)+g.atk*(level-1),def:(lv1.def||0)+g.def*(level-1),
+        magic:(lv1.magic||0)+g.magic*(level-1),mdef:(lv1.mdef||0)+g.mdef*(level-1),spd:(lv1.spd||0)+g.spd*(level-1)
+      };
+    }
+    ["hpMax","mpMax","atk","def","magic","mdef","spd"].forEach(k=>base[k]=(Number(base[k])||0)+(Number(seed[k])||0));
+    c.stats={hp:base.hpMax,hpMax:base.hpMax,mp:base.mpMax,mpMax:base.mpMax,atk:base.atk,def:base.def,magic:base.magic,mdef:base.mdef,spd:base.spd};
+    const equip=equipmentStatDelta(c);
+    Object.entries(equip).forEach(([k,v])=>{ if(k in c.stats)c.stats[k]+=v; });
+    c.stats.hp=c.stats.hpMax;c.stats.mp=c.stats.mpMax;
+    c.learnedSkills=naturalSkillIdsAtLevel(c,level);
+    clearBattleOnlyStates(c,{preservePoison:false});
+  }
+  function debugJoinCharacter(id){
+    if(!id || id==="hero" || !roster[id]) return "主人公は常に加入しています。";
+    const result=addRecruitedSpecies(id);
+    ensureHeroTravelMember();
+    return `${roster[id].name}：${result}`;
+  }
+  function debugLeaveCharacter(id){
+    if(!id || id==="hero") return "主人公は離脱できません。";
+    if(!state.ownedSpecies.has(id)) return `${roster[id]?.name||id}は加入していません。`;
+    state.ownedSpecies.delete(id);
+    state.battleActive=state.battleActive.filter(x=>x!==id);
+    state.battleReserve=state.battleReserve.filter(x=>x!==id);
+    state.recruitedWaiting=(state.recruitedWaiting||[]).filter(x=>x!==id);
+    ensureHeroTravelMember();
+    if(state.battleActive.length===0){
+      const heroPos=state.battleReserve.indexOf("hero");
+      if(heroPos>=0){state.battleReserve.splice(heroPos,1);state.battleActive.push("hero");}
+    }
+    return `${roster[id].name}を仲間一覧から外しました。`;
+  }
+  function debugHealAll(){
+    Object.values(roster).forEach(c=>{const st=S(c);st.hp=st.hpMax;st.mp=st.mpMax;clearBattleOnlyStates(c,{preservePoison:false});});
+    if(state.run) updateRunHud();
+    updateHeader();
+  }
+  function debugChangeEquipmentCount(id,delta){
+    if(!equipmentCatalog[id] || ["bare","no_shield","no_body","no_accessory"].includes(id)) return;
+    const floor=equippedCount(id);
+    equipmentOwnedCounts[id]=Math.max(floor,Number(equipmentOwnedCounts[id]||0)+(Number(delta)||0));
+  }
+  function debugRefreshCharacterStatus(){
+    const c=debugSelectedCharacter(); if(!c)return;
+    const owned=c.id==="hero" || state.ownedSpecies.has(c.id);
+    const loc=partyLocation(c.id);
+    $("debugLevelInput").value=c.level||1;
+    $("debugCharacterStatus").innerHTML=`<strong>${c.name}</strong>　Lv ${c.level||1}　${owned?'<span class="on">加入済み</span>':'<span class="off">未加入</span>'}　${owned?loc:"－"}<br>HP ${S(c).hp}/${S(c).hpMax}　MP ${S(c).mp}/${S(c).mpMax}　習得スキル ${(c.learnedSkills||[]).length}個`;
+    $("debugJoinBtn").disabled=c.id==="hero" || owned;
+    $("debugLeaveBtn").disabled=c.id==="hero" || !owned;
+  }
+  function debugRefreshInventoryStatus(){
+    const itemId=$("debugItemSelect")?.value;
+    const equipId=$("debugEquipSelect")?.value;
+    const item=ITEMS[itemId],eq=equipmentCatalog[equipId];
+    $("debugInventoryStatus").innerHTML=`所持金 <strong>${state.gold} G</strong>　${item?`${item.icon||""} ${item.name} <strong>×${itemCount(itemId)}</strong>`:""}　${eq?`${eq.icon||""} ${eq.name} <strong>×${ownedEquipmentCount(equipId)}</strong>`:""}`;
+  }
+  function debugFlagButton(btn,on){
+    if(!btn)return; btn.textContent=on?"ON":"OFF";btn.classList.toggle("good",!!on);btn.classList.toggle("bad",!on);
+  }
+  function debugRefreshProgress(){
+    debugFlagButton($("debugCaveToggleBtn"),state.caveUnlocked);
+    debugFlagButton($("debugBossToggleBtn"),state.caveBossDefeated);
+    debugFlagButton($("debugMerchantToggleBtn"),state.travelMerchantMet);
+    updateHeader();
+    if(typeof updateWorldInfo==="function") updateWorldInfo();
+  }
+  function debugPopulateFormationIndex(){
+    const area=$("debugFormationArea").value;
+    const pack=battleFormations[area]||battleFormations.plains;
+    const sel=$("debugFormationIndex");sel.innerHTML="";
+    pack.formations.forEach((ids,i)=>{
+      const op=document.createElement("option");op.value=String(i);op.textContent=`${i+1}. ${ids.map(id=>enemyData[id]?.name||id).join(" + ")}`;sel.appendChild(op);
+    });
+    debugRefreshFormationStatus();
+  }
+  function debugRefreshFormationStatus(){
+    const area=$("debugFormationArea")?.value;if(!area)return;
+    const pack=battleFormations[area]||battleFormations.plains;
+    const index=Math.max(0,Math.min(pack.formations.length-1,Number($("debugFormationIndex")?.value)||0));
+    const ids=pack.formations[index]||[];
+    $("debugFormationStatus").innerHTML=`<strong>${pack.label}</strong><br>${ids.map(id=>`${enemyData[id]?.name||id}（HP ${enemyData[id]?.stats?.hp||"?"}）`).join(" / ")}`;
+  }
+  function debugRefreshBattleOptions(){ debugFlagButton($("debugForceRecruitBtn"),state.devForceRecruit); }
+  function refreshDebugTools(){
+    debugRefreshCharacterStatus();debugRefreshInventoryStatus();debugRefreshProgress();debugRefreshFormationStatus();debugRefreshBattleOptions();
+    const footer=$("debugFooterState");if(footer) footer.textContent=`現在：${currentScreenId().replace("Screen","")}`;
+  }
+  function setDebugTab(tab){
+    if(!DEBUG_TABS.includes(tab))tab="party";debugActiveTab=tab;
+    document.querySelectorAll(".debug-tab").forEach(b=>b.classList.toggle("active",b.dataset.debugTab===tab));
+    document.querySelectorAll(".debug-page").forEach(p=>p.classList.toggle("active",p.dataset.debugPage===tab));
+    refreshDebugTools();
+  }
+  function openDebugTools(){
+    if(currentScreenId()==="titleScreen"){toast("ゲーム開始後に使用できます。");return;}
+    $("debugModal").classList.add("show");setDebugTab(debugActiveTab);
+  }
+  function closeDebugTools(){ $("debugModal").classList.remove("show"); }
+  function initDebugTools(){
+    const charSel=$("debugCharacterSelect");
+    Object.values(roster).forEach(c=>{const op=document.createElement("option");op.value=c.id;op.textContent=c.name;charSel.appendChild(op);});
+    const itemSel=$("debugItemSelect");
+    Object.values(ITEMS).forEach(item=>{const op=document.createElement("option");op.value=item.id;op.textContent=`${item.icon||""} ${item.name}`;itemSel.appendChild(op);});
+    const equipSel=$("debugEquipSelect");
+    Object.values(equipmentCatalog).filter(x=>x && !["bare","no_shield","no_body","no_accessory"].includes(x.id)).forEach(item=>{const op=document.createElement("option");op.value=item.id;op.textContent=`${item.icon||""} ${item.name}`;equipSel.appendChild(op);});
+    const areaSel=$("debugFormationArea");
+    Object.entries(battleFormations).forEach(([id,pack])=>{const op=document.createElement("option");op.value=id;op.textContent=pack.label;areaSel.appendChild(op);});
+    debugPopulateFormationIndex();
+
+    $("debugCloseBtn").onclick=closeDebugTools;
+    document.querySelectorAll(".debug-tab").forEach(b=>b.onclick=()=>setDebugTab(b.dataset.debugTab));
+    charSel.onchange=debugRefreshCharacterStatus;
+    $("debugJoinBtn").onclick=()=>{toast(debugJoinCharacter(charSel.value));refreshDebugTools();};
+    $("debugLeaveBtn").onclick=()=>{toast(debugLeaveCharacter(charSel.value));refreshDebugTools();};
+    $("debugJoinAllBtn").onclick=()=>{Object.keys(speciesRecruitment).forEach(id=>debugJoinCharacter(id));toast("全仲間を加入状態にしました。");refreshDebugTools();};
+    $("debugHealAllBtn").onclick=()=>{debugHealAll();toast("全キャラのHP・MPを回復しました。");refreshDebugTools();};
+    $("debugSkillTestOpenBtn").onclick=()=>{closeDebugTools();openDevSkillTestMenu();};
+    $("debugSetLevelBtn").onclick=()=>{const c=debugSelectedCharacter();setCharacterLevelDev(c,$("debugLevelInput").value);toast(`${c.name}をLv ${c.level}にしました。`);refreshDebugTools();};
+    document.querySelectorAll("[data-debug-level]").forEach(b=>b.onclick=()=>{const c=debugSelectedCharacter();setCharacterLevelDev(c,Number(b.dataset.debugLevel));toast(`${c.name}をLv ${c.level}にしました。`);refreshDebugTools();});
+
+    $("debugGoldAddBtn").onclick=()=>{state.gold=Math.max(0,state.gold+Math.max(1,Number($("debugGoldAmount").value)||1));updateHeader();refreshDebugTools();};
+    $("debugGoldSubBtn").onclick=()=>{state.gold=Math.max(0,state.gold-Math.max(1,Number($("debugGoldAmount").value)||1));updateHeader();refreshDebugTools();};
+    itemSel.onchange=debugRefreshInventoryStatus;equipSel.onchange=debugRefreshInventoryStatus;
+    $("debugItemAddBtn").onclick=()=>{addItemCount(itemSel.value,Math.max(1,Number($("debugItemAmount").value)||1));refreshDebugTools();};
+    $("debugItemSubBtn").onclick=()=>{addItemCount(itemSel.value,-Math.max(1,Number($("debugItemAmount").value)||1));refreshDebugTools();};
+    $("debugEquipAddBtn").onclick=()=>{debugChangeEquipmentCount(equipSel.value,Math.max(1,Number($("debugEquipAmount").value)||1));refreshDebugTools();};
+    $("debugEquipSubBtn").onclick=()=>{debugChangeEquipmentCount(equipSel.value,-Math.max(1,Number($("debugEquipAmount").value)||1));refreshDebugTools();};
+    $("debugAllItemsBtn").onclick=()=>{Object.keys(ITEMS).forEach(id=>addItemCount(id,10));toast("全アイテムを10個ずつ追加しました。");refreshDebugTools();};
+    $("debugAllEquipmentBtn").onclick=()=>{Object.values(equipmentCatalog).filter(x=>x && !["bare","no_shield","no_body","no_accessory"].includes(x.id)).forEach(x=>debugChangeEquipmentCount(x.id,1));toast("全装備を1個ずつ追加しました。");refreshDebugTools();};
+
+    $("debugCaveToggleBtn").onclick=()=>{state.caveUnlocked=!state.caveUnlocked;debugRefreshProgress();};
+    $("debugBossToggleBtn").onclick=()=>{state.caveBossDefeated=!state.caveBossDefeated;debugRefreshProgress();};
+    $("debugMerchantToggleBtn").onclick=()=>{state.travelMerchantMet=!state.travelMerchantMet;debugRefreshProgress();};
+    $("debugProgressOpenBtn").onclick=()=>{state.caveUnlocked=true;state.caveBossDefeated=true;state.travelMerchantMet=true;toast("現行の進行フラグをすべてONにしました。");debugRefreshProgress();};
+    $("debugProgressResetBtn").onclick=()=>modal("進行フラグを初期化","現在実装されている進行フラグだけをOFFにします。仲間・所持品・Lv・装備は変わりません。",[["初期化する",()=>{state.caveUnlocked=false;state.caveBossDefeated=false;state.travelMerchantMet=false;closeModal();toast("進行フラグを初期状態にしました。");debugRefreshProgress();}],["やめる",closeModal]]);
+
+    areaSel.onchange=debugPopulateFormationIndex;$("debugFormationIndex").onchange=debugRefreshFormationStatus;
+    $("debugBattleStartBtn").onclick=()=>{const area=areaSel.value,index=Number($("debugFormationIndex").value)||0;closeDebugTools();openBattle(false,area,{preserveParty:true,formationIndex:index});};
+    $("debugForceRecruitBtn").onclick=()=>{state.devForceRecruit=!state.devForceRecruit;debugRefreshBattleOptions();toast(`勧誘強制成功：${state.devForceRecruit?"ON":"OFF"}`);};
+    $("debugBattleSkillBtn").onclick=()=>{closeDebugTools();openDevSkillTestMenu();};
+    $("debugBattleHealBtn").onclick=()=>{debugHealAll();toast("全キャラのHP・MPを回復しました。");refreshDebugTools();};
+    refreshDebugTools();
+  }
+
+    function itemCount(id){ return Math.max(0,Number(state.items?.[id]||0)); }
   function addItemCount(id,n=1){
     if(!state.items) state.items={};
     state.items[id]=Math.max(0,Number(state.items[id]||0)+Number(n||0));
@@ -8376,7 +8665,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.35a";
       updateHeader();
       return;
     }
@@ -8384,7 +8673,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.35a";
   }
 
   async function attemptEscape(){
@@ -8684,7 +8973,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.35a";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -8692,7 +8981,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.35a";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8825,7 +9114,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.35a";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8848,20 +9137,23 @@
     };
   });
 
-  function openBattle(fromRun=false,area="plains"){
+  function openBattle(fromRun=false,area="plains",options={}){
     state.battleFromRun=fromRun;
     state.battleDirectTest=!fromRun;
     state.battleReturn=fromRun?"exploreScreen":"homeScreen";
     if(!fromRun){
       state.battleTestSnapshot=snapshotPartyState();
-      resetRosterForDirectTest();
+      if(!options.preserveParty) resetRosterForDirectTest();
     }
 
     state.battleSpeed=Number(localStorage.getItem("milesta_battle_speed")||"1");
     updateSpeedButtons();
 
     state.battleFormationArea=area;
-    state.battleFormationIndex=randomFormation(area);
+    const requestedFormation=Number(options.formationIndex);
+    state.battleFormationIndex=Number.isInteger(requestedFormation)
+      ? ((requestedFormation % (battleFormations[area]?.formations.length||1)) + (battleFormations[area]?.formations.length||1)) % (battleFormations[area]?.formations.length||1)
+      : randomFormation(area);
     state.battleEscapeDisabled=area==="caveBoss";
     state.battleSpecial=area==="caveBoss"?"caveBoss":null;
     state.battleRound=1;
@@ -8886,7 +9178,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.35a";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8911,7 +9203,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.35a";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -10027,6 +10319,7 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
   initialGameSnapshot={saveVersion:SAVE_SCHEMA_VERSION,appVersion:DEV_VERSION,savedAt:null,location:"ミレスタ",game:capturePersistentState()};
   refreshTitleContinue();
   showTitleScreen();
+  initDebugTools();
 })();
 </script>
 </body>
