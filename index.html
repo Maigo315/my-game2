@@ -460,7 +460,7 @@
   .explore-skill-list-wrap{max-height:min(355px,55vh);overflow:auto;scrollbar-width:thin}
   .explore-skill-actor-card.no-field-skills{opacity:.32;filter:grayscale(.5);cursor:not-allowed}
 
-  /* v0.34n exploration skill polish: stable scrolling + result preview animations */
+  /* v0.34o exploration skill polish: stable scrolling + result preview animations */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw);height:min(650px,calc(100vh - 24px - var(--safe-top) - var(--safe-bottom)));
     max-height:94%;overflow:hidden;display:flex;flex-direction:column;
@@ -497,7 +497,7 @@
     .explore-skill-list-wrap{padding-bottom:14px}
   }
 
-  /* v0.34n: exploration skill actor picker vertical balance */
+  /* v0.34o: exploration skill actor picker vertical balance */
   #exploreSkillActorView{flex:0 0 auto !important;padding-top:34px}
   #exploreSkillActorView .explore-item-target-strip{margin-bottom:12px}
   #exploreSkillActorView:not([hidden]) ~ .swap-note{margin-top:0;align-self:stretch}
@@ -3048,7 +3048,7 @@
   }
 
 
-  /* v0.34n: exploration skill modal uses one stable compact layout on phones */
+  /* v0.34o: exploration skill modal uses one stable compact layout on phones */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw) !important;
     height:min(600px,calc(100vh - 18px - var(--safe-top) - var(--safe-bottom))) !important;
@@ -3133,13 +3133,13 @@
   }
 
 
-  /* v0.34n: keep Safari from re-autosizing text after orientation changes. */
+  /* v0.34o: keep Safari from re-autosizing text after orientation changes. */
   html,body,#app{
     -webkit-text-size-adjust:100% !important;
     text-size-adjust:100% !important;
   }
 
-  /* v0.34n: exploration skill modal uses one visual scale; only content height changes by view. */
+  /* v0.34o: exploration skill modal uses one visual scale; only content height changes by view. */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw) !important;
     height:min(600px,calc(100dvh - 18px - var(--safe-top) - var(--safe-bottom))) !important;
@@ -3200,16 +3200,15 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34n</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34o</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34n</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34o</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
   </header>
 
   <main id="homeScreen" class="screen active">
     <section class="home-card">
       <h1>辺境の町ミレスタ</h1>
-      <p>小さな辺境の町。ここを拠点に周辺地域を探索します。</p>
       <div class="big-actions">
         <button class="menu-btn" id="goWorld"><span class="icon">🗺️</span>世界マップ</button>
         <button class="menu-btn" id="dummyParty"><span class="icon">👥</span>仲間編成</button>
@@ -3362,9 +3361,8 @@
       <section class="info-panel">
         <button class="small-btn" id="backHome" style="align-self:flex-start;padding:8px 12px">← ミレスタへ</button>
         <h2 id="areaName" style="margin-top:14px">ミレスタ平原</h2>
-        <p id="areaDesc">町のすぐ外に広がる穏やかな平原。探索の基本を学ぶのに向いています。</p>
-        <div class="info-row">
-          <span class="badge">推奨：入門</span>
+        <p id="areaDesc">町のすぐ外に広がる穏やかな平原。危険な魔物娘もほとんどいない。</p>
+        <div class="info-row" hidden>
           <span class="badge" id="areaStatus">探索可能</span>
         </div>
         <button class="action-btn" id="departBtn">探索を開始する</button>
@@ -3392,7 +3390,7 @@
         <span class="chip" id="exploreAreaLabel">🌿 ミレスタ平原</span>
         <div class="grow"></div>
         <div class="legend">
-          <span>⚔ 戦闘</span><span>📦 宝箱</span><span>❤ 回復</span><span>🛒 店</span><span>？ イベント</span>
+          <span>⚔ 戦闘</span><span>🪎 宝箱</span><span>❤ 回復</span><span>🛒 店</span><span>？ イベント</span>
         </div>
       </div>
       <div class="map-hint">金色に光るノードをタップして上へ進む</div>
@@ -3635,7 +3633,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.34n";
+  const DEV_VERSION = "v0.34o";
   const state = {
     gold: 100,
     items:{
@@ -3797,13 +3795,13 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34n" : "ミレスタ・仲間編成 v0.34n";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34o" : "ミレスタ・仲間編成 v0.34o";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34o"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4295,7 +4293,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34n";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34o";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -4303,7 +4301,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34n" : "ミレスタ・仲間編成 v0.34n";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34o" : "ミレスタ・仲間編成 v0.34o";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4336,13 +4334,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34o";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34o";
     updateHeader();
   };
 
@@ -4876,7 +4874,7 @@
 
   };
 
-  // v0.34n: keep menu skill icons consistent by role / element; battle FX uses fxSymbol separately.
+  // v0.34o: keep menu skill icons consistent by role / element; battle FX uses fxSymbol separately.
   const SKILL_ELEMENT_ICONS={fire:"🔴",ice:"🔵",thunder:"🟡",earth:"🟤",wind:"🟢",light:"⚪",dark:"🟣",pleasure:"🩷"};
   function unifiedSkillIcon(sk){
     if(!sk) return "🔹";
@@ -5158,7 +5156,7 @@
     });
   }
 
-  // v0.34n development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
+  // v0.34o development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
   function devOwnedCharacterIds(){
     return [...new Set(["hero",...state.ownedSpecies])].filter(id=>roster[id]);
   }
@@ -8002,7 +8000,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34o";
       updateHeader();
       return;
     }
@@ -8010,7 +8008,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34o";
   }
 
   async function attemptEscape(){
@@ -8310,7 +8308,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34o";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -8318,7 +8316,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34o";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8452,7 +8450,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34o";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8513,7 +8511,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34o";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8538,7 +8536,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34o";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -8709,16 +8707,14 @@
     document.querySelectorAll(".area-pin").forEach(p=>p.classList.toggle("selected",p.dataset.area===a));
     if(a==="plains"){
       $("areaName").textContent="ミレスタ平原";
-      $("areaDesc").textContent="町のすぐ外に広がる穏やかな平原。探索の基本を学ぶのに向いています。";
+      $("areaDesc").textContent="町のすぐ外に広がる穏やかな平原。危険な魔物娘もほとんどいない。";
       $("areaStatus").textContent="探索可能";
       $("departBtn").disabled=false;
       $("departBtn").classList.remove("locked");
     }else{
       $("areaName").textContent="小さな洞窟";
       if(state.caveUnlocked){
-        $("areaDesc").textContent=state.caveBossDefeated
-          ? "二層にわたる小さな洞窟。魔界の尖兵は撃退済みで、第二層の崩れた岩壁の先へ進めるようになっています。"
-          : "平原の外れで見つかった小さな洞窟。第一層と第二層、それぞれ5Fの奥へ進みます。";
+        $("areaDesc").textContent="ミレスタの町の近くにある洞窟。ナメクジ娘の巣にもなっている。";
         $("areaStatus").textContent=state.caveBossDefeated?"踏破済み":"探索可能";
         $("departBtn").disabled=false;
         $("departBtn").classList.remove("locked");
@@ -9585,7 +9581,7 @@ ${reward}`,[["進む",closeModal]]);return;
         else if(layer===1) openBattle(true,"cave1");
         else openBattle(true,Math.random()<.05?"rare":"cave2");
         break;
-      case "chest": modal("📦 宝箱",`古びた宝箱を発見した。
+      case "chest": modal("🪎 宝箱",`宝箱を発見！
 ${grantChestReward()}` ,[["閉じる",()=>{closeModal();updateRunHud();}]]); break;
       case "heal": modal("❤ 休息地点","ひと息つけそうな場所を見つけた。どうする？",[
         ["休息する（HP40%）",()=>{const r=recoverTravelParty(.40,0);closeModal();updateRunHud();modal("❤ 休息地点",`同行メンバー全員のHPを40%回復した。
