@@ -2790,6 +2790,213 @@
     .party-manage-shell:not(.waiting-view-mode) .party-organize-slot .party-mini-hp i{height:3px !important}
   }
 
+
+  /* v0.32j: waiting roster uses the organize-card grammar + select-then-deploy flow */
+  .party-manage-shell.waiting-view-mode{
+    grid-template-rows:auto minmax(0,1fr) 102px !important;
+  }
+  .party-manage-shell.waiting-view-mode .party-waiting-view{
+    height:100% !important;
+    min-height:0 !important;
+    max-height:none !important;
+    align-self:stretch !important;
+    display:grid !important;
+    grid-template-rows:28px minmax(0,1fr) !important;
+    gap:5px !important;
+    padding:6px 8px 7px !important;
+    overflow:hidden !important;
+  }
+  .party-waiting-view-head{
+    height:28px !important;
+    min-height:0 !important;
+    padding:0 2px !important;
+    margin:0 !important;
+    justify-content:flex-start !important;
+  }
+  .party-waiting-view-head > div:first-child{
+    margin-right:auto !important;
+  }
+  .party-waiting-view-head #partyWaitingDeployBtn,
+  .party-waiting-view-head #partyWaitingCloseBtn{
+    min-height:24px !important;
+    padding:3px 10px !important;
+    border-radius:9px !important;
+    font-size:8px !important;
+    white-space:nowrap !important;
+  }
+  .party-waiting-deploy-btn{
+    border-color:#6875a6 !important;
+    background:linear-gradient(#35466f,#243451) !important;
+    color:#eef1ff !important;
+    font-weight:1000 !important;
+  }
+  .party-waiting-deploy-btn.ready{
+    border-color:#d8c361 !important;
+    background:linear-gradient(#5b4b20,#352d18) !important;
+    color:#fff0a2 !important;
+    box-shadow:0 0 11px rgba(236,207,95,.20) !important;
+  }
+  .party-waiting-deploy-btn:disabled{
+    opacity:.34 !important;
+    filter:grayscale(.42) !important;
+    cursor:default !important;
+  }
+  .party-wait-list{
+    height:100% !important;
+    min-height:0 !important;
+    max-height:none !important;
+    grid-auto-columns:clamp(86px,9vw,112px) !important;
+    align-items:stretch !important;
+    padding:0 1px 4px !important;
+  }
+
+  /* Make Milesta-waiting cards read exactly like the finished organize cards. */
+  .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot{
+    min-width:0 !important;
+    height:100% !important;
+    min-height:0 !important;
+    padding:4px !important;
+    border-radius:9px !important;
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    grid-template-rows:minmax(0,1fr) auto !important;
+    gap:0 !important;
+    align-items:stretch !important;
+    text-align:center !important;
+  }
+  .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-slot-thumb{
+    width:100% !important;
+    height:auto !important;
+    aspect-ratio:1/.92 !important;
+    max-height:none !important;
+    min-height:0 !important;
+    margin:0 auto !important;
+    align-self:center !important;
+    padding:3px !important;
+    border-radius:8px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    overflow:hidden !important;
+    background:rgba(6,16,26,.35) !important;
+  }
+  .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-slot-thumb img{
+    width:100% !important;
+    height:100% !important;
+    max-width:100% !important;
+    max-height:100% !important;
+    object-fit:contain !important;
+    object-position:center center !important;
+    transform:none !important;
+  }
+  .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-slot-info{
+    display:block !important;
+    min-width:0 !important;
+    margin-top:-2px !important;
+  }
+  .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-slot-name{
+    display:block !important;
+    font-size:10px !important;
+    line-height:1.02 !important;
+    font-weight:1000 !important;
+    text-align:center !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+  .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-slot-meta{
+    display:block !important;
+    margin:0 !important;
+    color:#d6c979 !important;
+    font-size:7px !important;
+    line-height:1.02 !important;
+    text-align:center !important;
+    white-space:nowrap !important;
+  }
+  .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-mini-hp{
+    display:grid !important;
+    grid-template-columns:14px minmax(0,1fr) !important;
+    grid-template-areas:"label value" "bar bar" !important;
+    column-gap:3px !important;
+    row-gap:1px !important;
+    margin-top:1px !important;
+    font-size:7px !important;
+    line-height:1 !important;
+    align-items:center !important;
+  }
+  .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-mini-hp b{
+    grid-area:label !important;
+    align-self:end !important;
+    font-size:7px !important;
+    line-height:1 !important;
+    text-align:left !important;
+  }
+  .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-mini-hp i{
+    grid-area:bar !important;
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:4px !important;
+  }
+  .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-mini-hp span{
+    grid-area:value !important;
+    justify-self:end !important;
+    align-self:end !important;
+    font-size:7px !important;
+    line-height:1 !important;
+    text-align:right !important;
+    white-space:nowrap !important;
+    font-variant-numeric:tabular-nums;
+  }
+
+  @media(max-height:520px){
+    .party-manage-shell.waiting-view-mode{
+      grid-template-rows:auto minmax(0,1fr) 88px !important;
+    }
+    .party-manage-shell.waiting-view-mode .party-waiting-view{
+      height:100% !important;
+      grid-template-rows:24px minmax(0,1fr) !important;
+      gap:4px !important;
+      padding:5px 7px 6px !important;
+    }
+    .party-waiting-view-head{height:24px !important}
+    .party-waiting-view-head #partyWaitingDeployBtn,
+    .party-waiting-view-head #partyWaitingCloseBtn{
+      min-height:22px !important;
+      padding:2px 8px !important;
+      font-size:7px !important;
+    }
+    .party-wait-list{
+      height:100% !important;
+      max-height:none !important;
+      grid-auto-columns:clamp(74px,9vw,96px) !important;
+      gap:5px !important;
+    }
+    .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot{
+      padding:3px !important;
+      gap:0 !important;
+    }
+    .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-slot-thumb{
+      aspect-ratio:1/.90 !important;
+      padding:2px !important;
+    }
+    .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-slot-info{
+      margin-top:-1px !important;
+    }
+    .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-slot-name{font-size:8px !important}
+    .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-slot-meta{font-size:6px !important}
+    .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-mini-hp{
+      grid-template-columns:12px minmax(0,1fr) !important;
+      column-gap:2px !important;
+      row-gap:1px !important;
+      margin-top:1px !important;
+      font-size:6px !important;
+    }
+    .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-mini-hp b,
+    .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-mini-hp span{font-size:6px !important}
+    .party-manage-shell.waiting-view-mode .party-wait-card.party-organize-slot .party-mini-hp i{height:3px !important}
+  }
+
 </style>
 </head>
 <body>
@@ -2805,7 +3012,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32i</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32j</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -2857,6 +3064,7 @@
       <section class="party-waiting-view" id="partyWaitingView">
         <div class="party-waiting-view-head">
           <div><strong>👥 ミレスタ待機から呼び出す</strong><span id="partyWaitingCount">0</span></div>
+          <button class="small-btn party-waiting-deploy-btn" id="partyWaitingDeployBtn" disabled>👥 編成に呼び出す</button>
           <button class="small-btn" id="partyWaitingCloseBtn">← 編成へ戻る</button>
         </div>
         <div class="party-wait-list" id="partyWaitingList"></div>
@@ -3367,7 +3575,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.32g" : "ミレスタ・仲間編成 v0.32g";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.32j" : "ミレスタ・仲間編成 v0.32j";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -3572,11 +3780,16 @@
           if(state.partySelection?.id===id) btn.classList.add("selected");
           btn.innerHTML=partyCardHtml(c);
           btn.onclick=()=>{
-            state.partySelection={id,group:"waiting",index:-1};
-            updatePartyDetail(id);
-            state.partyWaitingViewOpen=false;
-            configurePartyManageScreen("milesta");
-            $("partyDetailGuide").textContent=`${c.name}を呼び出します。移動先のバトル枠・控え枠をタップしてください。`;
+            const alreadySelected=state.partySelection?.group==="waiting" && state.partySelection?.id===id;
+            if(alreadySelected){
+              state.partySelection=null;
+              updatePartyDetail(state.battleActive[0] || state.battleReserve[0] || "hero");
+              $("partyDetailGuide").textContent="呼び出したい仲間をタップしてください。";
+            }else{
+              state.partySelection={id,group:"waiting",index:-1};
+              updatePartyDetail(id);
+              $("partyDetailGuide").textContent=`${c.name}を選択中です。「編成に呼び出す」で編成画面へ進むか、「詳細を見る」でステータスを確認できます。`;
+            }
             renderPartyManage(false);
           };
           waiting.appendChild(btn);
@@ -3591,6 +3804,12 @@
     const canWait=state.partyManageContext!=="explore" && !state.partyWaitingViewOpen && !!state.partySelection && state.partySelection.group!=="waiting" && state.partySelection.id!=="hero";
     waitBtn.classList.toggle("ready",canWait);
     waitBtn.disabled=!canWait;
+    const deployBtn=$("partyWaitingDeployBtn");
+    const canDeploy=state.partyManageContext!=="explore" && state.partyWaitingViewOpen && state.partySelection?.group==="waiting";
+    if(deployBtn){
+      deployBtn.classList.toggle("ready",canDeploy);
+      deployBtn.disabled=!canDeploy;
+    }
     if(refreshDetail) updatePartyDetail(state.partySelection?.id || state.battleActive[0] || state.battleReserve[0] || "hero");
   }
 
@@ -3862,7 +4081,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.32g" : "ミレスタ・仲間編成 v0.32g";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.32j" : "ミレスタ・仲間編成 v0.32j";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -3870,14 +4089,24 @@
     state.partySelection=null;
     state.partyWaitingViewOpen=true;
     configurePartyManageScreen("milesta");
-    $("partyDetailGuide").textContent="呼び出したい仲間をタップしてください。";
+    renderPartyManage(true);
+    $("partyDetailGuide").textContent="呼び出したい仲間をタップしてください。詳細を見るだけでも選択できます。";
+  };
+  $("partyWaitingDeployBtn").onclick=()=>{
+    const sel=state.partySelection;
+    if(!sel || sel.group!=="waiting") return;
+    const c=roster[sel.id];
+    state.partyWaitingViewOpen=false;
+    configurePartyManageScreen("milesta");
+    $("partyDetailGuide").textContent=`${c.name}を呼び出します。移動先のバトルメンバー・控えのキャラ、または空き枠をタップしてください。`;
     renderPartyManage(false);
   };
   $("partyWaitingCloseBtn").onclick=()=>{
+    state.partySelection=null;
     state.partyWaitingViewOpen=false;
     configurePartyManageScreen("milesta");
+    renderPartyManage(true);
     $("partyDetailGuide").textContent="仲間をタップすると選択できます。";
-    renderPartyManage(false);
   };
   $("partyWaitSelectedBtn").onclick=moveSelectedToWaiting;
   $("partyBackBtn").onclick=()=>{
