@@ -1291,7 +1291,7 @@
 
   /* Modal */
   .modal{
-    display:none;position:fixed;inset:0;z-index:220;background:rgba(0,0,0,.62);
+    display:none;position:fixed;inset:0;z-index:260;background:rgba(0,0,0,.62);
     align-items:center;justify-content:center;padding:22px
   }
   .modal.show{display:flex}
@@ -3240,11 +3240,15 @@
   .save-slot.empty{border-style:dashed;background:#0d1822;color:#718597}
   .save-slot-index{font-size:13px;font-weight:1000;color:#e8d57e;letter-spacing:.06em}.save-slot.empty .save-slot-index{color:#7f91a0}
   .save-slot-main{min-width:0}.save-slot-title{font-size:12px;font-weight:1000}.save-slot-meta{margin-top:4px;color:#b6c4cf;font-size:9px;line-height:1.5}.save-slot-date{margin-top:3px;color:#71899b;font-size:8px}
+  .save-party-strip{display:flex;align-items:center;gap:5px;margin-top:6px;min-height:34px}
+  .save-party-thumb{width:34px;height:34px;flex:0 0 34px;border-radius:7px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#09141e;border:1px solid #304b61}
+  .save-party-thumb img{width:100%;height:100%;object-fit:contain;object-position:center center}
+  .save-party-thumb.empty{border-style:dashed;color:#51687b;font-size:7px;font-weight:1000}
   .save-slot-actions{display:flex;align-items:center;gap:5px}.save-slot-actions button{min-width:72px;padding:7px 9px;border-radius:8px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:9px;font-weight:1000;cursor:pointer}
   .save-slot-actions button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.save-slot-actions button.danger{min-width:44px;border-color:#72474d;background:#3a2328;color:#ffc4c8}.save-slot-actions button:disabled{opacity:.3;cursor:default}
   @media(max-height:520px){
     .title-card{height:min(350px,90vh);padding:20px}.title-card h1{font-size:34px}.title-actions{width:310px;gap:7px;padding-top:18px}.title-action{min-height:42px;font-size:13px}.title-version{margin-top:8px}
-    .save-panel{padding:8px;gap:5px}.save-head h2{font-size:15px}.save-head p{display:none}.save-tabs{padding:2px}.save-tab{min-height:27px;font-size:9px}.save-slot-list{gap:5px}.save-slot{grid-template-columns:62px minmax(0,1fr) auto;min-height:68px;padding:6px 7px}.save-slot-index{font-size:11px}.save-slot-title{font-size:10px}.save-slot-meta{font-size:8px;margin-top:2px}.save-slot-date{font-size:7px}.save-slot-actions button{min-width:60px;padding:5px 7px;font-size:8px}.save-slot-actions button.danger{min-width:38px}
+    .save-panel{padding:8px;gap:5px}.save-head h2{font-size:15px}.save-head p{display:none}.save-tabs{padding:2px}.save-tab{min-height:27px;font-size:9px}.save-slot-list{gap:5px}.save-slot{grid-template-columns:62px minmax(0,1fr) auto;min-height:68px;padding:6px 7px}.save-slot-index{font-size:11px}.save-slot-title{font-size:10px}.save-slot-meta{font-size:8px;margin-top:2px}.save-slot-date{font-size:7px}.save-slot-actions button{min-width:60px;padding:5px 7px;font-size:8px}.save-slot-actions button.danger{min-width:38px}.save-party-strip{gap:4px;margin-top:4px;min-height:28px}.save-party-thumb{width:28px;height:28px;flex-basis:28px;border-radius:6px}
   }
 
 </style>
@@ -3262,10 +3266,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34q</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34r</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34q</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34r</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3277,7 +3281,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.34q</div>
+      <div class="title-version">DEV v0.34r</div>
     </section>
   </main>
 
@@ -3723,7 +3727,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.34q";
+  const DEV_VERSION = "v0.34r";
   const SAVE_SCHEMA_VERSION = 1;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -3892,13 +3896,13 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34q" : "ミレスタ・仲間編成 v0.34q";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34r" : "ミレスタ・仲間編成 v0.34r";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -4402,7 +4406,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34q" : "ミレスタ・仲間編成 v0.34q";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34r" : "ミレスタ・仲間編成 v0.34r";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4435,13 +4439,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
     updateHeader();
   };
 
@@ -5421,13 +5425,27 @@
       date:formatSaveDate(data.savedAt)
     };
   }
+  function savePartyPortraits(data){
+    const ids=Array.isArray(data?.game?.battleActive)?data.game.battleActive.slice(0,4):[];
+    const cells=[];
+    for(let i=0;i<4;i++){
+      const id=ids[i],c=id?roster[id]:null;
+      if(c?.img){
+        cells.push(`<span class="save-party-thumb" title="${c.name||id}"><img src="${c.img}" alt="${c.name||''}"></span>`);
+      }else{
+        cells.push('<span class="save-party-thumb empty">EMPTY</span>');
+      }
+    }
+    return `<div class="save-party-strip" aria-label="保存時のバトルメンバー">${cells.join("")}</div>`;
+  }
+
   function renderSaveSlots(){
     const list=$("saveSlotList"); list.innerHTML="";
     for(let slot=1;slot<=SAVE_SLOT_COUNT;slot++){
       const data=readSaveSlot(slot),sum=saveSlotSummary(data);
       const row=document.createElement("div");
       row.className=`save-slot${data?"":" empty"}`;
-      row.innerHTML=`<div class="save-slot-index">SLOT ${slot}</div><div class="save-slot-main">${data?`<div class="save-slot-title">${sum.title}</div><div class="save-slot-meta">${sum.meta}</div><div class="save-slot-date">${sum.date}</div>`:`<div class="save-slot-title">EMPTY</div><div class="save-slot-meta">セーブデータはありません。</div>`}</div><div class="save-slot-actions"></div>`;
+      row.innerHTML=`<div class="save-slot-index">SLOT ${slot}</div><div class="save-slot-main">${data?`<div class="save-slot-title">${sum.title}</div><div class="save-slot-meta">${sum.meta}</div><div class="save-slot-date">${sum.date}</div>${savePartyPortraits(data)}`:`<div class="save-slot-title">EMPTY</div><div class="save-slot-meta">セーブデータはありません。</div>`}</div><div class="save-slot-actions"></div>`;
       const actions=row.querySelector(".save-slot-actions");
       const main=document.createElement("button");
       main.className="primary";
@@ -8348,7 +8366,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
       updateHeader();
       return;
     }
@@ -8356,7 +8374,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
   }
 
   async function attemptEscape(){
@@ -8656,7 +8674,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -8664,7 +8682,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8797,7 +8815,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8858,7 +8876,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8883,7 +8901,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34r";
     updateHeader();
     toast("戦闘テストを終了");
   }
