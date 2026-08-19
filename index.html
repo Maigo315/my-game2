@@ -460,7 +460,7 @@
   .explore-skill-list-wrap{max-height:min(355px,55vh);overflow:auto;scrollbar-width:thin}
   .explore-skill-actor-card.no-field-skills{opacity:.32;filter:grayscale(.5);cursor:not-allowed}
 
-  /* v0.34m exploration skill polish: stable scrolling + result preview animations */
+  /* v0.34n exploration skill polish: stable scrolling + result preview animations */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw);height:min(650px,calc(100vh - 24px - var(--safe-top) - var(--safe-bottom)));
     max-height:94%;overflow:hidden;display:flex;flex-direction:column;
@@ -497,7 +497,7 @@
     .explore-skill-list-wrap{padding-bottom:14px}
   }
 
-  /* v0.34m: exploration skill actor picker vertical balance */
+  /* v0.34n: exploration skill actor picker vertical balance */
   #exploreSkillActorView{flex:0 0 auto !important;padding-top:34px}
   #exploreSkillActorView .explore-item-target-strip{margin-bottom:12px}
   #exploreSkillActorView:not([hidden]) ~ .swap-note{margin-top:0;align-self:stretch}
@@ -3048,7 +3048,7 @@
   }
 
 
-  /* v0.34m: exploration skill modal uses one stable compact layout on phones */
+  /* v0.34n: exploration skill modal uses one stable compact layout on phones */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw) !important;
     height:min(600px,calc(100vh - 18px - var(--safe-top) - var(--safe-bottom))) !important;
@@ -3133,13 +3133,13 @@
   }
 
 
-  /* v0.34m: keep Safari from re-autosizing text after orientation changes. */
+  /* v0.34n: keep Safari from re-autosizing text after orientation changes. */
   html,body,#app{
     -webkit-text-size-adjust:100% !important;
     text-size-adjust:100% !important;
   }
 
-  /* v0.34m: exploration skill modal uses one visual scale; only content height changes by view. */
+  /* v0.34n: exploration skill modal uses one visual scale; only content height changes by view. */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw) !important;
     height:min(600px,calc(100dvh - 18px - var(--safe-top) - var(--safe-bottom))) !important;
@@ -3200,10 +3200,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34m</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34n</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34m</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34n</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
   </header>
 
   <main id="homeScreen" class="screen active">
@@ -3635,7 +3635,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.34m";
+  const DEV_VERSION = "v0.34n";
   const state = {
     gold: 100,
     items:{
@@ -3721,7 +3721,7 @@
   const NODE = {
     start:  {icon:"⬆", label:"入口", color:"#386a62"},
     battle: {icon:"⚔", label:"戦闘", color:"#7a3d42"},
-    chest:  {icon:"📦", label:"宝箱", color:"#7a6638"},
+    chest:  {icon:"🪎", label:"宝箱", color:"#7a6638"},
     heal:   {icon:"❤", label:"回復", color:"#3d7355"},
     shop:   {icon:"🛒", label:"ショップ", color:"#53608b"},
     event:  {icon:"？", label:"イベント", color:"#664c7c"},
@@ -3797,13 +3797,13 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34m" : "ミレスタ・仲間編成 v0.34m";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34n" : "ミレスタ・仲間編成 v0.34n";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4295,7 +4295,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34m";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34n";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -4303,7 +4303,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34m" : "ミレスタ・仲間編成 v0.34m";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34n" : "ミレスタ・仲間編成 v0.34n";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4336,13 +4336,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
     updateHeader();
   };
 
@@ -4876,7 +4876,7 @@
 
   };
 
-  // v0.34m: keep menu skill icons consistent by role / element; battle FX uses fxSymbol separately.
+  // v0.34n: keep menu skill icons consistent by role / element; battle FX uses fxSymbol separately.
   const SKILL_ELEMENT_ICONS={fire:"🔴",ice:"🔵",thunder:"🟡",earth:"🟤",wind:"🟢",light:"⚪",dark:"🟣",pleasure:"🩷"};
   function unifiedSkillIcon(sk){
     if(!sk) return "🔹";
@@ -5158,7 +5158,7 @@
     });
   }
 
-  // v0.34m development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
+  // v0.34n development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
   function devOwnedCharacterIds(){
     return [...new Set(["hero",...state.ownedSpecies])].filter(id=>roster[id]);
   }
@@ -7133,7 +7133,7 @@
       if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
       total+=dmg; landed++; if(killed)defeated++;
       setMessage(`${sk.icon||"⚔️"} ${sk.name} ${hit}撃目！${critical?" 会心！":""} ${target.displayName} に ${dmg} ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
-      await animateEnemyDamage(target,killed,"impact",sk.icon||"✦",critical,dmg);
+      await animateEnemyDamage(target,killed,"impact",sk.fxSymbol||sk.icon||"✦",critical,dmg);
     }
     const notes=[`${landed}/${hits}ヒット`,criticals?`${criticals}回会心`:"",defeated?`${defeated}体撃破`:"",missed?`${missed}回回避`:""].filter(Boolean).join(" / ");
     setMessage(`${sk.icon||"⚔️"} ${sk.name}：合計 ${total} ダメージ（${notes}）`);
@@ -7224,11 +7224,11 @@
         const defeated=results.filter(r=>r.killed).length;
         const shocked=results.filter(r=>r.shock?.success).length;
         setMessage(`${sk.icon||"✨"} ${sk.name}！ 敵全体に合計 ${total} ダメージ！${shocked?` ${shocked}体が感電！`:""}${defeated?` ${defeated}体を倒した！`:""}`);
-        await Promise.all(results.map(r=>animateEnemyDamage(r.target,r.killed,sk.animation||"magicshot",sk.icon||"✦")));
+        await Promise.all(results.map(r=>animateEnemyDamage(r.target,r.killed,sk.animation||"magicshot",sk.fxSymbol||sk.icon||"✦")));
       }else{
         const r=results[0];
         setMessage(`${sk.icon||"✨"} ${sk.name}！ ${r.target.displayName} に ${r.dmg} ダメージ。${r.shock?.success?"⚡ 感電した！ ":""}${r.killed?`${r.target.displayName} を倒した！`:""}`);
-        await animateEnemyDamage(r.target,r.killed,sk.animation||"magicshot",sk.icon||"✦");
+        await animateEnemyDamage(r.target,r.killed,sk.animation||"magicshot",sk.fxSymbol||sk.icon||"✦");
       }
       if(results.some(r=>r.shock?.success) && !results.some(r=>r.killed)) renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
       return;
@@ -7841,7 +7841,7 @@
       renderBattleParty();
       flashPartyValue(slot,dmg,"damage");
       const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
-      if(card) spawnFx(sk.animation||"magicshot",sk.icon||"✦",card);
+      if(card) spawnFx(sk.animation||"magicshot",sk.fxSymbol||sk.icon||"✦",card);
       if(sk.target!=="enemyAll"){
         const reduced=[];
         if(barrierWasActive) reduced.push("魔力障壁");
@@ -7879,7 +7879,7 @@
       let raw=physicalDamage(enemy.atk,effectiveDef(target),Number(sk.power)||1,1);
       const dmg=Math.max(1,target.defending?Math.ceil(raw/2):raw);
       S(target).hp=Math.max(0,S(target).hp-dmg);
-      if(enemyEl) spawnFx(sk.animation||"impact",sk.icon||"💥",enemyEl);
+      if(enemyEl) spawnFx(sk.animation||"impact",sk.fxSymbol||sk.icon||"💥",enemyEl);
       renderBattleParty(); flashPartyValue(slot,dmg,"damage");
       setMessage(`${enemy.displayName} の体当たり！ ${target.name} に ${dmg} ダメージ。${target.defending?"（防御で軽減）":""}`);
       await wait(BASE_TIME.enemyAfter);
@@ -8002,7 +8002,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
       updateHeader();
       return;
     }
@@ -8010,7 +8010,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
   }
 
   async function attemptEscape(){
@@ -8310,7 +8310,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -8318,7 +8318,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8452,7 +8452,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8513,7 +8513,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8538,7 +8538,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34m";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34n";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -8905,9 +8905,7 @@
       const c=svgEl("circle",{cx:0,cy:0,r:34,fill:NODE[n.type].color});
       const icon=svgEl("text",{x:0,y:2});
       icon.textContent=NODE[n.type].icon;
-      const label=svgEl("text",{x:0,y:57,class:"label"});
-      label.textContent=NODE[n.type].label;
-      g.append(c,icon,label);
+      g.append(c,icon);
       if(isReach){
         g.addEventListener("click",()=>moveTo(n.id));
       }
