@@ -2791,7 +2791,7 @@
   }
 
 
-  /* v0.34a: waiting roster uses the organize-card grammar + select-then-deploy flow */
+  /* v0.34b: waiting roster uses the organize-card grammar + select-then-deploy flow */
   .party-manage-shell.waiting-view-mode{
     grid-template-rows:auto minmax(0,1fr) 102px !important;
   }
@@ -3012,7 +3012,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34a</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34b</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -3590,13 +3590,13 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34a" : "ミレスタ・仲間編成 v0.34a";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34b" : "ミレスタ・仲間編成 v0.34b";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34a"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4096,7 +4096,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34a" : "ミレスタ・仲間編成 v0.34a";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34b" : "ミレスタ・仲間編成 v0.34b";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4129,13 +4129,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
     updateHeader();
   };
 
@@ -5044,9 +5044,9 @@
       skills:["allHeal"],ai:"momoHealer",stats:{hp:78,mp:24,atk:17,def:17,magic:10,mdef:4,spd:3}
     },
     vanguard:{
-      name:"魔界の尖兵",img:HELLHOUND_IMG,exp:0,gold:0,critRate:0,evasionRate:0,
+      name:"魔界の尖兵",img:HELLHOUND_IMG,exp:0,gold:0,critRate:0,evasionRate:0,boss:true,
       bowInstantKillImmune:true,statusDeathImmune:true,statusImmuneAll:true,resist:{...characterProfiles.dog.resist},
-      skills:["tackle","cold"],ai:"vanguardBoss",stats:{hp:420,mp:36,atk:23,def:12,magic:11,mdef:10,spd:17}
+      skills:["tackle","cold"],ai:"vanguardBoss",stats:{hp:420,mp:36,atk:27,def:12,magic:15,mdef:10,spd:17}
     }
   };
 
@@ -6275,7 +6275,7 @@
           skills:[...(base.skills||[])],ai:base.ai||"basic",resist:{...(base.resist||{})},
           critRate:clampRate(base.critRate||0),evasionRate:clampRate(base.evasionRate||0),
           critMultiplier:Number(base.critMultiplier)||BASE_CRITICAL_MULTIPLIER,
-          bowInstantKillImmune:!!base.bowInstantKillImmune,statusDeathImmune:!!base.statusDeathImmune,statusImmuneAll:!!base.statusImmuneAll,
+          bowInstantKillImmune:!!base.bowInstantKillImmune,statusDeathImmune:!!base.statusDeathImmune,statusImmuneAll:!!base.statusImmuneAll,boss:!!base.boss,
           conditions:{poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false},
           lastSkillId:null,
           shockRecoverFails:0,defeatOrder:0
@@ -6298,7 +6298,8 @@
       const hpWrap=document.createElement("span"); hpWrap.className="enemy-hp-wrap";
       const hp=document.createElement("i"); hp.className="enemy-hp"; hp.style.width=`${Math.max(0,Math.round(e.hp/e.hpMax*100))}%`;
       hpWrap.appendChild(hp);
-      div.append(img,name,hpNum,hpWrap);
+      if(e.boss) div.append(img,name,hpWrap);
+      else div.append(img,name,hpNum,hpWrap);
 
       div.onclick=()=>{
         if(state.battlePhase==="input") cancelScheduledTurnStart();
@@ -7385,8 +7386,8 @@
       const roll=Math.random();
       const canCold=enemy.lastSkillId!=="cold" && enemySkillAvailable(enemy,"cold");
       const canTackle=enemySkillAvailable(enemy,"tackle");
-      if(roll<.20 && canCold) return {type:"skill",skillId:"cold"};
-      if(roll<.50 && canTackle) return {type:"skill",skillId:"tackle"};
+      if(roll<.25 && canCold) return {type:"skill",skillId:"cold"};
+      if(roll<.60 && canTackle) return {type:"skill",skillId:"tackle"};
       return {type:"attack"};
     }
 
@@ -7652,7 +7653,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
       updateHeader();
       return;
     }
@@ -7660,7 +7661,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
   }
 
   async function attemptEscape(){
@@ -7960,7 +7961,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -7968,7 +7969,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8102,7 +8103,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8163,7 +8164,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8188,7 +8189,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34b";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -8486,6 +8487,19 @@
     state.run.current="L0N0"; state.run.previous=null;
     state.run.visited=new Set(["L0N0"]); state.run.resolved=new Set(); state.run.stealthUsed=false;
     setExploreAreaLabel(); renderMap(); updateRunHud();
+  }
+
+  // v0.34b: continue the same expedition directly from the plains goal into the cave.
+  // Party HP/MP, inventory and accumulated run rewards are preserved; map-local state resets.
+  function enterCaveFromPlains(){
+    if(!state.run) return;
+    state.run.area="cave";
+    state.run.caveLayer=1;
+    state.run.nodes=buildMap("cave",1);
+    state.run.current="L0N0"; state.run.previous=null;
+    state.run.visited=new Set(["L0N0"]); state.run.resolved=new Set(); state.run.stealthUsed=false;
+    setExploreAreaLabel(); renderMap(); updateRunHud();
+    toast("小さな洞窟・第一層へ進んだ");
   }
 
   function byId(id){ return state.run.nodes.find(n=>n.id===id); }
@@ -9102,7 +9116,19 @@ ${grantChestReward()}` ,[["閉じる",()=>{closeModal();updateRunHud();}]]); bre
         ]);break;
       case "goal":
         if(!cave){
-          if(!state.caveUnlocked){state.caveUnlocked=true;localStorage.setItem("milesta_cave_unlocked","1");modal("★ 平原の最奥", "草の切れ目の向こう、岩肌に小さな裂け目を見つけた。\n中へ続く空洞があるようだ。\n\n【小さな洞窟】が世界マップに追加された！",[["ミレスタへ帰還",()=>{closeModal();finishRun("エリアを踏破してミレスタへ帰還しました");}]]);}else{modal("★ 平原の最奥","以前見つけた洞窟の入口までたどり着いた。\n今回の探索はここまで。",[["ミレスタへ帰還",()=>{closeModal();finishRun("エリアを踏破してミレスタへ帰還しました");}]]);} 
+          if(!state.caveUnlocked){
+            state.caveUnlocked=true;
+            localStorage.setItem("milesta_cave_unlocked","1");
+            modal("★ 平原の最奥","草の切れ目の向こう、岩肌に小さな裂け目を見つけた。\n中へ続く空洞があるようだ。\n\n【小さな洞窟】が世界マップに追加された！",[
+              ["小さな洞窟へ進む",()=>{closeModal();enterCaveFromPlains();}],
+              ["ミレスタへ帰還",()=>{closeModal();finishRun("エリアを踏破してミレスタへ帰還しました");}]
+            ]);
+          }else{
+            modal("★ 平原の最奥","以前見つけた小さな洞窟の入口までたどり着いた。\nこのまま洞窟へ進みますか？",[
+              ["小さな洞窟へ進む",()=>{closeModal();enterCaveFromPlains();}],
+              ["ミレスタへ帰還",()=>{closeModal();finishRun("エリアを踏破してミレスタへ帰還しました");}]
+            ]);
+          }
         }else if(state.caveBossDefeated){
           modal("★ 小さな洞窟・最奥","魔界の尖兵がいた場所には、もう何もいない。\n洞窟の奥には静けさが戻っている。",[["ミレスタへ帰還",()=>{closeModal();finishRun("小さな洞窟からミレスタへ帰還しました");}]]);
         }else{
