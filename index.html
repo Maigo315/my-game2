@@ -3016,10 +3016,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34g</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34h</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34g</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34h</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
   </header>
 
   <main id="homeScreen" class="screen active">
@@ -3033,6 +3033,7 @@
         <button class="menu-btn" id="dummyTalk"><span class="icon">💬</span>会話</button>
       </div>
       <button class="small-btn" id="battleTestBtn" style="margin-top:12px;width:100%">⚔ 戦闘を直接テスト</button>
+      <button class="small-btn" id="devSkillTestBtn" style="margin-top:8px;width:100%;opacity:.9">🧪 開発用：スキルテスト</button>
       <button class="small-btn" id="resetCaveBossBtn" style="margin-top:8px;width:100%;opacity:.82">🧪 開発用：洞窟ボス撃破状態をリセット</button>
     </section>
   </main>
@@ -3450,7 +3451,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.34g";
+  const DEV_VERSION = "v0.34h";
   const state = {
     gold: 100,
     items:{
@@ -3491,6 +3492,7 @@
     battleAutoContinuous: false,
     battleAutoStartTimer: null,
     battleTestSnapshot: null,
+    devSkillTestSnapshot: null,
     ownedSpecies: new Set(),
     recruitedWaiting: [],
     battleVictoryData: null,
@@ -3611,13 +3613,13 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34g" : "ミレスタ・仲間編成 v0.34g";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34h" : "ミレスタ・仲間編成 v0.34h";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4109,7 +4111,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34g";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34h";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -4117,7 +4119,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34g" : "ミレスタ・仲間編成 v0.34g";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34h" : "ミレスタ・仲間編成 v0.34h";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4150,18 +4152,19 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
     updateHeader();
   };
 
   $("backHome").onclick=()=>showScreen("homeScreen");
   $("battleTestBtn").onclick=()=>openBattle(false, "plains");
+  $("devSkillTestBtn").onclick=()=>openDevSkillTestMenu();
   $("resetCaveBossBtn").onclick=()=>{
     modal("開発用リセット","小さな洞窟のボス撃破状態だけをリセットします。\n洞窟の発見状態や仲間・所持品などはそのままです。",[
       ["リセットする",()=>{
@@ -4952,6 +4955,98 @@
       c.defending=s.defending;
       c.conditions={...conditionsOf(c),...(s.conditions||{})};
     });
+  }
+
+  // v0.34h development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
+  function devOwnedCharacterIds(){
+    return [...new Set(["hero",...state.ownedSpecies])].filter(id=>roster[id]);
+  }
+
+  function captureDevSkillTestSnapshot(){
+    if(state.devSkillTestSnapshot) return;
+    state.devSkillTestSnapshot=Object.fromEntries(Object.entries(roster).map(([id,c])=>[id,{
+      level:c.level,
+      exp:c.exp,
+      stats:{...c.stats},
+      learnedSkills:[...(c.learnedSkills||[])]
+    }]));
+  }
+
+  function devAllSkillIdsFor(c){
+    // The hero is the universal test actor: every currently implemented skill is exposed,
+    // including skills they never learn naturally (e.g. オルヒール / ステルス / リターン).
+    if(c.id==="hero") return Object.keys(skills);
+    const profile=profileFor(c);
+    const planned=profile?.plannedSkills
+      ? Object.values(profile.plannedSkills).flat().filter(id=>skills[id])
+      : [];
+    return [...new Set([...(c.learnedSkills||[]),...planned])];
+  }
+
+  function applyDevAllSkills({maxLevel=false}={}){
+    captureDevSkillTestSnapshot();
+    // Rebase on the original pre-test state so switching between the two test modes is predictable.
+    Object.entries(state.devSkillTestSnapshot).forEach(([id,s])=>{
+      const c=roster[id];
+      if(!c) return;
+      c.level=s.level;
+      c.exp=s.exp;
+      c.stats={...s.stats};
+      c.learnedSkills=[...(s.learnedSkills||[])];
+    });
+    devOwnedCharacterIds().forEach(id=>{
+      const c=roster[id];
+      if(maxLevel){
+        while(c.level<MAX_LEVEL) levelUpCharacter(c);
+        c.exp=0;
+      }
+      c.learnedSkills=[...new Set(devAllSkillIdsFor(c))];
+      const st=S(c);
+      st.hp=st.hpMax;
+      st.mp=st.mpMax;
+      clearBattleOnlyStates(c,{preservePoison:false});
+    });
+    updateDevSkillTestButton();
+    updateHeader();
+  }
+
+  function restoreDevSkillTestState(){
+    const snap=state.devSkillTestSnapshot;
+    if(!snap) return false;
+    Object.entries(snap).forEach(([id,s])=>{
+      const c=roster[id];
+      if(!c) return;
+      c.level=s.level;
+      c.exp=s.exp;
+      c.stats={...s.stats};
+      c.learnedSkills=[...(s.learnedSkills||[])];
+      clearBattleOnlyStates(c,{preservePoison:false});
+    });
+    state.devSkillTestSnapshot=null;
+    updateDevSkillTestButton();
+    updateHeader();
+    return true;
+  }
+
+  function updateDevSkillTestButton(){
+    const btn=$("devSkillTestBtn");
+    if(!btn) return;
+    btn.textContent=state.devSkillTestSnapshot
+      ? "🧪 開発用：スキルテスト（適用中）"
+      : "🧪 開発用：スキルテスト";
+  }
+
+  function openDevSkillTestMenu(){
+    const active=!!state.devSkillTestSnapshot;
+    modal("🧪 スキルテスト",
+      "現在仲間になっているキャラを一時的にテスト強化します。\n主人公は、自力習得しないものを含む現在実装済みの全スキルを取得します。\n他の仲間は、そのキャラに予定されている実装済みスキルを全取得します。\n\n元に戻すまでテスト状態は維持されます。",
+      [
+        ["全スキルのみ",()=>{closeModal();applyDevAllSkills({maxLevel:false});toast("🧪 スキルテスト：全スキルを一時習得しました");}],
+        ["最大Lv＋全スキル",()=>{closeModal();applyDevAllSkills({maxLevel:true});toast("🧪 スキルテスト：最大Lv＋全スキルを適用しました");}],
+        ["元の状態に戻す",()=>{closeModal();if(restoreDevSkillTestState()) toast("↩️ スキルテスト前の状態に戻しました");else toast("戻せるテスト状態がありません");},"",!active],
+        ["やめる",closeModal]
+      ]
+    );
   }
 
   const recruitRanks = {
@@ -7706,7 +7801,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
       updateHeader();
       return;
     }
@@ -7714,7 +7809,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
   }
 
   async function attemptEscape(){
@@ -8014,7 +8109,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -8022,7 +8117,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -8156,7 +8251,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8217,7 +8312,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8242,7 +8337,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34g";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34h";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -9240,6 +9335,7 @@ ${grantChestReward()}` ,[["閉じる",()=>{closeModal();updateRunHud();}]]); bre
   }
 
   updateHeader();
+  updateDevSkillTestButton();
 })();
 </script>
 </body>
