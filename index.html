@@ -460,7 +460,7 @@
   .explore-skill-list-wrap{max-height:min(355px,55vh);overflow:auto;scrollbar-width:thin}
   .explore-skill-actor-card.no-field-skills{opacity:.32;filter:grayscale(.5);cursor:not-allowed}
 
-  /* v0.34p exploration skill polish: stable scrolling + result preview animations */
+  /* v0.34q exploration skill polish: stable scrolling + result preview animations */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw);height:min(650px,calc(100vh - 24px - var(--safe-top) - var(--safe-bottom)));
     max-height:94%;overflow:hidden;display:flex;flex-direction:column;
@@ -497,7 +497,7 @@
     .explore-skill-list-wrap{padding-bottom:14px}
   }
 
-  /* v0.34p: exploration skill actor picker vertical balance */
+  /* v0.34q: exploration skill actor picker vertical balance */
   #exploreSkillActorView{flex:0 0 auto !important;padding-top:34px}
   #exploreSkillActorView .explore-item-target-strip{margin-bottom:12px}
   #exploreSkillActorView:not([hidden]) ~ .swap-note{margin-top:0;align-self:stretch}
@@ -3048,7 +3048,7 @@
   }
 
 
-  /* v0.34p: exploration skill modal uses one stable compact layout on phones */
+  /* v0.34q: exploration skill modal uses one stable compact layout on phones */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw) !important;
     height:min(600px,calc(100vh - 18px - var(--safe-top) - var(--safe-bottom))) !important;
@@ -3133,13 +3133,13 @@
   }
 
 
-  /* v0.34p: keep Safari from re-autosizing text after orientation changes. */
+  /* v0.34q: keep Safari from re-autosizing text after orientation changes. */
   html,body,#app{
     -webkit-text-size-adjust:100% !important;
     text-size-adjust:100% !important;
   }
 
-  /* v0.34p: exploration skill modal uses one visual scale; only content height changes by view. */
+  /* v0.34q: exploration skill modal uses one visual scale; only content height changes by view. */
   #exploreSkillModal .swap-panel{
     width:min(980px,96vw) !important;
     height:min(600px,calc(100dvh - 18px - var(--safe-top) - var(--safe-bottom))) !important;
@@ -3185,6 +3185,68 @@
     }
   }
 
+
+  /* v0.34q title + save/load foundation */
+  body.title-mode .topbar{display:none}
+  #titleScreen{
+    align-items:center;justify-content:center;padding:24px;position:relative;
+    background:
+      radial-gradient(circle at 50% 34%,rgba(85,129,150,.24),transparent 32%),
+      linear-gradient(rgba(7,15,23,.34),rgba(7,15,23,.74)),
+      linear-gradient(145deg,#203846,#101b29 55%,#080d14);
+  }
+  .title-card{
+    width:min(720px,90vw);height:min(460px,84vh);min-height:300px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:34px;border-radius:26px;border:1px solid rgba(110,144,170,.44);
+    background:linear-gradient(rgba(18,34,48,.50),rgba(10,20,30,.64));
+    box-shadow:0 24px 70px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.04);
+    text-align:center;
+  }
+  .title-kicker{font-size:10px;letter-spacing:.22em;color:#8fa6b9;font-weight:900}
+  .title-card h1{margin:10px 0 0;font-size:clamp(34px,6vw,62px);letter-spacing:.07em;text-shadow:0 5px 18px rgba(0,0,0,.55)}
+  .title-card .title-sub{margin-top:8px;color:#91a6b8;font-size:11px}
+  .title-actions{width:min(360px,82%);margin-top:auto;display:grid;gap:10px;padding-top:28px}
+  .title-action{min-height:54px;font-size:16px;font-weight:1000;border-radius:14px}
+  .title-action:disabled{opacity:.38;filter:grayscale(.45);cursor:default}
+  .title-version{margin-top:13px;font-size:9px;color:#63788a;font-weight:800;letter-spacing:.08em}
+  .home-system-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .home-system-actions .small-btn{margin:0!important;width:100%;font-weight:900}
+
+  .save-modal{
+    display:none;position:fixed;inset:0;z-index:235;background:rgba(0,0,0,.72);
+    align-items:center;justify-content:center;
+    padding-top:calc(10px + var(--safe-top));padding-bottom:calc(10px + var(--safe-bottom));
+    padding-left:calc(10px + var(--safe-left));padding-right:calc(10px + var(--safe-right));
+  }
+  .save-modal.show{display:flex}
+  .save-panel{
+    width:min(780px,96vw);max-height:94%;overflow:hidden;
+    display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:8px;padding:12px;
+    border:1px solid #58728b;border-radius:18px;background:linear-gradient(#1b2c3f,#101a27);
+    box-shadow:0 22px 65px rgba(0,0,0,.58);
+  }
+  .save-head{display:flex;align-items:center;gap:9px}
+  .save-head-copy{min-width:0;flex:1}.save-head h2{margin:0;font-size:19px}.save-head p{margin:2px 0 0;color:#96a9ba;font-size:9px}
+  .save-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:3px;border:1px solid #293f51;border-radius:10px;background:#0a141e}
+  .save-tab{min-height:32px;border:1px solid #405d74;border-radius:8px;background:#142638;color:#b9c8d4;font-size:10px;font-weight:1000;cursor:pointer}
+  .save-tab.active{border-color:#d9c565;background:linear-gradient(#594a20,#332b17);color:#fff0a2}
+  .save-tab[hidden]{display:none}
+  .save-slot-list{min-height:0;overflow:auto;display:grid;gap:7px;padding:1px;scrollbar-width:thin}
+  .save-slot{
+    display:grid;grid-template-columns:74px minmax(0,1fr) auto;gap:10px;align-items:center;
+    min-height:88px;padding:9px 10px;border:1px solid #38546b;border-radius:12px;background:#101e2b;
+  }
+  .save-slot.empty{border-style:dashed;background:#0d1822;color:#718597}
+  .save-slot-index{font-size:13px;font-weight:1000;color:#e8d57e;letter-spacing:.06em}.save-slot.empty .save-slot-index{color:#7f91a0}
+  .save-slot-main{min-width:0}.save-slot-title{font-size:12px;font-weight:1000}.save-slot-meta{margin-top:4px;color:#b6c4cf;font-size:9px;line-height:1.5}.save-slot-date{margin-top:3px;color:#71899b;font-size:8px}
+  .save-slot-actions{display:flex;align-items:center;gap:5px}.save-slot-actions button{min-width:72px;padding:7px 9px;border-radius:8px;border:1px solid #49647a;background:#173047;color:#e8f0f5;font-size:9px;font-weight:1000;cursor:pointer}
+  .save-slot-actions button.primary{border-color:#c9b85c;background:#4a3d1b;color:#fff0a2}.save-slot-actions button.danger{min-width:44px;border-color:#72474d;background:#3a2328;color:#ffc4c8}.save-slot-actions button:disabled{opacity:.3;cursor:default}
+  @media(max-height:520px){
+    .title-card{height:min(350px,90vh);padding:20px}.title-card h1{font-size:34px}.title-actions{width:310px;gap:7px;padding-top:18px}.title-action{min-height:42px;font-size:13px}.title-version{margin-top:8px}
+    .save-panel{padding:8px;gap:5px}.save-head h2{font-size:15px}.save-head p{display:none}.save-tabs{padding:2px}.save-tab{min-height:27px;font-size:9px}.save-slot-list{gap:5px}.save-slot{grid-template-columns:62px minmax(0,1fr) auto;min-height:68px;padding:6px 7px}.save-slot-index{font-size:11px}.save-slot-title{font-size:10px}.save-slot-meta{font-size:8px;margin-top:2px}.save-slot-date{font-size:7px}.save-slot-actions button{min-width:60px;padding:5px 7px;font-size:8px}.save-slot-actions button.danger{min-width:38px}
+  }
+
 </style>
 </head>
 <body>
@@ -3200,13 +3262,26 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34p</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.34q</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34p</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.34q</span><span class="badge">💰 <span id="goldText">120</span> G</span></div>
   </header>
 
-  <main id="homeScreen" class="screen active">
+  <main id="titleScreen" class="screen active">
+    <section class="title-card">
+      <div class="title-kicker">MILESTA RPG</div>
+      <h1>辺境の町ミレスタ</h1>
+      <div class="title-sub">仮タイトル</div>
+      <div class="title-actions">
+        <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
+        <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
+      </div>
+      <div class="title-version">DEV v0.34q</div>
+    </section>
+  </main>
+
+  <main id="homeScreen" class="screen">
     <section class="home-card">
       <h1>辺境の町ミレスタ</h1>
       <div class="big-actions">
@@ -3214,6 +3289,10 @@
         <button class="menu-btn" id="dummyParty"><span class="icon">👥</span>仲間編成</button>
         <button class="menu-btn" id="townShopBtn"><span class="icon">🛒</span>ショップ</button>
         <button class="menu-btn" id="dummyTalk"><span class="icon">💬</span>会話</button>
+      </div>
+      <div class="home-system-actions">
+        <button class="small-btn" id="saveLoadBtn">💾 セーブ／ロード</button>
+        <button class="small-btn" id="returnTitleBtn">↩ タイトルに戻る</button>
       </div>
       <button class="small-btn" id="battleTestBtn" style="margin-top:12px;width:100%">⚔ 戦闘を直接テスト</button>
       <button class="small-btn" id="devSkillTestBtn" style="margin-top:8px;width:100%;opacity:.9">🧪 開発用：スキルテスト</button>
@@ -3619,6 +3698,20 @@
   </div>
 </div>
 
+<div class="save-modal" id="saveModal">
+  <section class="save-panel">
+    <div class="save-head">
+      <div class="save-head-copy"><h2 id="saveTitle">セーブ／ロード</h2><p id="saveDesc">3つのスロットを使用できます。</p></div>
+      <button class="swap-close" id="saveCloseBtn">閉じる</button>
+    </div>
+    <div class="save-tabs" id="saveTabs">
+      <button class="save-tab active" id="saveTabSave" data-save-mode="save">セーブ</button>
+      <button class="save-tab" id="saveTabLoad" data-save-mode="load">ロード</button>
+    </div>
+    <div class="save-slot-list" id="saveSlotList"></div>
+  </section>
+</div>
+
 <div class="modal" id="modal">
   <div class="dialog">
     <h2 id="modalTitle">イベント</h2>
@@ -3630,7 +3723,13 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.34p";
+  const DEV_VERSION = "v0.34q";
+  const SAVE_SCHEMA_VERSION = 1;
+  const SAVE_SLOT_COUNT = 3;
+  const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
+  let saveUiContext = "milesta";
+  let saveUiMode = "save";
+  let initialGameSnapshot = null;
   const state = {
     gold: 100,
     items:{
@@ -3648,8 +3747,8 @@
     shopMode:"buy",
     shopSelectedKey:null,
     travelMerchantMet:false,
-    caveUnlocked: localStorage.getItem("milesta_cave_unlocked") === "1",
-    caveBossDefeated: localStorage.getItem("milesta_cave_boss_defeated") === "1",
+    caveUnlocked:false,
+    caveBossDefeated:false,
     selectedArea: "plains",
     run: null,
     battleReturn: "homeScreen",
@@ -3733,6 +3832,7 @@
 
   function showScreen(id){
     screens.forEach(s => s.classList.toggle("active", s.id === id));
+    document.body.classList.toggle("title-mode",id==="titleScreen");
   }
   function updateHeader(){
     $("goldText").textContent = state.gold;
@@ -3792,13 +3892,17 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34p" : "ミレスタ・仲間編成 v0.34p";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.34q" : "ミレスタ・仲間編成 v0.34q";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34p"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q"; updateWorld(); showScreen("worldScreen"); };
+  $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
+  $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
+  $("titleNewBtn").onclick=()=>startNewGame();
+  $("titleContinueBtn").onclick=()=>openSaveUi("title","load");
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4290,7 +4394,7 @@
     renderCharacterDetail(id);
     $("characterBackBtn").textContent=state.partyManageContext==="explore" ? "← 探索編成へ" : "← 仲間編成へ";
     showScreen("characterScreen");
-    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34p";
+    $("topSubtitle").textContent="キャラ詳細・装備試作 v0.34q";
   }
 
   $("partyDetailOpenBtn").onclick=()=>openCharacterDetail(state.partyDetailCharacterId||"hero");
@@ -4298,7 +4402,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34p" : "ミレスタ・仲間編成 v0.34p";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.34q" : "ミレスタ・仲間編成 v0.34q";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4331,13 +4435,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34p";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34p";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
     updateHeader();
   };
 
@@ -4348,7 +4452,6 @@
     modal("開発用リセット","小さな洞窟のボス撃破状態だけをリセットします。\n洞窟の発見状態や仲間・所持品などはそのままです。",[
       ["リセットする",()=>{
         state.caveBossDefeated=false;
-        localStorage.removeItem("milesta_cave_boss_defeated");
         closeModal();
         updateWorldInfo();
         toast("魔界の尖兵を再びテストできるようになりました。");
@@ -4871,7 +4974,7 @@
 
   };
 
-  // v0.34p: keep menu skill icons consistent by role / element; battle FX uses fxSymbol separately.
+  // v0.34q: keep menu skill icons consistent by role / element; battle FX uses fxSymbol separately.
   const SKILL_ELEMENT_ICONS={fire:"🔴",ice:"🔵",thunder:"🟡",earth:"🟤",wind:"🟢",light:"⚪",dark:"🟣",pleasure:"🩷"};
   function unifiedSkillIcon(sk){
     if(!sk) return "🔹";
@@ -5153,7 +5256,255 @@
     });
   }
 
-  // v0.34p development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
+  // v0.34q save / load foundation. Manual saves are currently allowed only in Milesta.
+  function saveSlotKey(slot){ return `${SAVE_KEY_PREFIX}${slot}`; }
+  function serializeRun(run){
+    if(!run) return null;
+    return {
+      ...run,
+      visited:[...(run.visited||[])],
+      resolved:[...(run.resolved||[])],
+      diggingChecked:[...(run.diggingChecked||[])]
+    };
+  }
+  function deserializeRun(run){
+    if(!run) return null;
+    return {
+      ...run,
+      visited:new Set(run.visited||[]),
+      resolved:new Set(run.resolved||[]),
+      diggingChecked:new Set(run.diggingChecked||[])
+    };
+  }
+  function capturePersistentState(){
+    return {
+      gold:state.gold,
+      items:{...(state.items||{})},
+      travelMerchantMet:!!state.travelMerchantMet,
+      caveUnlocked:!!state.caveUnlocked,
+      caveBossDefeated:!!state.caveBossDefeated,
+      selectedArea:state.selectedArea||"plains",
+      run:serializeRun(state.run),
+      battleActive:[...state.battleActive],
+      battleReserve:[...state.battleReserve],
+      ownedSpecies:[...state.ownedSpecies],
+      recruitedWaiting:[...(state.recruitedWaiting||[])],
+      roster:Object.fromEntries(Object.entries(roster).map(([id,c])=>[id,{
+        level:Number(c.level)||1,
+        exp:Number(c.exp)||0,
+        fate:Number(c.fate)||0,
+        stats:{...S(c)},
+        seedBonus:{...seedBonusOf(c)},
+        learnedSkills:[...(c.learnedSkills||[])],
+        equipment:{...ensureEquipment(c)},
+        conditions:{...conditionsOf(c)}
+      }])),
+      equipmentOwnedCounts:{...equipmentOwnedCounts}
+    };
+  }
+  function applyPersistentState(data){
+    if(!data) return false;
+    const base=initialGameSnapshot?.game||capturePersistentState();
+    state.gold=Number.isFinite(Number(data.gold))?Number(data.gold):base.gold;
+    state.items={...(base.items||{}),...(data.items||{})};
+    state.travelMerchantMet=!!data.travelMerchantMet;
+    state.caveUnlocked=!!data.caveUnlocked;
+    state.caveBossDefeated=!!data.caveBossDefeated;
+    state.selectedArea=data.selectedArea||"plains";
+    state.run=deserializeRun(data.run);
+    state.battleActive=Array.isArray(data.battleActive)?data.battleActive.filter(id=>roster[id]).slice(0,4):[...base.battleActive];
+    state.battleReserve=Array.isArray(data.battleReserve)?data.battleReserve.filter(id=>roster[id]&&!state.battleActive.includes(id)).slice(0,6):[...base.battleReserve];
+    state.ownedSpecies=new Set((data.ownedSpecies||[]).filter(id=>roster[id]&&id!=="hero"));
+    state.recruitedWaiting=[...(data.recruitedWaiting||[])].filter(id=>roster[id]&&id!=="hero");
+
+    Object.keys(equipmentOwnedCounts).forEach(id=>equipmentOwnedCounts[id]=0);
+    Object.assign(equipmentOwnedCounts,base.equipmentOwnedCounts||{},data.equipmentOwnedCounts||{});
+    ["bare","no_shield","no_body","no_accessory"].forEach(id=>equipmentOwnedCounts[id]=999);
+
+    Object.entries(base.roster||{}).forEach(([id,b])=>{
+      const c=roster[id]; if(!c) return;
+      const r=data.roster?.[id]||b;
+      c.level=Number(r.level)||1;
+      c.exp=Math.max(0,Number(r.exp)||0);
+      c.fate=Number.isFinite(Number(r.fate))?Number(r.fate):Number(b.fate)||0;
+      c.stats={...(b.stats||{}),...(r.stats||{})};
+      c.seedBonus={...(b.seedBonus||{}),...(r.seedBonus||{})};
+      c.learnedSkills=[...(r.learnedSkills||b.learnedSkills||[])];
+      c.equipment={...(b.equipment||{}),...(r.equipment||{})};
+      c.conditions={...conditionsOf(c),...(r.conditions||{})};
+      clearBattleOnlyStates(c,{preservePoison:true});
+    });
+
+    // Milesta saves should always resume from a clean non-battle state.
+    state.battleReturn="homeScreen";
+    state.battleFromRun=false;
+    state.battleDirectTest=false;
+    state.battleEnemies=[];
+    state.battleActions=[null,null,null,null];
+    state.battleTargetMode=null;
+    state.battleEnded=false;
+    state.battleAutoContinuous=false;
+    state.battleTestSnapshot=null;
+    state.devSkillTestSnapshot=null;
+    state.pendingRecruitCandidate=null;
+    state.battleSpecial=null;
+    state.battleEscapeDisabled=false;
+    state.fortuneCasts=0;
+    state.partySelection=null;
+    state.partyWaitingViewOpen=false;
+    state.partyManageContext="milesta";
+    return true;
+  }
+  function makeSaveDocument(){
+    const game=capturePersistentState();
+    // Current manual saves are Milesta-only; keep the slot future-ready but do not persist an active run yet.
+    game.run=null;
+    return {
+      saveVersion:SAVE_SCHEMA_VERSION,
+      appVersion:DEV_VERSION,
+      savedAt:new Date().toISOString(),
+      location:"ミレスタ",
+      game
+    };
+  }
+  function readSaveSlot(slot){
+    try{
+      const raw=localStorage.getItem(saveSlotKey(slot));
+      if(!raw) return null;
+      const data=JSON.parse(raw);
+      if(!data || !data.game) return null;
+      return data;
+    }catch(err){
+      console.warn("save read failed",slot,err);
+      return null;
+    }
+  }
+  function hasAnySave(){
+    for(let i=1;i<=SAVE_SLOT_COUNT;i++) if(readSaveSlot(i)) return true;
+    return false;
+  }
+  function formatSaveDate(iso){
+    if(!iso) return "日時不明";
+    try{return new Date(iso).toLocaleString("ja-JP",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false});}
+    catch(_){return iso;}
+  }
+  function refreshTitleContinue(){
+    const btn=$("titleContinueBtn"); if(btn) btn.disabled=!hasAnySave();
+  }
+  function closeSaveUi(){ $("saveModal").classList.remove("show"); }
+  function setSaveUiMode(mode){
+    saveUiMode=mode;
+    $("saveTabSave").classList.toggle("active",mode==="save");
+    $("saveTabLoad").classList.toggle("active",mode==="load");
+    renderSaveSlots();
+  }
+  function openSaveUi(context="milesta",mode="save"){
+    saveUiContext=context;
+    saveUiMode=context==="title"?"load":mode;
+    const titleOnly=context==="title";
+    $("saveTitle").textContent=titleOnly?"つづきから":"セーブ／ロード";
+    $("saveDesc").textContent=titleOnly?"ロードするデータを選んでください。":"ミレスタでは3つの手動セーブ枠を使用できます。";
+    $("saveTabSave").hidden=titleOnly;
+    $("saveTabLoad").hidden=titleOnly;
+    $("saveTabs").style.display=titleOnly?"none":"grid";
+    $("saveCloseBtn").textContent=titleOnly?"← タイトルへ":"閉じる";
+    $("saveModal").classList.add("show");
+    setSaveUiMode(saveUiMode);
+  }
+  function saveSlotSummary(data){
+    if(!data) return null;
+    const hero=data.game?.roster?.hero||{};
+    const friends=(data.game?.ownedSpecies||[]).length;
+    return {
+      title:data.location||"ミレスタ",
+      meta:`主人公 Lv ${hero.level||1}　💰 ${Number(data.game?.gold)||0} G　仲間 ${friends}人`,
+      date:formatSaveDate(data.savedAt)
+    };
+  }
+  function renderSaveSlots(){
+    const list=$("saveSlotList"); list.innerHTML="";
+    for(let slot=1;slot<=SAVE_SLOT_COUNT;slot++){
+      const data=readSaveSlot(slot),sum=saveSlotSummary(data);
+      const row=document.createElement("div");
+      row.className=`save-slot${data?"":" empty"}`;
+      row.innerHTML=`<div class="save-slot-index">SLOT ${slot}</div><div class="save-slot-main">${data?`<div class="save-slot-title">${sum.title}</div><div class="save-slot-meta">${sum.meta}</div><div class="save-slot-date">${sum.date}</div>`:`<div class="save-slot-title">EMPTY</div><div class="save-slot-meta">セーブデータはありません。</div>`}</div><div class="save-slot-actions"></div>`;
+      const actions=row.querySelector(".save-slot-actions");
+      const main=document.createElement("button");
+      main.className="primary";
+      main.textContent=saveUiMode==="save"?"セーブ":"ロード";
+      main.disabled=saveUiMode==="load"&&!data;
+      main.onclick=()=>saveUiMode==="save"?requestSaveSlot(slot,data):requestLoadSlot(slot,data);
+      actions.appendChild(main);
+      if(data){
+        const del=document.createElement("button"); del.className="danger"; del.textContent="削除";
+        del.onclick=()=>requestDeleteSlot(slot);
+        actions.appendChild(del);
+      }
+      list.appendChild(row);
+    }
+  }
+  function writeSaveSlot(slot){
+    try{
+      localStorage.setItem(saveSlotKey(slot),JSON.stringify(makeSaveDocument()));
+      closeModal();
+      renderSaveSlots();
+      refreshTitleContinue();
+      toast(`SLOT ${slot} にセーブしました。`);
+    }catch(err){
+      console.error("save failed",err);
+      closeModal();
+      modal("セーブ失敗","セーブデータを書き込めませんでした。ブラウザの保存領域を確認してください。");
+    }
+  }
+  function requestSaveSlot(slot,existing){
+    if(saveUiContext!=="milesta") return;
+    if(existing){
+      modal("セーブ確認",`SLOT ${slot} のデータに上書きしますか？`,[["上書きする",()=>writeSaveSlot(slot)],["やめる",closeModal]]);
+    }else writeSaveSlot(slot);
+  }
+  function requestLoadSlot(slot,data){
+    if(!data) return;
+    modal("ロード確認",`SLOT ${slot} のデータをロードしますか？\n現在の未保存の進行状況は失われます。`,[["ロードする",()=>loadSaveSlot(slot)],["やめる",closeModal]]);
+  }
+  function loadSaveSlot(slot){
+    const data=readSaveSlot(slot);
+    if(!data){ closeModal(); renderSaveSlots(); return; }
+    if(Number(data.saveVersion)>SAVE_SCHEMA_VERSION){
+      closeModal(); modal("ロードできません","このセーブデータは、より新しい形式で作成されています。"); return;
+    }
+    applyPersistentState(data.game);
+    closeModal(); closeSaveUi();
+    restorePartyFull();
+    updateWorld(); updateHeader();
+    $("topSubtitle").textContent=`探索＋勧誘・装備試作 ${DEV_VERSION}`;
+    showScreen("homeScreen");
+    toast(`SLOT ${slot} をロードしました。`);
+  }
+  function requestDeleteSlot(slot){
+    modal("セーブデータ削除",`SLOT ${slot} のデータを削除しますか？\nこの操作は取り消せません。`,[["削除する",()=>{localStorage.removeItem(saveSlotKey(slot));closeModal();renderSaveSlots();refreshTitleContinue();}],["やめる",closeModal]]);
+  }
+  function startNewGame(){
+    if(!initialGameSnapshot) return;
+    applyPersistentState(initialGameSnapshot.game);
+    state.run=null;
+    restorePartyFull();
+    updateWorld(); updateHeader();
+    $("topSubtitle").textContent=`探索＋勧誘・装備試作 ${DEV_VERSION}`;
+    showScreen("homeScreen");
+    toast("新しい冒険を始めます。");
+  }
+  function confirmReturnToTitle(){
+    modal("タイトルに戻る","タイトル画面に戻りますか？\nセーブしていない進行状況は失われます。",[["タイトルに戻る",()=>{closeModal();closeSaveUi();state.run=null;showTitleScreen();}],["やめる",closeModal]]);
+  }
+  function showTitleScreen(){
+    refreshTitleContinue();
+    showScreen("titleScreen");
+  }
+  $("saveCloseBtn").onclick=closeSaveUi;
+  $("saveTabSave").onclick=()=>setSaveUiMode("save");
+  $("saveTabLoad").onclick=()=>setSaveUiMode("load");
+
+  // v0.34q development helper: temporarily expose late / otherwise unobtainable skills for UI testing.
   function devOwnedCharacterIds(){
     return [...new Set(["hero",...state.ownedSpecies])].filter(id=>roster[id]);
   }
@@ -7997,7 +8348,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34p";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
       updateHeader();
       return;
     }
@@ -8005,7 +8356,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34p";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
   }
 
   async function attemptEscape(){
@@ -8305,7 +8656,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34p";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -8313,12 +8664,11 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34p";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
       state.caveBossDefeated=true;
-      localStorage.setItem("milesta_cave_boss_defeated","1");
       state.battleSpecial=null;
       state.battleEscapeDisabled=false;
       modal("★ 小さな洞窟・最奥","魔界の尖兵を撃退した！\nどこかの岩壁が崩れるような音がした……",[["ミレスタへ帰還",()=>{closeModal();finishRun("小さな洞窟を踏破してミレスタへ帰還しました");}]]);
@@ -8447,7 +8797,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34p";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -8508,7 +8858,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34p";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -8533,7 +8883,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34p";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.34q";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -9615,7 +9965,6 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
         if(!cave){
           if(!state.caveUnlocked){
             state.caveUnlocked=true;
-            localStorage.setItem("milesta_cave_unlocked","1");
             modal("★ 平原の最奥","草の切れ目の向こう、岩肌に小さな裂け目を見つけた。\n中へ続く空洞があるようだ。\n\n【小さな洞窟】が世界マップに追加された！",[
               ["小さな洞窟へ進む",()=>{closeModal();enterCaveFromPlains();}],
               ["ミレスタへ帰還",()=>{closeModal();finishRun("エリアを踏破してミレスタへ帰還しました");}]
@@ -9647,6 +9996,9 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
 
   updateHeader();
   updateDevSkillTestButton();
+  initialGameSnapshot={saveVersion:SAVE_SCHEMA_VERSION,appVersion:DEV_VERSION,savedAt:null,location:"ミレスタ",game:capturePersistentState()};
+  refreshTitleContinue();
+  showTitleScreen();
 })();
 </script>
 </body>
