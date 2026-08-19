@@ -3012,7 +3012,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.32j</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.33a</div>
     </div>
     <div class="grow"></div>
     <div class="resource"><span class="badge">💰 <span id="goldText">120</span> G</span></div>
@@ -3439,11 +3439,17 @@
 (() => {
   const state = {
     gold: 100,
-    potions: 2,
-    antidotes: 0,
-    lifeStones: 0,
-    returnFeathers: 1,
-    seedItems:{powerSeed:0,guardSeed:0,intellectSeed:0,spiritSeed:0,speedSeed:0,fateSeed:0,lifeSeed:0,magicSeed:0,allSeed:0},
+    items:{
+      potion:2,highPotion:0,exPotion:0,lastPotion:0,
+      magicHerb:0,magicCondenseGrass:0,spiritDew:0,
+      antidote:0,panacea:0,lifeStone:0,phoenixTail:0,
+      polishDrink:0,guardDrink:0,magicDrink:0,blockDrink:0,quickDrink:0,superDrink:0,
+      cleanBall:0,mountOil:0,superOil:0,auraGear:0,auraMachine:0,
+      poisonGasBottle:0,smokeBomb:0,sealingCrystal:0,
+      returnFeather:1,holyWater:0,emergencyEscapePack:0,deliciousMilk:0,
+      demonFireSeed:0,restCross:0,mysteriousMap:0,changeCube:0,
+      powerSeed:0,guardSeed:0,intellectSeed:0,spiritSeed:0,speedSeed:0,fateSeed:0,lifeSeed:0,magicSeed:0,allSeed:0
+    },
     currentShop:null,
     shopMode:"buy",
     shopSelectedKey:null,
@@ -3528,11 +3534,11 @@
   }
   function updateHeader(){
     $("goldText").textContent = state.gold;
-    const potionText=$("potionText"); if(potionText) potionText.textContent = state.potions;
+    const potionText=$("potionText"); if(potionText) potionText.textContent = itemCount("potion");
     const exploreItemBtn=$("exploreItemBtn");
     if(exploreItemBtn) exploreItemBtn.textContent=`🧪 アイテム`;
     const featherCount=$("returnFeatherCount");
-    if(featherCount) featherCount.textContent=`×${state.returnFeathers}`;
+    if(featherCount) featherCount.textContent=`×${itemCount("returnFeather")}`;
     $("cavePin").classList.toggle("locked", !state.caveUnlocked);
   }
   function toast(msg){
@@ -3581,7 +3587,7 @@
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
   $("dummyTalk").onclick=()=>modal("会話","ここには将来、町の住民や仲間との会話イベントを追加できます。");
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32b"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.33a"; updateWorld(); showScreen("worldScreen"); };
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4114,13 +4120,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.33a";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.33a";
     updateHeader();
   };
 
@@ -4682,7 +4688,13 @@
     c.level=1;
     c.exp=0;
     c.growth=characterGrowth[c.id] || null;
+    c.seedBonus={hpMax:0,mpMax:0,atk:0,def:0,magic:0,mdef:0,spd:0,fate:0};
   });
+
+  function seedBonusOf(c){
+    if(!c.seedBonus) c.seedBonus={hpMax:0,mpMax:0,atk:0,def:0,magic:0,mdef:0,spd:0,fate:0};
+    return c.seedBonus;
+  }
 
   function profileFor(cOrId){
     const id=typeof cOrId==="string" ? cOrId : cOrId?.profileId || cOrId?.id;
@@ -4707,6 +4719,10 @@
     const profile=profileFor(c);
     if(profile){
       const target=formalStatsAtLevel(profile,c.level);
+      const seed=seedBonusOf(c);
+      target.hpMax+=Number(seed.hpMax)||0; target.mpMax+=Number(seed.mpMax)||0;
+      target.atk+=Number(seed.atk)||0; target.def+=Number(seed.def)||0; target.magic+=Number(seed.magic)||0;
+      target.mdef+=Number(seed.mdef)||0; target.spd+=Number(seed.spd)||0;
       const hpGain=Math.max(0,target.hpMax-oldHpMax);
       const mpGain=Math.max(0,target.mpMax-oldMpMax);
       old.hpMax=target.hpMax; old.mpMax=target.mpMax;
@@ -4848,11 +4864,13 @@
     return {
       active:[...state.battleActive],
       reserve:[...state.battleReserve],
-      potions:state.potions,antidotes:state.antidotes,lifeStones:state.lifeStones,returnFeathers:state.returnFeathers,
+      items:{...(state.items||{})},
       roster:Object.fromEntries(Object.entries(roster).map(([id,c])=>[id,{
         stats:{...c.stats},
         level:c.level,
         exp:c.exp,
+        fate:c.fate,
+        seedBonus:{...seedBonusOf(c)},
         learnedSkills:[...(c.learnedSkills||[])],
         atkBuff:c.atkBuff,
         atkBuffRounds:c.atkBuffRounds,
@@ -4870,16 +4888,15 @@
     if(!snapshot) return;
     state.battleActive=[...snapshot.active];
     state.battleReserve=[...snapshot.reserve];
-    if(Number.isFinite(snapshot.potions)) state.potions=snapshot.potions;
-    if(Number.isFinite(snapshot.antidotes)) state.antidotes=snapshot.antidotes;
-    if(Number.isFinite(snapshot.lifeStones)) state.lifeStones=snapshot.lifeStones;
-    if(Number.isFinite(snapshot.returnFeathers)) state.returnFeathers=snapshot.returnFeathers;
+    if(snapshot.items) state.items={...snapshot.items};
     Object.entries(snapshot.roster).forEach(([id,s])=>{
       const c=roster[id];
       if(!c) return;
       c.stats={...s.stats};
       c.level=s.level;
       c.exp=s.exp;
+      if(Number.isFinite(s.fate)) c.fate=s.fate;
+      c.seedBonus={...seedBonusOf(c),...(s.seedBonus||{})};
       c.learnedSkills=[...(s.learnedSkills||initialLearnedSkills[id]||[])];
       c.atkBuff=s.atkBuff??1;
       c.atkBuffRounds=s.atkBuffRounds??0;
@@ -5036,37 +5053,86 @@
   function S(c){ return c.stats; }
 
   const ITEMS = {
-    potion:{id:"potion",name:"ポーション",icon:"🧪",price:12,sellRate:.25,heal:50,battleUse:true,desc:"味方1人のHPを50回復"},
-    antidote:{id:"antidote",name:"毒消し草",icon:"🌿",price:10,sellRate:.25,battleUse:true,desc:"味方1人の毒を解除"},
-    lifeStone:{id:"lifeStone",name:"命の石",icon:"💠",price:250,sellRate:.25,battleUse:true,desc:"味方1人の戦闘不能を解除し、HP20%で復活"},
-    returnFeather:{id:"returnFeather",name:"帰還の羽",icon:"🪶",price:150,sellRate:.25,fieldOnly:true,desc:"探索を終了し、ミレスタへ即座に帰還する"},
-    powerSeed:{id:"powerSeed",name:"力の種",icon:"🌱",price:1000,sellable:false,desc:"攻撃力を永続的に+1"},
-    guardSeed:{id:"guardSeed",name:"守りの種",icon:"🌱",price:1000,sellable:false,desc:"防御力を永続的に+1"},
-    intellectSeed:{id:"intellectSeed",name:"知性の種",icon:"🌱",price:1000,sellable:false,desc:"魔力を永続的に+1"},
-    spiritSeed:{id:"spiritSeed",name:"精神の種",icon:"🌱",price:1000,sellable:false,desc:"魔法防御を永続的に+1"},
-    speedSeed:{id:"speedSeed",name:"敏捷の種",icon:"🌱",price:1000,sellable:false,desc:"素早さを永続的に+1"},
-    fateSeed:{id:"fateSeed",name:"運命の種",icon:"🌱",price:1000,sellable:false,desc:"運命値を永続的に+1"},
-    lifeSeed:{id:"lifeSeed",name:"生命の種",icon:"🌱",price:1000,sellable:false,desc:"最大HPを永続的に+1"},
-    magicSeed:{id:"magicSeed",name:"魔法の種",icon:"🌱",price:1000,sellable:false,desc:"最大MPを永続的に+1"},
-    allSeed:{id:"allSeed",name:"全能の種",icon:"🌟",price:8000,sellable:false,desc:"全てのステータスを永続的に+1"}
+    // HP recovery
+    potion:{id:"potion",name:"ポーション",icon:"🧪",price:12,sellRate:.10,battleUse:true,fieldUse:true,effect:"hpHeal",amount:50,battleTarget:"ally",desc:"味方1人のHPを50回復"},
+    highPotion:{id:"highPotion",name:"ハイポーション",icon:"🧪",price:60,sellRate:.10,battleUse:true,fieldUse:true,effect:"hpHeal",amount:150,battleTarget:"ally",desc:"味方1人のHPを150回復"},
+    exPotion:{id:"exPotion",name:"エクスポーション",icon:"🧪",price:150,sellRate:.10,battleUse:true,fieldUse:true,effect:"hpHeal",amount:300,battleTarget:"ally",desc:"味方1人のHPを300回復"},
+    lastPotion:{id:"lastPotion",name:"ラストポーション",icon:"🧪",price:400,sellRate:.10,battleUse:true,fieldUse:true,effect:"hpHeal",full:true,battleTarget:"ally",desc:"味方1人のHPを全回復"},
+
+    // MP recovery
+    magicHerb:{id:"magicHerb",name:"マジックハーブ",icon:"🌿",price:800,sellRate:.10,battleUse:true,fieldUse:true,effect:"mpHeal",amount:40,battleTarget:"ally",desc:"味方1人のMPを40回復"},
+    magicCondenseGrass:{id:"magicCondenseGrass",name:"魔凝草",icon:"🌿",price:2000,sellRate:.10,battleUse:true,fieldUse:true,effect:"mpHeal",amount:120,battleTarget:"ally",desc:"味方1人のMPを120回復"},
+    spiritDew:{id:"spiritDew",name:"精霊の魔露",icon:"💧",price:5000,sellRate:.10,battleUse:true,fieldUse:true,effect:"mpHeal",amount:300,battleTarget:"ally",desc:"味方1人のMPを300回復"},
+
+    // Recovery / revival
+    antidote:{id:"antidote",name:"毒消し草",icon:"🌿",price:10,sellRate:.10,battleUse:true,fieldUse:true,effect:"cleanse",poisonOnly:true,battleTarget:"ally",desc:"味方1人の毒を解除"},
+    panacea:{id:"panacea",name:"万能薬",icon:"✨",price:80,sellRate:.10,battleUse:true,fieldUse:true,effect:"cleanse",battleTarget:"ally",desc:"味方1人の状態異常をすべて解除"},
+    lifeStone:{id:"lifeStone",name:"命の石",icon:"💠",price:250,sellRate:.10,battleUse:true,fieldUse:true,effect:"revive",revivePercent:.20,battleTarget:"ally",allowKO:true,desc:"味方1人の戦闘不能を解除し、HP20%で復活"},
+    phoenixTail:{id:"phoenixTail",name:"フェニックスの尾",icon:"🔥",price:1500,sellRate:.10,battleUse:true,fieldUse:true,effect:"revive",revivePercent:1,battleTarget:"ally",allowKO:true,desc:"味方1人の戦闘不能を解除し、HPを全回復"},
+
+    // Five-round 1.3x buffs, identical to the standard buff spells.
+    polishDrink:{id:"polishDrink",name:"ポリッシュドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["atk"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の攻撃力を1.3倍（5ラウンド）"},
+    guardDrink:{id:"guardDrink",name:"ガードドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["def"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の防御力を1.3倍（5ラウンド）"},
+    magicDrink:{id:"magicDrink",name:"マジックドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["magic"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の魔力を1.3倍（5ラウンド）"},
+    blockDrink:{id:"blockDrink",name:"ブロックドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["mdef"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の魔法防御力を1.3倍（5ラウンド）"},
+    quickDrink:{id:"quickDrink",name:"クイックドリンク",icon:"🥤",price:400,sellRate:.10,battleUse:true,effect:"buff",buffs:["spd"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の素早さを1.3倍（5ラウンド）"},
+    superDrink:{id:"superDrink",name:"スーパードリンク",icon:"🌈",price:2000,sellRate:.10,battleUse:true,effect:"buff",buffs:["atk","def","magic","mdef","spd"],multiplier:1.30,duration:5,battleTarget:"ally",desc:"味方1人の攻撃・防御・魔力・魔防・素早さを1.3倍（5ラウンド）"},
+
+    // Non-magical battle utilities. Aura / Canceller do not stop these.
+    cleanBall:{id:"cleanBall",name:"まっさらだま",icon:"⚪",price:1800,sellRate:.10,battleUse:true,effect:"dispel",battleTarget:"enemy",desc:"敵1体のバフ・強化状態をすべて解除。非魔法扱い"},
+    mountOil:{id:"mountOil",name:"マウントオイル",icon:"🛢️",price:1000,sellRate:.10,battleUse:true,effect:"barrier",barrier:"mount",battleTarget:"ally",desc:"味方1人をマウント状態にする"},
+    superOil:{id:"superOil",name:"スーペルオイル",icon:"🛢️",price:4000,sellRate:.10,battleUse:true,effect:"barrier",barrier:"mount",battleTarget:"allyAll",desc:"味方全員をマウント状態にする"},
+    auraGear:{id:"auraGear",name:"オーラギア",icon:"⚙️",price:2000,sellRate:.10,battleUse:true,effect:"barrier",barrier:"aura",battleTarget:"ally",desc:"味方1人をオーラ状態にする"},
+    auraMachine:{id:"auraMachine",name:"オーラマシン",icon:"🔮",price:8000,sellRate:.10,battleUse:true,effect:"barrier",barrier:"aura",battleTarget:"allyAll",desc:"味方全員をオーラ状態にする"},
+    poisonGasBottle:{id:"poisonGasBottle",name:"毒ガス瓶",icon:"☠️",price:500,sellRate:.10,battleUse:true,effect:"statusAll",status:"poison",baseRate:STATUS_BASE_RATE.all,battleTarget:"enemyAll",desc:"敵全体を毒状態にする。ネオポイズン相当・非魔法扱い"},
+    smokeBomb:{id:"smokeBomb",name:"煙幕玉",icon:"🌫️",price:500,sellRate:.10,battleUse:true,effect:"statusAll",status:"blind",baseRate:STATUS_BASE_RATE.all,battleTarget:"enemyAll",desc:"敵全体を暗闇状態にする。ネオブラインド相当・非魔法扱い"},
+    sealingCrystal:{id:"sealingCrystal",name:"封印の水晶",icon:"🔇",price:500,sellRate:.10,battleUse:true,effect:"statusAll",status:"silence",baseRate:STATUS_BASE_RATE.all,battleTarget:"enemyAll",desc:"敵全体を封印状態にする。ネオサイレンス相当・非魔法扱い"},
+    emergencyEscapePack:{id:"emergencyEscapePack",name:"緊急脱出パック",icon:"🏃",price:1000,sellRate:.10,battleUse:true,effect:"escape",battleTarget:"self",desc:"通常戦闘から100%の確率で逃走する"},
+    deliciousMilk:{id:"deliciousMilk",name:"おいしいミルク",icon:"🥛",price:9500,sellRate:.10,battleUse:true,effect:"fortune",battleTarget:"self",desc:"敵全体の勧誘確率を少し上昇。フォーチュンと同じ効果"},
+
+    // Exploration utilities
+    returnFeather:{id:"returnFeather",name:"帰還の羽",icon:"🪶",price:150,sellRate:.10,fieldUse:true,fieldDirect:"return",desc:"探索を終了し、ミレスタへ即座に帰還する"},
+    holyWater:{id:"holyWater",name:"聖水",icon:"💧",price:1500,sellRate:.10,fieldUse:true,fieldDirect:"stealth",successRate:.35,desc:"未踏の戦闘マスを個別に35%判定で無マス化。ステルスと使用枠共有・1マップ1回"},
+    demonFireSeed:{id:"demonFireSeed",name:"魔界の火種",icon:"🔥",price:1000,sellRate:.10,fieldUse:true,fieldDirect:"nextBattle",desc:"次に進める通常ノードをすべて戦闘マスに変える"},
+    restCross:{id:"restCross",name:"安息の十字架",icon:"✝️",price:1000,sellRate:.10,fieldUse:true,fieldDirect:"nextHeal",desc:"次に進める通常ノードをすべて回復マスに変える"},
+    mysteriousMap:{id:"mysteriousMap",name:"不可思議な地図",icon:"🗺️",price:1000,sellRate:.10,fieldUse:true,fieldDirect:"nextEvent",desc:"次に進める通常ノードをすべてイベントマスに変える"},
+    changeCube:{id:"changeCube",name:"チェンジキューブ",icon:"🎲",price:6000,sellRate:.10,fieldUse:true,fieldDirect:"rerollMap",desc:"未踏の通常ノードを戦闘・宝箱・回復・イベントからランダムに変更する"},
+
+    // Permanent growth items. Seed bonuses are stored separately so level-ups never erase them.
+    powerSeed:{id:"powerSeed",name:"力の種",icon:"🌱",price:1000,sellRate:.10,fieldUse:true,effect:"seed",seedStat:"atk",desc:"攻撃力を永続的に+1"},
+    guardSeed:{id:"guardSeed",name:"守りの種",icon:"🌱",price:1000,sellRate:.10,fieldUse:true,effect:"seed",seedStat:"def",desc:"防御力を永続的に+1"},
+    intellectSeed:{id:"intellectSeed",name:"知性の種",icon:"🌱",price:1000,sellRate:.10,fieldUse:true,effect:"seed",seedStat:"magic",desc:"魔力を永続的に+1"},
+    spiritSeed:{id:"spiritSeed",name:"精神の種",icon:"🌱",price:1000,sellRate:.10,fieldUse:true,effect:"seed",seedStat:"mdef",desc:"魔法防御を永続的に+1"},
+    speedSeed:{id:"speedSeed",name:"敏捷の種",icon:"🌱",price:1000,sellRate:.10,fieldUse:true,effect:"seed",seedStat:"spd",desc:"素早さを永続的に+1"},
+    fateSeed:{id:"fateSeed",name:"運命の種",icon:"🌱",price:1000,sellRate:.10,fieldUse:true,effect:"seed",seedStat:"fate",desc:"運命値を永続的に+1"},
+    lifeSeed:{id:"lifeSeed",name:"生命の種",icon:"🌱",price:1000,sellRate:.10,fieldUse:true,effect:"seed",seedStat:"hpMax",desc:"最大HPを永続的に+1"},
+    magicSeed:{id:"magicSeed",name:"魔法の種",icon:"🌱",price:1000,sellRate:.10,fieldUse:true,effect:"seed",seedStat:"mpMax",desc:"最大MPを永続的に+1"},
+    allSeed:{id:"allSeed",name:"全能の種",icon:"🌟",price:8000,sellRate:.10,fieldUse:true,effect:"seed",seedStat:"all",desc:"最大HP・最大MP・攻撃・防御・魔力・魔防・素早さ・運命を永続的に+1"}
   };
   const NORMAL_SEED_IDS=["powerSeed","guardSeed","intellectSeed","spiritSeed","speedSeed","fateSeed","lifeSeed","magicSeed"];
-  function itemCount(id){
-    if(id==="potion") return state.potions;
-    if(id==="antidote") return state.antidotes;
-    if(id==="lifeStone") return state.lifeStones;
-    if(id==="returnFeather") return state.returnFeathers;
-    return Number(state.seedItems[id]||0);
-  }
+  const BATTLE_ITEM_IDS=[
+    "potion","highPotion","exPotion","lastPotion","magicHerb","magicCondenseGrass","spiritDew","antidote","panacea","lifeStone","phoenixTail",
+    "polishDrink","guardDrink","magicDrink","blockDrink","quickDrink","superDrink","cleanBall","mountOil","superOil","auraGear","auraMachine",
+    "poisonGasBottle","smokeBomb","sealingCrystal","emergencyEscapePack","deliciousMilk"
+  ];
+  const FIELD_ITEM_IDS=[
+    "potion","highPotion","exPotion","lastPotion","magicHerb","magicCondenseGrass","spiritDew","antidote","panacea","lifeStone","phoenixTail",
+    "returnFeather","holyWater","demonFireSeed","restCross","mysteriousMap","changeCube",
+    "powerSeed","guardSeed","intellectSeed","spiritSeed","speedSeed","fateSeed","lifeSeed","magicSeed","allSeed"
+  ];
+  function itemCount(id){ return Math.max(0,Number(state.items?.[id]||0)); }
   function addItemCount(id,n=1){
-    if(id==="potion") state.potions+=n;
-    else if(id==="antidote") state.antidotes+=n;
-    else if(id==="lifeStone") state.lifeStones+=n;
-    else if(id==="returnFeather") state.returnFeathers+=n;
-    else state.seedItems[id]=(state.seedItems[id]||0)+n;
+    if(!state.items) state.items={};
+    state.items[id]=Math.max(0,Number(state.items[id]||0)+Number(n||0));
     updateHeader();
   }
   function removeItemCount(id,n=1){ if(itemCount(id)<n) return false; addItemCount(id,-n); return true; }
+  function itemUsageLabel(item){
+    if(item?.battleUse && item?.fieldUse) return "戦闘・探索";
+    if(item?.battleUse) return "戦闘専用";
+    if(item?.fieldUse) return "探索専用";
+    return "特殊";
+  }
   const SHOP_STOCK={
     town:[
       {kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},
@@ -5077,7 +5143,7 @@
   };
   function shopEntryData(entry){ return entry?.kind==="item"?ITEMS[entry.id]:equipmentCatalog[entry?.id]; }
   function shopEntryKey(entry){ return entry?`${entry.kind}:${entry.id}`:""; }
-  function sellPriceFor(entry){ const d=shopEntryData(entry); return Math.floor((d?.price||0)*(entry.kind==="equip" ? .50 :(d?.sellRate??.25))); }
+  function sellPriceFor(entry){ const d=shopEntryData(entry); return Math.floor((d?.price||0)*(entry.kind==="equip" ? .50 :(d?.sellRate??.10))); }
   function shopSellEntries(){
     const out=[];
     Object.values(ITEMS).forEach(item=>{ if(item.sellable!==false && item.price>0 && itemCount(item.id)>0) out.push({kind:"item",id:item.id}); });
@@ -5129,7 +5195,7 @@
     const can=mode==="buy"?state.gold>=price:(entry.kind==="item"?owned>0:free>0);
     let middle="";
     if(entry.kind==="equip") middle=`<div class="shop-compare">${shopEquipCompareHtml(d)}</div>`;
-    else middle=`<div class="shop-compare"><div class="shop-consumable-info"><div class="shop-info-row"><span>所持数</span><strong>×${owned}</strong></div><div class="shop-info-row"><span>使用区分</span><strong>${d.battleUse?"戦闘・探索":"探索・特殊"}</strong></div><div class="shop-info-row"><span>売却価格</span><strong>${d.sellable===false?"売却不可":`${sellPriceFor(entry)} G`}</strong></div></div></div>`;
+    else middle=`<div class="shop-compare"><div class="shop-consumable-info"><div class="shop-info-row"><span>所持数</span><strong>×${owned}</strong></div><div class="shop-info-row"><span>使用区分</span><strong>${itemUsageLabel(d)}</strong></div><div class="shop-info-row"><span>売却価格</span><strong>${d.sellable===false?"売却不可":`${sellPriceFor(entry)} G`}</strong></div></div></div>`;
     const note=mode==="buy"?(can?"":"所持金が足りません。"):(entry.kind==="equip"?`売却可能 ×${free}（装備中の品は売れません）`:`所持 ×${owned}`);
     box.innerHTML=`<div class="shop-detail-head"><div class="shop-detail-icon">${d.icon||"📦"}</div><div class="shop-detail-name"><b>${d.name}</b><small>${entry.kind==="equip"?EQUIPMENT_SLOT_LABELS[d.slot]||"装備":"アイテム"}</small></div><div class="shop-detail-price">${price} G</div></div><div class="shop-detail-desc">${d.desc||"説明はありません。"}</div>${middle}<div class="shop-action-row"><div class="shop-action-note">${note}</div><button class="shop-action-btn${mode==="sell"?" sell":""}" ${can?"":"disabled"}>${mode==="buy"?"購入する":"売却する"}</button></div>`;
     const btn=box.querySelector(".shop-action-btn"); if(btn)btn.onclick=()=>mode==="buy"?buyShopEntry(entry):sellShopEntry(entry);
@@ -5821,6 +5887,29 @@
     state.battleActions.forEach((action,slot)=>{ if(action?.type==="item") refundQueuedItem(slot); });
   }
 
+  function battleItemTargetUsable(item,c){
+    if(!item || !c) return false;
+    const st=S(c);
+    if(item.effect==="revive") return st.hp<=0;
+    if(st.hp<=0) return false;
+    if(item.effect==="hpHeal") return st.hp<st.hpMax;
+    if(item.effect==="mpHeal") return st.mp<st.mpMax;
+    if(item.effect==="cleanse"){
+      const cond=conditionsOf(c);
+      return item.poisonOnly ? !!cond.poison : ["poison","blind","silence","shock"].some(k=>cond[k]);
+    }
+    return true;
+  }
+
+  function battleItemTargetNote(item){
+    if(item.battleTarget==="allyAll") return "味方全員";
+    if(item.battleTarget==="enemy") return "敵1体";
+    if(item.battleTarget==="enemyAll") return "敵全体";
+    if(item.battleTarget==="self") return "その場で使用";
+    if(item.allowKO) return "戦闘不能の味方";
+    return "味方1人";
+  }
+
   function openItemMenu(){
     if(state.battlePhase!=="input" || state.battleEnded) return;
     cancelScheduledTurnStart();
@@ -5828,18 +5917,37 @@
     state.battleTargetMode=null; renderBattleParty(); updateActorPortrait(); updateExecuteButton();
     $("itemSelectTitle").textContent=`${actor.name}：アイテム`; $("itemSelectLead").textContent="使用するアイテムを選択"; renderSkillPartyStatus("itemPartyStatus");
     const box=$("itemList"); box.innerHTML="";
-    ["potion","antidote","lifeStone"].forEach(id=>{ const item=ITEMS[id],available=availableItemForSlot(id),usable=available>0; const btn=document.createElement("button"); btn.className="skill-option";btn.disabled=!usable;btn.innerHTML=`<span class="skill-option-icon">${item.icon}</span><span class="skill-option-main"><span class="skill-option-name">${item.name}</span><span class="skill-option-desc">${item.desc}</span></span><span class="skill-option-meta">× ${available}<small>${usable?(id==="lifeStone"?"戦闘不能の味方":"味方1人"):"所持なし"}</small></span>`;btn.onclick=()=>selectBattleItem(id);box.appendChild(btn); });
+    const shown=BATTLE_ITEM_IDS.filter(id=>availableItemForSlot(id)>0);
+    if(!shown.length){
+      box.innerHTML='<div class="character-skill-empty">戦闘で使えるアイテムを持っていません。</div>';
+    }
+    shown.forEach(id=>{
+      const item=ITEMS[id],available=availableItemForSlot(id),usable=available>0;
+      const btn=document.createElement("button"); btn.className="skill-option"; btn.disabled=!usable;
+      btn.innerHTML=`<span class="skill-option-icon">${item.icon}</span><span class="skill-option-main"><span class="skill-option-name">${item.name}</span><span class="skill-option-desc">${item.desc}</span></span><span class="skill-option-meta">× ${available}<small>${battleItemTargetNote(item)}</small></span>`;
+      btn.onclick=()=>selectBattleItem(id); box.appendChild(btn);
+    });
     $("itemModal").classList.add("show");
   }
 
   function selectBattleItem(itemId){
     if(state.battlePhase!=="input" || state.battleEnded) return;
     const item=ITEMS[itemId];
-    if(!item || availableItemForSlot(itemId)<=0){ setMessage(`${item?.name||"アイテム"}を持っていません。`); return; }
+    if(!item || !item.battleUse || availableItemForSlot(itemId)<=0){ setMessage(`${item?.name||"アイテム"}を持っていません。`); return; }
     closeItemMenu();
-    state.battleTargetMode={kind:"ally",source:"item",item:item.id,actorSlot:state.battleActorSlot,allowKO:itemId==="lifeStone"};
-    renderBattleParty(); updateActorPortrait(); updateExecuteButton();
-    setMessage(`${item.icon} ${item.name}：下のバトルメンバーから対象を選んでください。`);
+    if(item.battleTarget==="ally"){
+      state.battleTargetMode={kind:"ally",source:"item",item:item.id,actorSlot:state.battleActorSlot,allowKO:!!item.allowKO};
+      renderBattleParty(); updateActorPortrait(); updateExecuteButton();
+      setMessage(`${item.icon} ${item.name}：下のバトルメンバーから対象を選んでください。`);
+      return;
+    }
+    if(item.battleTarget==="enemy"){
+      state.battleTargetMode={kind:"enemy",source:"item",item:item.id,actorSlot:state.battleActorSlot};
+      renderFormation(state.battleFormationArea,state.battleFormationIndex,false); renderBattleParty(); updateActorPortrait(); updateExecuteButton();
+      setMessage(`${item.icon} ${item.name}：対象の敵をタップしてください。`);
+      return;
+    }
+    queueAction({type:"item",item:item.id});
   }
 
   function targetModeName(mode=state.battleTargetMode){
@@ -5917,6 +6025,10 @@
     }
     if(action.type==="item"){
       const item=ITEMS[action.item];
+      if(item?.battleTarget==="enemyAll") return `${item.icon} ${item.name}→敵全体`;
+      if(item?.battleTarget==="allyAll") return `${item.icon} ${item.name}→味方全員`;
+      if(item?.battleTarget==="self") return `${item.icon} ${item.name}`;
+      if(item?.battleTarget==="enemy"){ const target=enemyByUid(action.targetUid); return `${item.icon} ${item.name}→${target?.displayName||"敵"}`; }
       const target=roster[action.targetId || state.battleActive[action.targetSlot]];
       return `${item?.icon||"🧪"} ${item?.name||"アイテム"}→${target ? target.name : "味方"}`;
     }
@@ -5951,7 +6063,7 @@
       if(c.defending) btn.classList.add("defending");
       if(c.atkBuffRounds>0) btn.classList.add("buff-atk");
       const targetMode=state.battleTargetMode;
-      const targetAllowed=!!(targetMode && targetMode.kind==="ally" && (st.hp>0 || targetMode.allowKO));
+      const targetAllowed=!!(targetMode && targetMode.kind==="ally" && (targetMode.source==="item" ? battleItemTargetUsable(ITEMS[targetMode.item],c) : (st.hp>0 || targetMode.allowKO)));
       if(targetAllowed) btn.classList.add("targetable");
       btn.dataset.slot=String(slot);
 
@@ -5986,15 +6098,24 @@
           return;
         }
         if(state.battleTargetMode && state.battleTargetMode.kind==="ally"){
-          if(st.hp<=0 && !state.battleTargetMode.allowKO){
+          const pending=state.battleTargetMode;
+          if(pending.source==="item" && !battleItemTargetUsable(ITEMS[pending.item],c)){
+            setMessage("その対象には今は使えません。");
+            return;
+          }
+          if(st.hp<=0 && !pending.allowKO){
             setMessage("戦闘不能の仲間は対象にできません。");
             return;
           }
-          const mode=state.battleTargetMode;
+          const mode=pending;
           const targetId=state.battleActive[slot];
           state.battleTargetMode=null;
           if(mode.source==="item") queueAction({type:"item",item:mode.item,targetSlot:slot,targetId});
           else queueAction({type:"skill",skill:mode.skill,targetSlot:slot,targetId});
+          return;
+        }
+        if(state.battleTargetMode?.kind==="enemy"){
+          setMessage(`${targetModeName()}：対象の敵をタップしてください。`);
           return;
         }
         if(st.hp>0){
@@ -6159,7 +6280,15 @@
 
       div.onclick=()=>{
         if(state.battlePhase==="input") cancelScheduledTurnStart();
-        if(state.battlePhase!=="input" || state.battleEnded || (state.battleTargetMode && state.battleTargetMode.kind==="ally")) return;
+        if(state.battlePhase!=="input" || state.battleEnded) return;
+        if(state.battleTargetMode?.kind==="ally") return;
+        if(state.battleTargetMode?.kind==="enemy"){
+          const mode=state.battleTargetMode;
+          state.battleTargetMode=null;
+          if(mode.source==="item") queueAction({type:"item",item:mode.item,targetUid:e.uid});
+          else if(mode.source==="skill") queueAction({type:"skill",skill:mode.skill,targetUid:e.uid});
+          return;
+        }
         stage.querySelectorAll(".enemy").forEach(x=>x.classList.remove("selected"));
         div.classList.add("selected");
         setMessage(`対象：${e.displayName}。${roster[state.battleActive[state.battleActorSlot]].name} のコマンドを選択してください。`);
@@ -6168,11 +6297,12 @@
     });
 
     const selectedAction=state.battleActions[state.battleActorSlot];
-    let preferredUid=selectedAction && (selectedAction.type==="attack" || (selectedAction.type==="skill" && skills[selectedAction.skill]?.target==="enemy"))
+    let preferredUid=selectedAction && (selectedAction.type==="attack" || (selectedAction.type==="skill" && skills[selectedAction.skill]?.target==="enemy") || (selectedAction.type==="item" && ITEMS[selectedAction.item]?.battleTarget==="enemy"))
       ? selectedAction.targetUid : null;
     let preferred=preferredUid ? stage.querySelector(`.enemy[data-enemy-uid="${preferredUid}"]`) : null;
     if(!preferred) preferred=stage.querySelector(".enemy");
-    if(preferred && state.battlePhase==="input" && !(state.battleTargetMode && state.battleTargetMode.kind==="ally")) preferred.classList.add("selected");
+    if(preferred && state.battlePhase==="input" && !state.battleTargetMode) preferred.classList.add("selected");
+    if(state.battleTargetMode?.kind==="enemy") stage.querySelectorAll(".enemy").forEach(x=>x.classList.add("selected"));
 
     $("battleAreaLabel").textContent=pack.label;
     $("formationAreaSelect").value=area;
@@ -7063,21 +7193,123 @@
   }
   async function resolveBattleItem(actor,action,slot){
     const item=ITEMS[action.item]; if(!item) return;
-    const targetSlot=action.targetSlot; const target=roster[action.targetId || state.battleActive[targetSlot]]; const stillActive=target && state.battleActive[targetSlot]===target.id;
-    if(!target || !stillActive){ setMessage(`${actor.name} は ${item.name} を使えなかった。対象が戦線にいません。`); await wait(BASE_TIME.message); return; }
-    animateActor("cast"); setMessage(`🧪 ${actor.name} は ${item.name} を使った！`); await wait(BASE_TIME.actionLead);
-    if(action.item==="lifeStone"){
+    animateActor(item.effect==="buff" || item.effect==="barrier" || item.effect==="fortune" ? "buff" : "cast");
+    setMessage(`${item.icon||"🧪"} ${actor.name} は ${item.name} を使った！`);
+    await wait(BASE_TIME.actionLead);
+
+    if(item.effect==="escape"){
+      if(state.battleEscapeDisabled){ setMessage("この戦闘からは逃走できない！"); await wait(BASE_TIME.message); return; }
+      setMessage(`🏃 ${item.name}！ うまく逃げ切った！`);
+      await wait(BASE_TIME.message);
+      finishEscape();
+      return;
+    }
+    if(item.effect==="fortune"){
+      state.fortuneCasts=(Number(state.fortuneCasts)||0)+1;
+      setMessage(`🥛 ${item.name}！ 敵全体の加入率が少し上昇した。（重ね掛け ${state.fortuneCasts}回 / 最終70%上限）`);
+      await wait(BASE_TIME.buff);
+      return;
+    }
+    if(item.effect==="statusAll"){
+      const targets=[...livingEnemies()];
+      if(!targets.length) return;
+      const results=targets.map(target=>({target,result:tryInflictStatus(target,item.status,item.baseRate)}));
+      results.forEach(({target,result})=>{
+        const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${target.uid}"]`);
+        if(el) spawnFx("magicshot",statusIcon(item.status),el);
+      });
+      await wait(BASE_TIME.hit);
+      renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+      const success=results.filter(x=>x.result.success).length;
+      const mount=results.filter(x=>x.result.reason==="mount").length;
+      const already=results.filter(x=>x.result.reason==="already").length;
+      setMessage(`${item.icon} ${item.name}！ ${success}体に${statusName(item.status)}が決まった。${mount?` ${mount}体はマウントで防いだ。`:""}${already?` ${already}体はすでに同状態。`:""}`);
+      await wait(BASE_TIME.buff);
+      return;
+    }
+    if(item.effect==="dispel"){
+      let target=enemyByUid(action.targetUid);
+      if(!target || target.hp<=0) target=livingEnemies()[0]||null;
+      if(!target) return;
+      const removed=clearEnemyBuffs(target);
+      const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${target.uid}"]`);
+      if(el) spawnFx("buff","⚪",el);
+      renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+      setMessage(removed?`⚪ ${target.displayName} の強化効果をすべて解除した！`:`${target.displayName} には解除できる強化効果がなかった。`);
+      await wait(BASE_TIME.buff);
+      return;
+    }
+
+    const allyTargets=item.battleTarget==="allyAll"
+      ? livingActiveSlots()
+      : (()=>{
+          const targetSlot=action.targetSlot;
+          const target=roster[action.targetId || state.battleActive[targetSlot]];
+          const stillActive=target && state.battleActive[targetSlot]===target.id;
+          return target && stillActive ? [{i:targetSlot,c:target}] : [];
+        })();
+    if(!allyTargets.length){ setMessage(`${actor.name} は ${item.name} を使えなかった。対象が戦線にいません。`); await wait(BASE_TIME.message); return; }
+
+    if(item.effect==="revive"){
+      const {i,c:target}=allyTargets[0];
       if(S(target).hp>0){ setMessage(`${target.name} は戦闘不能ではなかった。`); await wait(BASE_TIME.message); return; }
-      S(target).hp=Math.max(1,Math.floor(S(target).hpMax*.20)); renderBattleParty(); flashPartyValue(targetSlot,S(target).hp,"heal"); setMessage(`💠 ${target.name} がHP ${S(target).hp}で復活した！`); await wait(BASE_TIME.heal); return;
+      S(target).hp=Math.max(1,Math.min(S(target).hpMax,Math.round(S(target).hpMax*(Number(item.revivePercent)||.20))));
+      renderBattleParty(); flashPartyValue(i,S(target).hp,"heal");
+      setMessage(`${item.icon} ${target.name} がHP ${S(target).hp}で復活した！`); await wait(BASE_TIME.heal); return;
     }
-    if(S(target).hp<=0){ setMessage(`${target.name} は戦闘不能のため効果がなかった。`); await wait(BASE_TIME.message); return; }
-    if(action.item==="antidote"){
-      if(!conditionsOf(target).poison){ setMessage(`${target.name} は毒状態ではなかった。`); await wait(BASE_TIME.message); return; }
-      conditionsOf(target).poison=false; renderBattleParty(); setMessage(`🌿 ${target.name} の毒が消えた。`); await wait(BASE_TIME.heal); return;
+
+    const livingTargets=allyTargets.filter(({c})=>S(c).hp>0);
+    if(!livingTargets.length){ setMessage("戦闘不能の仲間には効果がなかった。"); await wait(BASE_TIME.message); return; }
+
+    if(item.effect==="cleanse"){
+      let removed=0;
+      livingTargets.forEach(({c})=>{ removed+=clearNegativeConditions(c,{poisonOnly:!!item.poisonOnly}); });
+      renderBattleParty();
+      setMessage(removed?`${item.icon} 状態異常を ${removed}個解除した。`:`解除できる状態異常はなかった。`);
+      await wait(BASE_TIME.buff); return;
     }
-    const amount=Math.min(item.heal||0,S(target).hpMax-S(target).hp);
-    if(amount<=0){ setMessage(`${target.name} のHPは満タンだった。`); await wait(BASE_TIME.message); return; }
-    S(target).hp=Math.min(S(target).hpMax,S(target).hp+amount); updateHeader(); renderBattleParty(); flashPartyValue(targetSlot,amount,"heal"); const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${targetSlot}"]`); if(card) spawnFx("heal","🧪",card); setMessage(`🧪 ${target.name} のHPが ${amount} 回復した。`); await wait(BASE_TIME.heal);
+    if(item.effect==="hpHeal"){
+      let total=0;
+      livingTargets.forEach(({i,c})=>{
+        const st=S(c),amount=Math.min(st.hpMax-st.hp,item.full?st.hpMax-st.hp:Number(item.amount)||0);
+        if(amount>0){ st.hp+=amount; total+=amount; flashPartyValue(i,amount,"heal"); const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`); if(card) spawnFx("heal","🧪",card); }
+      });
+      renderBattleParty(); updateHeader();
+      setMessage(total?`${item.icon} HPが ${total} 回復した。`:`HPはすでに満タンだった。`);
+      await wait(BASE_TIME.heal); return;
+    }
+    if(item.effect==="mpHeal"){
+      let total=0;
+      livingTargets.forEach(({i,c})=>{
+        const st=S(c),amount=Math.min(st.mpMax-st.mp,Number(item.amount)||0);
+        if(amount>0){ st.mp+=amount; total+=amount; flashPartyValue(i,amount,"heal"); const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`); if(card) spawnFx("heal","🔹",card); }
+      });
+      renderBattleParty();
+      setMessage(total?`${item.icon} MPが ${total} 回復した。`:`MPはすでに満タンだった。`);
+      await wait(BASE_TIME.heal); return;
+    }
+    if(item.effect==="buff"){
+      let applied=0,stronger=0;
+      livingTargets.forEach(({i,c})=>{
+        (item.buffs||[]).forEach(buff=>{
+          const result=applyStatBuff(c,{buff,multiplier:item.multiplier,duration:item.duration});
+          if(result.applied) applied++; else if(result.reason==="stronger") stronger++;
+        });
+        const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`); if(card) spawnFx("buff",item.icon,card);
+      });
+      renderBattleParty();
+      setMessage(applied?`${item.icon} ${item.name}の効果で能力が上昇した！${stronger?`（${stronger}項目はより強い効果を維持）`:""}`:`より強い強化がかかっているため変化しなかった。`);
+      await wait(BASE_TIME.buff); return;
+    }
+    if(item.effect==="barrier"){
+      livingTargets.forEach(({i,c})=>{
+        conditionsOf(c)[item.barrier]=true;
+        const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`); if(card) spawnFx("buff",item.barrier==="aura"?"🔮":"🛡️",card);
+      });
+      renderBattleParty();
+      setMessage(`${item.icon} ${item.battleTarget==="allyAll"?"味方全員":"対象"}を${item.barrier==="aura"?"オーラ":"マウント"}状態にした。`);
+      await wait(BASE_TIME.buff); return;
+    }
   }
 
   function enemySkillAvailable(enemy,skillId){
@@ -7344,7 +7576,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.33a";
       updateHeader();
       return;
     }
@@ -7352,7 +7584,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.33a";
   }
 
   async function attemptEscape(){
@@ -7649,7 +7881,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.33a";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -7657,7 +7889,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.33a";
     state.battleFromRun=false;
 
     if(extraToast) toast(extraToast);
@@ -7781,7 +8013,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.33a";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -7840,7 +8072,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.33a";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -7864,7 +8096,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.32b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.33a";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -8417,20 +8649,56 @@
     $("exploreItemModal").classList.remove("show");
   }
 
-  function fieldItemTargetUsable(itemId,c){ const st=S(c); if(itemId==="potion")return st.hp>0&&st.hp<st.hpMax;if(itemId==="antidote")return st.hp>0&&!!conditionsOf(c).poison;if(itemId==="lifeStone")return st.hp<=0;return false; }
+  const MAP_ITEM_SPECIAL_TYPES=new Set(["start","shop","goal"]);
+  function fieldItemTargetUsable(itemId,c){
+    const item=ITEMS[itemId],st=S(c); if(!item) return false;
+    if(item.effect==="hpHeal") return st.hp>0 && st.hp<st.hpMax;
+    if(item.effect==="mpHeal") return st.hp>0 && st.mp<st.mpMax;
+    if(item.effect==="cleanse"){
+      if(st.hp<=0) return false;
+      const cond=conditionsOf(c);
+      return item.poisonOnly ? !!cond.poison : ["poison","blind","silence","shock"].some(k=>cond[k]);
+    }
+    if(item.effect==="revive") return st.hp<=0;
+    if(item.effect==="seed") return true;
+    return false;
+  }
+  function nextModifiableNodes(){
+    if(!state.run) return [];
+    const reachable=reachableIds();
+    return state.run.nodes.filter(n=>reachable.has(n.id) && !MAP_ITEM_SPECIAL_TYPES.has(n.type));
+  }
+  function remainingModifiableNodes(){
+    if(!state.run) return [];
+    return state.run.nodes.filter(n=>!state.run.visited.has(n.id) && !MAP_ITEM_SPECIAL_TYPES.has(n.type));
+  }
+  function fieldDirectItemUsable(item){
+    if(!state.run || !item?.fieldDirect) return false;
+    if(item.fieldDirect==="return") return true;
+    if(item.fieldDirect==="stealth") return !state.run.stealthUsed && state.run.nodes.some(n=>n.type==="battle" && !state.run.visited.has(n.id));
+    if(["nextBattle","nextHeal","nextEvent"].includes(item.fieldDirect)) return nextModifiableNodes().length>0;
+    if(item.fieldDirect==="rerollMap") return remainingModifiableNodes().length>0;
+    return false;
+  }
   function renderExploreItemList(){
     $("exploreItemListView").hidden=false;
     $("exploreItemTargetView").hidden=true;
     $("exploreItemLead").textContent="使用するアイテムを選択";
-    const featherBtn=$("exploreReturnFeatherBtn"),featherCount=$("returnFeatherCount");
-    if(featherCount) featherCount.textContent=`×${state.returnFeathers}`;
-    if(featherBtn) featherBtn.disabled=state.returnFeathers<=0;
+    const legacyFeather=$("exploreReturnFeatherBtn"); if(legacyFeather) legacyFeather.style.display="none";
     const choices=$("exploreFieldItemList"); choices.innerHTML="";
-    ["potion","antidote","lifeStone"].forEach(id=>{
+    const shown=FIELD_ITEM_IDS.filter(id=>itemCount(id)>0);
+    if(!shown.length){
+      choices.innerHTML='<div class="character-skill-empty">探索中に使えるアイテムを持っていません。</div>';
+      return;
+    }
+    shown.forEach(id=>{
       const item=ITEMS[id],count=itemCount(id);
-      if(count<=0) return;
-      const b=document.createElement("button");
-      b.className="skill-option";
+      if(item.fieldDirect){
+        const b=document.createElement("button"); b.className="field-item-btn"; b.disabled=!fieldDirectItemUsable(item);
+        b.innerHTML=`<span class="icon">${item.icon}</span><span><strong>${item.name}</strong><small>${item.desc}</small></span><span class="field-item-count">×${count}</span>`;
+        b.onclick=()=>useExploreDirectItem(id); choices.appendChild(b); return;
+      }
+      const b=document.createElement("button"); b.className="skill-option";
       b.innerHTML=`<span class="skill-option-icon">${item.icon}</span><span class="skill-option-main"><span class="skill-option-name">${item.name}</span><span class="skill-option-desc">${item.desc}</span></span><span class="skill-option-meta">× ${count}<small>対象を選ぶ</small></span>`;
       b.onclick=()=>{state.exploreItemId=id;renderExploreItemTargets();};
       choices.appendChild(b);
@@ -8464,21 +8732,69 @@
     targets.append(battle,reserve);
   }
   function openExploreItemMenu(){ if(!state.run)return;renderExploreItemList();$("exploreItemModal").classList.add("show"); }
-  function useExploreFieldItem(id){ const c=roster[id],item=ITEMS[state.exploreItemId];if(!c||!item||itemCount(item.id)<=0)return;const st=S(c);if(!fieldItemTargetUsable(item.id,c)){toast("その対象には今は使えません");return;}removeItemCount(item.id,1);let text="";if(item.id==="potion"){const amount=Math.min(item.heal,st.hpMax-st.hp);st.hp+=amount;text=`HPが ${amount} 回復`;}else if(item.id==="antidote"){conditionsOf(c).poison=false;text="毒が消えた";}else if(item.id==="lifeStone"){st.hp=Math.max(1,Math.floor(st.hpMax*.20));text=`HP ${st.hp}で復活`;}updateRunHud();renderExploreItemTargets();toast(`${c.name}：${text}`); }
 
-  function useReturnFeather(){
-    if(!state.run || state.returnFeathers<=0) return;
-    modal("🪶 帰還の羽を使いますか？",`帰還の羽を1個消費して、現在の探索を終了します。\n所持数：${state.returnFeathers}`,[
-      ["使用する",()=>{
-        if(!state.run || state.returnFeathers<=0){ closeModal(); return; }
-        state.returnFeathers--;
-        closeModal();
-        closeExploreItemMenu();
-        finishRun("帰還の羽でミレスタへ帰還しました");
-      }],
-      ["やめる",closeModal]
-    ]);
+  function applySeedItem(c,item){
+    const bonus=seedBonusOf(c),st=S(c);
+    const applyOne=key=>{
+      if(key==="fate"){ bonus.fate=(Number(bonus.fate)||0)+1; c.fate=(Number(c.fate)||0)+1; return; }
+      bonus[key]=(Number(bonus[key])||0)+1;
+      if(key==="hpMax"){ st.hpMax+=1; st.hp=Math.min(st.hpMax,st.hp+1); return; }
+      if(key==="mpMax"){ st.mpMax+=1; st.mp=Math.min(st.mpMax,st.mp+1); return; }
+      st[key]=(Number(st[key])||0)+1;
+    };
+    if(item.seedStat==="all") ["hpMax","mpMax","atk","def","magic","mdef","spd","fate"].forEach(applyOne);
+    else applyOne(item.seedStat);
   }
+
+  function useExploreFieldItem(id){
+    const c=roster[id],item=ITEMS[state.exploreItemId]; if(!c||!item||itemCount(item.id)<=0)return;
+    const st=S(c); if(!fieldItemTargetUsable(item.id,c)){toast("その対象には今は使えません");return;}
+    removeItemCount(item.id,1); let text="";
+    if(item.effect==="hpHeal"){
+      const amount=Math.min(st.hpMax-st.hp,item.full?st.hpMax-st.hp:Number(item.amount)||0); st.hp+=amount; text=`HPが ${amount} 回復`;
+    }else if(item.effect==="mpHeal"){
+      const amount=Math.min(st.mpMax-st.mp,Number(item.amount)||0); st.mp+=amount; text=`MPが ${amount} 回復`;
+    }else if(item.effect==="cleanse"){
+      const removed=clearNegativeConditions(c,{poisonOnly:!!item.poisonOnly}); text=removed?`状態異常を ${removed}個解除`:"解除できる状態異常はなかった";
+    }else if(item.effect==="revive"){
+      st.hp=Math.max(1,Math.min(st.hpMax,Math.round(st.hpMax*(Number(item.revivePercent)||.20)))); text=`HP ${st.hp}で復活`;
+    }else if(item.effect==="seed"){
+      applySeedItem(c,item); text=`${item.desc}`;
+    }
+    updateRunHud(); renderExploreItemTargets(); toast(`${c.name}：${text}`);
+  }
+
+  function useExploreDirectItem(id){
+    const item=ITEMS[id]; if(!state.run || !item || itemCount(id)<=0) return;
+    if(!fieldDirectItemUsable(item)){ toast(item.fieldDirect==="stealth" && state.run.stealthUsed?"このマップではステルス系効果をすでに使用しています":"今はこのアイテムを使えません"); return; }
+    if(item.fieldDirect==="return"){
+      modal(`${item.icon} ${item.name}を使いますか？`,`${item.name}を1個消費して、現在の探索を終了します。
+所持数：${itemCount(id)}`,[
+        ["使用する",()=>{ if(!state.run || !removeItemCount(id,1)){closeModal();return;} closeModal();closeExploreItemMenu();finishRun(`${item.name}でミレスタへ帰還しました`); }],
+        ["やめる",closeModal]
+      ]); return;
+    }
+    if(item.fieldDirect==="stealth"){
+      const battles=state.run.nodes.filter(n=>n.type==="battle" && !state.run.visited.has(n.id));
+      if(!battles.length || state.run.stealthUsed) return;
+      removeItemCount(id,1); state.run.stealthUsed=true; let erased=0;
+      battles.forEach(n=>{ if(Math.random()<(Number(item.successRate)||.35)){n.type="empty";erased++;} });
+      renderMap(); updateRunHud(); renderExploreItemList(); toast(`${item.name}：戦闘マス ${erased}個が静まり返った`); return;
+    }
+    if(["nextBattle","nextHeal","nextEvent"].includes(item.fieldDirect)){
+      const nodes=nextModifiableNodes(); if(!nodes.length) return;
+      const type=item.fieldDirect==="nextBattle"?"battle":item.fieldDirect==="nextHeal"?"heal":"event";
+      removeItemCount(id,1); nodes.forEach(n=>n.type=type); renderMap(); updateRunHud(); renderExploreItemList();
+      toast(`${item.name}：次の通常ノード ${nodes.length}個を${NODE[type].label}マスに変更`); return;
+    }
+    if(item.fieldDirect==="rerollMap"){
+      const nodes=remainingModifiableNodes(); if(!nodes.length) return;
+      removeItemCount(id,1); const pool=["battle","chest","heal","event"]; nodes.forEach(n=>n.type=choose(pool));
+      renderMap(); updateRunHud(); renderExploreItemList(); toast(`${item.name}：未踏の通常ノード ${nodes.length}個を再構成した`); return;
+    }
+  }
+
+  function useReturnFeather(){ useExploreDirectItem("returnFeather"); }
 
   $("exploreReturnFeatherBtn").onclick=useReturnFeather;
   $("exploreSkillBtn").onclick=openExploreSkillMenu;
