@@ -3263,7 +3263,7 @@
 
 
 
-  /* v0.36a story / conversation event foundation */
+  /* v0.36b story / conversation event foundation */
   .story-event-modal{
     display:none;position:fixed;inset:0;z-index:255;background:rgba(1,6,11,.78);
     align-items:center;justify-content:center;
@@ -3288,6 +3288,7 @@
   .story-event-content{min-width:0;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;gap:8px;padding:5px 4px 3px}
   .story-event-speaker{
     justify-self:start;min-width:110px;padding:6px 13px;border-radius:999px;border:1px solid #526f88;
+    margin-left:-14px;
     background:#13263a;color:#eef6ff;font-size:13px;font-weight:1000;letter-spacing:.03em;
   }
   .story-event-speaker:empty{display:none}
@@ -3328,7 +3329,7 @@
   }
   .story-next[hidden]{display:none}.story-next:active{transform:translateY(1px)}
 
-  /* v0.36a: dialogue upper area is fixed; only the bottom control lane switches between NEXT and choices. */
+  /* v0.36b: dialogue upper area is fixed; only the bottom control lane switches between NEXT and choices. */
   .story-event-panel:not(.system):not(.tutorial) .story-event-content{
     grid-template-rows:auto minmax(0,1fr) 48px;
     gap:8px;
@@ -3352,7 +3353,7 @@
     .story-event-panel:not(.system):not(.tutorial) .story-event-content{grid-template-rows:auto minmax(0,1fr) 36px;gap:5px}
     .story-event-panel:not(.system):not(.tutorial) .story-event-portrait{margin-bottom:41px}
     .story-event-panel:not(.system):not(.tutorial) .story-event-footer{min-height:36px}
-    .story-event-content{gap:5px;padding:3px 2px 1px}.story-event-speaker{padding:4px 10px;font-size:10px;min-width:88px}
+    .story-event-content{gap:5px;padding:3px 2px 1px}.story-event-speaker{padding:4px 10px;font-size:10px;min-width:88px;margin-left:-10px}
     .story-event-text{padding:11px 13px;font-size:13px;line-height:1.6}.story-event-choices{gap:5px}.story-choice{min-height:36px;font-size:10px}
     .story-event-footer{min-height:30px}.story-next{min-width:94px;min-height:31px;font-size:9px}
     .story-event-panel.system .story-event-content,.story-event-panel.tutorial .story-event-content{padding:8px 6%}
@@ -3360,7 +3361,7 @@
     .story-event-panel.tutorial .story-event-text{font-size:11px;line-height:1.55}
   }
 
-  /* v0.36a developer tools */
+  /* v0.36b developer tools */
   .debug-modal{
     display:none;position:fixed;inset:0;z-index:245;background:rgba(0,0,0,.74);
     align-items:center;justify-content:center;
@@ -3405,7 +3406,7 @@
     .debug-panel{height:calc(100vh - 10px - var(--safe-top) - var(--safe-bottom));padding:7px;gap:5px}.debug-head h2{font-size:14px}.debug-head p{display:none}.debug-tabs{padding:2px}.debug-tab{min-height:26px;font-size:8px}.debug-section{padding:6px}.debug-section-title{margin-bottom:4px}.debug-control-row{grid-template-columns:92px minmax(0,1fr) auto;gap:5px;margin-top:4px}.debug-control-row select,.debug-control-row input{height:27px;font-size:8px}.debug-btn{min-height:27px;padding:4px 7px;font-size:8px}.debug-status{min-height:28px;padding:5px 7px;font-size:7px}.debug-toggle-card{padding:5px;gap:3px}.debug-foot{font-size:7px;padding-top:3px}
   }
 
-  /* v0.36a prologue presentation */
+  /* v0.36b prologue presentation */
   .story-event-portrait.silhouette img{
     opacity:.64;
     filter:brightness(0) saturate(100%) invert(58%) sepia(65%) saturate(1480%) hue-rotate(176deg) brightness(104%) contrast(95%) drop-shadow(0 12px 12px rgba(20,90,165,.42));
@@ -3432,10 +3433,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.36a</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.36b</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.36a</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.36b</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3447,7 +3448,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.36a</div>
+      <div class="title-version">DEV v0.36b</div>
     </section>
   </main>
 
@@ -3960,7 +3961,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.36a</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.36b</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -3989,7 +3990,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.36a";
+  const DEV_VERSION = "v0.36b";
   const SAVE_SCHEMA_VERSION = 3;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4380,7 +4381,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.36a" : "ミレスタ・仲間編成 v0.36a";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.36b" : "ミレスタ・仲間編成 v0.36b";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4388,7 +4389,7 @@
   $("dummyTalk").onclick=()=>{
     if(!startStoryEvent("milestaIntroEliza")) modal("会話","エリザは町の門へ先に向かったようだ。");
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36a"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -4895,7 +4896,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.36a" : "ミレスタ・仲間編成 v0.36a";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.36b" : "ミレスタ・仲間編成 v0.36b";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4928,13 +4929,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
     updateHeader();
   };
 
@@ -6337,7 +6338,7 @@
   ];
 
 
-  // v0.36a unified developer panel. Debug state itself is intentionally not persisted,
+  // v0.36b unified developer panel. Debug state itself is intentionally not persisted,
   // while game-state changes made through the panel can be saved normally.
   const DEBUG_TABS=["party","inventory","progress","battle"];
   let debugActiveTab="party";
@@ -9067,7 +9068,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
       updateHeader();
       return;
     }
@@ -9075,7 +9076,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
   }
 
   async function attemptEscape(){
@@ -9375,7 +9376,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -9383,7 +9384,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="caveBoss"){
@@ -9516,7 +9517,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -9580,7 +9581,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -9605,7 +9606,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
     updateHeader();
     toast("戦闘テストを終了");
   }
