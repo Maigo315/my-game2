@@ -3328,14 +3328,14 @@
   }
   .story-next[hidden]{display:none}.story-next:active{transform:translateY(1px)}
 
-  /* v0.35e: normal dialogue uses one shared row grid so portrait/text bottoms align exactly. */
+  /* v0.35f: portrait height stays fixed whether choices are shown or not. */
   .story-event-panel:not(.system):not(.tutorial){
     grid-template-rows:auto minmax(0,1fr) auto auto;
     row-gap:8px;
   }
   .story-event-panel:not(.system):not(.tutorial) .story-event-content{display:contents}
   .story-event-panel:not(.system):not(.tutorial) .story-event-portrait{
-    grid-column:1;grid-row:1 / 3;margin-bottom:0;
+    grid-column:1;grid-row:1 / 4;margin-bottom:0;
   }
   .story-event-panel:not(.system):not(.tutorial) .story-event-speaker{grid-column:2;grid-row:1}
   .story-event-panel:not(.system):not(.tutorial) .story-event-text{grid-column:2;grid-row:2}
@@ -3359,7 +3359,7 @@
     .story-event-panel.tutorial .story-event-text{font-size:11px;line-height:1.55}
   }
 
-  /* v0.35e developer tools */
+  /* v0.35f developer tools */
   .debug-modal{
     display:none;position:fixed;inset:0;z-index:245;background:rgba(0,0,0,.74);
     align-items:center;justify-content:center;
@@ -3422,7 +3422,7 @@
       <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.35e</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.35e</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.35f</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3434,7 +3434,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.35e</div>
+      <div class="title-version">DEV v0.35f</div>
     </section>
   </main>
 
@@ -3947,7 +3947,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.35e</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.35f</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
