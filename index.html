@@ -247,6 +247,10 @@
     background:rgba(7,14,20,.83);border:1px solid rgba(105,133,153,.65);
     border-radius:999px;padding:2px 6px;font-size:9px;font-weight:800;
   }
+  /* Recruitment state: new = gold, owned = standard blue-gray, unavailable = red-purple. */
+  .enemy .enemy-name.recruit-new{border-color:#d9bd55;color:#fff1a3;box-shadow:0 0 0 1px rgba(217,189,85,.12),0 0 9px rgba(217,189,85,.16)}
+  .enemy .enemy-name.recruit-owned{border-color:rgba(105,133,153,.65);color:#eef5fb}
+  .enemy .enemy-name.recruit-unavailable{border-color:#8e536a;color:#f3c8d6;background:rgba(31,13,23,.88)}
   .enemy-hp-wrap{
     position:absolute;left:8%;right:8%;bottom:0;height:8px;border-radius:999px;
     background:rgba(12,20,28,.92);border:1px solid rgba(154,178,196,.45);overflow:hidden;
@@ -3263,7 +3267,7 @@
 
 
 
-  /* v0.37b protagonist name entry */
+  /* v0.37c protagonist name entry */
   .name-entry-modal{
     display:none;position:fixed;inset:0;z-index:260;background:rgba(1,6,11,.84);
     align-items:center;justify-content:center;
@@ -3304,7 +3308,7 @@
     .name-entry-content{padding:4% 7%}.name-entry-prompt{font-size:17px}.name-entry-sub{font-size:9px;margin-top:4px}.name-entry-field{margin-top:13px}.name-entry-input{min-height:44px;font-size:18px}.name-entry-confirm{margin-top:13px;min-height:38px;min-width:120px;font-size:10px}
   }
 
-  /* v0.37b story / conversation event foundation */
+  /* v0.37c story / conversation event foundation */
   .story-event-modal{
     display:none;position:fixed;inset:0;z-index:255;background:rgba(1,6,11,.78);
     align-items:center;justify-content:center;
@@ -3369,7 +3373,7 @@
   }
   .story-next[hidden]{display:none}.story-next:active{transform:translateY(1px)}
 
-  /* v0.37b: dialogue upper area is fixed; only the bottom control lane switches between NEXT and choices. */
+  /* v0.37c: dialogue upper area is fixed; only the bottom control lane switches between NEXT and choices. */
   .story-event-panel:not(.system):not(.tutorial) .story-event-content{
     grid-template-rows:auto minmax(0,1fr) 48px;
     gap:8px;
@@ -3401,7 +3405,7 @@
     .story-event-panel.tutorial .story-event-text{font-size:11px;line-height:1.55}
   }
 
-  /* v0.37b developer tools */
+  /* v0.37c developer tools */
   .debug-modal{
     display:none;position:fixed;inset:0;z-index:245;background:rgba(0,0,0,.74);
     align-items:center;justify-content:center;
@@ -3446,7 +3450,7 @@
     .debug-panel{height:calc(100vh - 10px - var(--safe-top) - var(--safe-bottom));padding:7px;gap:5px}.debug-head h2{font-size:14px}.debug-head p{display:none}.debug-tabs{padding:2px}.debug-tab{min-height:26px;font-size:8px}.debug-section{padding:6px}.debug-section-title{margin-bottom:4px}.debug-control-row{grid-template-columns:92px minmax(0,1fr) auto;gap:5px;margin-top:4px}.debug-control-row select,.debug-control-row input{height:27px;font-size:8px}.debug-btn{min-height:27px;padding:4px 7px;font-size:8px}.debug-status{min-height:28px;padding:5px 7px;font-size:7px}.debug-toggle-card{padding:5px;gap:3px}.debug-foot{font-size:7px;padding-top:3px}
   }
 
-  /* v0.37b prologue presentation */
+  /* v0.37c prologue presentation */
   .story-event-portrait.silhouette img{
     opacity:.64;
     filter:brightness(0) saturate(100%) invert(58%) sepia(65%) saturate(1480%) hue-rotate(176deg) brightness(104%) contrast(95%) drop-shadow(0 12px 12px rgba(20,90,165,.42));
@@ -3473,10 +3477,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.37b</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.37c</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.37b</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.37c</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3488,7 +3492,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.37b</div>
+      <div class="title-version">DEV v0.37c</div>
     </section>
   </main>
 
@@ -4013,7 +4017,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.37b</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.37c</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4042,7 +4046,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.37b";
+  const DEV_VERSION = "v0.37c";
   const SAVE_SCHEMA_VERSION = 5;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4510,7 +4514,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.37b" : "ミレスタ・仲間編成 v0.37b";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.37c" : "ミレスタ・仲間編成 v0.37c";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4518,7 +4522,7 @@
   $("dummyTalk").onclick=()=>{
     if(!startStoryEvent("milestaIntroEliza")) modal("会話","エリザは町の門へ先に向かったようだ。");
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37c"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -5029,7 +5033,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.37b" : "ミレスタ・仲間編成 v0.37b";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.37c" : "ミレスタ・仲間編成 v0.37c";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -5062,13 +5066,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37c";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37c";
     updateHeader();
   };
 
@@ -5788,14 +5792,17 @@
     };
   }
 
-  function awardExperience(amount){
+  function awardExperience(amount,eligibleIds=null){
     const leveled=[];
     if(amount<=0) return leveled;
+    const eligible=eligibleIds instanceof Set ? eligibleIds : null;
 
-    // Reserve members receive no EXP.
+    // Reserve members and characters who were KO when victory was decided receive no EXP.
     [...new Set(state.battleActive)].forEach(id=>{
       const c=roster[id];
       if(!c || c.levelLocked) return;
+      if(eligible && !eligible.has(id)) return;
+      if(!eligible && S(c).hp<=0) return;
       const oldLevel=c.level;
       const before={...S(c)};
       const learned=[];
@@ -6513,7 +6520,7 @@
   ];
 
 
-  // v0.37b unified developer panel. Debug state itself is intentionally not persisted,
+  // v0.37c unified developer panel. Debug state itself is intentionally not persisted,
   // while game-state changes made through the panel can be saved normally.
   const DEBUG_TABS=["party","inventory","progress","battle"];
   let debugActiveTab="party";
@@ -7869,7 +7876,10 @@
       div.className="enemy";
       div.dataset.enemyUid=e.uid;
       const img=document.createElement("img"); img.src=e.img; img.alt=e.displayName;
-      const name=document.createElement("span"); name.className="enemy-name"; name.textContent=e.displayName+enemyStatusSuffix(e);
+      const name=document.createElement("span");
+      const recruitState=!speciesRecruitment[e.id] ? "recruit-unavailable" : (state.ownedSpecies.has(e.id) ? "recruit-owned" : "recruit-new");
+      name.className=`enemy-name ${recruitState}`;
+      name.textContent=e.displayName+enemyStatusSuffix(e);
       const hpWrap=document.createElement("span"); hpWrap.className="enemy-hp-wrap";
       const hp=document.createElement("i"); hp.className="enemy-hp"; hp.style.width=`${Math.max(0,Math.round(e.hp/e.hpMax*100))}%`;
       hpWrap.appendChild(hp);
@@ -9245,7 +9255,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37c";
       updateHeader();
       return;
     }
@@ -9253,7 +9263,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37c";
   }
 
   async function attemptEscape(){
@@ -9500,6 +9510,7 @@
     setCommandsEnabled(false);
     updateExecuteButton();
     clearEnemyActing();
+    const expEligibleIds=new Set(state.battleActive.filter(id=>roster[id] && S(roster[id]).hp>0));
     const victoryTraitNotes=applyVictoryTraits();
     const victoryPassiveNotes=applyVictoryPassives();
     victoryTraitNotes.push(...victoryPassiveNotes);
@@ -9511,7 +9522,7 @@
     if(state.battleFromRun){
       const gain=state.battleEnemies.reduce((sum,e)=>sum+(e.gold||0),0);
       const expGain=state.battleEnemies.reduce((sum,e)=>sum+(e.exp||0),0);
-      const leveled=awardExperience(expGain);
+      const leveled=awardExperience(expGain,expEligibleIds);
 
       state.gold+=gain;
       state.run.runGold+=gain;
@@ -9553,7 +9564,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37c";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -9561,7 +9572,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37c";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -9715,7 +9726,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37c";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -9779,7 +9790,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37c";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -9804,7 +9815,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37c";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -10919,7 +10930,10 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
         }else if(state.caveBossDefeated){
           modal("★ 小さな洞窟・最奥","魔界の尖兵がいた場所には、もう何もいない。\n洞窟の奥には静けさが戻っている。",[["ミレスタへ帰還",()=>{closeModal();finishRun("小さな洞窟からミレスタへ帰還しました");}]]);
         }else{
-          startStoryEvent("caveBossIntro",{force:true});
+          modal("★ 小さな洞窟・最奥","この先から不穏な気配がする……。\n先に進みますか？",[
+            ["進む",()=>{closeModal();startStoryEvent("caveBossIntro",{force:true});}],
+            ["町に戻る",()=>{closeModal();finishRun("小さな洞窟の最奥からミレスタへ帰還しました");}]
+          ]);
         }
         break;
     }
