@@ -3263,7 +3263,7 @@
 
 
 
-  /* v0.36b story / conversation event foundation */
+  /* v0.36c story / conversation event foundation */
   .story-event-modal{
     display:none;position:fixed;inset:0;z-index:255;background:rgba(1,6,11,.78);
     align-items:center;justify-content:center;
@@ -3288,7 +3288,6 @@
   .story-event-content{min-width:0;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;gap:8px;padding:5px 4px 3px}
   .story-event-speaker{
     justify-self:start;min-width:110px;padding:6px 13px;border-radius:999px;border:1px solid #526f88;
-    margin-left:-14px;
     background:#13263a;color:#eef6ff;font-size:13px;font-weight:1000;letter-spacing:.03em;
   }
   .story-event-speaker:empty{display:none}
@@ -3329,7 +3328,7 @@
   }
   .story-next[hidden]{display:none}.story-next:active{transform:translateY(1px)}
 
-  /* v0.36b: dialogue upper area is fixed; only the bottom control lane switches between NEXT and choices. */
+  /* v0.36c: dialogue upper area is fixed; only the bottom control lane switches between NEXT and choices. */
   .story-event-panel:not(.system):not(.tutorial) .story-event-content{
     grid-template-rows:auto minmax(0,1fr) 48px;
     gap:8px;
@@ -3353,7 +3352,7 @@
     .story-event-panel:not(.system):not(.tutorial) .story-event-content{grid-template-rows:auto minmax(0,1fr) 36px;gap:5px}
     .story-event-panel:not(.system):not(.tutorial) .story-event-portrait{margin-bottom:41px}
     .story-event-panel:not(.system):not(.tutorial) .story-event-footer{min-height:36px}
-    .story-event-content{gap:5px;padding:3px 2px 1px}.story-event-speaker{padding:4px 10px;font-size:10px;min-width:88px;margin-left:-10px}
+    .story-event-content{gap:5px;padding:3px 2px 1px}.story-event-speaker{padding:4px 10px;font-size:10px;min-width:88px}
     .story-event-text{padding:11px 13px;font-size:13px;line-height:1.6}.story-event-choices{gap:5px}.story-choice{min-height:36px;font-size:10px}
     .story-event-footer{min-height:30px}.story-next{min-width:94px;min-height:31px;font-size:9px}
     .story-event-panel.system .story-event-content,.story-event-panel.tutorial .story-event-content{padding:8px 6%}
@@ -3361,7 +3360,7 @@
     .story-event-panel.tutorial .story-event-text{font-size:11px;line-height:1.55}
   }
 
-  /* v0.36b developer tools */
+  /* v0.36c developer tools */
   .debug-modal{
     display:none;position:fixed;inset:0;z-index:245;background:rgba(0,0,0,.74);
     align-items:center;justify-content:center;
@@ -3406,7 +3405,7 @@
     .debug-panel{height:calc(100vh - 10px - var(--safe-top) - var(--safe-bottom));padding:7px;gap:5px}.debug-head h2{font-size:14px}.debug-head p{display:none}.debug-tabs{padding:2px}.debug-tab{min-height:26px;font-size:8px}.debug-section{padding:6px}.debug-section-title{margin-bottom:4px}.debug-control-row{grid-template-columns:92px minmax(0,1fr) auto;gap:5px;margin-top:4px}.debug-control-row select,.debug-control-row input{height:27px;font-size:8px}.debug-btn{min-height:27px;padding:4px 7px;font-size:8px}.debug-status{min-height:28px;padding:5px 7px;font-size:7px}.debug-toggle-card{padding:5px;gap:3px}.debug-foot{font-size:7px;padding-top:3px}
   }
 
-  /* v0.36b prologue presentation */
+  /* v0.36c prologue presentation */
   .story-event-portrait.silhouette img{
     opacity:.64;
     filter:brightness(0) saturate(100%) invert(58%) sepia(65%) saturate(1480%) hue-rotate(176deg) brightness(104%) contrast(95%) drop-shadow(0 12px 12px rgba(20,90,165,.42));
@@ -3433,10 +3432,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.36b</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.36c</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.36b</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.36c</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3448,7 +3447,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.36b</div>
+      <div class="title-version">DEV v0.36c</div>
     </section>
   </main>
 
@@ -3961,7 +3960,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.36b</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.36c</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -3990,7 +3989,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.36b";
+  const DEV_VERSION = "v0.36c";
   const SAVE_SCHEMA_VERSION = 3;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4124,6 +4123,14 @@
         {type:"dialogue",speaker:"町長",silhouette:MAYOR_EVENT_IMG,text:`帰還の羽は、瞬時に町に戻ることができる、冒険の必需品だ。\n……気をつけて行ってくるのだぞ。`},
         {type:"end"}
       ]
+    },
+    recruitTutorial: {
+      completionFlag:"recruitTutorialDone",
+      steps:[
+        {type:"tutorial",title:"📌 魔物娘の勧誘",text:`戦闘に勝利すると、倒した魔物娘が起き上がることがあります。
+起き上がった魔物娘は仲間にすることができます。`},
+        {type:"end"}
+      ]
     }
   };
 
@@ -4205,7 +4212,9 @@
 
   function prologueStage(){ return Number(state.prologueStage)||0; }
   function recruitmentUnlocked(){ return prologueStage()>=4; }
-  function returnFeatherUnlocked(){ return prologueStage()>=4; }
+  function recruitTutorialDone(){ return !!state.eventFlags?.recruitTutorialDone || !!state.caveUnlocked || !!state.caveBossDefeated; }
+  function returnFeatherUnlocked(){ return prologueStage()>=4 && recruitTutorialDone(); }
+  function waitingUnlocked(){ return !!state.caveBossDefeated; }
   function resetElizaEscortState(){
     const c=roster?.eliza;if(!c)return;
     c.level=30;c.exp=0;c.fate=20;
@@ -4363,14 +4372,19 @@
   function configurePartyManageScreen(context="milesta"){
     state.partyManageContext=context;
     const exploring=context==="explore";
+    const waitingOk=waitingUnlocked();
     $("partyManageShell").classList.toggle("explore-mode",exploring);
-    if(exploring) state.partyWaitingViewOpen=false;
-    $("partyManageShell").classList.toggle("waiting-view-mode",!exploring && state.partyWaitingViewOpen);
+    if(exploring || !waitingOk) state.partyWaitingViewOpen=false;
+    $("partyManageShell").classList.toggle("waiting-view-mode",!exploring && waitingOk && state.partyWaitingViewOpen);
     $("partyManageKicker").textContent=exploring ? "EXPEDITION PARTY ORGANIZE" : "MILESTA PARTY ORGANIZE";
     $("partyManageTitle").textContent=exploring ? "探索パーティ編成" : "仲間編成";
     $("partyManageDesc").textContent=exploring
       ? "同行中の10枠を入れ替えます。1人目をタップして選び、次に移動先の枠をタップしてください。主人公も控えへ移動できます。"
-      : "探索に探索に同行する10枠を整理します。選択中の仲間は「ミレスタに待機させる」で預けられ、「待機から呼び出す」で戻せます。主人公はバトルと控えの間だけ移動できます。";
+      : waitingOk
+        ? "探索に同行する10枠を整理します。選択中の仲間は「ミレスタに待機させる」で預けられ、「待機から呼び出す」で戻せます。主人公はバトルと控えの間だけ移動できます。"
+        : "探索に同行する10枠を整理します。主人公はバトルと控えの間だけ移動できます。";
+    $("partyWaitingOpenBtn").hidden=exploring || !waitingOk;
+    $("partyWaitSelectedBtn").hidden=exploring || !waitingOk;
     $("partyBackBtn").textContent=exploring ? "← 探索へ" : "← ミレスタへ";
   }
 
@@ -4381,7 +4395,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.36b" : "ミレスタ・仲間編成 v0.36b";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.36c" : "ミレスタ・仲間編成 v0.36c";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4389,7 +4403,7 @@
   $("dummyTalk").onclick=()=>{
     if(!startStoryEvent("milestaIntroEliza")) modal("会話","エリザは町の門へ先に向かったようだ。");
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36c"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -4465,8 +4479,8 @@
   function selectPartyMember(id,group,index){
     state.partySelection={id,group,index};
     updatePartyDetail(id);
-    const heroNote=id==="hero" ? " 主人公はミレスタ待機には移せません。" : "";
-    $("partyDetailGuide").textContent=(state.partyManageContext==="explore"
+    const heroNote=id==="hero" && waitingUnlocked() ? " 主人公はミレスタ待機には移せません。" : "";
+    $("partyDetailGuide").textContent=(state.partyManageContext==="explore" || !waitingUnlocked()
       ? "選択中。移動したいバトル枠・控え枠をタップしてください。"
       : "選択中。移動先のバトル枠・控え枠をタップするか、「ミレスタに待機させる」を押してください。")+heroNote;
     renderPartyManage(false);
@@ -4525,6 +4539,7 @@
 
   function moveSelectedToWaiting(){
     if(state.partyManageContext==="explore") return;
+    if(!waitingUnlocked()){ clearPartySelection("ミレスタ待機はまだ利用できません。"); return; }
     const sel=state.partySelection;
     if(!sel) return;
     if(sel.id==="hero"){ clearPartySelection("主人公は探索パーティから外せません。"); return; }
@@ -4584,7 +4599,7 @@
     for(let i=0;i<4;i++) battle.appendChild(makePartySlot("battle",i,state.battleActive[i]||null));
     for(let i=0;i<6;i++) reserve.appendChild(makePartySlot("reserve",i,state.battleReserve[i]||null));
 
-    const waits=state.partyManageContext==="explore" ? [] : waitingSpeciesIds();
+    const waits=(state.partyManageContext==="explore" || !waitingUnlocked()) ? [] : waitingSpeciesIds();
     if(state.partyManageContext!=="explore"){
       if(!waits.length){
         const empty=document.createElement("div"); empty.className="party-wait-empty"; empty.textContent="待機中の仲間はいません"; waiting.appendChild(empty);
@@ -4616,11 +4631,11 @@
     $("partyReserveCount").textContent=`${state.battleReserve.length} / 6`;
     $("partyWaitingCount").textContent=String(waits.length);
     const waitBtn=$("partyWaitSelectedBtn");
-    const canWait=state.partyManageContext!=="explore" && !state.partyWaitingViewOpen && !!state.partySelection && state.partySelection.group!=="waiting" && state.partySelection.id!=="hero";
+    const canWait=waitingUnlocked() && state.partyManageContext!=="explore" && !state.partyWaitingViewOpen && !!state.partySelection && state.partySelection.group!=="waiting" && state.partySelection.id!=="hero";
     waitBtn.classList.toggle("ready",canWait);
     waitBtn.disabled=!canWait;
     const deployBtn=$("partyWaitingDeployBtn");
-    const canDeploy=state.partyManageContext!=="explore" && state.partyWaitingViewOpen && state.partySelection?.group==="waiting";
+    const canDeploy=waitingUnlocked() && state.partyManageContext!=="explore" && state.partyWaitingViewOpen && state.partySelection?.group==="waiting";
     if(deployBtn){
       deployBtn.classList.toggle("ready",canDeploy);
       deployBtn.disabled=!canDeploy;
@@ -4896,11 +4911,11 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.36b" : "ミレスタ・仲間編成 v0.36b";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.36c" : "ミレスタ・仲間編成 v0.36c";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
-    if(state.partyManageContext==="explore") return;
+    if(state.partyManageContext==="explore" || !waitingUnlocked()) return;
     state.partySelection=null;
     state.partyWaitingViewOpen=true;
     configurePartyManageScreen("milesta");
@@ -4929,13 +4944,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36c";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36c";
     updateHeader();
   };
 
@@ -6177,10 +6192,11 @@
     state.battleEnemies.forEach((enemy,encounterIndex)=>{
       const info=speciesRecruitment[enemy.id];
       if(!info || enemy.hp>0) return;
-      if(!testMode && state.ownedSpecies.has(enemy.id)) return;
+      const tutorialBattle=state.battleSpecial==="recruitTutorial";
+      if(!testMode && state.ownedSpecies.has(enemy.id) && !tutorialBattle) return;
 
       const chance=recruitmentChance(enemy.id,fateTotal);
-      if(state.devForceRecruit || Math.random()<chance){
+      if(tutorialBattle || state.devForceRecruit || Math.random()<chance){
         successful.push({
           id:enemy.id,
           name:info.name,
@@ -6338,7 +6354,7 @@
   ];
 
 
-  // v0.36b unified developer panel. Debug state itself is intentionally not persisted,
+  // v0.36c unified developer panel. Debug state itself is intentionally not persisted,
   // while game-state changes made through the panel can be saved normally.
   const DEBUG_TABS=["party","inventory","progress","battle"];
   let debugActiveTab="party";
@@ -6501,8 +6517,8 @@
     $("debugBossToggleBtn").onclick=()=>{state.caveBossDefeated=!state.caveBossDefeated;debugRefreshProgress();};
     $("debugMerchantToggleBtn").onclick=()=>{state.travelMerchantMet=!state.travelMerchantMet;debugRefreshProgress();};
     $("debugIntroToggleBtn").onclick=()=>{const on=prologueStage()<1;state.eventFlags.milestaIntroDone=on;state.prologueStage=on?1:0;if(!on)leaveElizaEscort();debugRefreshProgress();};
-    $("debugProgressOpenBtn").onclick=()=>{state.caveUnlocked=true;state.caveBossDefeated=true;state.travelMerchantMet=true;state.eventFlags.milestaIntroDone=true;state.prologueStage=5;toast("現行の進行フラグをすべてONにしました。");debugRefreshProgress();};
-    $("debugProgressResetBtn").onclick=()=>modal("進行フラグを初期化","現在実装されている進行フラグだけをOFFにします。仲間・所持品・Lv・装備は変わりません。",[["初期化する",()=>{state.caveUnlocked=false;state.caveBossDefeated=false;state.travelMerchantMet=false;state.eventFlags.milestaIntroDone=false;state.prologueStage=0;leaveElizaEscort();closeModal();toast("進行フラグを初期状態にしました。");debugRefreshProgress();}],["やめる",closeModal]]);
+    $("debugProgressOpenBtn").onclick=()=>{state.caveUnlocked=true;state.caveBossDefeated=true;state.travelMerchantMet=true;state.eventFlags.milestaIntroDone=true;state.eventFlags.recruitTutorialDone=true;state.prologueStage=5;toast("現行の進行フラグをすべてONにしました。");debugRefreshProgress();};
+    $("debugProgressResetBtn").onclick=()=>modal("進行フラグを初期化","現在実装されている進行フラグだけをOFFにします。仲間・所持品・Lv・装備は変わりません。",[["初期化する",()=>{state.caveUnlocked=false;state.caveBossDefeated=false;state.travelMerchantMet=false;state.eventFlags.milestaIntroDone=false;state.eventFlags.recruitTutorialDone=false;state.prologueStage=0;leaveElizaEscort();closeModal();toast("進行フラグを初期状態にしました。");debugRefreshProgress();}],["やめる",closeModal]]);
     $("debugIntroReplayBtn").onclick=()=>{closeDebugTools();startStoryEvent("milestaIntroEliza",{preview:true,force:true});};
 
     areaSel.onchange=debugPopulateFormationIndex;$("debugFormationIndex").onchange=debugRefreshFormationStatus;
@@ -9068,7 +9084,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36c";
       updateHeader();
       return;
     }
@@ -9076,7 +9092,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36c";
   }
 
   async function attemptEscape(){
@@ -9376,7 +9392,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36c";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -9384,8 +9400,16 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36c";
     state.battleFromRun=false;
+
+    if(state.battleSpecial==="recruitTutorial"){
+      state.battleSpecial=null;
+      state.battleEscapeDisabled=false;
+      if(extraToast) toast(extraToast);
+      if(!recruitTutorialDone()) startStoryEvent("recruitTutorial",{force:true});
+      return;
+    }
 
     if(state.battleSpecial==="caveBoss"){
       state.caveBossDefeated=true;
@@ -9517,7 +9541,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36c";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -9557,8 +9581,8 @@
     state.battleFormationIndex=Number.isInteger(requestedFormation)
       ? ((requestedFormation % (battleFormations[area]?.formations.length||1)) + (battleFormations[area]?.formations.length||1)) % (battleFormations[area]?.formations.length||1)
       : randomFormation(area);
-    state.battleEscapeDisabled=area==="caveBoss";
-    state.battleSpecial=area==="caveBoss"?"caveBoss":null;
+    state.battleEscapeDisabled=!!options.escapeDisabled || area==="caveBoss";
+    state.battleSpecial=options.special || (area==="caveBoss"?"caveBoss":null);
     state.battleRound=1;
     state.battleTurnSlot=0;
     state.battleEnded=false;
@@ -9581,7 +9605,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36c";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -9606,7 +9630,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36c";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -9847,6 +9871,9 @@
     if(area==="plains" && prologueStage()===2){
       const normalNodes=layers.slice(1).flat();
       if(!normalNodes.some(n=>n.type==="battle")) choose(normalNodes).type="battle";
+    }
+    if(area==="plains" && prologueStage()>=4 && !recruitTutorialDone()){
+      layers[1].forEach(n=>n.type="battle");
     }
     const goalType=area==="cave"&&caveLayer===1?"stairs":"goal";
     layers.push([{id:"L6N0",layer:6,index:0,x:500,y:yPositions[6],type:goalType,out:[]}]);
@@ -10660,11 +10687,14 @@ ${reward}`,[["進む",closeModal]]);return;
     if(!repeatableSpecial) state.run.resolved.add(node.id);
     const cave=state.run.area==="cave",layer=state.run.caveLayer;
     switch(node.type){
-      case "battle":
-        if(!cave) openBattle(true,"plains");
+      case "battle": {
+        const recruitTutorialBattle=!cave && node.layer===1 && prologueStage()>=4 && !recruitTutorialDone();
+        if(recruitTutorialBattle) openBattle(true,"plains",{formationIndex:0,special:"recruitTutorial",escapeDisabled:true});
+        else if(!cave) openBattle(true,"plains");
         else if(layer===1) openBattle(true,"cave1");
         else openBattle(true,Math.random()<.05?"rare":"cave2");
         break;
+      }
       case "chest": modal("🪎 宝箱",`宝箱を発見！
 ${grantChestReward()}` ,[["閉じる",()=>{closeModal();updateRunHud();}]]); break;
       case "heal": {
