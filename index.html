@@ -3263,7 +3263,7 @@
 
 
 
-  /* v0.36d story / conversation event foundation */
+  /* v0.36e story / conversation event foundation */
   .story-event-modal{
     display:none;position:fixed;inset:0;z-index:255;background:rgba(1,6,11,.78);
     align-items:center;justify-content:center;
@@ -3328,7 +3328,7 @@
   }
   .story-next[hidden]{display:none}.story-next:active{transform:translateY(1px)}
 
-  /* v0.36d: dialogue upper area is fixed; only the bottom control lane switches between NEXT and choices. */
+  /* v0.36e: dialogue upper area is fixed; only the bottom control lane switches between NEXT and choices. */
   .story-event-panel:not(.system):not(.tutorial) .story-event-content{
     grid-template-rows:auto minmax(0,1fr) 48px;
     gap:8px;
@@ -3360,7 +3360,7 @@
     .story-event-panel.tutorial .story-event-text{font-size:11px;line-height:1.55}
   }
 
-  /* v0.36d developer tools */
+  /* v0.36e developer tools */
   .debug-modal{
     display:none;position:fixed;inset:0;z-index:245;background:rgba(0,0,0,.74);
     align-items:center;justify-content:center;
@@ -3405,7 +3405,7 @@
     .debug-panel{height:calc(100vh - 10px - var(--safe-top) - var(--safe-bottom));padding:7px;gap:5px}.debug-head h2{font-size:14px}.debug-head p{display:none}.debug-tabs{padding:2px}.debug-tab{min-height:26px;font-size:8px}.debug-section{padding:6px}.debug-section-title{margin-bottom:4px}.debug-control-row{grid-template-columns:92px minmax(0,1fr) auto;gap:5px;margin-top:4px}.debug-control-row select,.debug-control-row input{height:27px;font-size:8px}.debug-btn{min-height:27px;padding:4px 7px;font-size:8px}.debug-status{min-height:28px;padding:5px 7px;font-size:7px}.debug-toggle-card{padding:5px;gap:3px}.debug-foot{font-size:7px;padding-top:3px}
   }
 
-  /* v0.36d prologue presentation */
+  /* v0.36e prologue presentation */
   .story-event-portrait.silhouette img{
     opacity:.64;
     filter:brightness(0) saturate(100%) invert(58%) sepia(65%) saturate(1480%) hue-rotate(176deg) brightness(104%) contrast(95%) drop-shadow(0 12px 12px rgba(20,90,165,.42));
@@ -3432,10 +3432,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.36d</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.36e</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.36d</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.36e</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3447,7 +3447,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.36d</div>
+      <div class="title-version">DEV v0.36e</div>
     </section>
   </main>
 
@@ -3959,7 +3959,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.36d</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.36e</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -3988,7 +3988,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.36d";
+  const DEV_VERSION = "v0.36e";
   const SAVE_SCHEMA_VERSION = 3;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4394,7 +4394,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.36d" : "ミレスタ・仲間編成 v0.36d";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.36e" : "ミレスタ・仲間編成 v0.36e";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4402,7 +4402,7 @@
   $("dummyTalk").onclick=()=>{
     if(!startStoryEvent("milestaIntroEliza")) modal("会話","エリザは町の門へ先に向かったようだ。");
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36d"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36e"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -4910,7 +4910,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.36d" : "ミレスタ・仲間編成 v0.36d";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.36e" : "ミレスタ・仲間編成 v0.36e";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4943,13 +4943,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36e";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36e";
     updateHeader();
   };
 
@@ -6353,7 +6353,7 @@
   ];
 
 
-  // v0.36d unified developer panel. Debug state itself is intentionally not persisted,
+  // v0.36e unified developer panel. Debug state itself is intentionally not persisted,
   // while game-state changes made through the panel can be saved normally.
   const DEBUG_TABS=["party","inventory","progress","battle"];
   let debugActiveTab="party";
@@ -9083,7 +9083,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36e";
       updateHeader();
       return;
     }
@@ -9091,7 +9091,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36e";
   }
 
   async function attemptEscape(){
@@ -9391,7 +9391,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36e";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -9399,7 +9399,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36e";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -9540,7 +9540,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36e";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -9604,7 +9604,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36e";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -9629,7 +9629,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.36e";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -10726,9 +10726,7 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
           }else if(!state.caveUnlocked){
             state.caveUnlocked=true;
             if(prologueStage()>=4) state.prologueStage=Math.max(5,prologueStage());
-            modal("📌 新マップ「小さな洞窟」が解放されました。","次回探索時は、ここから開始できます。
-
-このまま洞窟へ進みますか？",[
+            modal("📌 新マップ「小さな洞窟」が解放されました。","次回探索時は、ここから開始できます。\n\nこのまま洞窟へ進みますか？",[
               ["小さな洞窟へ進む",()=>{closeModal();enterCaveFromPlains();}],
               ["ミレスタへ帰還",()=>{closeModal();finishRun("エリアを踏破してミレスタへ帰還しました");}]
             ]);
