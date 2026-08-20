@@ -3263,7 +3263,48 @@
 
 
 
-  /* v0.37a story / conversation event foundation */
+  /* v0.37b protagonist name entry */
+  .name-entry-modal{
+    display:none;position:fixed;inset:0;z-index:260;background:rgba(1,6,11,.84);
+    align-items:center;justify-content:center;
+    padding-top:calc(10px + var(--safe-top));padding-bottom:calc(10px + var(--safe-bottom));
+    padding-left:calc(10px + var(--safe-left));padding-right:calc(10px + var(--safe-right));
+  }
+  .name-entry-modal.show{display:flex}
+  .name-entry-panel{
+    width:min(900px,96vw);height:min(500px,89vh);min-height:310px;
+    display:grid;grid-template-columns:minmax(190px,34%) minmax(0,1fr);gap:12px;
+    padding:12px;border:1px solid #58728b;border-radius:20px;
+    background:linear-gradient(#17283a,#0d1722);box-shadow:0 26px 78px rgba(0,0,0,.72);overflow:hidden;
+  }
+  .name-entry-portrait{
+    min-width:0;min-height:0;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;
+    border:1px solid #35536c;border-radius:14px;
+    background:radial-gradient(circle at 50% 35%,rgba(86,139,170,.25),transparent 48%),linear-gradient(#13283a,#09151f);
+  }
+  .name-entry-portrait img{width:100%;height:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 12px 12px rgba(0,0,0,.46))}
+  .name-entry-content{min-width:0;display:flex;flex-direction:column;justify-content:center;padding:7% 8%}
+  .name-entry-prompt{font-size:clamp(18px,2.3vw,28px);font-weight:1000;line-height:1.5;color:#eef5fb}
+  .name-entry-sub{margin-top:8px;color:#8fa6b9;font-size:11px}
+  .name-entry-field{margin-top:24px}
+  .name-entry-input{
+    width:100%;min-height:58px;padding:10px 16px;border:2px solid #57758e;border-radius:13px;outline:none;
+    background:#09151f;color:#fff2a6;font:1000 clamp(19px,2.5vw,28px)/1.2 inherit;letter-spacing:.05em;
+    box-shadow:inset 0 2px 10px rgba(0,0,0,.3);
+  }
+  .name-entry-input:focus{border-color:#d8bf55;box-shadow:0 0 0 3px rgba(216,191,85,.13),inset 0 2px 10px rgba(0,0,0,.3)}
+  .name-entry-meta{margin-top:7px;display:flex;justify-content:flex-end;color:#71899b;font-size:9px;font-weight:900}
+  .name-entry-confirm{
+    align-self:flex-end;margin-top:24px;min-width:150px;min-height:48px;border:1px solid #bda74d;border-radius:11px;
+    background:linear-gradient(#594b20,#332b17);color:#fff0a2;font-size:13px;font-weight:1000;cursor:pointer;
+  }
+  .name-entry-confirm:disabled{opacity:.35;cursor:default}.name-entry-confirm:not(:disabled):active{transform:translateY(1px)}
+  @media(max-height:520px){
+    .name-entry-panel{height:calc(100vh - 12px - var(--safe-top) - var(--safe-bottom));grid-template-columns:minmax(155px,29%) minmax(0,1fr);gap:7px;padding:7px}
+    .name-entry-content{padding:4% 7%}.name-entry-prompt{font-size:17px}.name-entry-sub{font-size:9px;margin-top:4px}.name-entry-field{margin-top:13px}.name-entry-input{min-height:44px;font-size:18px}.name-entry-confirm{margin-top:13px;min-height:38px;min-width:120px;font-size:10px}
+  }
+
+  /* v0.37b story / conversation event foundation */
   .story-event-modal{
     display:none;position:fixed;inset:0;z-index:255;background:rgba(1,6,11,.78);
     align-items:center;justify-content:center;
@@ -3328,7 +3369,7 @@
   }
   .story-next[hidden]{display:none}.story-next:active{transform:translateY(1px)}
 
-  /* v0.37a: dialogue upper area is fixed; only the bottom control lane switches between NEXT and choices. */
+  /* v0.37b: dialogue upper area is fixed; only the bottom control lane switches between NEXT and choices. */
   .story-event-panel:not(.system):not(.tutorial) .story-event-content{
     grid-template-rows:auto minmax(0,1fr) 48px;
     gap:8px;
@@ -3360,7 +3401,7 @@
     .story-event-panel.tutorial .story-event-text{font-size:11px;line-height:1.55}
   }
 
-  /* v0.37a developer tools */
+  /* v0.37b developer tools */
   .debug-modal{
     display:none;position:fixed;inset:0;z-index:245;background:rgba(0,0,0,.74);
     align-items:center;justify-content:center;
@@ -3405,7 +3446,7 @@
     .debug-panel{height:calc(100vh - 10px - var(--safe-top) - var(--safe-bottom));padding:7px;gap:5px}.debug-head h2{font-size:14px}.debug-head p{display:none}.debug-tabs{padding:2px}.debug-tab{min-height:26px;font-size:8px}.debug-section{padding:6px}.debug-section-title{margin-bottom:4px}.debug-control-row{grid-template-columns:92px minmax(0,1fr) auto;gap:5px;margin-top:4px}.debug-control-row select,.debug-control-row input{height:27px;font-size:8px}.debug-btn{min-height:27px;padding:4px 7px;font-size:8px}.debug-status{min-height:28px;padding:5px 7px;font-size:7px}.debug-toggle-card{padding:5px;gap:3px}.debug-foot{font-size:7px;padding-top:3px}
   }
 
-  /* v0.37a prologue presentation */
+  /* v0.37b prologue presentation */
   .story-event-portrait.silhouette img{
     opacity:.64;
     filter:brightness(0) saturate(100%) invert(58%) sepia(65%) saturate(1480%) hue-rotate(176deg) brightness(104%) contrast(95%) drop-shadow(0 12px 12px rgba(20,90,165,.42));
@@ -3432,10 +3473,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.37a</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.37b</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.37a</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.37b</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3447,7 +3488,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.37a</div>
+      <div class="title-version">DEV v0.37b</div>
     </section>
   </main>
 
@@ -3866,6 +3907,19 @@
 
 
 
+<div class="name-entry-modal" id="nameEntryModal" role="dialog" aria-modal="true" aria-label="主人公の名前入力">
+  <section class="name-entry-panel">
+    <div class="name-entry-portrait"><img id="nameEntryPortrait" alt="主人公"></div>
+    <div class="name-entry-content">
+      <div class="name-entry-prompt">主人公の名前を入力してください。</div>
+      <div class="name-entry-sub">8文字まで。決定後は変更できません。</div>
+      <div class="name-entry-field"><input class="name-entry-input" id="heroNameInput" type="text" value="ロイド" maxlength="8" autocomplete="off" spellcheck="false" aria-label="主人公の名前"></div>
+      <div class="name-entry-meta"><span id="heroNameCount">3 / 8</span></div>
+      <button class="name-entry-confirm" id="heroNameConfirmBtn">決定</button>
+    </div>
+  </section>
+</div>
+
 <div class="story-event-modal" id="storyEventModal" role="dialog" aria-modal="true" aria-label="会話イベント">
   <section class="story-event-panel" id="storyEventPanel">
     <div class="story-event-portrait" id="storyEventPortraitWrap"><img id="storyEventPortrait" alt=""></div>
@@ -3959,7 +4013,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.37a</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.37b</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -3988,8 +4042,8 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.37a";
-  const SAVE_SCHEMA_VERSION = 4;
+  const DEV_VERSION = "v0.37b";
+  const SAVE_SCHEMA_VERSION = 5;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
   let saveUiContext = "milesta";
@@ -4131,7 +4185,7 @@
         {type:"dialogue",speaker:"エリザ",portrait:ELIZA_EVENT_IMG,text:`{{hero}}……！？\nだめ、逃げて……！`},
         {type:"dialogue",speaker:"？？？",portraitId:"vanguard",text:`あれ〜？また人間？\nもうボク疲れてるんだけど……。`},
         {type:"dialogue",speaker:"主人公",text:"…………"},
-        {type:"dialogue",speaker:"？？？",portraitId:"vanguard",text:`まあいや。\nキミ弱そうだし。キミもボッコボコにしてあげる！`},
+        {type:"dialogue",speaker:"？？？",portraitId:"vanguard",text:`まあいいや。\nキミ弱そうだし。キミもボッコボコにしてあげる！`},
         {type:"dialogue",speaker:"エリザ",portrait:ELIZA_EVENT_IMG,text:"だめ……この魔物娘、魔界の……"},
         {type:"dialogue",speaker:"？？？",portraitId:"vanguard",text:`あはは！そっちのお姉さんは強かったけど、キミはどうかな？\nちょっと遊んであげる！`},
         {type:"end"}
@@ -4306,9 +4360,14 @@
     updateWorld();showScreen("homeScreen");updateHeader();
   }
 
+  function normalizeHeroName(value){
+    return Array.from(String(value??"").trim()).slice(0,8).join("");
+  }
+  function escapeHtml(value){
+    return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  }
   function storyHeroName(){
-    const n=roster?.hero?.name||"主人公";
-    return n==="主人公" ? "〇〇" : n;
+    return normalizeHeroName(roster?.hero?.name)||"ロイド";
   }
   function storyText(value){
     return String(value??"").replace(/\{\{hero\}\}/g,storyHeroName());
@@ -4399,8 +4458,9 @@
       panel.classList.toggle("tutorial",isTutorial);
       panel.classList.toggle("narration",isNarration);
       portraitWrap.classList.toggle("silhouette",!!step.silhouette && hasPortrait);
-      if(hasPortrait){portrait.src=portraitSrc;portrait.alt=step.speaker||"立ち絵";}else{portrait.removeAttribute("src");portrait.alt="";}
-      speaker.textContent=isTutorial?(step.title||"📌 案内"):((isSystem||isNarration)?"":storyText(step.speaker||""));
+      const speakerName=step.speaker==="主人公"?storyHeroName():storyText(step.speaker||"");
+      if(hasPortrait){portrait.src=portraitSrc;portrait.alt=speakerName||"立ち絵";}else{portrait.removeAttribute("src");portrait.alt="";}
+      speaker.textContent=isTutorial?(step.title||"📌 案内"):((isSystem||isNarration)?"":speakerName);
       body.textContent=storyText(step.text||"");
       choices.innerHTML="";
       const opts=Array.isArray(step.choices)?step.choices:[];
@@ -4450,7 +4510,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.37a" : "ミレスタ・仲間編成 v0.37a";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.37b" : "ミレスタ・仲間編成 v0.37b";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4458,11 +4518,14 @@
   $("dummyTalk").onclick=()=>{
     if(!startStoryEvent("milestaIntroEliza")) modal("会話","エリザは町の門へ先に向かったようだ。");
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37a"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
   $("titleContinueBtn").onclick=()=>openSaveUi("title","load");
+  $("heroNameInput").addEventListener("input",updateHeroNameEntry);
+  $("heroNameInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing&&!$("heroNameConfirmBtn").disabled){e.preventDefault();confirmHeroNameEntry();}});
+  $("heroNameConfirmBtn").onclick=confirmHeroNameEntry;
 
   function ensureHeroTravelMember(){
     if(state.battleActive.includes("hero") || state.battleReserve.includes("hero")) return;
@@ -4966,7 +5029,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.37a" : "ミレスタ・仲間編成 v0.37a";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.37b" : "ミレスタ・仲間編成 v0.37b";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -4999,13 +5062,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
     updateHeader();
   };
 
@@ -5847,6 +5910,7 @@
   }
   function capturePersistentState(){
     return {
+      heroName:String(roster?.hero?.name||"主人公"),
       gold:state.gold,
       items:{...(state.items||{})},
       travelMerchantMet:!!state.travelMerchantMet,
@@ -5908,6 +5972,10 @@
       c.conditions={...conditionsOf(c),...(r.conditions||{})};
       clearBattleOnlyStates(c,{preservePoison:true});
     });
+    if(roster.hero){
+      const incomingName=typeof data.heroName==="string"?normalizeHeroName(data.heroName):"";
+      roster.hero.name=incomingName||"ロイド";
+    }
 
     // Milesta saves should always resume from a clean non-battle state.
     state.battleReturn="homeScreen";
@@ -5989,9 +6057,10 @@
     if(!data) return null;
     const hero=data.game?.roster?.hero||{};
     const friends=(data.game?.ownedSpecies||[]).length;
+    const heroName=normalizeHeroName(data.game?.heroName)||"ロイド";
     return {
       title:data.location||"ミレスタ",
-      meta:`主人公 Lv ${hero.level||1}　💰 ${Number(data.game?.gold)||0} G　仲間 ${friends}人`,
+      meta:`${heroName} Lv ${hero.level||1}　💰 ${Number(data.game?.gold)||0} G　仲間 ${friends}人`,
       date:formatSaveDate(data.savedAt)
     };
   }
@@ -6001,7 +6070,9 @@
     const makeCell=(id,role)=>{
       const c=id?roster[id]:null;
       if(c?.img){
-        return `<span class="save-party-thumb ${role}" title="${c.name||id}"><img src="${c.img}" alt="${c.name||''}"></span>`;
+        const displayName=id==="hero"?(normalizeHeroName(data?.game?.heroName)||"ロイド"):(c.name||id);
+        const safeName=escapeHtml(displayName);
+        return `<span class="save-party-thumb ${role}" title="${safeName}"><img src="${c.img}" alt="${safeName}"></span>`;
       }
       return `<span class="save-party-thumb ${role} empty" title="空き枠"></span>`;
     };
@@ -6018,7 +6089,7 @@
       const data=readSaveSlot(slot),sum=saveSlotSummary(data);
       const row=document.createElement("div");
       row.className=`save-slot${data?"":" empty"}`;
-      row.innerHTML=`<div class="save-slot-index">SLOT ${slot}</div><div class="save-slot-main${data?"":" empty"}">${data?`<div class="save-slot-info"><div class="save-slot-title">${sum.title}</div><div class="save-slot-meta">${sum.meta}</div><div class="save-slot-date">${sum.date}</div></div>${savePartyPortraits(data)}`:`<div class="save-slot-title">EMPTY</div><div class="save-slot-meta">セーブデータはありません。</div>`}</div><div class="save-slot-actions"></div>`;
+      row.innerHTML=`<div class="save-slot-index">SLOT ${slot}</div><div class="save-slot-main${data?"":" empty"}">${data?`<div class="save-slot-info"><div class="save-slot-title">${escapeHtml(sum.title)}</div><div class="save-slot-meta">${escapeHtml(sum.meta)}</div><div class="save-slot-date">${escapeHtml(sum.date)}</div></div>${savePartyPortraits(data)}`:`<div class="save-slot-title">EMPTY</div><div class="save-slot-meta">セーブデータはありません。</div>`}</div><div class="save-slot-actions"></div>`;
       const actions=row.querySelector(".save-slot-actions");
       const main=document.createElement("button");
       main.className="primary";
@@ -6064,6 +6135,7 @@
       closeModal(); modal("ロードできません","このセーブデータは、より新しい形式で作成されています。"); return;
     }
     applyPersistentState(data.game);
+    if(Number(data.saveVersion)<5 && roster.hero) roster.hero.name="ロイド";
     if(Number(data.saveVersion)<4 && state.caveBossDefeated){
       state.eventFlags.milestaWaitingUnlocked=true;
       state.eventFlags.caveSidepathUnlocked=true;
@@ -6080,6 +6152,33 @@
   function requestDeleteSlot(slot){
     modal("セーブデータ削除",`SLOT ${slot} のデータを削除しますか？\nこの操作は取り消せません。`,[["削除する",()=>{localStorage.removeItem(saveSlotKey(slot));closeModal();renderSaveSlots();refreshTitleContinue();}],["やめる",closeModal]]);
   }
+  function updateHeroNameEntry(){
+    const input=$("heroNameInput");
+    if(!input) return;
+    const chars=Array.from(input.value||"");
+    if(chars.length>8) input.value=chars.slice(0,8).join("");
+    const count=Array.from(input.value||"").length;
+    $("heroNameCount").textContent=`${count} / 8`;
+    $("heroNameConfirmBtn").disabled=normalizeHeroName(input.value).length===0;
+  }
+  function openHeroNameEntry(){
+    const input=$("heroNameInput");
+    $("nameEntryPortrait").src=roster.hero?.img||"";
+    input.value="ロイド";
+    updateHeroNameEntry();
+    $("nameEntryModal").classList.add("show");
+    setTimeout(()=>{input.focus();input.select();},40);
+  }
+  function confirmHeroNameEntry(){
+    const input=$("heroNameInput");
+    const name=normalizeHeroName(input.value)||"ロイド";
+    roster.hero.name=name;
+    $("nameEntryModal").classList.remove("show");
+    updateHeader();
+    showScreen("homeScreen");
+    toast("新しい冒険を始めます。");
+    setTimeout(()=>startStoryEvent("milestaIntroEliza"),120);
+  }
   function startNewGame(){
     if(!initialGameSnapshot) return;
     applyPersistentState(initialGameSnapshot.game);
@@ -6087,9 +6186,7 @@
     restorePartyFull();
     updateWorld(); updateHeader();
     $("topSubtitle").textContent=`探索＋勧誘・装備試作 ${DEV_VERSION}`;
-    showScreen("homeScreen");
-    toast("新しい冒険を始めます。");
-    setTimeout(()=>startStoryEvent("milestaIntroEliza"),120);
+    openHeroNameEntry();
   }
   function confirmReturnToTitle(){
     modal("タイトルに戻る","タイトル画面に戻りますか？\nセーブしていない進行状況は失われます。",[["タイトルに戻る",()=>{closeModal();closeSaveUi();state.run=null;showTitleScreen();}],["やめる",closeModal]]);
@@ -6416,7 +6513,7 @@
   ];
 
 
-  // v0.37a unified developer panel. Debug state itself is intentionally not persisted,
+  // v0.37b unified developer panel. Debug state itself is intentionally not persisted,
   // while game-state changes made through the panel can be saved normally.
   const DEBUG_TABS=["party","inventory","progress","battle"];
   let debugActiveTab="party";
@@ -8878,8 +8975,9 @@
 
     if(enemy.ai==="vanguardBoss"){
       const roll=Math.random();
+      const hpRatio=Math.max(0,Number(enemy.hp)||0)/Math.max(1,Number(enemy.hpMax)||1);
       const canCold=enemy.lastSkillId!=="cold" && enemySkillAvailable(enemy,"cold");
-      const canTackle=enemySkillAvailable(enemy,"tackle");
+      const canTackle=hpRatio>.10 && enemySkillAvailable(enemy,"tackle");
       if(roll<.25 && canCold) return {type:"skill",skillId:"cold"};
       if(roll<.65 && canTackle) return {type:"skill",skillId:"tackle"};
       return {type:"attack"};
@@ -9147,7 +9245,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
       updateHeader();
       return;
     }
@@ -9155,7 +9253,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
   }
 
   async function attemptEscape(){
@@ -9455,7 +9553,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -9463,7 +9561,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -9617,7 +9715,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -9681,7 +9779,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -9706,7 +9804,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.37b";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -10692,7 +10790,7 @@ ${ITEMS[id].name} ×1 を手に入れた。`,[["進む",()=>{closeModal();update
 ${reward}`,[["進む",()=>{closeModal();updateRunHud();}]]);}],["先を急ぐ",()=>{closeModal();modal("？ 困っている老人",`${heroName}たちは先を急いだ。`,[["進む",closeModal]]);}]]);return; }
     if(event===5){ modal("？ 獣の痕跡","獣の痕跡のようなものを見つけた。",[["気にせず進む",()=>{closeModal();modal("⚔ 獣の痕跡","犬娘たちが襲いかかってきた！",[["戦う",()=>{closeModal();openBattle(true,"eventDogs");}]]);}],["急いで走り抜ける",()=>{applyPartyHpPercent(-.10,true);closeModal();updateRunHud();modal("？ 獣の痕跡",`${heroName}たちは急いでその場を走り抜けた。
 バトルメンバー全員が最大HPの10%ダメージを受けた。`,[["進む",closeModal]]);}]]);return; }
-    modal("？ 古びた祠","小さな祠が草に埋もれている。",[["祈る",()=>{const hit=Math.random()<.01;if(hit){const b=seedBonusOf(roster.hero);b.fate=(Number(b.fate)||0)+1;roster.hero.fate=(Number(roster.hero.fate)||0)+1;}closeModal();modal("⛩ 古びた祠",hit?"何かが変わった気がする。\n主人公の運命値が1上がった！":"しかし何も起こらなかった。",[["進む",closeModal]]);}],["立ち去る",()=>{closeModal();modal("？ 古びた祠",`${heroName}たちはそのまま立ち去った。`,[["進む",closeModal]]);}]]);
+    modal("？ 古びた祠","小さな祠が草に埋もれている。",[["祈る",()=>{const hit=Math.random()<.01;if(hit){const b=seedBonusOf(roster.hero);b.fate=(Number(b.fate)||0)+1;roster.hero.fate=(Number(roster.hero.fate)||0)+1;}closeModal();modal("⛩ 古びた祠",hit?`何かが変わった気がする。\n${heroName}の運命値が1上がった！`:"しかし何も起こらなかった。",[["進む",closeModal]]);}],["立ち去る",()=>{closeModal();modal("？ 古びた祠",`${heroName}たちはそのまま立ち去った。`,[["進む",closeModal]]);}]]);
   }
 
   function damageActivePercent(rate){
@@ -10743,7 +10841,7 @@ ${reward}`,[["進む",closeModal]]);},"",!hasAntidote]
       const reward=grantChestReward(); updateRunHud(); modal("？ 不思議な手招き",`何者かを追った先で、宝箱を発見した！
 ${reward}`,[["進む",closeModal]]);return;
     }
-    modal("？ 古びた祠","小さな祠がぽつりと立っている。",[["祈る",()=>{const hit=Math.random()<.01;if(hit){const b=seedBonusOf(roster.hero);b.fate=(Number(b.fate)||0)+1;roster.hero.fate=(Number(roster.hero.fate)||0)+1;}closeModal();modal("⛩ 古びた祠",hit?"何かが変わった気がする。\n主人公の運命値が1上がった！":"しかし何も起こらなかった。",[["進む",closeModal]]);}],["立ち去る",()=>{closeModal();modal("？ 古びた祠",`${heroName}たちはそのまま立ち去った。`,[["進む",closeModal]]);}]]);
+    modal("？ 古びた祠","小さな祠がぽつりと立っている。",[["祈る",()=>{const hit=Math.random()<.01;if(hit){const b=seedBonusOf(roster.hero);b.fate=(Number(b.fate)||0)+1;roster.hero.fate=(Number(roster.hero.fate)||0)+1;}closeModal();modal("⛩ 古びた祠",hit?`何かが変わった気がする。\n${heroName}の運命値が1上がった！`:"しかし何も起こらなかった。",[["進む",closeModal]]);}],["立ち去る",()=>{closeModal();modal("？ 古びた祠",`${heroName}たちはそのまま立ち去った。`,[["進む",closeModal]]);}]]);
   }
 
   function returnToPreviousNode(){
