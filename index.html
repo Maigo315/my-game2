@@ -3328,29 +3328,30 @@
   }
   .story-next[hidden]{display:none}.story-next:active{transform:translateY(1px)}
 
-  /* v0.35f: portrait height stays fixed whether choices are shown or not. */
-  .story-event-panel:not(.system):not(.tutorial){
-    grid-template-rows:auto minmax(0,1fr) auto auto;
-    row-gap:8px;
+  /* v0.35g: dialogue upper area is fixed; only the bottom control lane switches between NEXT and choices. */
+  .story-event-panel:not(.system):not(.tutorial) .story-event-content{
+    grid-template-rows:auto minmax(0,1fr) 48px;
+    gap:8px;
   }
-  .story-event-panel:not(.system):not(.tutorial) .story-event-content{display:contents}
   .story-event-panel:not(.system):not(.tutorial) .story-event-portrait{
-    grid-column:1;grid-row:1 / 4;margin-bottom:0;
+    margin-bottom:56px;
   }
-  .story-event-panel:not(.system):not(.tutorial) .story-event-speaker{grid-column:2;grid-row:1}
-  .story-event-panel:not(.system):not(.tutorial) .story-event-text{grid-column:2;grid-row:2}
-  .story-event-panel:not(.system):not(.tutorial) .story-event-choices{grid-column:2;grid-row:3}
-  .story-event-panel:not(.system):not(.tutorial) .story-event-footer{grid-column:2;grid-row:4}
-  .story-event-panel.no-portrait:not(.system):not(.tutorial) .story-event-speaker,
-  .story-event-panel.no-portrait:not(.system):not(.tutorial) .story-event-text,
-  .story-event-panel.no-portrait:not(.system):not(.tutorial) .story-event-choices,
-  .story-event-panel.no-portrait:not(.system):not(.tutorial) .story-event-footer{grid-column:1}
+  .story-event-panel:not(.system):not(.tutorial) .story-event-speaker{grid-row:1}
+  .story-event-panel:not(.system):not(.tutorial) .story-event-text{grid-row:2}
+  .story-event-panel:not(.system):not(.tutorial) .story-event-choices{
+    grid-row:3;align-self:stretch;min-height:0;
+  }
+  .story-event-panel:not(.system):not(.tutorial) .story-event-footer{
+    grid-row:3;align-self:stretch;min-height:48px;
+  }
+  .story-event-panel:not(.system):not(.tutorial).has-choices .story-event-footer{display:none}
 
   @media(max-height:520px){
     .story-event-panel{height:calc(100vh - 12px - var(--safe-top) - var(--safe-bottom));grid-template-columns:minmax(155px,29%) minmax(0,1fr);gap:7px;padding:7px}
     .story-event-portrait{margin-bottom:36px}
-    .story-event-panel:not(.system):not(.tutorial){row-gap:5px}
-    .story-event-panel:not(.system):not(.tutorial) .story-event-portrait{margin-bottom:0}
+    .story-event-panel:not(.system):not(.tutorial) .story-event-content{grid-template-rows:auto minmax(0,1fr) 36px;gap:5px}
+    .story-event-panel:not(.system):not(.tutorial) .story-event-portrait{margin-bottom:41px}
+    .story-event-panel:not(.system):not(.tutorial) .story-event-footer{min-height:36px}
     .story-event-content{gap:5px;padding:3px 2px 1px}.story-event-speaker{padding:4px 10px;font-size:10px;min-width:88px}
     .story-event-text{padding:11px 13px;font-size:13px;line-height:1.6}.story-event-choices{gap:5px}.story-choice{min-height:36px;font-size:10px}
     .story-event-footer{min-height:30px}.story-next{min-width:94px;min-height:31px;font-size:9px}
@@ -3359,7 +3360,7 @@
     .story-event-panel.tutorial .story-event-text{font-size:11px;line-height:1.55}
   }
 
-  /* v0.35f developer tools */
+  /* v0.35g developer tools */
   .debug-modal{
     display:none;position:fixed;inset:0;z-index:245;background:rgba(0,0,0,.74);
     align-items:center;justify-content:center;
@@ -3422,7 +3423,7 @@
       <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.35e</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.35f</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.35g</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3434,7 +3435,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.35f</div>
+      <div class="title-version">DEV v0.35g</div>
     </section>
   </main>
 
@@ -3947,7 +3948,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.35f</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.35g</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4231,6 +4232,7 @@
       body.textContent=storyText(step.text||"");
       choices.innerHTML="";
       const opts=Array.isArray(step.choices)?step.choices:[];
+      panel.classList.toggle("has-choices",opts.length>0);
       opts.forEach(opt=>{const b=document.createElement("button");b.className="story-choice";b.textContent=storyText(opt.label);b.onclick=()=>chooseStoryEvent(opt);choices.appendChild(b);});
       next.hidden=opts.length>0;
       $("storyEventHint").textContent="";
