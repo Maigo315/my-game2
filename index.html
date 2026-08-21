@@ -3570,10 +3570,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43a</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43b</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43a</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43b</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3585,7 +3585,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.43a</div>
+      <div class="title-version">DEV v0.43b</div>
     </section>
   </main>
 
@@ -4137,7 +4137,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.43a</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.43b</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4166,7 +4166,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.43a";
+  const DEV_VERSION = "v0.43b";
   const SAVE_SCHEMA_VERSION = 6;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4786,7 +4786,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43a" : "ミレスタ・仲間編成 v0.43a";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43b" : "ミレスタ・仲間編成 v0.43b";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4800,7 +4800,7 @@
     }
     openTownTalkModal();
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43a"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -5332,7 +5332,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43a" : "ミレスタ・仲間編成 v0.43a";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43b" : "ミレスタ・仲間編成 v0.43b";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -5365,13 +5365,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
     updateHeader();
   };
 
@@ -6554,7 +6554,12 @@
       c.stats={...(b.stats||{}),...(r.stats||{})};
       c.finalVariation=r.finalVariation?{...r.finalVariation}:(b.finalVariation?{...b.finalVariation}:null);
       c.seedBonus={...(b.seedBonus||{}),...(r.seedBonus||{})};
-      c.learnedSkills=[...(r.learnedSkills||b.learnedSkills||[])];
+      // Backfill any natural skills added or moved to earlier levels in newer versions.
+      // This keeps older saves compatible (e.g. ポイズンスライムのLv1「ポイズン」).
+      c.learnedSkills=[...new Set([
+        ...(r.learnedSkills||b.learnedSkills||[]),
+        ...naturalSkillIdsAtLevel(c,c.level)
+      ])];
       c.equipment={...(b.equipment||{}),...(r.equipment||{})};
       c.conditions={...conditionsOf(c),...(r.conditions||{})};
       const needsVariationMigration=!!profileFor(c) && !r.finalVariation && (id==="hero" || state.ownedSpecies.has(id));
@@ -7055,7 +7060,7 @@
 
   function ownedSpeciesNames(){
     return [...state.ownedSpecies]
-      .map(id=>speciesRecruitment[id]?.name)
+      .map(id=>speciesRecruitment[id]?.name || roster[id]?.name)
       .filter(Boolean);
   }
 
@@ -7335,9 +7340,24 @@
     $("debugCloseBtn").onclick=closeDebugTools;
     document.querySelectorAll(".debug-tab").forEach(b=>b.onclick=()=>setDebugTab(b.dataset.debugTab));
     charSel.onchange=debugRefreshCharacterStatus;
-    $("debugJoinBtn").onclick=()=>{toast(debugJoinCharacter(charSel.value));refreshDebugTools();};
-    $("debugLeaveBtn").onclick=()=>{toast(debugLeaveCharacter(charSel.value));refreshDebugTools();};
-    $("debugJoinAllBtn").onclick=()=>{Object.keys(speciesRecruitment).forEach(id=>debugJoinCharacter(id));toast("全仲間を加入状態にしました。");refreshDebugTools();};
+    $("debugJoinBtn").onclick=()=>{
+      toast(debugJoinCharacter(charSel.value));
+      if(currentScreenId()==="partyScreen") renderPartyManage(false);
+      refreshDebugTools();
+    };
+    $("debugLeaveBtn").onclick=()=>{
+      toast(debugLeaveCharacter(charSel.value));
+      if(currentScreenId()==="partyScreen") renderPartyManage(false);
+      refreshDebugTools();
+    };
+    $("debugJoinAllBtn").onclick=()=>{
+      Object.values(roster)
+        .filter(c=>c && c.id!=="hero" && !c.npcOnly)
+        .forEach(c=>debugJoinCharacter(c.id));
+      toast("全プレイアブルキャラを加入状態にしました。");
+      if(currentScreenId()==="partyScreen") renderPartyManage(false);
+      refreshDebugTools();
+    };
     $("debugHealAllBtn").onclick=()=>{debugHealAll();toast("全キャラのHP・MPを回復しました。");refreshDebugTools();};
     $("debugSkillTestOpenBtn").onclick=()=>{closeDebugTools();openDevSkillTestMenu();};
     $("debugSetLevelBtn").onclick=()=>{const c=debugSelectedCharacter();setCharacterLevelDev(c,$("debugLevelInput").value);toast(`${c.name}をLv ${c.level}にしました。`);refreshDebugTools();};
@@ -10210,7 +10230,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
       updateHeader();
       return;
     }
@@ -10218,7 +10238,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
   }
 
   async function attemptEscape(){
@@ -10522,7 +10542,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -10530,7 +10550,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -10720,7 +10740,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -10785,7 +10805,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -10811,7 +10831,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
     updateHeader();
     toast("戦闘テストを終了");
   }
