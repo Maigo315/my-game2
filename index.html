@@ -1061,6 +1061,32 @@
     border:1px solid #6b7890;background:linear-gradient(#2a3948,#172430);color:#dbe6ef;
   }
 
+  /* v0.39a battle item-drop presentation */
+  .battle-drop-stage{
+    position:absolute;left:6%;right:6%;top:12%;bottom:14%;z-index:9;
+    display:none;place-items:center;pointer-events:none;
+  }
+  .battle-drop-stage.show{display:grid}
+  .battle-drop-card{
+    width:min(88%,360px);padding:14px 16px 12px;border:1px solid #d7bd68;border-radius:16px;
+    background:linear-gradient(180deg,rgba(32,27,17,.98),rgba(15,20,27,.98));
+    box-shadow:0 14px 34px rgba(0,0,0,.52),0 0 24px rgba(232,197,93,.12);
+    display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;pointer-events:auto;
+    animation:battleDropPop .28s ease-out both;
+  }
+  @keyframes battleDropPop{
+    from{opacity:0;transform:translateY(10px) scale(.95)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+  }
+  .battle-drop-headline{font-size:13px;font-weight:1000;color:#fff0ad;line-height:1.5}
+  .battle-drop-icon{font-size:54px;line-height:1;filter:drop-shadow(0 8px 10px rgba(0,0,0,.4))}
+  .battle-drop-item{font-size:14px;font-weight:1000;color:#eef7ff;line-height:1.5}
+  .battle-drop-continue{
+    min-width:150px;min-height:40px;margin-top:2px;border:1px solid #d9c76f;border-radius:999px;
+    background:rgba(43,38,17,.96);color:#fff0a6;font-size:11px;font-weight:1000;cursor:pointer;
+    box-shadow:0 4px 14px rgba(0,0,0,.42);animation:resultTapPulse .9s ease-in-out infinite alternate;
+  }
+
   .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
   .equipment-slots,.equipment-preview{border:1px solid #2d465a;border-radius:10px;background:#0d1823;padding:7px;min-width:0}
   .equipment-slot-list{display:grid;gap:5px}
@@ -3540,10 +3566,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.38e</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.39a</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.38e</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.39a</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3555,7 +3581,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.38e</div>
+      <div class="title-version">DEV v0.39a</div>
     </section>
   </main>
 
@@ -3780,6 +3806,14 @@
           </div>
           <div class="enemy-stage" id="enemyStage" data-count="2"></div>
           <div class="battle-effect-layer" id="battleEffectLayer"></div>
+          <div class="battle-drop-stage" id="battleDropStage" aria-live="polite">
+            <div class="battle-drop-card">
+              <strong class="battle-drop-headline" id="battleDropHeadline">犬娘はアイテムを落とした！</strong>
+              <div class="battle-drop-icon">🎁</div>
+              <span class="battle-drop-item" id="battleDropItemText">石の爪を入手した！</span>
+              <button class="battle-drop-continue" id="battleDropContinueBtn" type="button">タップして進む</button>
+            </div>
+          </div>
           <div class="battle-recruit-stage" id="battleRecruitStage" aria-live="polite">
             <div class="battle-recruit-glow"></div>
             <div class="battle-recruit-body">
@@ -4099,7 +4133,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.38e</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.39a</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4128,7 +4162,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.38e";
+  const DEV_VERSION = "v0.39a";
   const SAVE_SCHEMA_VERSION = 5;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4732,7 +4766,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.38e" : "ミレスタ・仲間編成 v0.38e";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.39a" : "ミレスタ・仲間編成 v0.39a";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4746,7 +4780,7 @@
     }
     openTownTalkModal();
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.38e"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39a"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -5257,7 +5291,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.38e" : "ミレスタ・仲間編成 v0.38e";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.39a" : "ミレスタ・仲間編成 v0.39a";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -5290,13 +5324,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.38e";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39a";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.38e";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39a";
     updateHeader();
   };
 
@@ -6544,6 +6578,58 @@
     momo:{name:"モモイロナメクジ",rank:"E"},
     arachne:{name:"アラクネ",rank:"D"}
   };
+
+  // v0.39a: defeated enemies can drop one consumable/equipment item at most.
+  // Rare is rolled first; only when it misses is the normal 10% roll attempted.
+  const NORMAL_DROP_RATE=.10;
+  const RARE_DROP_RATE=.03;
+  const SEED_DROP_RATE=.01;
+  const battleDropTable={
+    slime:{normal:{kind:"item",id:"potion",rate:NORMAL_DROP_RATE}},
+    dog:{normal:{kind:"equipment",id:"stone_claw",rate:NORMAL_DROP_RATE},rare:{kind:"equipment",id:"paw_hand",rate:RARE_DROP_RATE}},
+    fairy:{rare:{kind:"item",id:"magicHerb",rate:RARE_DROP_RATE}},
+    slug:{normal:{kind:"item",id:"antidote",rate:NORMAL_DROP_RATE}},
+    momo:{normal:{kind:"item",id:"antidote",rate:NORMAL_DROP_RATE},rare:{kind:"item",id:"lifeSeed",rate:SEED_DROP_RATE}},
+    arachne:{normal:{kind:"item",id:"antidote",rate:NORMAL_DROP_RATE},rare:{kind:"equipment",id:"whip",rate:RARE_DROP_RATE}},
+    slimebes:{normal:{kind:"item",id:"potion",rate:NORMAL_DROP_RATE},rare:{kind:"item",id:"highPotion",rate:RARE_DROP_RATE}},
+    harpy:{normal:{kind:"item",id:"returnFeather",rate:NORMAL_DROP_RATE}}
+  };
+
+  function battleDropEntryName(entry){
+    if(!entry) return "アイテム";
+    return entry.kind==="equipment"
+      ? (equipmentCatalog[entry.id]?.name||entry.id)
+      : (ITEMS[entry.id]?.name||entry.id);
+  }
+
+  function rollBattleDrops(){
+    const drops=[];
+    state.battleEnemies.forEach((enemy,encounterIndex)=>{
+      if(!enemy || enemy.hp>0) return;
+      const table=battleDropTable[enemy.id];
+      if(!table) return;
+      let picked=null,rarity="normal";
+      if(table.rare && Math.random()<table.rare.rate){
+        picked=table.rare;rarity="rare";
+      }else if(table.normal && Math.random()<table.normal.rate){
+        picked=table.normal;rarity="normal";
+      }
+      if(!picked) return;
+      drops.push({
+        enemyId:enemy.id,enemyName:enemy.displayName||enemy.name||speciesRecruitment[enemy.id]?.name||enemy.id,
+        encounterIndex,kind:picked.kind,id:picked.id,rarity,granted:false
+      });
+    });
+    return drops;
+  }
+
+  function grantBattleDrop(drop){
+    if(!drop || drop.granted) return;
+    if(drop.kind==="equipment") addEquipmentOwned(drop.id,1);
+    else addItemCount(drop.id,1);
+    drop.granted=true;
+    updateHeader();
+  }
 
   function activeFateTotal(){
     return state.battleActive.reduce((sum,id)=>sum+(roster[id]?.fate||0),0);
@@ -9547,7 +9633,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.38e";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39a";
       updateHeader();
       return;
     }
@@ -9555,7 +9641,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.38e";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39a";
   }
 
   async function attemptEscape(){
@@ -9815,11 +9901,12 @@
       const gain=state.battleEnemies.reduce((sum,e)=>sum+(e.gold||0),0);
       const expGain=state.battleEnemies.reduce((sum,e)=>sum+(e.exp||0),0);
       const leveled=awardExperience(expGain,expEligibleIds);
+      const drops=rollBattleDrops();
 
       state.gold+=gain;
       state.run.runGold+=gain;
       state.run.runExp+=expGain;
-      state.battleVictoryData={gain,expGain,leveled};
+      state.battleVictoryData={gain,expGain,leveled,drops,dropIndex:0};
       state.levelUpPresentationDone=false;
 
       const levelText=leveled.length
@@ -9832,7 +9919,7 @@
       renderBattleParty();
       showBattleContinue();
     }else{
-      state.battleVictoryData={gain:0,expGain:0,leveled:[]};
+      state.battleVictoryData={gain:0,expGain:0,leveled:[],drops:[],dropIndex:0};
       state.levelUpPresentationDone=true;
       const traitText=victoryTraitNotes.length?` ${victoryTraitNotes.join(" / ")}`:"";
       setMessage(`勝利！ 戦闘テストではEXP・ゴールドは獲得しません。${traitText}`);
@@ -9848,6 +9935,7 @@
     state.levelUpPresentationIndex=0;
     state.levelUpAfterClose=null;
     $("levelUpModal").classList.remove("show");
+    hideBattleDrop();
     hideBattleContinue();
 
     if(state.battleDirectTest){
@@ -9856,7 +9944,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.38e";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39a";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -9864,7 +9952,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.38e";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39a";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -9901,6 +9989,29 @@
     if(!state.recruitedWaiting.includes(id)) state.recruitedWaiting.push(id);
     return "ミレスタで待機";
   }
+
+  function showBattleDrop(drop){
+    if(!drop) return;
+    grantBattleDrop(drop);
+    $("battleDropHeadline").textContent=`${drop.enemyName}はアイテムを落とした！`;
+    $("battleDropItemText").textContent=`${battleDropEntryName(drop)}を入手した！`;
+    $("battleMessage").textContent=`${drop.enemyName}はアイテムを落とした！`;
+    $("battleDropStage").classList.add("show");
+  }
+
+  function hideBattleDrop(){
+    $("battleDropStage").classList.remove("show");
+  }
+
+  function advanceBattleDrop(){
+    const data=state.battleVictoryData;
+    if(!data) return;
+    hideBattleDrop();
+    data.dropIndex=(Number(data.dropIndex)||0)+1;
+    continueAfterVictory();
+  }
+
+  $("battleDropContinueBtn").onclick=advanceBattleDrop;
 
   function showRecruitOverlay(candidate,testMode=false){
     state.pendingRecruitCandidate={...candidate,testMode};
@@ -9978,6 +10089,13 @@
       return;
     }
 
+    const drops=data.drops||[];
+    const dropIndex=Number(data.dropIndex)||0;
+    if(dropIndex<drops.length){
+      showBattleDrop(drops[dropIndex]);
+      return;
+    }
+
     const candidate=(state.battleDirectTest || recruitmentUnlocked()) ? chooseRecruitWinner(state.battleDirectTest) : null;
     if(candidate){
       showRecruitOverlay(candidate,state.battleDirectTest);
@@ -10004,6 +10122,7 @@
     renderBattleParty();
     $("battleActorCaption").textContent="DEFEAT";
     hideRecruitOverlay();
+    hideBattleDrop();
     hideBattleContinue();
     setMessage(state.battleFromRun
       ? "パーティは力尽きた……。探索を終了してミレスタへ戻ります。"
@@ -10018,7 +10137,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.38e";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39a";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -10078,11 +10197,12 @@
     state.escapeBaseRate=null;
     state.fortuneCasts=0;
     hideRecruitOverlay();
+    hideBattleDrop();
     hideBattleContinue();
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.38e";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39a";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -10101,13 +10221,14 @@
     }
     state.battleEnded=true;
     state.battleAutoContinuous=false;
+    hideBattleDrop();
     hideBattleContinue();
     cancelScheduledTurnStart();
     restorePartySnapshot(state.battleTestSnapshot);
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.38e";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39a";
     updateHeader();
     toast("戦闘テストを終了");
   }
