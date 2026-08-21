@@ -1061,7 +1061,7 @@
     border:1px solid #6b7890;background:linear-gradient(#2a3948,#172430);color:#dbe6ef;
   }
 
-  /* v0.39b battle item-drop presentation */
+  /* v0.39c battle item-drop presentation */
   .battle-drop-stage{
     position:absolute;left:6%;right:6%;top:12%;bottom:14%;z-index:9;
     display:none;place-items:center;pointer-events:none;
@@ -1084,7 +1084,11 @@
   .battle-drop-continue{
     min-width:150px;min-height:40px;margin:2px auto 0;align-self:center;display:block;border:1px solid #d9c76f;border-radius:999px;
     background:rgba(43,38,17,.96);color:#fff0a6;font-size:11px;font-weight:1000;cursor:pointer;
-    box-shadow:0 4px 14px rgba(0,0,0,.42);animation:resultTapPulse .9s ease-in-out infinite alternate;
+    box-shadow:0 4px 14px rgba(0,0,0,.42);animation:battleDropTapPulse .9s ease-in-out infinite alternate;
+  }
+  @keyframes battleDropTapPulse{
+    from{filter:brightness(.95);transform:scale(.98)}
+    to{filter:brightness(1.18);transform:scale(1.02)}
   }
 
   .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
@@ -3566,10 +3570,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.39b</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.39c</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.39b</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.39c</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3581,7 +3585,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.39b</div>
+      <div class="title-version">DEV v0.39c</div>
     </section>
   </main>
 
@@ -4133,7 +4137,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.39b</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.39c</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4162,7 +4166,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.39b";
+  const DEV_VERSION = "v0.39c";
   const SAVE_SCHEMA_VERSION = 5;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4766,7 +4770,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.39b" : "ミレスタ・仲間編成 v0.39b";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.39c" : "ミレスタ・仲間編成 v0.39c";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4780,7 +4784,7 @@
     }
     openTownTalkModal();
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39b"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39c"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -5291,7 +5295,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.39b" : "ミレスタ・仲間編成 v0.39b";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.39c" : "ミレスタ・仲間編成 v0.39c";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -5324,13 +5328,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39c";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39c";
     updateHeader();
   };
 
@@ -6579,7 +6583,7 @@
     arachne:{name:"アラクネ",rank:"D"}
   };
 
-  // v0.39b: defeated enemies can drop one consumable/equipment item at most.
+  // v0.39c: defeated enemies can drop one consumable/equipment item at most.
   // Rare is rolled first; only when it misses is the normal 10% roll attempted.
   const NORMAL_DROP_RATE=.10;
   const RARE_DROP_RATE=.03;
@@ -9629,7 +9633,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39c";
       updateHeader();
       return;
     }
@@ -9637,7 +9641,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39c";
   }
 
   async function attemptEscape(){
@@ -9940,7 +9944,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39c";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -9948,7 +9952,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39c";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -10133,7 +10137,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39c";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -10198,7 +10202,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39c";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -10224,7 +10228,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.39c";
     updateHeader();
     toast("戦闘テストを終了");
   }
