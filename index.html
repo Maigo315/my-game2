@@ -4166,7 +4166,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.41a";
+  const DEV_VERSION = "v0.41b";
   const SAVE_SCHEMA_VERSION = 6;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -5223,6 +5223,23 @@
     host.querySelectorAll("[data-equip-compare]").forEach(b=>b.onclick=()=>{state.equipmentCompareMode=b.dataset.equipCompare;renderEquipmentTab(c);});
   }
 
+  function fitCharacterDetailName(){
+    const el=$("characterName");
+    if(!el) return;
+    // Start from the stylesheet's normal size (including compact-height media rules),
+    // then shrink only as much as needed to keep the full name visible.
+    el.style.fontSize="";
+    requestAnimationFrame(()=>{
+      if(!el || !el.isConnected) return;
+      let size=parseFloat(getComputedStyle(el).fontSize)||23;
+      const minSize=14;
+      while(el.scrollWidth>el.clientWidth && size>minSize){
+        size-=1;
+        el.style.fontSize=`${size}px`;
+      }
+    });
+  }
+
   function renderCharacterDetail(id="hero",preserveTab=false){
     const tab=preserveTab ? (state.characterDetailTab||"status") : "status";
     const c=roster[id] || roster.hero;
@@ -5233,6 +5250,7 @@
     if(!preserveTab){state.equipmentCompareMode="stats";state.equipmentPickerScrollTop=0;}
 
     $("characterName").textContent=c.name;
+    fitCharacterDetailName();
     $("characterLevel").textContent=`LEVEL ${c.level}`;
 
     state.equipmentPickerOpen=false;
@@ -11762,6 +11780,10 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
 
   updateHeader();
   updateDevSkillTestButton();
+  window.addEventListener("resize",()=>{
+    if($("characterName") && $("characterName").offsetParent!==null) fitCharacterDetailName();
+  });
+
   initialGameSnapshot={saveVersion:SAVE_SCHEMA_VERSION,appVersion:DEV_VERSION,savedAt:null,location:"ミレスタ",game:capturePersistentState()};
   refreshTitleContinue();
   showTitleScreen();
