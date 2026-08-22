@@ -3557,7 +3557,7 @@
 
 
 
-  /* v0.43i limited merchant stock row + stable shop footer */
+  /* v0.43j limited merchant stock row + stable shop footer */
   .shop-row-side{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px;min-width:94px}
   .shop-row-meta{display:flex;align-items:center;justify-content:flex-end;gap:5px;white-space:nowrap;max-width:100%}
   .shop-stock-badge{
@@ -3583,7 +3583,7 @@
   }
 
 
-  /* v0.43i shared inventory browser: home = view only, exploration = field-use enabled */
+  /* v0.43j shared inventory browser: home = view only, exploration = field-use enabled */
   .inventory-panel{
     width:min(860px,96vw);height:min(610px,94vh);overflow:hidden!important;
     display:flex;flex-direction:column;
@@ -3654,10 +3654,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43i</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43j</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43i</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43j</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3669,7 +3669,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.43i</div>
+      <div class="title-version">DEV v0.43j</div>
     </section>
   </main>
 
@@ -4230,7 +4230,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.43i</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.43j</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4259,7 +4259,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.43i";
+  const DEV_VERSION = "v0.43j";
   const SAVE_SCHEMA_VERSION = 7;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4880,7 +4880,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43i" : "ミレスタ・仲間編成 v0.43i";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43j" : "ミレスタ・仲間編成 v0.43j";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4895,7 +4895,7 @@
     }
     openTownTalkModal();
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43j"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -5466,7 +5466,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43i" : "ミレスタ・仲間編成 v0.43i";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43j" : "ミレスタ・仲間編成 v0.43j";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -5499,13 +5499,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43j";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43j";
     updateHeader();
   };
 
@@ -6012,6 +6012,20 @@
     ancient_patch:{id:"ancient_patch",slot:"accessory",name:"古代のパッチ",icon:"🔧",mods:{},skillBoost:{skillId:"nephilimLaser",kind:"laser",power:2.50,shockRate:.50},price:5000,desc:"ネフィリムレーザーを強化する謎のパッチ。威力220%→250%、感電35%→50%。"}
 
   };
+
+  // v0.43j: equipment icons are standardized by equipment category.
+  const EQUIPMENT_CATEGORY_ICONS={
+    weapon:{fist:"🥊",sword:"🗡️",axe:"🪓",bow:"🏹",staff:"🪄",whip:"➰",gun:"🔫"},
+    shield:"🛡️",
+    body:"👕",
+    accessory:"💍"
+  };
+  Object.values(equipmentCatalog).forEach(item=>{
+    if(!item || ["bare","no_shield","no_body","no_accessory"].includes(item.id)) return;
+    if(item.slot==="weapon") item.icon=EQUIPMENT_CATEGORY_ICONS.weapon[item.weaponType]||"🗡️";
+    else if(EQUIPMENT_CATEGORY_ICONS[item.slot]) item.icon=EQUIPMENT_CATEGORY_ICONS[item.slot];
+  });
+
   const equipmentInventory={
     weapon:["bare","stone_claw","bronze_knuckle","steel_claw","silver_knuckle","restian_claw","platinum_claw","golden_claw","champion","dagger","traveler_sword","iron_sword","silver_sword","salid_saber","kirisute_maru","platinum_sword","golden_sword","breaker","stone_axe","bronze_axe","steel_axe","silver_axe","icebreaker_maul","platinum_axe","golden_axe","destroyer","short_bow","traveler_bow","iron_bow","silver_bow","restian_bow","hamaya_bow","platinum_bow","golden_bow","chiron","hinoki_staff","mage_staff","iron_rod","silver_rod","ritual_staff","platinum_rod","golden_staff","hecate","whip","bronze_whip","iron_whip","silver_whip","trainer_whip","platinum_whip","golden_whip","mad_dragon_tail","type_milesta","hunter","type_zel","type_runel","alm_hunting_gun","remaster_zel","limbo_magic_gun","fatality","paw_hand"],
     shield:["no_shield","wood_shield","stone_greatshield","buckler","iron_buckler","iron_greatshield","silver_shield","heat_bulwark","snow_bulwark","ritual_shield","water_mirror_shield","platinum_shield","limbo_shield","fire_god_shield","ice_god_shield","wind_god_shield","earth_god_shield","empty_mind_barrier","spirit_shield","angel_shield","dark_shield","alm_small_shield"],
@@ -10746,7 +10760,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43j";
       updateHeader();
       return;
     }
@@ -10754,7 +10768,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43j";
   }
 
   async function attemptEscape(){
@@ -11058,7 +11072,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43j";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -11066,7 +11080,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43j";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -11274,7 +11288,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43j";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -11339,7 +11353,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43j";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -11365,7 +11379,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43j";
     updateHeader();
     toast("戦闘テストを終了");
   }
