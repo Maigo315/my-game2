@@ -3570,10 +3570,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43c</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43d</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43c</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43d</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3585,7 +3585,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.43c</div>
+      <div class="title-version">DEV v0.43d</div>
     </section>
   </main>
 
@@ -4137,7 +4137,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.43c</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.43d</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4166,7 +4166,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.43c";
+  const DEV_VERSION = "v0.43d";
   const SAVE_SCHEMA_VERSION = 6;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4786,7 +4786,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43c" : "ミレスタ・仲間編成 v0.43c";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43d" : "ミレスタ・仲間編成 v0.43d";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4800,7 +4800,7 @@
     }
     openTownTalkModal();
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -4872,7 +4872,7 @@
       </div>
       <div class="party-detail-ability-row">
         <span>攻 <b>${st.atk}</b></span><span>防 <b>${st.def}</b></span><span>魔 <b>${st.magic}</b></span>
-        <span>魔防 <b>${st.mdef}</b></span><span>速 <b>${st.spd}</b></span><span>運 <b>${c.fate}</b></span>
+        <span>魔防 <b>${st.mdef}</b></span><span>速 <b>${st.spd}</b></span><span>運 <b>${equipmentExtras(c).fate}</b></span>
       </div>`;
   }
 
@@ -5123,9 +5123,12 @@
   const RESISTANCE_RANK_ORDER=["E","D","C","B","A","S"];
   function equipmentResistanceDelta(equipmentOverride){
     const out={};
+    const allKeys=[...ATTRIBUTE_RESISTANCE_KEYS,...STATUS_RESISTANCE_KEYS];
     EQUIPMENT_SLOTS.forEach(slot=>{
       const item=equipmentCatalog[equipmentOverride?.[slot]];
       Object.entries(item?.resist||{}).forEach(([key,v])=>out[key]=(out[key]||0)+v);
+      const all=Number(item?.resistAll)||0;
+      if(all) allKeys.forEach(key=>out[key]=(out[key]||0)+all);
     });
     return out;
   }
@@ -5177,11 +5180,24 @@
     if(item.roundStartBlockRate) bits.push(`R開始ブロック ${Math.round(Number(item.roundStartBlockRate)*100)}%`);
     if(item.attackAll) bits.push(`全体${Math.round((item.normalAttackPower||1)*100)}%`);
     if(item.defenseInfluence!==undefined && item.defenseInfluence!==1) bits.push(`防御影響${Math.round(item.defenseInfluence*100)}%`);
-    if(item.fate) bits.push(`運+${item.fate}`);
+    if(item.fate) bits.push(`運${item.fate>0?"+":""}${item.fate}`);
+    if(item.hpPercent) bits.push(`最大HP${item.hpPercent>0?"+":""}${Math.round(item.hpPercent*100)}%`);
+    if(item.mpPercent) bits.push(`最大MP${item.mpPercent>0?"+":""}${Math.round(item.mpPercent*100)}%`);
+    if(item.allStatPercent) bits.push(`全能力${Math.round(item.allStatPercent*100)}%`);
+    if(item.fatePercent) bits.push(`運命${Math.round(item.fatePercent*100)}%`);
     Object.entries(item.resist||{}).forEach(([key,steps])=>{
       if(steps) bits.push(`${RESISTANCE_LABELS[key]||key}耐性${steps>0?"+":""}${steps}`);
     });
-    if(item.physicalPoisonRate) bits.push(`毒付与${Number(item.physicalPoisonRate).toFixed(1)}%（保留）`);
+    if(item.resistAll) bits.push(`全耐性${item.resistAll>0?"+":""}${item.resistAll}`);
+    Object.entries(item.physicalStatus||{}).forEach(([status,rate])=>bits.push(`${statusName(status)}攻撃+${Math.round(Number(rate)*100)}%`));
+    if(item.bowInstantKillImmune) bits.push("射抜即死無効");
+    if(item.erodeDamageMultiplier) bits.push(`イロード被ダメ${Math.round((Number(item.erodeDamageMultiplier)-1)*100)}%`);
+    if(item.expMultiplier && item.expMultiplier!==1) bits.push(`EXP×${Number(item.expMultiplier).toFixed(1)}`);
+    if(item.reserveExpRate) bits.push(`控えEXP${Math.round(Number(item.reserveExpRate)*100)}%`);
+    if(item.redistributeExp) bits.push("EXP分配");
+    if(item.preventWipe) bits.push("全滅回避・消滅");
+    if(item.battleNodeWeightBonus) bits.push(`戦闘ノード重み+${Math.round(Number(item.battleNodeWeightBonus)*100)}%`);
+    if(item.skillBoost) bits.push("専用技強化");
     return bits;
   }
 
@@ -5335,7 +5351,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43c" : "ミレスタ・仲間編成 v0.43c";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43d" : "ミレスタ・仲間編成 v0.43d";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -5368,13 +5384,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
     updateHeader();
   };
 
@@ -5775,25 +5791,117 @@
     // ドロップ等の既存装備
     paw_hand:{id:"paw_hand",slot:"weapon",weaponType:"fist",name:"肉球ハンド",icon:"🐾",mods:{atk:5,spd:8},crit:9.5,canCrit:true,normalAttackPower:1,price:180,desc:"攻撃力+5 / 素早さ+8 / 会心率+9.5%。肉球がついた可愛い拳装備。"},
     no_shield:{id:"no_shield",slot:"shield",name:"装備なし",icon:"－",mods:{}},
-    wood_shield:{id:"wood_shield",slot:"shield",name:"木の盾",icon:"🛡️",mods:{def:2},price:30,desc:"防御力+2。軽く扱いやすい基本の盾。"},
-    stone_greatshield:{id:"stone_greatshield",slot:"shield",name:"石の大盾",icon:"🪨",mods:{def:5,spd:-5},price:60,desc:"防御力+5 / 素早さ-5。非常に重いが、防御力に優れる大盾。"},
-    alm_small_shield:{id:"alm_small_shield",slot:"shield",name:"アルムの小盾",icon:"🛡️",mods:{def:3},resist:{ice:1},price:120,desc:"防御力+3 / 氷耐性+1。アルム王国製の小さな盾。"},
+    wood_shield:{id:"wood_shield",slot:"shield",name:"木の盾",icon:"🛡️",mods:{def:2},price:30,desc:"木製の扱いやすい盾。防御力+2。"},
+    stone_greatshield:{id:"stone_greatshield",slot:"shield",name:"石の大盾",icon:"🪨",mods:{def:5,spd:-5},price:60,desc:"石でできた重い盾。防御力+5 / 素早さ-5。"},
+    buckler:{id:"buckler",slot:"shield",name:"バックラー",icon:"🛡️",mods:{def:4},price:100,desc:"腕に装着する小型の盾。防御力+4。"},
+    iron_buckler:{id:"iron_buckler",slot:"shield",name:"アイアンバックラー",icon:"🛡️",mods:{def:9},price:330,desc:"鉄製の頑丈なバックラー。防御力+9。"},
+    iron_greatshield:{id:"iron_greatshield",slot:"shield",name:"鉄の大盾",icon:"🛡️",mods:{def:16,spd:-7},price:420,desc:"鉄製の重い大盾。防御力+16 / 素早さ-7。"},
+    silver_shield:{id:"silver_shield",slot:"shield",name:"シルバーシールド",icon:"🛡️",mods:{def:23,spd:-10},price:1100,desc:"純銀製の大きな盾。防御力+23 / 素早さ-10。"},
+    heat_bulwark:{id:"heat_bulwark",slot:"shield",name:"炎熱の防壁",icon:"🔥",mods:{def:12,mdef:5},resist:{fire:1,ice:-1},price:2800,desc:"炎から身を守る魔法の盾。防御力+12 / 魔防+5 / 炎耐性+1 / 氷耐性-1。"},
+    snow_bulwark:{id:"snow_bulwark",slot:"shield",name:"氷雪の防壁",icon:"❄️",mods:{def:12,mdef:5},resist:{fire:-1,ice:1},price:2800,desc:"冷気から身を守る魔法の盾。防御力+12 / 魔防+5 / 炎耐性-1 / 氷耐性+1。"},
+    ritual_shield:{id:"ritual_shield",slot:"shield",name:"祭事の盾",icon:"🛡️",mods:{def:10},resist:{blind:1,silence:1,death:1},price:3000,desc:"祭事に使われる不思議な模様の盾。防御力+10 / 暗闇・封印・即死耐性+1。"},
+    water_mirror_shield:{id:"water_mirror_shield",slot:"shield",name:"水鏡の盾",icon:"🪞",mods:{def:10,mdef:8},resist:{thunder:1,poison:1,death:1},price:4800,desc:"ヒザクラに伝わる美しい盾。防御力+10 / 魔防+8 / 雷・毒・即死耐性+1。"},
+    platinum_shield:{id:"platinum_shield",slot:"shield",name:"白金の盾",icon:"🛡️",mods:{def:40,spd:-12},price:12000,desc:"白金製の高性能な大盾。防御力+40 / 素早さ-12。"},
+    limbo_shield:{id:"limbo_shield",slot:"shield",name:"辺獄の盾",icon:"🛡️",mods:{def:55,spd:-12},price:32000,desc:"魔界で流通しているとんでもなく頑丈な盾。防御力+55 / 素早さ-12。"},
+    fire_god_shield:{id:"fire_god_shield",slot:"shield",name:"炎神の盾",icon:"🔥",mods:{def:5,mdef:5},resist:{fire:2},price:6000,desc:"炎耐性を大きく上げる盾。防御力+5 / 魔防+5 / 炎耐性+2。"},
+    ice_god_shield:{id:"ice_god_shield",slot:"shield",name:"氷神の盾",icon:"❄️",mods:{def:5,mdef:5},resist:{ice:2},price:6000,desc:"氷耐性を大きく上げる盾。防御力+5 / 魔防+5 / 氷耐性+2。"},
+    wind_god_shield:{id:"wind_god_shield",slot:"shield",name:"風神の盾",icon:"🌪️",mods:{def:5,mdef:5},resist:{wind:2},price:6000,desc:"風耐性を大きく上げる盾。防御力+5 / 魔防+5 / 風耐性+2。"},
+    earth_god_shield:{id:"earth_god_shield",slot:"shield",name:"地神の盾",icon:"🪨",mods:{def:5,mdef:5},resist:{earth:2},price:6000,desc:"地耐性を大きく上げる盾。防御力+5 / 魔防+5 / 地耐性+2。"},
+    empty_mind_barrier:{id:"empty_mind_barrier",slot:"shield",name:"無心の障壁",icon:"🫧",mods:{mdef:10},resist:{pleasure:2},price:10000,desc:"快楽から身を守る障壁。魔防+10 / 快楽耐性+2。"},
+    spirit_shield:{id:"spirit_shield",slot:"shield",name:"精霊の盾",icon:"🔮",mods:{def:10,mdef:10},fate:4,resist:{fire:1,ice:1,light:1,dark:1},price:54000,desc:"精霊の加護が宿った神秘的な盾。防御力+10 / 魔防+10 / 運命+4 / 炎・氷・光・闇耐性+1。"},
+    angel_shield:{id:"angel_shield",slot:"shield",name:"天使の盾",icon:"🪽",mods:{def:12},fate:2,resist:{light:2,dark:-1},price:8000,desc:"天使が扱うと言われる聖なる盾。防御力+12 / 運命+2 / 光耐性+2 / 闇耐性-1。"},
+    dark_shield:{id:"dark_shield",slot:"shield",name:"暗黒の盾",icon:"🌑",mods:{def:14},fate:-2,resist:{light:-1,dark:2},price:8000,desc:"闇をまとった禍々しい盾。防御力+14 / 運命-2 / 光耐性-1 / 闇耐性+2。"},
+    alm_small_shield:{id:"alm_small_shield",slot:"shield",name:"アルムの小盾",icon:"🛡️",mods:{def:2},resist:{fire:-1,ice:1},price:120,desc:"アルム王国製の小さな盾。防御力+2 / 炎耐性-1 / 氷耐性+1。"},
+
     no_body:{id:"no_body",slot:"body",name:"装備なし",icon:"－",mods:{}},
-    milesta_clothes:{id:"milesta_clothes",slot:"body",name:"ミレスタの服",icon:"👕",mods:{def:3,spd:2},price:50,desc:"防御力+3 / 素早さ+2。動きやすさを重視した軽装。"},
-    leather_armor:{id:"leather_armor",slot:"body",name:"革の鎧",icon:"🥋",mods:{def:6},price:90,desc:"防御力+6。素直に防御力を高める革鎧。"},
-    ragged_robe:{id:"ragged_robe",slot:"body",name:"ボロボロローブ",icon:"🥻",mods:{def:3,mdef:3},price:60,desc:"防御力+3 / 魔法防御+3。ボロボロになったローブ。"},
+    milesta_clothes:{id:"milesta_clothes",slot:"body",name:"ミレスタの服",icon:"👕",mods:{def:3,spd:2},price:50,desc:"着心地の良い布の服。防御力+3 / 素早さ+2。"},
+    leather_armor:{id:"leather_armor",slot:"body",name:"革の鎧",icon:"🥋",mods:{def:6},price:90,desc:"冒険向きの革製の鎧。防御力+6。"},
+    traveler_clothes:{id:"traveler_clothes",slot:"body",name:"旅人の服",icon:"👕",mods:{def:4,spd:7},price:130,desc:"旅人たちが好む動きやすい服。防御力+4 / 素早さ+7。"},
+    bronze_mail:{id:"bronze_mail",slot:"body",name:"ブロンズメイル",icon:"🛡️",mods:{def:11},price:190,desc:"ブロンズ製の安価な鎧。防御力+11。"},
+    mage_robe:{id:"mage_robe",slot:"body",name:"魔術師のローブ",icon:"🥻",mods:{def:5,magic:3,mdef:5},price:230,desc:"魔法を扱う者のためのローブ。防御力+5 / 魔力+3 / 魔防+5。"},
+    iron_mail:{id:"iron_mail",slot:"body",name:"アイアンメイル",icon:"🛡️",mods:{def:18},price:440,desc:"鋼鉄でできた頑丈な鎧。防御力+18。"},
+    runel_clothes:{id:"runel_clothes",slot:"body",name:"ルネルの服",icon:"👕",mods:{def:15,spd:10},price:1550,desc:"ルネル地方で親しまれている服。防御力+15 / 素早さ+10。"},
+    silver_mail:{id:"silver_mail",slot:"body",name:"シルバーメイル",icon:"🛡️",mods:{def:27,mdef:5},price:1700,desc:"少し魔力がこめられた純銀製の鎧。防御力+27 / 魔防+5。"},
+    magical_cloth:{id:"magical_cloth",slot:"body",name:"マジカルクロス",icon:"🧥",mods:{def:20,magic:9,mdef:17},price:2900,desc:"魔力が織り込まれた特殊な衣。防御力+20 / 魔力+9 / 魔防+17。"},
+    restian_belt:{id:"restian_belt",slot:"body",name:"レスティアンベルト",icon:"🥋",mods:{atk:11,def:23,spd:7},resist:{death:1},price:3600,desc:"攻撃力が上がる不思議な民族衣装。攻撃力+11 / 防御力+23 / 素早さ+7 / 即死耐性+1。"},
+    miko_outfit:{id:"miko_outfit",slot:"body",name:"巫女装束",icon:"⛩️",mods:{def:22,magic:5,mdef:10},fate:6,resist:{poison:1,silence:1},price:6800,desc:"みんな大好き巫女さんの装束。防御力+22 / 魔力+5 / 魔防+10 / 運命+6 / 毒・封印耐性+1。"},
+    platinum_mail:{id:"platinum_mail",slot:"body",name:"プラチナメイル",icon:"🛡️",mods:{def:48,mdef:8},price:16500,desc:"白金製の高性能な鎧。防御力+48 / 魔防+8。"},
+    light_robe:{id:"light_robe",slot:"body",name:"光の法衣",icon:"✨",mods:{def:33,magic:9,mdef:28},resist:{thunder:1,light:1},price:19000,desc:"光の魔力を宿した神秘的な法衣。防御力+33 / 魔力+9 / 魔防+28 / 雷・光耐性+1。"},
+    demon_clothes:{id:"demon_clothes",slot:"body",name:"魔界の衣",icon:"🧥",mods:{def:52,spd:18},resist:{dark:1},price:44500,desc:"魔界の一般的な衣服。防御力+52 / 素早さ+18 / 闇耐性+1。"},
+    golden_armor:{id:"golden_armor",slot:"body",name:"煌金の鎧",icon:"🛡️",mods:{def:70,mdef:11},price:47000,desc:"魔界の特別な金属で作られた鎧。防御力+70 / 魔防+11。"},
+    field_runner:{id:"field_runner",slot:"body",name:"フィールドランナー",icon:"🥾",mods:{def:68,spd:21},resist:{blind:2},price:170000,desc:"戦場を駆ける者のための服。防御力+68 / 素早さ+21 / 暗闇耐性+2。"},
+    phalanx:{id:"phalanx",slot:"body",name:"ファランクス",icon:"🛡️",mods:{def:92,mdef:15,spd:-8},resist:{wind:1,poison:2},price:203000,desc:"圧倒的な防御力を誇る重厚な鎧。防御力+92 / 魔防+15 / 素早さ-8 / 風耐性+1 / 毒耐性+2。"},
+    yggdrasil:{id:"yggdrasil",slot:"body",name:"ユグドラシル",icon:"🌳",mods:{def:54,magic:16,mdef:46},fate:5,resist:{thunder:1,earth:1,silence:1},price:240000,desc:"神の木の名を冠する最高峰の法衣。防御力+54 / 魔力+16 / 魔防+46 / 運命+5 / 雷・地・封印耐性+1。"},
+    ragged_robe:{id:"ragged_robe",slot:"body",name:"ボロボロローブ",icon:"🥻",mods:{def:3,mdef:3},price:60,desc:"ボロボロになったローブ。防御力+3 / 魔防+3。"},
+
     no_accessory:{id:"no_accessory",slot:"accessory",name:"装備なし",icon:"－",mods:{}},
-    hunter_charm:{id:"hunter_charm",slot:"accessory",name:"狩人の御守り",icon:"🦷",mods:{atk:2},crit:2,price:200,desc:"攻撃力+2 / 会心率+2.0%。物理攻撃を堅実に強化する御守り。"},
-    light_shoes:{id:"light_shoes",slot:"accessory",name:"身軽なシューズ",icon:"👟",mods:{},evasion:5,price:250,desc:"回避率+5.0%。物理攻撃に対する回避を目に見えて高める。"},
-    magic_earrings:{id:"magic_earrings",slot:"accessory",name:"魔法のイヤリング",icon:"💎",mods:{magic:4},resist:{silence:1},desc:"魔力+4 / 封印耐性+1段階。魔法を扱う者向けのイヤリング。"},
-    fate_ring:{id:"fate_ring",slot:"accessory",name:"運命の指輪",icon:"💍",mods:{},fate:4,price:180,desc:"運命値+4。運命値を大きく引き上げる指輪。"},
-    poison_gloves:{id:"poison_gloves",slot:"accessory",name:"毒手袋",icon:"🧤",mods:{},physicalPoisonRate:10,price:400,unavailable:true,desc:"物理攻撃時、10%の確率で毒状態にする。※装備からの毒付与連携は現在保留。"}
+    hunter_charm:{id:"hunter_charm",slot:"accessory",name:"狩人の御守り",icon:"🦷",mods:{atk:2},crit:2,price:200,desc:"狩人たちが愛用する御守り。攻撃力+2 / 会心率+2.0%。"},
+    light_shoes:{id:"light_shoes",slot:"accessory",name:"身軽なシューズ",icon:"👟",mods:{},evasion:5,price:250,desc:"身軽に動ける靴。回避率+5.0%。"},
+    magic_earrings:{id:"magic_earrings",slot:"accessory",name:"魔法のイヤリング",icon:"💎",mods:{magic:4},resist:{silence:1},price:300,desc:"魔法を扱う者向けのイヤリング。魔力+4 / 封印耐性+1。"},
+    fate_ring:{id:"fate_ring",slot:"accessory",name:"運命の指輪",icon:"💍",mods:{},fate:4,price:180,desc:"安物だが運気が上がりそうな指輪。運命+4。"},
+    poison_gloves:{id:"poison_gloves",slot:"accessory",name:"毒手袋",icon:"🧤",mods:{},physicalStatus:{poison:.10},price:400,desc:"毒が塗りたくられた危険な手袋。物理攻撃時、10%を基準に毒を付与する。"},
+    hidden_smoke:{id:"hidden_smoke",slot:"accessory",name:"仕込み煙幕",icon:"🌫️",mods:{},physicalStatus:{blind:.10},price:400,desc:"服の中などに仕込んでおく煙幕。物理攻撃時、10%を基準に暗闇を付与する。"},
+    sealing_talisman:{id:"sealing_talisman",slot:"accessory",name:"封魔の呪符",icon:"🔇",mods:{},physicalStatus:{silence:.10},price:400,desc:"敵のスキルを封じることがある呪符。物理攻撃時、10%を基準に封印を付与する。"},
+    veteran_charm:{id:"veteran_charm",slot:"accessory",name:"歴戦の御守り",icon:"🎖️",mods:{atk:12,mdef:-10},crit:4,price:3600,desc:"歴戦の戦士たちが愛用する御守り。攻撃力+12 / 魔防-10 / 会心率+4.0%。"},
+    shadow_shoes:{id:"shadow_shoes",slot:"accessory",name:"影法師の靴",icon:"👟",mods:{},evasion:12,price:4400,desc:"かなり身軽に動ける靴。回避率+12.0%。"},
+    bandana:{id:"bandana",slot:"accessory",name:"バンダナ",icon:"🎀",mods:{atk:1,def:1,spd:2},price:80,desc:"気が引き締まるバンダナ。攻撃力+1 / 防御力+1 / 素早さ+2。"},
+    full_face:{id:"full_face",slot:"accessory",name:"フルフェイス",icon:"⛑️",mods:{def:5},bowInstantKillImmune:true,price:180,desc:"頭部を完全に守る装備。防御力+5 / 射抜即死無効。"},
+    erosion_guard_helmet:{id:"erosion_guard_helmet",slot:"accessory",name:"侵蝕防護メット",icon:"🪖",mods:{def:12},erodeDamageMultiplier:.30,price:2500,desc:"イロードの魔力から身を守るメット。防御力+12 / イロード系魔法の被ダメージ-70%。"},
+    golden_helmet:{id:"golden_helmet",slot:"accessory",name:"黄金の兜",icon:"👑",mods:{def:17,mdef:7},fate:10,resist:{light:1,dark:-1,thunder:-1},price:52000,desc:"光の力を宿した黄金の兜。防御力+17 / 魔防+7 / 運命+10 / 光耐性+1 / 闇・雷耐性-1。"},
+    restian_tiara:{id:"restian_tiara",slot:"accessory",name:"レスティアンティアラ",icon:"👑",mods:{atk:4,def:6,mdef:5},resist:{poison:1,death:1},price:2700,desc:"レスティア公国伝統の頭飾り。攻撃力+4 / 防御力+6 / 魔防+5 / 毒・即死耐性+1。"},
+    thunder_god_helmet:{id:"thunder_god_helmet",slot:"accessory",name:"雷神の兜",icon:"⚡",mods:{def:20,mdef:14},resist:{thunder:5},price:108000,desc:"雷耐性がものすごく上がる兜。防御力+20 / 魔防+14 / 雷耐性+5。"},
+    zel_leggings:{id:"zel_leggings",slot:"accessory",name:"ゼルレギンス",icon:"🥾",mods:{def:3},resist:{earth:1,poison:1},price:310,desc:"グランゼル王国で流通している一般的なレギンス。防御力+3 / 地・毒耐性+1。"},
+    runel_sneakers:{id:"runel_sneakers",slot:"accessory",name:"ルネルスニーカー",icon:"👟",mods:{spd:2},resist:{earth:1,wind:1},price:550,desc:"ルネル地方で大人気のスニーカー。素早さ+2 / 地・風耐性+1。"},
+    windcaller_shoes:{id:"windcaller_shoes",slot:"accessory",name:"風呼びの靴",icon:"🌪️",mods:{def:-4,spd:12},resist:{wind:2,earth:-1},price:7400,desc:"風の加護を宿した靴。防御力-4 / 素早さ+12 / 風耐性+2 / 地耐性-1。"},
+    earth_greaves:{id:"earth_greaves",slot:"accessory",name:"大地の具足",icon:"🥾",mods:{def:16},resist:{wind:-1,earth:3},price:12000,desc:"大地の力を宿した頑丈な具足。防御力+16 / 風耐性-1 / 地耐性+3。"},
+    hero_shoes:{id:"hero_shoes",slot:"accessory",name:"英雄の靴",icon:"👢",mods:{def:-5,mdef:-5,spd:40},price:50000,desc:"英雄が履いていたと言われる靴。防御力-5 / 魔防-5 / 素早さ+40。"},
+    gold_ring:{id:"gold_ring",slot:"accessory",name:"ゴールドリング",icon:"💍",mods:{def:8,mdef:10},fate:3,resist:{light:1,silence:1,death:1},price:9200,desc:"黄金でできた神秘的な指輪。防御力+8 / 魔防+10 / 運命+3 / 光・封印・即死耐性+1。"},
+    platinum_ring:{id:"platinum_ring",slot:"accessory",name:"プラチナリング",icon:"💍",mods:{def:13,mdef:16},fate:8,resist:{light:1,dark:1,thunder:1,silence:1,death:1},price:27000,desc:"白金でできたとても神秘的な指輪。防御力+13 / 魔防+16 / 運命+8 / 光・闇・雷・封印・即死耐性+1。"},
+    red_bracelet:{id:"red_bracelet",slot:"accessory",name:"紅のブレスレット",icon:"🔴",mods:{mdef:4},resist:{fire:1},price:1900,desc:"炎耐性が上がる腕輪。魔防+4 / 炎耐性+1。"},
+    blue_bracelet:{id:"blue_bracelet",slot:"accessory",name:"蒼のブレスレット",icon:"🔵",mods:{mdef:4},resist:{ice:1},price:1900,desc:"氷耐性が上がる腕輪。魔防+4 / 氷耐性+1。"},
+    white_bracelet:{id:"white_bracelet",slot:"accessory",name:"白のブレスレット",icon:"⚪",mods:{mdef:4},resist:{light:1},price:1900,desc:"光耐性が上がる腕輪。魔防+4 / 光耐性+1。"},
+    black_bracelet:{id:"black_bracelet",slot:"accessory",name:"黒のブレスレット",icon:"⚫",mods:{mdef:4},resist:{dark:1},price:1900,desc:"闇耐性が上がる腕輪。魔防+4 / 闇耐性+1。"},
+    red_orb:{id:"red_orb",slot:"accessory",name:"紅の宝珠",icon:"🔴",mods:{magic:8,mdef:10},resist:{fire:3,ice:-2},price:8200,desc:"炎耐性に特化する宝珠。魔力+8 / 魔防+10 / 炎耐性+3 / 氷耐性-2。"},
+    blue_orb:{id:"blue_orb",slot:"accessory",name:"蒼の宝珠",icon:"🔵",mods:{magic:8,mdef:10},resist:{fire:-2,ice:3},price:8200,desc:"氷耐性に特化する宝珠。魔力+8 / 魔防+10 / 炎耐性-2 / 氷耐性+3。"},
+    white_orb:{id:"white_orb",slot:"accessory",name:"白の宝珠",icon:"⚪",mods:{magic:8,mdef:10},resist:{light:3,dark:-2},price:8200,desc:"光耐性に特化する宝珠。魔力+8 / 魔防+10 / 光耐性+3 / 闇耐性-2。"},
+    black_orb:{id:"black_orb",slot:"accessory",name:"黒の宝珠",icon:"⚫",mods:{magic:8,mdef:10},resist:{light:-2,dark:3},price:8200,desc:"闇耐性に特化する宝珠。魔力+8 / 魔防+10 / 光耐性-2 / 闇耐性+3。"},
+    gas_mask:{id:"gas_mask",slot:"accessory",name:"防毒マスク",icon:"😷",mods:{},resist:{poison:3},price:450,desc:"毒から身を守るマスク。毒耐性+3。"},
+    lightning_rod:{id:"lightning_rod",slot:"accessory",name:"避雷針",icon:"⚡",mods:{},resist:{thunder:3},price:500,desc:"雷から身を守る避雷針。雷耐性+3。"},
+    night_vision_glasses:{id:"night_vision_glasses",slot:"accessory",name:"暗視グラス",icon:"🥽",mods:{},resist:{blind:3},price:450,desc:"暗闇でも視界を確保できる眼鏡。暗闇耐性+3。"},
+    barrier_charm:{id:"barrier_charm",slot:"accessory",name:"結界の護符",icon:"📿",mods:{},resist:{silence:3},price:450,desc:"封印の魔力を跳ね除ける護符。封印耐性+3。"},
+    talisman:{id:"talisman",slot:"accessory",name:"タリスマン",icon:"📿",mods:{mdef:6},resist:{death:4},price:1200,desc:"即死の災いから守ってくれる御守り。魔防+6 / 即死耐性+4。"},
+    spirit_gem:{id:"spirit_gem",slot:"accessory",name:"精霊の宝石",icon:"💎",mods:{atk:-8,magic:6,mdef:14},resist:{poison:1,blind:1,silence:1,death:1},price:5600,desc:"精霊の魔力を宿した宝石。攻撃力-8 / 魔力+6 / 魔防+14 / 毒・暗闇・封印・即死耐性+1。"},
+    matchmaking_charm:{id:"matchmaking_charm",slot:"accessory",name:"縁結びの御守り",icon:"🎀",mods:{def:2,mdef:4},fate:7,price:2000,desc:"ヒザクラ伝統のご利益のある御守り。防御力+2 / 魔防+4 / 運命+7。"},
+    demon_ocarina:{id:"demon_ocarina",slot:"accessory",name:"魔縁のオカリナ",icon:"🎵",mods:{},fate:15,battleNodeWeightBonus:.25,price:9800,desc:"魔物娘が寄ってくる不思議なオカリナ。運命+15 / 探索の戦闘ノード抽選重み+25%。複数装備で加算。"},
+    war_god_charm:{id:"war_god_charm",slot:"accessory",name:"戦神の御守り",icon:"⚔️",mods:{atk:35,magic:-10,mdef:-10},price:50000,desc:"攻撃力に特化する御守り。攻撃力+35 / 魔力-10 / 魔防-10。"},
+    guardian_bracelet:{id:"guardian_bracelet",slot:"accessory",name:"守護神の腕輪",icon:"🛡️",mods:{atk:-15,def:55,magic:-15},price:50000,desc:"防御力に特化する腕輪。攻撃力-15 / 防御力+55 / 魔力-15。"},
+    demon_ancestor_earring:{id:"demon_ancestor_earring",slot:"accessory",name:"魔祖の耳飾り",icon:"💎",mods:{atk:-10,def:-10,magic:35},price:50000,desc:"魔力に特化する耳飾り。攻撃力-10 / 防御力-10 / 魔力+35。"},
+    spirit_king_collar:{id:"spirit_king_collar",slot:"accessory",name:"精霊王の首輪",icon:"📿",mods:{atk:-15,magic:-15,mdef:55},price:50000,desc:"魔法防御に特化する首輪。攻撃力-15 / 魔力-15 / 魔防+55。"},
+    energy_bottle:{id:"energy_bottle",slot:"accessory",name:"エナジーボトル",icon:"🧪",mods:{},hpPercent:.10,price:8800,desc:"生命力を供給するボトル。最大HP+10%。"},
+    energy_tank:{id:"energy_tank",slot:"accessory",name:"エナジータンク",icon:"🛢️",mods:{},hpPercent:.20,price:45000,desc:"生命力を補完する貯蔵タンク。最大HP+20%。"},
+    magic_bottle:{id:"magic_bottle",slot:"accessory",name:"マジックボトル",icon:"🧪",mods:{},mpPercent:.10,price:8800,desc:"魔力を供給するボトル。最大MP+10%。"},
+    magic_tank:{id:"magic_tank",slot:"accessory",name:"マジックタンク",icon:"🛢️",mods:{},mpPercent:.20,price:45000,desc:"魔力を補完する貯蔵タンク。最大MP+20%。"},
+    growth_crystal:{id:"growth_crystal",slot:"accessory",name:"成長の水晶",icon:"🔹",mods:{},allStatPercent:-.20,fatePercent:-.20,resistAll:-2,expMultiplier:1.50,price:100,desc:"成長を促す水晶。全ステータス（運命含む）-20% / 全耐性-2 / 獲得経験値+50%。"},
+    trial_crystal:{id:"trial_crystal",slot:"accessory",name:"試練の水晶",icon:"🔷",mods:{},allStatPercent:-.50,fatePercent:-.50,resistAll:-3,expMultiplier:2.00,price:200,desc:"試練を与える水晶。全ステータス（運命含む）-50% / 全耐性-3 / 獲得経験値+100%。"},
+    hardship_crystal:{id:"hardship_crystal",slot:"accessory",name:"苦難の水晶",icon:"💠",mods:{},allStatPercent:-.75,fatePercent:-.75,resistAll:-4,expMultiplier:2.50,price:400,desc:"苦難をもたらす水晶。全ステータス（運命含む）-75% / 全耐性-4 / 獲得経験値+150%。"},
+    training_sash:{id:"training_sash",slot:"accessory",name:"修練の襷",icon:"🎗️",mods:{},reserveExpRate:.50,price:800,desc:"戦闘不参加でも経験値が得られる襷。控え時、基礎経験値の50%を獲得。"},
+    honing_eye:{id:"honing_eye",slot:"accessory",name:"練磨の眼",icon:"👁️",mods:{},reserveExpRate:.80,price:3200,desc:"戦闘不参加でも経験値が得られる不思議な眼。控え時、基礎経験値の80%を獲得。"},
+    void_membrane:{id:"void_membrane",slot:"accessory",name:"無の光膜",icon:"🫧",mods:{},redistributeExp:true,price:600,desc:"獲得経験値0。勝利時に生存していれば、本来の経験値を生存中の前列・非装備者へ均等分配する。複数装備者の分も合算。"},
+    holy_beast_clock:{id:"holy_beast_clock",slot:"accessory",name:"聖獣の時計",icon:"⌚",mods:{},preventWipe:true,price:10000,desc:"全滅時、前列の味方全員をHP全回復で復活し、消滅する神秘の懐中時計。"},
+    martial_gauntlet:{id:"martial_gauntlet",slot:"accessory",name:"武神の手甲",icon:"🥊",mods:{},skillBoost:{skillId:"explosiveFist",kind:"hits",amount:1},price:5000,desc:"爆裂拳を強化する手甲。爆裂拳の攻撃回数+1。"},
+    sword_god_hair:{id:"sword_god_hair",slot:"accessory",name:"剣神の遺髪",icon:"🗡️",mods:{},skillBoost:{skillId:"swordDance",kind:"hits",amount:1},price:5000,desc:"剣の舞を強化する遺髪。剣の舞の攻撃回数+1。"},
+    beast_god_belt:{id:"beast_god_belt",slot:"accessory",name:"獣神のベルト",icon:"🪓",mods:{},skillBoost:{skillId:"terraCrash",kind:"critDamage",multiplier:1.20},price:5000,desc:"テラクラッシュを強化するベルト。テラクラッシュの会心ダメージ倍率をさらに1.2倍。"},
+    stardust_monocle:{id:"stardust_monocle",slot:"accessory",name:"星屑のモノクル",icon:"🧐",mods:{},skillBoost:{skillId:"stardust",kind:"power",value:2.70},price:5000,desc:"スターダストを強化するモノクル。スターダストの威力を220%から270%へ強化。"},
+    mana_amplifier:{id:"mana_amplifier",slot:"accessory",name:"魔流増幅器",icon:"🪄",mods:{},skillBoost:{skillId:"magicBarrier",kind:"barrier",value:.70},price:5000,desc:"魔力障壁を強化する増幅器。魔法ダメージ軽減率を60%から70%へ強化。"},
+    dragon_god_tattoo:{id:"dragon_god_tattoo",slot:"accessory",name:"龍神のタトゥー",icon:"🐉",mods:{},skillBoost:{skillId:"dragonSpiral",kind:"hits",amount:1},price:5000,desc:"龍螺旋を強化するタトゥー。龍螺旋の攻撃回数+1。"},
+    ancient_patch:{id:"ancient_patch",slot:"accessory",name:"古代のパッチ",icon:"🔧",mods:{},skillBoost:{skillId:"nephilimLaser",kind:"laser",power:2.50,shockRate:.50},price:5000,desc:"ネフィリムレーザーを強化する謎のパッチ。威力220%→250%、感電35%→50%。"}
+
   };
   const equipmentInventory={
     weapon:["bare","stone_claw","bronze_knuckle","steel_claw","silver_knuckle","restian_claw","platinum_claw","golden_claw","champion","dagger","traveler_sword","iron_sword","silver_sword","salid_saber","kirisute_maru","platinum_sword","golden_sword","breaker","stone_axe","bronze_axe","steel_axe","silver_axe","icebreaker_maul","platinum_axe","golden_axe","destroyer","short_bow","traveler_bow","iron_bow","silver_bow","restian_bow","hamaya_bow","platinum_bow","golden_bow","chiron","hinoki_staff","mage_staff","iron_rod","silver_rod","ritual_staff","platinum_rod","golden_staff","hecate","whip","bronze_whip","iron_whip","silver_whip","trainer_whip","platinum_whip","golden_whip","mad_dragon_tail","type_milesta","hunter","type_zel","type_runel","alm_hunting_gun","remaster_zel","limbo_magic_gun","fatality","paw_hand"],
-    shield:["no_shield","wood_shield","stone_greatshield","alm_small_shield"],
-    body:["no_body","milesta_clothes","leather_armor","ragged_robe"],
-    accessory:["no_accessory","hunter_charm","light_shoes","magic_earrings","fate_ring","poison_gloves"]
+    shield:["no_shield","wood_shield","stone_greatshield","buckler","iron_buckler","iron_greatshield","silver_shield","heat_bulwark","snow_bulwark","ritual_shield","water_mirror_shield","platinum_shield","limbo_shield","fire_god_shield","ice_god_shield","wind_god_shield","earth_god_shield","empty_mind_barrier","spirit_shield","angel_shield","dark_shield","alm_small_shield"],
+    body:["no_body","milesta_clothes","leather_armor","traveler_clothes","bronze_mail","mage_robe","iron_mail","runel_clothes","silver_mail","magical_cloth","restian_belt","miko_outfit","platinum_mail","light_robe","demon_clothes","golden_armor","field_runner","phalanx","yggdrasil","ragged_robe"],
+    accessory:["no_accessory","hunter_charm","light_shoes","magic_earrings","fate_ring","poison_gloves","hidden_smoke","sealing_talisman","veteran_charm","shadow_shoes","bandana","full_face","erosion_guard_helmet","golden_helmet","restian_tiara","thunder_god_helmet","zel_leggings","runel_sneakers","windcaller_shoes","earth_greaves","hero_shoes","gold_ring","platinum_ring","red_bracelet","blue_bracelet","white_bracelet","black_bracelet","red_orb","blue_orb","white_orb","black_orb","gas_mask","lightning_rod","night_vision_glasses","barrier_charm","talisman","spirit_gem","matchmaking_charm","demon_ocarina","war_god_charm","guardian_bracelet","demon_ancestor_earring","spirit_king_collar","energy_bottle","energy_tank","magic_bottle","magic_tank","growth_crystal","trial_crystal","hardship_crystal","training_sash","honing_eye","void_membrane","holy_beast_clock","martial_gauntlet","sword_god_hair","beast_god_belt","stardust_monocle","mana_amplifier","dragon_god_tattoo","ancient_patch"]
   };
   // Real ownership begins in v0.31. "装備なし" is unlimited; actual gear must be bought or found.
   const equipmentOwnedCounts={};
@@ -5808,7 +5916,39 @@
     return Math.max(0,ownedEquipmentCount(itemId)-equippedCount(itemId,excludeCharacterId));
   }
   function addEquipmentOwned(itemId,count=1){
-    equipmentOwnedCounts[itemId]=(equipmentOwnedCounts[itemId]||0)+count;
+    equipmentOwnedCounts[itemId]=Math.max(0,(equipmentOwnedCounts[itemId]||0)+count);
+  }
+  function equippedItemList(c,equipmentOverride=null){
+    const eq=equipmentOverride||ensureEquipment(c);
+    return EQUIPMENT_SLOTS.map(slot=>equipmentCatalog[eq[slot]]).filter(Boolean);
+  }
+  function equipmentHasFlag(c,key){ return equippedItemList(c).some(item=>!!item?.[key]); }
+  function equipmentNumberSum(c,key){ return equippedItemList(c).reduce((sum,item)=>sum+(Number(item?.[key])||0),0); }
+  function equippedAccessory(c){ return equipmentCatalog[ensureEquipment(c).accessory]||equipmentCatalog.no_accessory; }
+  function effectiveSkillForActor(actor,baseSkill){
+    if(!actor || !baseSkill) return baseSkill;
+    const boost=equippedAccessory(actor)?.skillBoost;
+    if(!boost || boost.skillId!==baseSkill.id) return baseSkill;
+    const sk={...baseSkill};
+    if(boost.kind==="hits") sk.hits=Math.max(1,(Number(sk.hits)||1)+(Number(boost.amount)||0));
+    else if(boost.kind==="critDamage") sk.critDamageMultiplier=Math.max(1,Number(boost.multiplier)||1);
+    else if(boost.kind==="power") sk.power=Math.max(0,Number(boost.value)||Number(sk.power)||1);
+    else if(boost.kind==="barrier") sk.reduction=Math.max(0,Math.min(.95,Number(boost.value)||Number(sk.reduction)||0));
+    else if(boost.kind==="laser"){
+      sk.power=Math.max(0,Number(boost.power)||Number(sk.power)||1);
+      sk.shockRate=Math.max(0,Math.min(1,Number(boost.shockRate)||Number(sk.shockRate)||0));
+    }
+    return sk;
+  }
+  function applyEquipmentPhysicalStatus(actor,target){
+    if(!actor || !target || target.hp<=0) return null;
+    const statusMap=equippedAccessory(actor)?.physicalStatus;
+    if(!statusMap) return null;
+    for(const [status,baseRate] of Object.entries(statusMap)){
+      const result=tryInflictStatus(target,status,Number(baseRate)||0);
+      if(result.success) return {status,result};
+    }
+    return null;
   }
   const favoriteWeaponsByCharacter={hero:["sword","bow","staff"],eliza:["sword"],slime:["fist","whip"],dog:["fist"],fairy:["staff","whip"],slug:["fist","axe"],momo:["fist","axe"],arachne:["staff","whip"],slimebes:["fist","sword","axe"],poison:["fist","axe"],harpy:["fist","staff"],alraune:["staff","whip"],rabbit:["fist","sword","whip"],demon:["staff"],golem:["fist","axe"],elf:["bow"],sylph:["staff"],owl:["fist","bow"],moth:["staff","whip"],forestMage:["bow","staff"],silverSlime:["fist","bow","whip"],maidDevil:["fist","whip","gun"],lamia:["axe","whip"],poisonArachne:["bow","staff","whip"],ghost:["staff"],karen:["sword","axe"]};
   const weaponTypeLabels={fist:"拳",sword:"剣",axe:"斧槌",bow:"弓",staff:"杖",whip:"鞭",gun:"銃"};
@@ -5840,15 +5980,18 @@
     const eq=equipmentOverride||ensureEquipment(c);
     let crit=Number(c?.critRate)||BASE_CRITICAL_RATE;
     let evasion=Number(c?.evasionRate)||BASE_EVASION_RATE;
-    let fate=c.fate||0;
+    let fate=Number(c?.fate)||0;
+    let fatePercent=0;
     let critMultiplier=BASE_CRITICAL_MULTIPLIER+(Number(c?.critMultiplierBonus)||0);
     EQUIPMENT_SLOTS.forEach(slot=>{
       const item=equipmentCatalog[eq[slot]]; if(!item)return;
       crit+=Number(item.crit)||0;
       evasion+=Number(item.evasion)||0;
       fate+=Number(item.fate)||0;
+      fatePercent+=Number(item.fatePercent)||0;
       critMultiplier+=Number(item.critMultiplierBonus)||0;
     });
+    if(fatePercent) fate=Math.max(0,Math.round(fate*(1+fatePercent)));
     return {crit:clampRate(crit),evasion:clampRate(evasion),fate,critMultiplier:Math.max(1,Math.round(critMultiplier*100)/100)};
   }
   function weaponAttackProfile(c){
@@ -5872,9 +6015,38 @@
          {kind:"impact",symbol:"💥"}
     };
   }
+  function equipmentBaseStatsForPercent(c){
+    const profile=profileFor(c);
+    if(profile){
+      const base=formalStatsAtLevel(profile,c.level||1,ensureCharacterFinalVariation(c));
+      const seed=seedBonusOf(c);
+      ["hpMax","mpMax","atk","def","magic","mdef","spd"].forEach(k=>base[k]=(Number(base[k])||0)+(Number(seed[k])||0));
+      return base;
+    }
+    const st=S(c)||{};
+    return {hpMax:Number(st.hpMax)||1,mpMax:Number(st.mpMax)||0,atk:Number(st.atk)||0,def:Number(st.def)||0,magic:Number(st.magic)||0,mdef:Number(st.mdef)||0,spd:Number(st.spd)||0};
+  }
   function equipmentStatDelta(c,equipmentOverride=null){
-    const eq=equipmentOverride||ensureEquipment(c); const d={hpMax:0,mpMax:0,atk:0,def:0,magic:0,mdef:0,spd:0};
-    EQUIPMENT_SLOTS.forEach(slot=>{const item=equipmentCatalog[eq[slot]]; const mods=itemModsFor(c,item); Object.entries(mods).forEach(([k,v])=>{if(k in d)d[k]+=v;});});
+    const eq=equipmentOverride||ensureEquipment(c);
+    const d={hpMax:0,mpMax:0,atk:0,def:0,magic:0,mdef:0,spd:0};
+    const pct={hpMax:0,mpMax:0,atk:0,def:0,magic:0,mdef:0,spd:0};
+    EQUIPMENT_SLOTS.forEach(slot=>{
+      const item=equipmentCatalog[eq[slot]]; if(!item)return;
+      const mods=itemModsFor(c,item);
+      Object.entries(mods).forEach(([k,v])=>{if(k in d)d[k]+=Number(v)||0;});
+      const all=Number(item.allStatPercent)||0;
+      if(all) Object.keys(pct).forEach(k=>pct[k]+=all);
+      pct.hpMax+=Number(item.hpPercent)||0;
+      pct.mpMax+=Number(item.mpPercent)||0;
+    });
+    if(Object.values(pct).some(Boolean)){
+      const base=equipmentBaseStatsForPercent(c);
+      Object.keys(pct).forEach(k=>{
+        if(!pct[k]) return;
+        const before=(Number(base[k])||0)+(Number(d[k])||0);
+        d[k]+=Math.round(before*pct[k]);
+      });
+    }
     return d;
   }
   function changeEquipment(c,slot,itemId){
@@ -6391,6 +6563,7 @@
     c.powerChargeMultiplier=1;c.powerChargeRounds=0;
     c.magicConcentrationMultiplier=1;c.magicConcentrationRounds=0;
     c.magicBarrierRounds=0;
+    c.magicBarrierReduction=0;
     c._usedHealingMagicThisRound=false;
     c._maidGiftTriggeredThisBattle=false;
     c.shockRecoverFails=0;
@@ -6440,34 +6613,58 @@
     };
   }
 
+  function grantExperienceToCharacter(c,amount,leveled){
+    amount=Math.max(0,Math.round(Number(amount)||0));
+    if(!c || c.levelLocked || amount<=0) return;
+    const oldLevel=c.level;
+    const before={...S(c)};
+    const learned=[];
+    c.exp+=amount;
+    let gains=0;
+    while(c.level<MAX_LEVEL && c.exp>=expNeeded(c.level,c)){
+      c.exp-=expNeeded(c.level,c);
+      learned.push(...levelUpCharacter(c));
+      gains++;
+    }
+    if(gains){
+      leveled.push({id:c.id,name:c.name,oldLevel,level:c.level,gains,growth:statGrowthDiff(before,S(c)),learned:[...new Set(learned)]});
+    }
+  }
+
   function awardExperience(amount,eligibleIds=null){
     const leveled=[];
+    amount=Math.max(0,Math.round(Number(amount)||0));
     if(amount<=0) return leveled;
     const eligible=eligibleIds instanceof Set ? eligibleIds : null;
-
-    // Reserve members and characters who were KO when victory was decided receive no EXP.
-    [...new Set(state.battleActive)].forEach(id=>{
+    const activeIds=[...new Set(state.battleActive)].filter(id=>{
       const c=roster[id];
-      if(!c || c.levelLocked) return;
-      if(eligible && !eligible.has(id)) return;
-      if(!eligible && S(c).hp<=0) return;
-      const oldLevel=c.level;
-      const before={...S(c)};
-      const learned=[];
-      c.exp+=amount;
-      let gains=0;
-      while(c.level<MAX_LEVEL && c.exp>=expNeeded(c.level,c)){
-        c.exp-=expNeeded(c.level,c);
-        learned.push(...levelUpCharacter(c));
-        gains++;
-      }
-      if(gains){
-        leveled.push({
-          id,name:c.name,oldLevel,level:c.level,gains,
-          growth:statGrowthDiff(before,S(c)),
-          learned:[...new Set(learned)]
-        });
-      }
+      if(!c || c.levelLocked) return false;
+      if(eligible) return eligible.has(id);
+      return S(c).hp>0;
+    });
+    const recipients=activeIds.filter(id=>!equippedAccessory(roster[id])?.redistributeExp);
+    const donors=activeIds.filter(id=>!!equippedAccessory(roster[id])?.redistributeExp);
+    const awards=new Map(activeIds.map(id=>[id,equippedAccessory(roster[id])?.redistributeExp?0:amount]));
+
+    // 無の光膜：装備者が勝利時に生存している場合だけ、その人の基礎EXPを前列の生存・非装備者へ均等分配する。
+    const pool=donors.length*amount;
+    if(pool>0 && recipients.length){
+      const each=Math.floor(pool/recipients.length),remainder=pool%recipients.length;
+      recipients.forEach((id,index)=>awards.set(id,(awards.get(id)||0)+each+(index<remainder?1:0)));
+    }
+
+    // 個人EXP倍率は分配後に適用する。
+    recipients.forEach(id=>{
+      const c=roster[id],mult=Math.max(0,Number(equippedAccessory(c)?.expMultiplier)||1);
+      grantExperienceToCharacter(c,Math.round((awards.get(id)||0)*mult),leveled);
+    });
+
+    // 控えEXP装備。戦闘不能中の控えには入らない。
+    [...new Set(state.battleReserve)].forEach(id=>{
+      if(activeIds.includes(id)) return;
+      const c=roster[id]; if(!c || c.levelLocked || S(c).hp<=0) return;
+      const rate=Math.max(0,Number(equippedAccessory(c)?.reserveExpRate)||0);
+      if(rate>0) grantExperienceToCharacter(c,Math.round(amount*rate),leveled);
     });
     return leveled;
   }
@@ -7063,7 +7260,10 @@
   }
 
   function activeFateTotal(){
-    return state.battleActive.reduce((sum,id)=>sum+(roster[id]?.fate||0),0);
+    return state.battleActive.reduce((sum,id)=>{
+      const c=roster[id];
+      return sum+(c?equipmentExtras(c).fate:0);
+    },0);
   }
 
   function baseRecruitmentChance(speciesId,fateTotal=activeFateTotal()){
@@ -7806,7 +8006,8 @@
       return {blocked:true,reason:"canceller",damageMultiplier:0};
     }
     const barrierActive=hasDamage && Number(target?.magicBarrierRounds)>0;
-    const barrierMultiplier=barrierActive?(1-(Number(skills.magicBarrier?.reduction)||.60)):1;
+    const barrierReduction=barrierActive?Math.max(0,Math.min(.95,Number(target?.magicBarrierReduction)||Number(skills.magicBarrier?.reduction)||.60)):0;
+    const barrierMultiplier=barrierActive?(1-barrierReduction):1;
     const defendMultiplier=hasDamage && target?.defending ? .50 : 1;
     return {
       blocked:false,
@@ -7973,7 +8174,10 @@
           if(c[roundKey]<=0){ c[roundKey]=0; c[valueKey]=1; }
         }
       });
-      if((c.magicBarrierRounds||0)>0){ c.magicBarrierRounds--; if(c.magicBarrierRounds<0)c.magicBarrierRounds=0; }
+      if((c.magicBarrierRounds||0)>0){
+        c.magicBarrierRounds--;
+        if(c.magicBarrierRounds<=0){ c.magicBarrierRounds=0; c.magicBarrierReduction=0; }
+      }
       if(conditionsOf(c).berserk && (c.berserkRounds||0)>0){
         c.berserkRounds--;
         if(c.berserkRounds<=0){ c.berserkRounds=0; conditionsOf(c).berserk=false; }
@@ -9326,7 +9530,8 @@
     }
 
     // "射抜" is a weapon-specific roll and deliberately ignores the normal death-status resistance system.
-    if(isBasic && profile.bowInstantKillRate>0 && !target.bowInstantKillImmune && Math.random()*100<profile.bowInstantKillRate){
+    const bowInstantKillBlocked=!!target.bowInstantKillImmune || (!!target.stats && equipmentHasFlag(target,"bowInstantKillImmune"));
+    if(isBasic && profile.bowInstantKillRate>0 && !bowInstantKillBlocked && Math.random()*100<profile.bowInstantKillRate){
       target.hp=0;
       if(!target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
       const pierceGun=profile.weapon?.weaponType==="gun";
@@ -9341,7 +9546,7 @@
     let dmg=physicalDamage(effectiveAtk(actor),effectiveEnemyStat(target,"def"),attackPower,1,defenseInfluence);
     const canCrit=isBasic ? profile.canCrit : options.canCrit!==false;
     const critical=canCrit && (options.forceCrit===true || rollCritical(criticalRateForAttack(actor,target)));
-    if(critical) dmg=Math.max(1,Math.round(dmg*criticalMultiplierForActor(actor)));
+    if(critical) dmg=Math.max(1,Math.round(dmg*criticalMultiplierForActor(actor)*Math.max(1,Number(options.critDamageMultiplier)||1)));
 
     target.hp=Math.max(0,target.hp-dmg);
     const killed=target.hp<=0;
@@ -9350,6 +9555,13 @@
     setMessage(`${actor.name} の${skillName||"攻撃"}！${critText} ${target.displayName} に ${dmg} ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
     const hitFx=isBasic?profile.fx:{kind:fxKind,symbol:fxSymbol};
     await animateEnemyDamage(target,killed,hitFx.kind,hitFx.symbol,critical,dmg);
+    if(!killed){
+      const proc=applyEquipmentPhysicalStatus(actor,target);
+      if(proc?.result?.success){
+        setMessage(`${statusIcon(proc.status)} ${actor.name} の装備効果！ ${target.displayName} は${statusName(proc.status)}状態になった！`);
+        await wait(BASE_TIME.short);
+      }
+    }
     if(isBasic && !killed && profile.basicDispelRate>0 && Math.random()<profile.basicDispelRate){
       const removed=clearEnemyBuffs(target);
       if(removed){
@@ -9403,6 +9615,13 @@
         if(killed) defeated++;
         setMessage(`➰ ${target.displayName} に ${dmg} ダメージ。${critical?" 会心！":""}${killed?` ${target.displayName} を倒した！`:""}`);
         await animateEnemyDamage(target,killed,profile.fx.kind,profile.fx.symbol,critical,dmg);
+        if(!killed){
+          const proc=applyEquipmentPhysicalStatus(actor,target);
+          if(proc?.result?.success){
+            setMessage(`${statusIcon(proc.status)} ${actor.name} の装備効果！ ${target.displayName} は${statusName(proc.status)}状態になった！`);
+            await wait(BASE_TIME.short);
+          }
+        }
         await maybeTriggerOrangeGel(actor,target,traitContext);
       }
       const notes=[defeated?`${defeated}体撃破`:"",missed?`${missed}体回避`:"",criticals?`${criticals}回会心`:""].filter(Boolean).join(" / ");
@@ -9446,6 +9665,13 @@
       total+=dmg; landed++; if(killed)defeated++;
       setMessage(`${sk.icon||"⚔️"} ${sk.name} ${hit}撃目！${critical?" 会心！":""} ${target.displayName} に ${dmg} ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
       await animateEnemyDamage(target,killed,"impact",sk.fxSymbol||sk.icon||"✦",critical,dmg);
+      if(!killed){
+        const proc=applyEquipmentPhysicalStatus(actor,target);
+        if(proc?.result?.success){
+          setMessage(`${statusIcon(proc.status)} ${actor.name} の装備効果！ ${target.displayName} は${statusName(proc.status)}状態になった！`);
+          await wait(BASE_TIME.short);
+        }
+      }
     }
     const notes=[`${landed}/${hits}ヒット`,criticals?`${criticals}回会心`:"",defeated?`${defeated}体撃破`:"",missed?`${missed}回回避`:""].filter(Boolean).join(" / ");
     setMessage(`${sk.icon||"⚔️"} ${sk.name}：合計 ${total} ダメージ（${notes}）`);
@@ -9477,6 +9703,13 @@
       if(shock?.success) shocked++;
       total+=dmg; if(killed) defeated++;
       await animateEnemyDamage(target,killed,sk.animation||"impact",sk.fxSymbol||sk.icon||"✦",critical,dmg);
+      if(!killed){
+        const proc=applyEquipmentPhysicalStatus(actor,target);
+        if(proc?.result?.success){
+          setMessage(`${statusIcon(proc.status)} ${actor.name} の装備効果！ ${target.displayName} は${statusName(proc.status)}状態になった！`);
+          await wait(BASE_TIME.short);
+        }
+      }
     }
     renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
     setMessage(`${sk.icon||"⚔️"} ${sk.name}！ 敵全体に合計 ${total} ダメージ！${shocked?` ${shocked}体が感電！`:""}${defeated?` ${defeated}体を倒した！`:""}${missed?` ${missed}体は回避。`:""}`);
@@ -9484,8 +9717,9 @@
   }
 
   async function resolveSkill(actor,action,slot){
-    const sk=skills[action.skill];
-    if(!sk) return;
+    const baseSkill=skills[action.skill];
+    if(!baseSkill) return;
+    const sk=effectiveSkillForActor(actor,baseSkill);
     if(conditionsOf(actor).silence){
       setMessage(`🔇 ${actor.name} は封印されていて ${sk.name} を使えない！`);
       await wait(BASE_TIME.message);
@@ -9661,7 +9895,7 @@
       let target=enemyByUid(action.targetUid);
       if(!target || target.hp<=0) target=livingEnemies()[0]||null;
       if(!target) return;
-      const result=await resolveAttack(actor,target,sk.name,Number(sk.power)||1,sk.animation||"impact",sk.fxSymbol||sk.icon||"✦",{canCrit:sk.canCrit!==false,forceCrit:!!sk.forceCrit});
+      const result=await resolveAttack(actor,target,sk.name,Number(sk.power)||1,sk.animation||"impact",sk.fxSymbol||sk.icon||"✦",{canCrit:sk.canCrit!==false,forceCrit:!!sk.forceCrit,critDamageMultiplier:Number(sk.critDamageMultiplier)||1});
       if(sk.dispelOnHit && !result?.missed){
         const removed=clearEnemyBuffs(target);
         if(removed){
@@ -9706,11 +9940,12 @@
       await wait(BASE_TIME.actionLead);
       targets.forEach(({i,c})=>{
         c.magicBarrierRounds=Math.max(Number(c.magicBarrierRounds)||0,Number(sk.duration)||2);
+        c.magicBarrierReduction=Math.max(Number(c.magicBarrierReduction)||0,Number(sk.reduction)||.60);
         const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`);
         if(card) spawnFx("buff","🪄",card);
       });
       renderBattleParty();
-      setMessage(`🪄 ${sk.name}！ 味方前衛全員が受ける魔法ダメージを60%軽減（2ラウンド）。`);
+      setMessage(`🪄 ${sk.name}！ 味方前衛全員が受ける魔法ダメージを${Math.round((Number(sk.reduction)||.60)*100)}%軽減（${Number(sk.duration)||2}ラウンド）。`);
       await wait(BASE_TIME.buff);
       return;
     }
@@ -10089,7 +10324,9 @@
     const variance=Array.isArray(sk.gambleRange)
       ? sk.gambleRange[0]+Math.random()*(sk.gambleRange[1]-sk.gambleRange[0])
       : damageVariance();
-    return Math.max(1,Math.round(raw*defense*resist*partyReduction*variance));
+    const erodeIds=["erode","gigaErode","lastErode","ruinErosion"];
+    const equipReduction=erodeIds.includes(sk.id)?Math.max(0,Number(equippedAccessory(target)?.erodeDamageMultiplier)||1):1;
+    return Math.max(1,Math.round(raw*defense*resist*partyReduction*variance*equipReduction));
   }
 
   async function handleAllyKoFromEnemy(target,slot){
@@ -10353,7 +10590,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
       updateHeader();
       return;
     }
@@ -10361,7 +10598,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
   }
 
   async function attemptEscape(){
@@ -10665,7 +10902,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -10673,7 +10910,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -10834,8 +11071,26 @@
 
   $("battleContinueBtn").onclick=continueAfterVictory;
 
+  function tryUseHolyBeastClock(){
+    if(!Array.isArray(state.battleActive) || !state.battleActive.length) return false;
+    const wearer=state.battleActive.map(id=>roster[id]).find(c=>c && ensureEquipment(c).accessory==="holy_beast_clock");
+    if(!wearer) return false;
+    wearer.equipment.accessory="no_accessory";
+    equipmentOwnedCounts.holy_beast_clock=Math.max(0,Number(equipmentOwnedCounts.holy_beast_clock||0)-1);
+    state.battleActive.forEach(id=>{
+      const c=roster[id]; if(!c)return;
+      S(c).hp=S(c).hpMax;
+      c.defending=false;
+    });
+    renderBattleParty();
+    updateActorPortrait();
+    setMessage(`⌚ 聖獣の時計が砕け散った！ 前列の味方全員がHP全回復で復活した！`);
+    return true;
+  }
+
   function loseBattle(){
     if(state.battleEnded) return;
+    if(tryUseHolyBeastClock()) return;
     state.battleEnded=true;
     state.battleAutoContinuous=false;
     cancelScheduledTurnStart();
@@ -10863,7 +11118,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -10928,7 +11183,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -10954,7 +11209,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -11207,16 +11462,27 @@
   function rand(n){ return Math.floor(Math.random()*n); }
   function choose(arr){ return arr[rand(arr.length)]; }
 
-  function weightedNode(layer,area="plains"){
-    if(layer===1) return choose(["battle","battle","battle","chest"]);
-    const pool=[];
-    const add=(type,n)=>{for(let i=0;i<n;i++)pool.push(type);};
-    if(area==="cave"){
-      add("battle",52); add("chest",18); add("heal",12); add("event",15); add("shop",3);
-    }else{
-      add("battle",48); add("chest",18); add("heal",12); add("event",16); add("shop",6);
+  function battleNodeWeightMultiplier(){
+    const bonus=travelPartyIds().reduce((sum,id)=>sum+(Number(equippedAccessory(roster[id])?.battleNodeWeightBonus)||0),0);
+    return Math.max(0,1+bonus);
+  }
+  function weightedChoice(entries){
+    const total=entries.reduce((sum,e)=>sum+Math.max(0,Number(e.weight)||0),0);
+    if(total<=0) return entries[0]?.type||"battle";
+    let roll=Math.random()*total;
+    for(const entry of entries){
+      roll-=Math.max(0,Number(entry.weight)||0);
+      if(roll<0) return entry.type;
     }
-    return choose(pool);
+    return entries[entries.length-1]?.type||"battle";
+  }
+  function weightedNode(layer,area="plains"){
+    const battleMult=battleNodeWeightMultiplier();
+    if(layer===1) return weightedChoice([{type:"battle",weight:3*battleMult},{type:"chest",weight:1}]);
+    const base=area==="cave"
+      ? {battle:52,chest:18,heal:12,event:15,shop:3}
+      : {battle:48,chest:18,heal:12,event:16,shop:6};
+    return weightedChoice(Object.entries(base).map(([type,weight])=>({type,weight:type==="battle"?weight*battleMult:weight})));
   }
 
   function buildMap(area="plains",caveLayer=1){
