@@ -3288,7 +3288,7 @@
   .title-action{min-height:54px;font-size:16px;font-weight:1000;border-radius:14px}
   .title-action:disabled{opacity:.38;filter:grayscale(.45);cursor:default}
   .title-version{margin-top:13px;font-size:9px;color:#63788a;font-weight:800;letter-spacing:.08em}
-  .home-system-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .home-system-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
   .home-system-actions .small-btn{margin:0!important;width:100%;font-weight:900}
 
   .save-modal{
@@ -3557,7 +3557,7 @@
 
 
 
-  /* v0.43h limited merchant stock row + stable shop footer */
+  /* v0.43i limited merchant stock row + stable shop footer */
   .shop-row-side{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px;min-width:94px}
   .shop-row-meta{display:flex;align-items:center;justify-content:flex-end;gap:5px;white-space:nowrap;max-width:100%}
   .shop-stock-badge{
@@ -3581,6 +3581,64 @@
     .shop-row-meta{gap:3px}
     .shop-stock-badge{font-size:6px;padding:1px 4px}
   }
+
+
+  /* v0.43i shared inventory browser: home = view only, exploration = field-use enabled */
+  .inventory-panel{
+    width:min(860px,96vw);height:min(610px,94vh);overflow:hidden!important;
+    display:flex;flex-direction:column;
+  }
+  .inventory-tabs{
+    flex:0 0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:7px;
+    padding:4px;border:1px solid #293f51;border-radius:10px;background:#0a141e;
+  }
+  .inventory-tab{
+    min-height:34px;border:1px solid #405d74;border-radius:8px;background:#142638;color:#aebfcd;
+    font-size:10px;font-weight:1000;cursor:pointer;
+  }
+  .inventory-tab.active{border-color:#d9c565;background:linear-gradient(#594a20,#332b17);color:#fff0a2}
+  .inventory-main{flex:1;min-height:0;overflow:hidden}
+  .inventory-tab-panel{height:100%;min-height:0}
+  .inventory-tab-panel[hidden]{display:none!important}
+  .inventory-list{
+    height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;
+    display:flex;flex-direction:column;gap:6px;padding:1px 2px 12px;
+  }
+  .inventory-row{
+    flex:0 0 auto;width:100%;min-height:58px;display:grid;grid-template-columns:42px minmax(0,1fr) auto;
+    gap:9px;align-items:center;text-align:left;color:inherit;border:1px solid #3b5870;border-radius:10px;
+    background:linear-gradient(#142638,#0e1b28);padding:7px 9px;
+  }
+  button.inventory-row{cursor:pointer;font:inherit}
+  button.inventory-row:hover:not(:disabled){border-color:#dfc96b;filter:brightness(1.08)}
+  button.inventory-row:disabled{cursor:default;opacity:.72;filter:none}
+  .inventory-row-icon{
+    width:40px;height:40px;border-radius:9px;background:#0b1722;border:1px solid #31506a;
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+  }
+  .inventory-row-main{min-width:0}
+  .inventory-row-name{font-size:12px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .inventory-row-desc{margin-top:3px;color:#aebdca;font-size:8px;line-height:1.4}
+  .inventory-row-side{min-width:96px;text-align:right;white-space:nowrap}
+  .inventory-row-count{display:block;color:#ffe58f;font-size:11px;font-weight:1000}
+  .inventory-row-note{display:block;margin-top:3px;color:#8fa4b6;font-size:7px;font-weight:900}
+  .inventory-row-note.usable{color:#9fe2b4}
+  .inventory-slot-tag{
+    display:inline-block;margin-top:3px;padding:1px 5px;border-radius:999px;border:1px solid #465f75;
+    background:#152533;color:#afc2d1;font-size:7px;font-weight:1000;
+  }
+  .inventory-empty{
+    min-height:120px;display:flex;align-items:center;justify-content:center;text-align:center;
+    border:1px dashed #405164;border-radius:10px;color:#788b9d;font-size:10px;padding:18px;
+  }
+  #exploreItemTargetView{flex:1;min-height:0}
+  @media(max-height:520px){
+    .inventory-panel{height:calc(100vh - 14px - var(--safe-top) - var(--safe-bottom));padding:8px}
+    .inventory-tabs{margin-bottom:5px;padding:3px}.inventory-tab{min-height:27px;font-size:8px}
+    .inventory-list{gap:4px;padding-bottom:8px}.inventory-row{min-height:46px;grid-template-columns:34px minmax(0,1fr) auto;padding:5px 7px;gap:6px}
+    .inventory-row-icon{width:32px;height:32px;font-size:18px}.inventory-row-name{font-size:10px}.inventory-row-desc{font-size:7px}
+    .inventory-row-side{min-width:82px}.inventory-row-count{font-size:9px}.inventory-row-note,.inventory-slot-tag{font-size:6px}
+  }
 </style>
 </head>
 <body>
@@ -3596,10 +3654,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43f</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43i</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43f</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43i</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3611,7 +3669,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.43f</div>
+      <div class="title-version">DEV v0.43i</div>
     </section>
   </main>
 
@@ -3625,6 +3683,7 @@
         <button class="menu-btn" id="dummyTalk"><span class="icon">💬</span>会話</button>
       </div>
       <div class="home-system-actions">
+        <button class="small-btn" id="homeInventoryBtn">🎒 所持品</button>
         <button class="small-btn" id="saveLoadBtn">💾 セーブ／ロード</button>
         <button class="small-btn" id="returnTitleBtn">↩ タイトルに戻る</button>
       </div>
@@ -3782,7 +3841,7 @@
       <div class="party-list" id="explorePartyList"></div>
       <button class="reserve-chip" id="exploreReserveBtn">👥 パーティ編成</button>
       <button class="reserve-chip" id="exploreSkillBtn">✨ スキル</button>
-      <button class="reserve-chip" id="exploreItemBtn">🧪 アイテム</button>
+      <button class="reserve-chip" id="exploreItemBtn">🎒 所持品</button>
       <div class="run-info">
         <div class="statbox">進行<strong id="floorText">入口</strong></div>
         <div class="statbox">獲得G<strong id="runGoldText">0</strong></div>
@@ -3926,22 +3985,30 @@
 </div>
 
 <div class="swap-modal" id="exploreItemModal">
-  <div class="swap-panel skill-select-panel explore-item-panel">
+  <div class="swap-panel skill-select-panel explore-item-panel inventory-panel">
     <div class="swap-head">
-      <h2>探索中のアイテム</h2>
-      <p id="exploreItemLead">使用するアイテムを選択</p>
+      <h2 id="inventoryTitle">所持品</h2>
+      <p id="exploreItemLead">現在の所持品を確認</p>
       <button class="swap-close" id="exploreItemCloseBtn">閉じる</button>
     </div>
-    <div id="exploreItemListView">
-      <button class="field-item-btn" id="exploreReturnFeatherBtn" type="button">
-        <span class="icon">🪶</span>
-        <span><strong>帰還の羽</strong><small>探索を終了し、ミレスタへ即座に帰還する。</small></span>
-        <span class="field-item-count" id="returnFeatherCount">×1</span>
-      </button>
-      <div class="skill-list explore-field-item-list" id="exploreFieldItemList"></div>
+    <div class="inventory-tabs" id="inventoryTabs">
+      <button class="inventory-tab active" type="button" data-inventory-tab="items">🧪 アイテム</button>
+      <button class="inventory-tab" type="button" data-inventory-tab="equipment">⚔️ 装備品</button>
+      <button class="inventory-tab" type="button" data-inventory-tab="key">⚜️ 貴重品</button>
+    </div>
+    <div id="exploreItemListView" class="inventory-main">
+      <div class="inventory-tab-panel" id="inventoryItemsPanel">
+        <div class="inventory-list" id="exploreFieldItemList"></div>
+      </div>
+      <div class="inventory-tab-panel" id="inventoryEquipmentPanel" hidden>
+        <div class="inventory-list" id="inventoryEquipmentList"></div>
+      </div>
+      <div class="inventory-tab-panel" id="inventoryKeyPanel" hidden>
+        <div class="inventory-list" id="inventoryKeyList"></div>
+      </div>
     </div>
     <div id="exploreItemTargetView" hidden>
-      <button class="explore-skill-back" id="exploreItemBackBtn" type="button">← アイテム一覧へ</button>
+      <button class="explore-skill-back" id="exploreItemBackBtn" type="button">← 所持品へ</button>
       <div class="item-summary-note explore-item-summary" id="exploreItemSummary"></div>
       <div class="explore-item-target-strip" id="exploreItemTargets"></div>
     </div>
@@ -4163,7 +4230,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.43f</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.43i</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4192,7 +4259,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.43h";
+  const DEV_VERSION = "v0.43i";
   const SAVE_SCHEMA_VERSION = 7;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4468,7 +4535,7 @@
     $("goldText").textContent = state.gold;
     const potionText=$("potionText"); if(potionText) potionText.textContent = itemCount("potion");
     const exploreItemBtn=$("exploreItemBtn");
-    if(exploreItemBtn) exploreItemBtn.textContent=`🧪 アイテム`;
+    if(exploreItemBtn) exploreItemBtn.textContent=`🎒 所持品`;
     const featherCount=$("returnFeatherCount");
     if(featherCount) featherCount.textContent=`×${itemCount("returnFeather")}`;
     $("cavePin").classList.toggle("locked", !state.caveUnlocked);
@@ -4813,11 +4880,12 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43f" : "ミレスタ・仲間編成 v0.43f";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43i" : "ミレスタ・仲間編成 v0.43i";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
   $("townShopBtn").onclick=()=>openShop("town");
+  $("homeInventoryBtn").onclick=()=>openInventoryMenu("home","items");
   $("townTalkCloseBtn").onclick=()=>closeTownTalkModal();
   $("townTalkModal").onclick=e=>{ if(e.target===$("townTalkModal")) closeTownTalkModal(); };
   $("dummyTalk").onclick=()=>{
@@ -4827,7 +4895,7 @@
     }
     openTownTalkModal();
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43f"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -5398,7 +5466,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43f" : "ミレスタ・仲間編成 v0.43f";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43i" : "ミレスタ・仲間編成 v0.43i";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -5431,13 +5499,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43f";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43f";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
     updateHeader();
   };
 
@@ -10678,7 +10746,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43f";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
       updateHeader();
       return;
     }
@@ -10686,7 +10754,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43f";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
   }
 
   async function attemptEscape(){
@@ -10990,7 +11058,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43f";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -10998,7 +11066,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43f";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -11206,7 +11274,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43f";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -11271,7 +11339,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43f";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -11297,7 +11365,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43f";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43i";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -12111,35 +12179,82 @@
     if(item.fieldDirect==="rerollMap") return remainingModifiableNodes().length>0;
     return false;
   }
-  function renderExploreItemList(){
-    $("exploreItemListView").hidden=false;
-    $("exploreItemTargetView").hidden=true;
-    $("exploreItemLead").textContent="使用するアイテムを選択";
-    const legacyFeather=$("exploreReturnFeatherBtn"); if(legacyFeather) legacyFeather.style.display="none";
+  let inventoryContext="home";
+  let inventoryTab="items";
+  const INVENTORY_EMPTY_EQUIPMENT_IDS=new Set(["bare","no_shield","no_body","no_accessory"]);
+
+  function inventoryItemActionNote(item){
+    if(inventoryContext!=="explore") return "確認のみ";
+    if(!item.fieldUse) return "探索中は使用不可";
+    if(item.fieldDirect) return fieldDirectItemUsable(item)?"タップして使用":"今は使用不可";
+    return "タップして使用";
+  }
+  function renderInventoryItems(){
     const choices=$("exploreFieldItemList"); choices.innerHTML="";
-    const shown=FIELD_ITEM_IDS.filter(id=>itemCount(id)>0);
-    if(!shown.length){
-      choices.innerHTML='<div class="character-skill-empty">探索中に使えるアイテムを持っていません。</div>';
-      return;
-    }
-    shown.forEach(id=>{
-      const item=ITEMS[id],count=itemCount(id);
-      if(item.keyItem){
-        const b=document.createElement("button"); b.className="field-item-btn"; b.disabled=true;
-        b.innerHTML=`<span class="icon">${item.icon}</span><span><strong>${item.name}</strong><small>${item.desc}<br>使用不可</small></span><span class="field-item-count">×${count}</span>`;
-        choices.appendChild(b); return;
+    const shown=Object.values(ITEMS).filter(item=>!item.keyItem && itemCount(item.id)>0);
+    if(!shown.length){ choices.innerHTML='<div class="inventory-empty">アイテムを持っていません。</div>'; return; }
+    shown.forEach(item=>{
+      const count=itemCount(item.id);
+      const usable=inventoryContext==="explore" && !!item.fieldUse && (!item.fieldDirect || fieldDirectItemUsable(item));
+      const tag=itemUsageLabel(item);
+      if(usable){
+        const b=document.createElement("button"); b.type="button"; b.className="inventory-row";
+        b.innerHTML=`<span class="inventory-row-icon">${item.icon}</span><span class="inventory-row-main"><span class="inventory-row-name">${item.name}</span><span class="inventory-slot-tag">${tag}</span><span class="inventory-row-desc">${item.desc}</span></span><span class="inventory-row-side"><span class="inventory-row-count">×${count}</span><span class="inventory-row-note usable">${inventoryItemActionNote(item)}</span></span>`;
+        b.onclick=()=>{
+          if(item.fieldDirect) useExploreDirectItem(item.id);
+          else{ state.exploreItemId=item.id; renderExploreItemTargets(); }
+        };
+        choices.appendChild(b);
+      }else{
+        const row=document.createElement("div"); row.className="inventory-row";
+        row.innerHTML=`<span class="inventory-row-icon">${item.icon}</span><span class="inventory-row-main"><span class="inventory-row-name">${item.name}</span><span class="inventory-slot-tag">${tag}</span><span class="inventory-row-desc">${item.desc}</span></span><span class="inventory-row-side"><span class="inventory-row-count">×${count}</span><span class="inventory-row-note">${inventoryItemActionNote(item)}</span></span>`;
+        choices.appendChild(row);
       }
-      if(item.fieldDirect){
-        const b=document.createElement("button"); b.className="field-item-btn"; b.disabled=!fieldDirectItemUsable(item);
-        b.innerHTML=`<span class="icon">${item.icon}</span><span><strong>${item.name}</strong><small>${item.desc}</small></span><span class="field-item-count">×${count}</span>`;
-        b.onclick=()=>useExploreDirectItem(id); choices.appendChild(b); return;
-      }
-      const b=document.createElement("button"); b.className="skill-option";
-      b.innerHTML=`<span class="skill-option-icon">${item.icon}</span><span class="skill-option-main"><span class="skill-option-name">${item.name}</span><span class="skill-option-desc">${item.desc}</span></span><span class="skill-option-meta">× ${count}<small>対象を選ぶ</small></span>`;
-      b.onclick=()=>{state.exploreItemId=id;renderExploreItemTargets();};
-      choices.appendChild(b);
     });
   }
+  function renderInventoryEquipment(){
+    const list=$("inventoryEquipmentList"); list.innerHTML="";
+    const ids=EQUIPMENT_SLOTS.flatMap(slot=>equipmentInventory[slot]||[]).filter(id=>!INVENTORY_EMPTY_EQUIPMENT_IDS.has(id) && ownedEquipmentCount(id)>0);
+    if(!ids.length){ list.innerHTML='<div class="inventory-empty">装備品を持っていません。</div>'; return; }
+    ids.forEach(id=>{
+      const item=equipmentCatalog[id]; if(!item) return;
+      const owned=ownedEquipmentCount(id),using=equippedCount(id);
+      const row=document.createElement("div"); row.className="inventory-row";
+      row.innerHTML=`<span class="inventory-row-icon">${item.icon||"◇"}</span><span class="inventory-row-main"><span class="inventory-row-name">${item.name}</span><span class="inventory-slot-tag">${EQUIPMENT_SLOT_LABELS[item.slot]||"装備品"}</span><span class="inventory-row-desc">${item.desc||""}</span></span><span class="inventory-row-side"><span class="inventory-row-count">×${owned}</span><span class="inventory-row-note">${using>0?`装備中 ${using}`:"未装備"}</span></span>`;
+      list.appendChild(row);
+    });
+  }
+  function renderInventoryKeyItems(){
+    const list=$("inventoryKeyList"); list.innerHTML="";
+    const shown=Object.values(ITEMS).filter(item=>item.keyItem && itemCount(item.id)>0);
+    if(!shown.length){ list.innerHTML='<div class="inventory-empty">貴重品はまだありません。</div>'; return; }
+    shown.forEach(item=>{
+      const row=document.createElement("div"); row.className="inventory-row";
+      row.innerHTML=`<span class="inventory-row-icon">${item.icon||"⚜️"}</span><span class="inventory-row-main"><span class="inventory-row-name">${item.name}</span><span class="inventory-slot-tag">貴重品</span><span class="inventory-row-desc">${item.desc||""}</span></span><span class="inventory-row-side"><span class="inventory-row-count">×${itemCount(item.id)}</span><span class="inventory-row-note">使用不可</span></span>`;
+      list.appendChild(row);
+    });
+  }
+  function renderInventory(){
+    $("exploreItemListView").hidden=false;
+    $("exploreItemTargetView").hidden=true;
+    $("inventoryTabs").hidden=false;
+    $("inventoryTitle").textContent="所持品";
+    $("exploreItemLead").textContent=inventoryContext==="explore"?"アイテムは探索中に使用できます":"現在の所持品を確認";
+    document.querySelectorAll("[data-inventory-tab]").forEach(btn=>btn.classList.toggle("active",btn.dataset.inventoryTab===inventoryTab));
+    $("inventoryItemsPanel").hidden=inventoryTab!=="items";
+    $("inventoryEquipmentPanel").hidden=inventoryTab!=="equipment";
+    $("inventoryKeyPanel").hidden=inventoryTab!=="key";
+    if(inventoryTab==="items") renderInventoryItems();
+    else if(inventoryTab==="equipment") renderInventoryEquipment();
+    else renderInventoryKeyItems();
+  }
+  function renderExploreItemList(){ inventoryTab="items"; renderInventory(); }
+  function openInventoryMenu(context="home",tab="items"){
+    if(context==="explore" && !state.run) return;
+    inventoryContext=context; inventoryTab=tab; state.exploreItemId=null; renderInventory(); $("exploreItemModal").classList.add("show");
+  }
+  function openExploreItemMenu(){ openInventoryMenu("explore","items"); }
+
   function exploreItemTargetCard(c,item){
     const st=S(c),canUse=itemCount(item.id)>0&&fieldItemTargetUsable(item.id,c);
     const card=document.createElement("button"); card.className="explore-item-target-card"; card.disabled=!canUse;
@@ -12158,6 +12273,7 @@
   function renderExploreItemTargets(){
     const item=ITEMS[state.exploreItemId]||ITEMS.potion;
     $("exploreItemListView").hidden=true; $("exploreItemTargetView").hidden=false;
+    $("inventoryTabs").hidden=true;
     $("exploreItemLead").textContent="使用する相手を選択";
     $("exploreItemSummary").innerHTML=`<span style="font-size:24px">${item.icon}</span><span><strong>${item.name} ×${itemCount(item.id)}</strong><br>${item.desc}</span>`;
     const targets=$("exploreItemTargets"); targets.innerHTML="";
@@ -12167,8 +12283,6 @@
     for(let i=0;i<6;i++){ const c=roster[state.battleReserve[i]]; reserve.appendChild(c?exploreItemTargetCard(c,item):exploreItemEmptySlot()); }
     targets.append(battle,reserve);
   }
-  function openExploreItemMenu(){ if(!state.run)return;renderExploreItemList();$("exploreItemModal").classList.add("show"); }
-
   function applySeedItem(c,item){
     const bonus=seedBonusOf(c),st=S(c);
     const applyOne=key=>{
@@ -12233,14 +12347,15 @@
 
   function useReturnFeather(){ useExploreDirectItem("returnFeather"); }
 
-  $("exploreReturnFeatherBtn").onclick=useReturnFeather;
+  const legacyReturnFeatherBtn=$("exploreReturnFeatherBtn"); if(legacyReturnFeatherBtn) legacyReturnFeatherBtn.onclick=useReturnFeather;
   $("exploreSkillBtn").onclick=openExploreSkillMenu;
   $("exploreSkillCloseBtn").onclick=closeExploreSkillMenu;
   $("exploreSkillActorBackBtn").onclick=renderExploreSkillActors;
   $("exploreSkillBackBtn").onclick=renderExploreSkillList;
   $("exploreSkillModal").addEventListener("click",e=>{ if(e.target===$("exploreSkillModal")) closeExploreSkillMenu(); });
   $("exploreItemBtn").onclick=openExploreItemMenu;
-  $("exploreItemBackBtn").onclick=renderExploreItemList;
+  $("exploreItemBackBtn").onclick=()=>{inventoryTab="items";renderInventory();};
+  document.querySelectorAll("[data-inventory-tab]").forEach(btn=>btn.onclick=()=>{inventoryTab=btn.dataset.inventoryTab;renderInventory();});
   $("exploreItemCloseBtn").onclick=closeExploreItemMenu;
   $("exploreItemModal").addEventListener("click",e=>{ if(e.target===$("exploreItemModal")) closeExploreItemMenu(); });
 
