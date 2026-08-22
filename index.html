@@ -3557,13 +3557,14 @@
 
 
 
-  /* v0.43g limited merchant stock + stable shop footer */
-  .shop-row-side{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:2px}
+  /* v0.43h limited merchant stock row + stable shop footer */
+  .shop-row-side{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px;min-width:94px}
+  .shop-row-meta{display:flex;align-items:center;justify-content:flex-end;gap:5px;white-space:nowrap;max-width:100%}
   .shop-stock-badge{
     display:inline-flex;align-items:center;justify-content:center;max-width:100%;
-    margin-top:2px;padding:2px 6px;border-radius:999px;border:1px solid #d6b94e;
-    background:linear-gradient(#56461b,#302711);color:#fff0a0;font-size:7.5px;font-weight:1000;
-    letter-spacing:.02em;box-shadow:0 0 9px rgba(226,191,68,.18);white-space:nowrap
+    margin:0;padding:1px 5px;border-radius:999px;border:1px solid #d6b94e;
+    background:linear-gradient(#56461b,#302711);color:#fff0a0;font-size:7px;font-weight:1000;
+    letter-spacing:.01em;box-shadow:0 0 9px rgba(226,191,68,.18);white-space:nowrap
   }
   .shop-stock-badge.soldout{border-color:#9b5960;background:linear-gradient(#49272b,#2a171a);color:#ffb9bf;box-shadow:none}
   .shop-row.soldout{opacity:.76}
@@ -3576,7 +3577,9 @@
   }
   .shop-flash.show{transform:translateY(-50%)}
   @media(max-height:520px){
-    .shop-stock-badge{font-size:6.5px;padding:1px 5px;margin-top:1px}
+    .shop-row-side{min-width:84px;gap:2px}
+    .shop-row-meta{gap:3px}
+    .shop-stock-badge{font-size:6px;padding:1px 4px}
   }
 </style>
 </head>
@@ -4189,7 +4192,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.43g";
+  const DEV_VERSION = "v0.43h";
   const SAVE_SCHEMA_VERSION = 7;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -7765,7 +7768,7 @@
     const remaining=shopRemainingStock(entry);
     if(remaining===null) return "";
     return remaining>0
-      ? `<span class="shop-stock-badge">◆ 限定在庫　残り${remaining}</span>`
+      ? `<span class="shop-stock-badge">◆ 限定 残り${remaining}</span>`
       : `<span class="shop-stock-badge soldout">売り切れ</span>`;
   }
   function recordLimitedShopPurchase(entry){
@@ -7853,7 +7856,7 @@
       const price=mode==="buy"?d.price:sellPriceFor(entry); const count=entry.kind==="item"?itemCount(entry.id):ownedEquipmentCount(entry.id); const free=entry.kind==="equip"?freeEquipmentCount(entry.id):count;
       const remaining=mode==="buy"?shopRemainingStock(entry):null; const soldOut=remaining!==null&&remaining<=0;
       const row=document.createElement("button"); row.type="button"; row.className=`shop-row${selectedNow?" selected":""}${soldOut?" soldout":""}`;
-      row.innerHTML=`<span class="ico">${d.icon||"📦"}</span><span class="shop-row-main"><b>${d.name}</b><small>${entry.kind==="equip"?`${EQUIPMENT_SLOT_LABELS[d.slot]||"装備"}${d.slot==="weapon"&&d.weaponType?`・${weaponTypeLabels[d.weaponType]||""}`:""}`:(d.desc||"")}</small></span><span class="shop-row-side"><span class="shop-price">${price} G</span>${shopStockBadgeHtml(entry,mode)}<span class="shop-owned">${mode==="sell"&&entry.kind==="equip"?`売却可×${free}`:`所持×${count}`}</span></span>`;
+      row.innerHTML=`<span class="ico">${d.icon||"📦"}</span><span class="shop-row-main"><b>${d.name}</b><small>${entry.kind==="equip"?`${EQUIPMENT_SLOT_LABELS[d.slot]||"装備"}${d.slot==="weapon"&&d.weaponType?`・${weaponTypeLabels[d.weaponType]||""}`:""}`:(d.desc||"")}</small></span><span class="shop-row-side"><span class="shop-price">${price} G</span><span class="shop-row-meta">${shopStockBadgeHtml(entry,mode)}<span class="shop-owned">${mode==="sell"&&entry.kind==="equip"?`売却可×${free}`:`所持×${count}`}</span></span></span>`;
       row.onclick=()=>{state.shopSelectedKey=shopEntryKey(entry);renderShop();}; box.appendChild(row);
     });
     renderShopDetail(selected,mode);
