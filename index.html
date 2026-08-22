@@ -3555,6 +3555,29 @@
   .story-event-panel.narration .story-event-footer{grid-row:2}
   .battle-status-card.npc-auto{border-color:#6c85a1;box-shadow:inset 0 0 0 1px rgba(115,164,210,.16)}
 
+
+
+  /* v0.43g limited merchant stock + stable shop footer */
+  .shop-row-side{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:2px}
+  .shop-stock-badge{
+    display:inline-flex;align-items:center;justify-content:center;max-width:100%;
+    margin-top:2px;padding:2px 6px;border-radius:999px;border:1px solid #d6b94e;
+    background:linear-gradient(#56461b,#302711);color:#fff0a0;font-size:7.5px;font-weight:1000;
+    letter-spacing:.02em;box-shadow:0 0 9px rgba(226,191,68,.18);white-space:nowrap
+  }
+  .shop-stock-badge.soldout{border-color:#9b5960;background:linear-gradient(#49272b,#2a171a);color:#ffb9bf;box-shadow:none}
+  .shop-row.soldout{opacity:.76}
+  .shop-row.soldout .shop-price{color:#a89b75}
+  .shop-action-note.limited{color:#f0d87c;font-weight:1000}
+  .shop-foot{position:relative}
+  .shop-flash{
+    position:absolute;right:3px;top:50%;margin-left:0!important;
+    transform:translateY(calc(-50% + 4px));
+  }
+  .shop-flash.show{transform:translateY(-50%)}
+  @media(max-height:520px){
+    .shop-stock-badge{font-size:6.5px;padding:1px 5px;margin-top:1px}
+  }
 </style>
 </head>
 <body>
@@ -4166,8 +4189,8 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.43f";
-  const SAVE_SCHEMA_VERSION = 6;
+  const DEV_VERSION = "v0.43g";
+  const SAVE_SCHEMA_VERSION = 7;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
   let saveUiContext = "milesta";
@@ -4190,6 +4213,7 @@
     shopMode:"buy",
     shopSelectedKey:null,
     travelMerchantMet:false,
+    limitedShopPurchases:{},
     caveUnlocked:false,
     caveBossDefeated:false,
     selectedArea: "plains",
@@ -6788,6 +6812,7 @@
       gold:state.gold,
       items:{...(state.items||{})},
       travelMerchantMet:!!state.travelMerchantMet,
+      limitedShopPurchases:{...(state.limitedShopPurchases||{})},
       caveUnlocked:!!state.caveUnlocked,
       caveBossDefeated:!!state.caveBossDefeated,
       eventFlags:{...(state.eventFlags||{})},
@@ -6818,6 +6843,7 @@
     state.gold=Number.isFinite(Number(data.gold))?Number(data.gold):base.gold;
     state.items={...(base.items||{}),...(data.items||{})};
     state.travelMerchantMet=!!data.travelMerchantMet;
+    state.limitedShopPurchases={...(base.limitedShopPurchases||{}),...(data.limitedShopPurchases||{})};
     state.caveUnlocked=!!data.caveUnlocked;
     state.caveBossDefeated=!!data.caveBossDefeated;
     state.eventFlags={...(base.eventFlags||{}),...(data.eventFlags||{})};
@@ -7716,10 +7742,38 @@
       {kind:"equip",id:"steel_claw"},{kind:"equip",id:"iron_sword"},{kind:"equip",id:"steel_axe"},{kind:"equip",id:"iron_bow"},{kind:"equip",id:"iron_rod"},{kind:"equip",id:"iron_whip"},{kind:"equip",id:"type_zel"}
     ],
     plains:[{kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"}],
-    cave:[{kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"},{kind:"equip",id:"alm_small_shield"}]
+    cave:[{kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"},{kind:"equip",id:"alm_small_shield",stockLimit:1,stockKey:"travel:alm_small_shield"}]
   };
   function shopEntryData(entry){ return entry?.kind==="item"?ITEMS[entry.id]:equipmentCatalog[entry?.id]; }
   function shopEntryKey(entry){ return entry?`${entry.kind}:${entry.id}`:""; }
+  function shopStockLimit(entry){
+    const n=Number(entry?.stockLimit);
+    return Number.isFinite(n)&&n>=0?Math.floor(n):null;
+  }
+  function shopStockKey(entry){ return entry?.stockKey||null; }
+  function shopPurchasedCount(entry){
+    const key=shopStockKey(entry);
+    if(!key) return 0;
+    return Math.max(0,Math.floor(Number(state.limitedShopPurchases?.[key])||0));
+  }
+  function shopRemainingStock(entry){
+    const limit=shopStockLimit(entry);
+    return limit===null?null:Math.max(0,limit-shopPurchasedCount(entry));
+  }
+  function shopStockBadgeHtml(entry,mode="buy"){
+    if(mode!=="buy") return "";
+    const remaining=shopRemainingStock(entry);
+    if(remaining===null) return "";
+    return remaining>0
+      ? `<span class="shop-stock-badge">◆ 限定在庫　残り${remaining}</span>`
+      : `<span class="shop-stock-badge soldout">売り切れ</span>`;
+  }
+  function recordLimitedShopPurchase(entry){
+    const key=shopStockKey(entry);
+    if(!key || shopStockLimit(entry)===null) return;
+    if(!state.limitedShopPurchases || typeof state.limitedShopPurchases!=="object") state.limitedShopPurchases={};
+    state.limitedShopPurchases[key]=shopPurchasedCount(entry)+1;
+  }
   function sellPriceFor(entry){ const d=shopEntryData(entry); return Math.floor((d?.price||0)*(entry.kind==="equip" ? .50 :(d?.sellRate??.10))); }
   function shopSellEntries(){
     const out=[];
@@ -7729,9 +7783,12 @@
   }
   function buyShopEntry(entry){
     const d=shopEntryData(entry),price=Number(d?.price)||0;
+    const remaining=shopRemainingStock(entry);
+    if(remaining!==null && remaining<=0){ toast("この商品は売り切れです"); renderShop(); return; }
     if(state.gold<price){ toast("お金が足りません"); return; }
     state.gold-=price;
     if(entry.kind==="item") addItemCount(entry.id,1); else addEquipmentOwned(entry.id,1);
+    recordLimitedShopPurchase(entry);
     state.shopSelectedKey=shopEntryKey(entry); renderShop(); updateHeader(); showShopFeedback(`✅ ${d.name}を購入しました`,`buy`); toast(`✅ ${d.name}を購入しました`);
   }
   function sellShopEntry(entry){
@@ -7769,12 +7826,19 @@
     const price=mode==="buy"?Number(d.price||0):sellPriceFor(entry);
     const owned=entry.kind==="item"?itemCount(entry.id):ownedEquipmentCount(entry.id);
     const free=entry.kind==="equip"?freeEquipmentCount(entry.id):owned;
-    const can=mode==="buy"?state.gold>=price:(entry.kind==="item"?owned>0:free>0);
+    const remaining=mode==="buy"?shopRemainingStock(entry):null;
+    const soldOut=remaining!==null&&remaining<=0;
+    const can=mode==="buy"?!soldOut&&state.gold>=price:(entry.kind==="item"?owned>0:free>0);
     let middle="";
     if(entry.kind==="equip") middle=`<div class="shop-compare">${shopEquipCompareHtml(d)}</div>`;
     else middle=`<div class="shop-compare"><div class="shop-consumable-info"><div class="shop-info-row"><span>所持数</span><strong>×${owned}</strong></div><div class="shop-info-row"><span>使用区分</span><strong>${itemUsageLabel(d)}</strong></div><div class="shop-info-row"><span>売却価格</span><strong>${d.sellable===false?"売却不可":`${sellPriceFor(entry)} G`}</strong></div></div></div>`;
-    const note=mode==="buy"?(can?"":"所持金が足りません。"):(entry.kind==="equip"?`売却可能 ×${free}（装備中の品は売れません）`:`所持 ×${owned}`);
-    box.innerHTML=`<div class="shop-detail-head"><div class="shop-detail-icon">${d.icon||"📦"}</div><div class="shop-detail-name"><b>${d.name}</b><small>${entry.kind==="equip"?EQUIPMENT_SLOT_LABELS[d.slot]||"装備":"アイテム"}</small></div><div class="shop-detail-price">${price} G</div></div><div class="shop-detail-desc">${d.desc||"説明はありません。"}</div>${middle}<div class="shop-action-row"><div class="shop-action-note">${note}</div><button class="shop-action-btn${mode==="sell"?" sell":""}" ${can?"":"disabled"}>${mode==="buy"?"購入する":"売却する"}</button></div>`;
+    let note="";
+    if(mode==="buy"){
+      if(soldOut) note="◆ 限定在庫：売り切れ";
+      else if(remaining!==null) note=`◆ 限定在庫：残り${remaining}${state.gold<price?" ／ 所持金が足りません":""}`;
+      else note=can?"":"所持金が足りません。";
+    }else note=entry.kind==="equip"?`売却可能 ×${free}（装備中の品は売れません）`:`所持 ×${owned}`;
+    box.innerHTML=`<div class="shop-detail-head"><div class="shop-detail-icon">${d.icon||"📦"}</div><div class="shop-detail-name"><b>${d.name}</b><small>${entry.kind==="equip"?EQUIPMENT_SLOT_LABELS[d.slot]||"装備":"アイテム"}</small></div><div class="shop-detail-price">${price} G</div></div><div class="shop-detail-desc">${d.desc||"説明はありません。"}</div>${middle}<div class="shop-action-row"><div class="shop-action-note${remaining!==null?" limited":""}">${note}</div><button class="shop-action-btn${mode==="sell"?" sell":""}" ${can?"":"disabled"}>${mode==="buy"?(soldOut?"売り切れ":"購入する"):"売却する"}</button></div>`;
     const btn=box.querySelector(".shop-action-btn"); if(btn)btn.onclick=()=>mode==="buy"?buyShopEntry(entry):sellShopEntry(entry);
   }
   function renderShop(){
@@ -7787,8 +7851,9 @@
     entries.forEach(entry=>{
       const d=shopEntryData(entry); if(!d)return; const selectedNow=shopEntryKey(entry)===state.shopSelectedKey;
       const price=mode==="buy"?d.price:sellPriceFor(entry); const count=entry.kind==="item"?itemCount(entry.id):ownedEquipmentCount(entry.id); const free=entry.kind==="equip"?freeEquipmentCount(entry.id):count;
-      const row=document.createElement("button"); row.type="button"; row.className=`shop-row${selectedNow?" selected":""}`;
-      row.innerHTML=`<span class="ico">${d.icon||"📦"}</span><span class="shop-row-main"><b>${d.name}</b><small>${entry.kind==="equip"?`${EQUIPMENT_SLOT_LABELS[d.slot]||"装備"}${d.slot==="weapon"&&d.weaponType?`・${weaponTypeLabels[d.weaponType]||""}`:""}`:(d.desc||"")}</small></span><span class="shop-row-side"><span class="shop-price">${price} G</span><span class="shop-owned">${mode==="sell"&&entry.kind==="equip"?`売却可×${free}`:`所持×${count}`}</span></span>`;
+      const remaining=mode==="buy"?shopRemainingStock(entry):null; const soldOut=remaining!==null&&remaining<=0;
+      const row=document.createElement("button"); row.type="button"; row.className=`shop-row${selectedNow?" selected":""}${soldOut?" soldout":""}`;
+      row.innerHTML=`<span class="ico">${d.icon||"📦"}</span><span class="shop-row-main"><b>${d.name}</b><small>${entry.kind==="equip"?`${EQUIPMENT_SLOT_LABELS[d.slot]||"装備"}${d.slot==="weapon"&&d.weaponType?`・${weaponTypeLabels[d.weaponType]||""}`:""}`:(d.desc||"")}</small></span><span class="shop-row-side"><span class="shop-price">${price} G</span>${shopStockBadgeHtml(entry,mode)}<span class="shop-owned">${mode==="sell"&&entry.kind==="equip"?`売却可×${free}`:`所持×${count}`}</span></span>`;
       row.onclick=()=>{state.shopSelectedKey=shopEntryKey(entry);renderShop();}; box.appendChild(row);
     });
     renderShopDetail(selected,mode);
