@@ -3570,10 +3570,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43b</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43c</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43b</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43c</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3585,7 +3585,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.43b</div>
+      <div class="title-version">DEV v0.43c</div>
     </section>
   </main>
 
@@ -4137,7 +4137,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.43b</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.43c</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4166,7 +4166,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.43b";
+  const DEV_VERSION = "v0.43c";
   const SAVE_SCHEMA_VERSION = 6;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4786,7 +4786,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43b" : "ミレスタ・仲間編成 v0.43b";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43c" : "ミレスタ・仲間編成 v0.43c";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4800,7 +4800,7 @@
     }
     openTownTalkModal();
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -5171,7 +5171,10 @@
     Object.entries(mods).filter(([,v])=>v).forEach(([k,v])=>bits.push(`${({atk:"攻",def:"防",magic:"魔",mdef:"魔防",spd:"速",hpMax:"HP",mpMax:"MP"}[k]||k)}${v>0?"+":""}${v}`));
     if(item.crit) bits.push(`会心+${Number(item.crit).toFixed(1)}%`);
     if(item.evasion) bits.push(`回避+${Number(item.evasion).toFixed(1)}%`);
-    if(item.bowInstantKillRate) bits.push(`弓即死${Number(item.bowInstantKillRate).toFixed(1)}%`);
+    if(item.bowInstantKillRate) bits.push(`射抜+${Number(item.bowInstantKillRate).toFixed(1)}%`);
+    if(item.basicDeathRate) bits.push(`即死+${(Number(item.basicDeathRate)*100).toFixed(1)}%`);
+    if(item.basicDispelRate) bits.push(`通常攻撃でバフ解除 ${Math.round(Number(item.basicDispelRate)*100)}%`);
+    if(item.roundStartBlockRate) bits.push(`R開始ブロック ${Math.round(Number(item.roundStartBlockRate)*100)}%`);
     if(item.attackAll) bits.push(`全体${Math.round((item.normalAttackPower||1)*100)}%`);
     if(item.defenseInfluence!==undefined && item.defenseInfluence!==1) bits.push(`防御影響${Math.round(item.defenseInfluence*100)}%`);
     if(item.fate) bits.push(`運+${item.fate}`);
@@ -5332,7 +5335,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43b" : "ミレスタ・仲間編成 v0.43b";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43c" : "ミレスタ・仲間編成 v0.43c";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -5365,13 +5368,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
     updateHeader();
   };
 
@@ -5696,13 +5699,80 @@
   const EQUIPMENT_SLOT_LABELS={weapon:"武器",shield:"盾",body:"身体",accessory:"アクセサリ"};
   const equipmentCatalog={
     bare:{id:"bare",slot:"weapon",name:"装備なし",icon:"－",mods:{},canCrit:true,normalAttackPower:1},
-    stone_claw:{id:"stone_claw",slot:"weapon",weaponType:"fist",name:"石の爪",icon:"🥊",mods:{atk:3,spd:2},crit:8,canCrit:true,normalAttackPower:1,price:50,desc:"攻撃力+3 / 素早さ+2 / 会心率+8.0%。素早い会心型の拳武器。"},
-    dagger:{id:"dagger",slot:"weapon",weaponType:"sword",name:"ダガー",icon:"🗡️",mods:{atk:7},crit:2,canCrit:true,normalAttackPower:1,price:60,desc:"攻撃力+7 / 会心率+2.0%。癖のない標準型。"},
-    stone_axe:{id:"stone_axe",slot:"weapon",weaponType:"axe",name:"石の斧",icon:"🪓",mods:{atk:11,spd:-7},crit:3,canCrit:true,normalAttackPower:1,price:90,desc:"攻撃力+11 / 素早さ-7 / 会心率+3.0%。重い一撃に特化。"},
-    hinoki_staff:{id:"hinoki_staff",slot:"weapon",weaponType:"staff",name:"檜の杖",icon:"🪄",mods:{atk:1,magic:4},canCrit:false,normalAttackPower:1,price:70,desc:"攻撃力+1 / 魔力+4。魔法能力を伸ばす基本の杖。"},
-    short_bow:{id:"short_bow",slot:"weapon",weaponType:"bow",name:"ショートボウ",icon:"🏹",mods:{atk:6},canCrit:false,normalAttackPower:1,bowInstantKillRate:2,price:70,desc:"攻撃力+6。通常攻撃時、独自判定で2.0%の雑魚即死。状態異常の即死耐性とは別処理。"},
-    whip:{id:"whip",slot:"weapon",weaponType:"whip",name:"ウィップ",icon:"➰",mods:{atk:6},canCrit:false,normalAttackPower:.80,attackAll:true,price:80,desc:"攻撃力+6。通常攻撃が敵全体になり、各対象へ80%威力。敵が1体でも80%。"},
-    type_milesta:{id:"type_milesta",slot:"weapon",weaponType:"gun",name:"タイプ・ミレスタ",icon:"🔫",mods:{atk:9},canCrit:false,normalAttackPower:.85,defenseInfluence:.50,price:90,desc:"攻撃力+9。通常攻撃は85%威力だが、敵防御力の影響を通常の50%しか受けない。"},
+
+    // 拳
+    stone_claw:{id:"stone_claw",slot:"weapon",weaponType:"fist",name:"石の爪",icon:"🥊",mods:{atk:3,spd:2},crit:8.0,canCrit:true,normalAttackPower:1,price:50,desc:"石製の爪。攻撃力+3 / 素早さ+2 / 会心率+8.0%。"},
+    bronze_knuckle:{id:"bronze_knuckle",slot:"weapon",weaponType:"fist",name:"ブロンズナックル",icon:"🥊",mods:{atk:12,spd:6},crit:8.2,canCrit:true,normalAttackPower:1,price:190,desc:"銅製の拳装備。攻撃力+12 / 素早さ+6 / 会心率+8.2%。"},
+    steel_claw:{id:"steel_claw",slot:"weapon",weaponType:"fist",name:"鋼鉄の爪",icon:"🥊",mods:{atk:21,spd:14},crit:8.5,canCrit:true,normalAttackPower:1,price:700,desc:"鋼鉄製の拳装備。攻撃力+21 / 素早さ+14 / 会心率+8.5%。"},
+    silver_knuckle:{id:"silver_knuckle",slot:"weapon",weaponType:"fist",name:"シルバーナックル",icon:"🥊",mods:{atk:37,spd:19},crit:8.8,canCrit:true,normalAttackPower:1,price:1500,desc:"銀製の拳装備。攻撃力+37 / 素早さ+19 / 会心率+8.8%。"},
+    restian_claw:{id:"restian_claw",slot:"weapon",weaponType:"fist",name:"レスティアンクロー",icon:"🥊",mods:{atk:55,spd:36},crit:9.0,canCrit:true,normalAttackPower:1,price:4200,desc:"レスティア公国で祭具としても使われる拳装備。攻撃力+55 / 素早さ+36 / 会心率+9.0%。"},
+    platinum_claw:{id:"platinum_claw",slot:"weapon",weaponType:"fist",name:"プラチナクロー",icon:"🥊",mods:{atk:94,spd:28},crit:9.5,canCrit:true,normalAttackPower:1,price:17800,desc:"白金製の高性能な拳装備。攻撃力+94 / 素早さ+28 / 会心率+9.5%。"},
+    golden_claw:{id:"golden_claw",slot:"weapon",weaponType:"fist",name:"煌金の爪",icon:"🥊",mods:{atk:145,spd:41},crit:9.6,canCrit:true,normalAttackPower:1,price:49000,desc:"魔界の特別な金属で作られた拳装備。攻撃力+145 / 素早さ+41 / 会心率+9.6%。"},
+    champion:{id:"champion",slot:"weapon",weaponType:"fist",name:"チャンピオン",icon:"🥊",mods:{atk:208,spd:50},crit:10.8,canCrit:true,normalAttackPower:1,price:228000,desc:"王者の証である至高の拳装備。攻撃力+208 / 素早さ+50 / 会心率+10.8%。"},
+
+    // 剣
+    dagger:{id:"dagger",slot:"weapon",weaponType:"sword",name:"ダガー",icon:"🗡️",mods:{atk:7},crit:2.0,canCrit:true,normalAttackPower:1,price:60,desc:"鋭利な短剣。攻撃力+7 / 会心率+2.0%。"},
+    traveler_sword:{id:"traveler_sword",slot:"weapon",weaponType:"sword",name:"旅人の剣",icon:"⚔️",mods:{atk:20},crit:2.0,canCrit:true,normalAttackPower:1,price:220,desc:"旅人が好む扱いやすい剣。攻撃力+20 / 会心率+2.0%。"},
+    iron_sword:{id:"iron_sword",slot:"weapon",weaponType:"sword",name:"アイアンソード",icon:"⚔️",mods:{atk:35},crit:2.2,canCrit:true,normalAttackPower:1,price:720,desc:"鉄製のオーソドックスな剣。攻撃力+35 / 会心率+2.2%。"},
+    silver_sword:{id:"silver_sword",slot:"weapon",weaponType:"sword",name:"シルバーソード",icon:"⚔️",mods:{atk:57},crit:2.2,canCrit:true,normalAttackPower:1,price:1700,desc:"銀製の鋭い刃の剣。攻撃力+57 / 会心率+2.2%。"},
+    salid_saber:{id:"salid_saber",slot:"weapon",weaponType:"sword",name:"サリードサーベル",icon:"⚔️",mods:{atk:72},crit:3.0,canCrit:true,normalAttackPower:1,price:4000,desc:"サリード王国の伝統歪曲刀。攻撃力+72 / 会心率+3.0%。"},
+    kirisute_maru:{id:"kirisute_maru",slot:"weapon",weaponType:"sword",name:"切捨丸",icon:"🗡️",mods:{atk:98},crit:2.3,canCrit:true,normalAttackPower:1,basicDeathRate:.03,price:9000,desc:"ヒザクラの民が携帯すると言われる、恐ろしく斬れる剣。攻撃力+98 / 会心率+2.3% / 即死率+3.0%。"},
+    platinum_sword:{id:"platinum_sword",slot:"weapon",weaponType:"sword",name:"プラチナソード",icon:"⚔️",mods:{atk:125},crit:2.6,canCrit:true,normalAttackPower:1,price:20000,desc:"白金製の高性能な剣。攻撃力+125 / 会心率+2.6%。"},
+    golden_sword:{id:"golden_sword",slot:"weapon",weaponType:"sword",name:"煌金の剣",icon:"⚔️",mods:{atk:184},crit:2.6,canCrit:true,normalAttackPower:1,price:50500,desc:"魔界の特別な金属で作られた剣。攻撃力+184 / 会心率+2.6%。"},
+    breaker:{id:"breaker",slot:"weapon",weaponType:"sword",name:"ブレイカー",icon:"⚔️",mods:{atk:240},crit:2.8,canCrit:true,normalAttackPower:1,price:255000,desc:"全てを斬り裂き破壊すると言われる剣。攻撃力+240 / 会心率+2.8%。"},
+
+    // 斧槌
+    stone_axe:{id:"stone_axe",slot:"weapon",weaponType:"axe",name:"石の斧",icon:"🪓",mods:{atk:11,spd:-7},crit:3.0,canCrit:true,normalAttackPower:1,price:90,desc:"石製の重い斧。攻撃力+11 / 素早さ-7 / 会心率+3.0%。"},
+    bronze_axe:{id:"bronze_axe",slot:"weapon",weaponType:"axe",name:"ブロンズアクス",icon:"🪓",mods:{atk:29,spd:-10},crit:3.4,canCrit:true,normalAttackPower:1,price:260,desc:"ブロンズ製の斧。攻撃力+29 / 素早さ-10 / 会心率+3.4%。"},
+    steel_axe:{id:"steel_axe",slot:"weapon",weaponType:"axe",name:"鋼鉄の斧",icon:"🪓",mods:{atk:47,spd:-14},crit:3.9,canCrit:true,normalAttackPower:1,price:780,desc:"鋼鉄製の重量感あふれる斧。攻撃力+47 / 素早さ-14 / 会心率+3.9%。"},
+    silver_axe:{id:"silver_axe",slot:"weapon",weaponType:"axe",name:"シルバーアクス",icon:"🪓",mods:{atk:69,spd:-17},crit:4.3,canCrit:true,normalAttackPower:1,price:2000,desc:"銀製の戦斧。攻撃力+69 / 素早さ-17 / 会心率+4.3%。"},
+    icebreaker_maul:{id:"icebreaker_maul",slot:"weapon",weaponType:"axe",name:"氷砕の大槌",icon:"🔨",mods:{atk:94,spd:-45},crit:6.5,canCrit:true,normalAttackPower:1,price:4800,desc:"アルム王国で分厚い氷を砕くために使われる大槌。攻撃力+94 / 素早さ-45 / 会心率+6.5%。"},
+    platinum_axe:{id:"platinum_axe",slot:"weapon",weaponType:"axe",name:"白金の斧",icon:"🪓",mods:{atk:163,spd:-22},crit:5.1,canCrit:true,normalAttackPower:1,price:24000,desc:"白金製の高性能な戦斧。攻撃力+163 / 素早さ-22 / 会心率+5.1%。"},
+    golden_axe:{id:"golden_axe",slot:"weapon",weaponType:"axe",name:"煌金の戦斧",icon:"🪓",mods:{atk:227,spd:-26},crit:5.5,canCrit:true,normalAttackPower:1,price:56000,desc:"魔界の特別な金属で作られた戦斧。攻撃力+227 / 素早さ-26 / 会心率+5.5%。"},
+    destroyer:{id:"destroyer",slot:"weapon",weaponType:"axe",name:"デストロイヤー",icon:"🪓",mods:{atk:298,spd:-35},crit:6.2,canCrit:true,normalAttackPower:1,price:284000,desc:"魔界の特別な金属で作られた戦斧。攻撃力+298 / 素早さ-35 / 会心率+6.2%。"},
+
+    // 弓：射抜は通常の即死耐性とは別枠の弓固有判定。
+    short_bow:{id:"short_bow",slot:"weapon",weaponType:"bow",name:"ショートボウ",icon:"🏹",mods:{atk:6},canCrit:false,normalAttackPower:1,bowInstantKillRate:2.0,price:70,desc:"初心者用の弓。攻撃力+6 / 射抜+2.0%。"},
+    traveler_bow:{id:"traveler_bow",slot:"weapon",weaponType:"bow",name:"旅人の弓",icon:"🏹",mods:{atk:18},canCrit:false,normalAttackPower:1,bowInstantKillRate:2.1,price:200,desc:"旅人が好む扱いやすい弓。攻撃力+18 / 射抜+2.1%。"},
+    iron_bow:{id:"iron_bow",slot:"weapon",weaponType:"bow",name:"アイアンボウ",icon:"🏹",mods:{atk:31},canCrit:false,normalAttackPower:1,bowInstantKillRate:2.2,price:690,desc:"鉄製の弓。攻撃力+31 / 射抜+2.2%。"},
+    silver_bow:{id:"silver_bow",slot:"weapon",weaponType:"bow",name:"シルバーボウ",icon:"🏹",mods:{atk:52},canCrit:false,normalAttackPower:1,bowInstantKillRate:2.3,price:1500,desc:"銀製の弓。攻撃力+52 / 射抜+2.3%。"},
+    restian_bow:{id:"restian_bow",slot:"weapon",weaponType:"bow",name:"レスティアンボウ",icon:"🏹",mods:{atk:77},crit:3.0,canCrit:true,normalAttackPower:1,bowInstantKillRate:1.4,price:4600,desc:"会心が発生する、レスティア公国の戦闘用弓。攻撃力+77 / 会心率+3.0% / 射抜+1.4%。"},
+    hamaya_bow:{id:"hamaya_bow",slot:"weapon",weaponType:"bow",name:"破魔弓",icon:"🏹",mods:{atk:86},canCrit:false,normalAttackPower:1,bowInstantKillRate:2.4,basicDispelRate:.10,price:8800,desc:"魔を滅するヒザクラの名弓。攻撃力+86 / 射抜+2.4%。通常攻撃で敵のバフを解除することがある。"},
+    platinum_bow:{id:"platinum_bow",slot:"weapon",weaponType:"bow",name:"白金の弓",icon:"🏹",mods:{atk:117},canCrit:false,normalAttackPower:1,bowInstantKillRate:2.5,price:19500,desc:"白金製の高性能な弓。攻撃力+117 / 射抜+2.5%。"},
+    golden_bow:{id:"golden_bow",slot:"weapon",weaponType:"bow",name:"煌金の弓",icon:"🏹",mods:{atk:171},canCrit:false,normalAttackPower:1,bowInstantKillRate:2.6,price:50000,desc:"魔界の特別な金属で作られた弓。攻撃力+171 / 射抜+2.6%。"},
+    chiron:{id:"chiron",slot:"weapon",weaponType:"bow",name:"ケイローン",icon:"🏹",mods:{atk:224,magic:18},canCrit:false,normalAttackPower:1,bowInstantKillRate:2.6,price:272000,desc:"神話の力が宿る大いなる弓。攻撃力+224 / 魔力+18 / 射抜+2.6%。"},
+
+    // 杖
+    hinoki_staff:{id:"hinoki_staff",slot:"weapon",weaponType:"staff",name:"檜の杖",icon:"🪄",mods:{atk:1,magic:4},canCrit:false,normalAttackPower:1,price:70,desc:"檜でできた杖。攻撃力+1 / 魔力+4。"},
+    mage_staff:{id:"mage_staff",slot:"weapon",weaponType:"staff",name:"魔術師の杖",icon:"🪄",mods:{atk:2,magic:9,mdef:4},canCrit:false,normalAttackPower:1,price:230,desc:"魔法を使うための木製の杖。攻撃力+2 / 魔力+9 / 魔防+4。"},
+    iron_rod:{id:"iron_rod",slot:"weapon",weaponType:"staff",name:"アイアンロッド",icon:"🪄",mods:{atk:13,magic:15,mdef:12},canCrit:false,normalAttackPower:1,price:740,desc:"魔力のこもった鉄製の魔法杖。攻撃力+13 / 魔力+15 / 魔防+12。"},
+    silver_rod:{id:"silver_rod",slot:"weapon",weaponType:"staff",name:"シルバーロッド",icon:"🪄",mods:{atk:20,magic:24,mdef:19},canCrit:false,normalAttackPower:1,price:1800,desc:"魔力のこもった銀製の魔法杖。攻撃力+20 / 魔力+24 / 魔防+19。"},
+    ritual_staff:{id:"ritual_staff",slot:"weapon",weaponType:"staff",name:"祭杖",icon:"🪄",mods:{atk:13,magic:31,mdef:28},canCrit:false,normalAttackPower:1,roundStartBlockRate:.10,price:4500,desc:"レスティア公国の祭事のための杖。攻撃力+13 / 魔力+31 / 魔防+28。ラウンド開始時、自分にブロックを発動することがある。"},
+    platinum_rod:{id:"platinum_rod",slot:"weapon",weaponType:"staff",name:"プラチナロッド",icon:"🪄",mods:{atk:25,magic:40,mdef:37},canCrit:false,normalAttackPower:1,price:22000,desc:"魔力のこもった白金製の高性能な魔法杖。攻撃力+25 / 魔力+40 / 魔防+37。"},
+    golden_staff:{id:"golden_staff",slot:"weapon",weaponType:"staff",name:"煌金の杖",icon:"🪄",mods:{atk:34,magic:51,mdef:49},canCrit:false,normalAttackPower:1,price:52000,desc:"魔界の特別な金属で作られた魔法杖。攻撃力+34 / 魔力+51 / 魔防+49。"},
+    hecate:{id:"hecate",slot:"weapon",weaponType:"staff",name:"ヘカテー",icon:"🪄",mods:{atk:56,magic:64,mdef:62},fate:3,canCrit:false,normalAttackPower:1,price:273000,desc:"女神の名を冠した究極の魔法杖。攻撃力+56 / 魔力+64 / 魔防+62 / 運命+3。"},
+
+    // 鞭：通常攻撃は敵全体へ80%威力。
+    whip:{id:"whip",slot:"weapon",weaponType:"whip",name:"ウィップ",icon:"➰",mods:{atk:6},canCrit:false,normalAttackPower:.80,attackAll:true,price:80,desc:"初心者用の鞭。攻撃力+6 / 通常攻撃は敵全体へ80%威力。"},
+    bronze_whip:{id:"bronze_whip",slot:"weapon",weaponType:"whip",name:"ブロンズウィップ",icon:"➰",mods:{atk:17},canCrit:false,normalAttackPower:.80,attackAll:true,price:230,desc:"一部に銅が使われている鞭。攻撃力+17 / 通常攻撃は敵全体へ80%威力。"},
+    iron_whip:{id:"iron_whip",slot:"weapon",weaponType:"whip",name:"アイアンウィップ",icon:"➰",mods:{atk:30},canCrit:false,normalAttackPower:.80,attackAll:true,price:760,desc:"一部に鋼鉄が使われている鞭。攻撃力+30 / 通常攻撃は敵全体へ80%威力。"},
+    silver_whip:{id:"silver_whip",slot:"weapon",weaponType:"whip",name:"シルバーウィップ",icon:"➰",mods:{atk:50},canCrit:false,normalAttackPower:.80,attackAll:true,price:1900,desc:"一部に純銀が使われている鞭。攻撃力+50 / 通常攻撃は敵全体へ80%威力。"},
+    trainer_whip:{id:"trainer_whip",slot:"weapon",weaponType:"whip",name:"調教師の鞭",icon:"➰",mods:{atk:64},crit:1.5,canCrit:true,normalAttackPower:.80,attackAll:true,price:4200,desc:"砂漠の猛獣を躾けるための鞭。攻撃力+64 / 会心率+1.5% / 通常攻撃は敵全体へ80%威力。"},
+    platinum_whip:{id:"platinum_whip",slot:"weapon",weaponType:"whip",name:"プラチナウィップ",icon:"➰",mods:{atk:109},canCrit:false,normalAttackPower:.80,attackAll:true,price:23000,desc:"一部に白金が使われている高性能な鞭。攻撃力+109 / 通常攻撃は敵全体へ80%威力。"},
+    golden_whip:{id:"golden_whip",slot:"weapon",weaponType:"whip",name:"煌金の鞭",icon:"➰",mods:{atk:163},canCrit:false,normalAttackPower:.80,attackAll:true,price:54000,desc:"一部に白金が使われている高性能な鞭。攻撃力+163 / 通常攻撃は敵全体へ80%威力。"},
+    mad_dragon_tail:{id:"mad_dragon_tail",slot:"weapon",weaponType:"whip",name:"狂龍の尾",icon:"➰",mods:{atk:219},canCrit:false,normalAttackPower:.80,attackAll:true,price:269000,desc:"荒々しい龍を思わせる恐ろしい鞭。攻撃力+219 / 通常攻撃は敵全体へ80%威力。"},
+
+    // 銃：通常攻撃は85%威力、敵防御力の影響は50%。
+    type_milesta:{id:"type_milesta",slot:"weapon",weaponType:"gun",name:"タイプ・ミレスタ",icon:"🔫",mods:{atk:9},canCrit:false,normalAttackPower:.85,defenseInfluence:.50,price:90,desc:"ミレスタ製の銃。攻撃力+9 / 敵防御力の影響50%。"},
+    hunter:{id:"hunter",slot:"weapon",weaponType:"gun",name:"ハンター",icon:"🔫",mods:{atk:21},canCrit:false,normalAttackPower:.85,defenseInfluence:.50,price:250,desc:"獣狩りで用いられる銃。攻撃力+21 / 敵防御力の影響50%。"},
+    type_zel:{id:"type_zel",slot:"weapon",weaponType:"gun",name:"タイプ・ゼル",icon:"🔫",mods:{atk:36},canCrit:false,normalAttackPower:.85,defenseInfluence:.50,price:780,desc:"グランゼル王国で流通している銃。攻撃力+36 / 敵防御力の影響50%。"},
+    type_runel:{id:"type_runel",slot:"weapon",weaponType:"gun",name:"タイプ・ルネル",icon:"🔫",mods:{atk:60},canCrit:false,normalAttackPower:.85,defenseInfluence:.50,price:2000,desc:"ルネル地方から出土した兵器を模した大量生産品。攻撃力+60 / 敵防御力の影響50%。"},
+    alm_hunting_gun:{id:"alm_hunting_gun",slot:"weapon",weaponType:"gun",name:"アルムの猟銃",icon:"🔫",mods:{atk:78},canCrit:false,normalAttackPower:.85,defenseInfluence:.50,bowInstantKillRate:1.5,price:4900,desc:"雪国アルムで狩猟に用いられる猟銃。攻撃力+78 / 射抜+1.5% / 敵防御力の影響50%。"},
+    remaster_zel:{id:"remaster_zel",slot:"weapon",weaponType:"gun",name:"リマスター・ゼル",icon:"🔫",mods:{atk:132},canCrit:false,normalAttackPower:.85,defenseInfluence:.50,price:22000,desc:"グランゼルの技術力の結晶である戦闘銃。攻撃力+132 / 敵防御力の影響50%。"},
+    limbo_magic_gun:{id:"limbo_magic_gun",slot:"weapon",weaponType:"gun",name:"辺獄の魔銃",icon:"🔫",mods:{atk:190},canCrit:false,normalAttackPower:.85,defenseInfluence:.50,price:53000,desc:"魔界で流通している恐るべき魔銃。攻撃力+190 / 敵防御力の影響50%。"},
+    fatality:{id:"fatality",slot:"weapon",weaponType:"gun",name:"フェイタリティ",icon:"🔫",mods:{atk:252,spd:8},canCrit:false,normalAttackPower:.85,defenseInfluence:.50,price:270000,desc:"標的を葬り去る致命の魔銃。攻撃力+252 / 素早さ+8 / 敵防御力の影響50%。"},
+
+    // ドロップ等の既存装備
     paw_hand:{id:"paw_hand",slot:"weapon",weaponType:"fist",name:"肉球ハンド",icon:"🐾",mods:{atk:5,spd:8},crit:9.5,canCrit:true,normalAttackPower:1,price:180,desc:"攻撃力+5 / 素早さ+8 / 会心率+9.5%。肉球がついた可愛い拳装備。"},
     no_shield:{id:"no_shield",slot:"shield",name:"装備なし",icon:"－",mods:{}},
     wood_shield:{id:"wood_shield",slot:"shield",name:"木の盾",icon:"🛡️",mods:{def:2},price:30,desc:"防御力+2。軽く扱いやすい基本の盾。"},
@@ -5720,7 +5790,7 @@
     poison_gloves:{id:"poison_gloves",slot:"accessory",name:"毒手袋",icon:"🧤",mods:{},physicalPoisonRate:10,price:400,unavailable:true,desc:"物理攻撃時、10%の確率で毒状態にする。※装備からの毒付与連携は現在保留。"}
   };
   const equipmentInventory={
-    weapon:["bare","stone_claw","dagger","stone_axe","hinoki_staff","short_bow","whip","type_milesta","paw_hand"],
+    weapon:["bare","stone_claw","bronze_knuckle","steel_claw","silver_knuckle","restian_claw","platinum_claw","golden_claw","champion","dagger","traveler_sword","iron_sword","silver_sword","salid_saber","kirisute_maru","platinum_sword","golden_sword","breaker","stone_axe","bronze_axe","steel_axe","silver_axe","icebreaker_maul","platinum_axe","golden_axe","destroyer","short_bow","traveler_bow","iron_bow","silver_bow","restian_bow","hamaya_bow","platinum_bow","golden_bow","chiron","hinoki_staff","mage_staff","iron_rod","silver_rod","ritual_staff","platinum_rod","golden_staff","hecate","whip","bronze_whip","iron_whip","silver_whip","trainer_whip","platinum_whip","golden_whip","mad_dragon_tail","type_milesta","hunter","type_zel","type_runel","alm_hunting_gun","remaster_zel","limbo_magic_gun","fatality","paw_hand"],
     shield:["no_shield","wood_shield","stone_greatshield","alm_small_shield"],
     body:["no_body","milesta_clothes","leather_armor","ragged_robe"],
     accessory:["no_accessory","hunter_charm","light_shoes","magic_earrings","fate_ring","poison_gloves"]
@@ -5790,6 +5860,8 @@
       attackAll:!!weapon.attackAll,
       canCrit:weapon.canCrit!==false,
       bowInstantKillRate:clampRate(weapon.bowInstantKillRate||0),
+      basicDeathRate:Math.max(0,Number(weapon.basicDeathRate)||0),
+      basicDispelRate:Math.max(0,Number(weapon.basicDispelRate)||0),
       fx:weapon.weaponType==="fist"?{kind:"punch",symbol:"💥"}:
          weapon.weaponType==="sword"?{kind:"slash",symbol:"✦"}:
          weapon.weaponType==="axe"?{kind:"heavy",symbol:"💥"}:
@@ -7409,6 +7481,20 @@
       {kind:"equip",id:"stone_claw"},{kind:"equip",id:"dagger"},{kind:"equip",id:"stone_axe"},{kind:"equip",id:"short_bow"},{kind:"equip",id:"hinoki_staff"},{kind:"equip",id:"whip"},{kind:"equip",id:"type_milesta"},
       {kind:"equip",id:"wood_shield"},{kind:"equip",id:"stone_greatshield"},{kind:"equip",id:"milesta_clothes"},{kind:"equip",id:"leather_armor"}
     ],
+    // Future story shops are prepared now. They become reachable when the corresponding town screens/events are implemented.
+    yordy:[
+      {kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},
+      {kind:"equip",id:"bronze_knuckle"},{kind:"equip",id:"traveler_sword"},{kind:"equip",id:"traveler_bow"}
+    ],
+    tileno:[
+      {kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},
+      {kind:"equip",id:"bronze_knuckle"},{kind:"equip",id:"traveler_sword"},{kind:"equip",id:"traveler_bow"},
+      {kind:"equip",id:"bronze_axe"},{kind:"equip",id:"mage_staff"},{kind:"equip",id:"bronze_whip"},{kind:"equip",id:"hunter"}
+    ],
+    granzel:[
+      {kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},
+      {kind:"equip",id:"steel_claw"},{kind:"equip",id:"iron_sword"},{kind:"equip",id:"steel_axe"},{kind:"equip",id:"iron_bow"},{kind:"equip",id:"iron_rod"},{kind:"equip",id:"iron_whip"},{kind:"equip",id:"type_zel"}
+    ],
     plains:[{kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"}],
     cave:[{kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"},{kind:"equip",id:"alm_small_shield"}]
   };
@@ -7502,7 +7588,8 @@
   }
   function openShop(key="town"){
     state.currentShop=key; state.shopMode="buy"; state.shopSelectedKey=null;
-    $("shopTitle").textContent=key==="town"?"ミレスタ商店":key==="cave"?"洞窟の旅商人":"旅の商人";
+    const shopTitles={town:"ミレスタ商店",yordy:"港町ヨーディー・武器屋",tileno:"ティレーノの街・武器屋",granzel:"グランゼル城下町・武器屋",cave:"洞窟の旅商人",plains:"旅の商人"};
+    $("shopTitle").textContent=shopTitles[key]||"旅の商人";
     $("shopLead").textContent="商品を選ぶと、装備時の能力差をその場で確認できます。";
     setShopMerchant(key); renderShop(); const sf=$("shopFlash"); if(sf){sf.textContent=""; sf.className="shop-flash";} $("shopModal").classList.add("show");
   }
@@ -9047,8 +9134,22 @@
     return false;
   }
 
+  function applyRoundStartWeaponEffects(){
+    const notices=[];
+    livingActiveSlots().forEach(({c})=>{
+      const weapon=equippedWeapon(c);
+      const rate=Math.max(0,Number(weapon?.roundStartBlockRate)||0);
+      if(rate>0 && Math.random()<rate){
+        const result=applyStatBuff(c,skills.block);
+        if(result.applied) notices.push(`🔶 ${c.name} の ${weapon.name} が輝き、ブロックが発動！`);
+      }
+    });
+    if(notices.length) toast(notices.join(" / "));
+  }
+
   function startCommandInput(){
     if(state.battleEnded) return;
+    applyRoundStartWeaponEffects();
     cancelScheduledTurnStart();
     state.battlePhase="input";
     state.battleActions=[null,null,null,null];
@@ -9212,12 +9313,25 @@
       return {dmg:0,killed:false,missed:true,critical:false};
     }
 
-    // Bow execution is a weapon-specific roll and deliberately ignores the normal death-status resistance system.
+    // Some swords carry a normal death-status proc. Unlike bow "射抜", this uses the ordinary death-resistance system.
+    if(isBasic && profile.basicDeathRate>0){
+      const death=tryInflictStatus(target,"death",profile.basicDeathRate);
+      if(death.success){
+        if(!target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
+        setMessage(`☠️ ${actor.name} の一撃が急所を断った！ ${target.displayName} を即死させた！`);
+        await animateEnemyDamage(target,true,"slash","☠",false,target.hpMax);
+        if(isBasic) await maybeTriggerOrangeGel(actor,target,options.traitContext);
+        return {dmg:target.hpMax,killed:true,missed:false,critical:false,instantKill:true};
+      }
+    }
+
+    // "射抜" is a weapon-specific roll and deliberately ignores the normal death-status resistance system.
     if(isBasic && profile.bowInstantKillRate>0 && !target.bowInstantKillImmune && Math.random()*100<profile.bowInstantKillRate){
       target.hp=0;
       if(!target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
-      setMessage(`🏹 ${actor.name} の一矢が急所を射抜いた！ ${target.displayName} を一撃で倒した！`);
-      await animateEnemyDamage(target,true,"impact","🎯");
+      const pierceGun=profile.weapon?.weaponType==="gun";
+      setMessage(`${pierceGun?"🔫":"🏹"} ${actor.name} の${pierceGun?"銃弾":"一矢"}が急所を射抜いた！ ${target.displayName} を一撃で倒した！`);
+      await animateEnemyDamage(target,true,pierceGun?"gun":"impact",pierceGun?"✹":"🎯");
       if(isBasic) await maybeTriggerOrangeGel(actor,target,options.traitContext);
       return {dmg:target.hpMax,killed:true,missed:false,critical:false,instantKill:true};
     }
@@ -9236,6 +9350,15 @@
     setMessage(`${actor.name} の${skillName||"攻撃"}！${critText} ${target.displayName} に ${dmg} ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
     const hitFx=isBasic?profile.fx:{kind:fxKind,symbol:fxSymbol};
     await animateEnemyDamage(target,killed,hitFx.kind,hitFx.symbol,critical,dmg);
+    if(isBasic && !killed && profile.basicDispelRate>0 && Math.random()<profile.basicDispelRate){
+      const removed=clearEnemyBuffs(target);
+      if(removed){
+        setMessage(`🏹 ${actor.name} の武器効果！ ${target.displayName} の強化効果を解除した！`);
+        const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${target.uid}"]`);
+        if(el) spawnFx("impact","✨",el);
+        await wait(BASE_TIME.short);
+      }
+    }
     if(isBasic) await maybeTriggerOrangeGel(actor,target,options.traitContext);
     return {dmg,killed,missed:false,critical};
   }
@@ -10230,7 +10353,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
       updateHeader();
       return;
     }
@@ -10238,7 +10361,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
   }
 
   async function attemptEscape(){
@@ -10542,7 +10665,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -10550,7 +10673,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -10740,7 +10863,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -10805,7 +10928,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -10831,7 +10954,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43c";
     updateHeader();
     toast("戦闘テストを終了");
   }
