@@ -3570,10 +3570,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43d</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43e</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43d</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43e</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3585,7 +3585,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.43d</div>
+      <div class="title-version">DEV v0.43e</div>
     </section>
   </main>
 
@@ -4137,7 +4137,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.43d</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.43e</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4166,7 +4166,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.43d";
+  const DEV_VERSION = "v0.43e";
   const SAVE_SCHEMA_VERSION = 6;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4786,7 +4786,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43d" : "ミレスタ・仲間編成 v0.43d";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43e" : "ミレスタ・仲間編成 v0.43e";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4800,7 +4800,7 @@
     }
     openTownTalkModal();
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43e"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -5205,11 +5205,27 @@
     const card=document.querySelector(".character-portrait-card");
     const portrait=$("characterPortrait"); if(!card||!portrait)return;
     card.classList.add("picker-mode"); portrait.className="";
+    const emptyId={weapon:"bare",shield:"no_shield",body:"no_body",accessory:"no_accessory"}[slot];
     const previewId=state.equipmentPreviewId||c.equipment[slot];
     const items=(equipmentInventory[slot]||[]).filter(id=>ownedEquipmentCount(id)>0 || id===c.equipment[slot]);
-    const list=items.map(id=>{const item=equipmentCatalog[id];const bits=equipmentItemBits(c,item);const noCopy=id!==c.equipment[slot] && freeEquipmentCount(id,c.id)<=0;const unavailable=!!item.unavailable||noCopy;return `<button class="equipment-picker-item${id===previewId?" preview":""}${id===c.equipment[slot]?" equipped":""}" data-picker-item="${id}" ${unavailable?"disabled":""}><span class="ico">${item.icon||"－"}</span><span><b>${item.name}</b><small>${bits.join(" / ")||"補正なし"}</small></span><span class="mark">${item.unavailable?"保留":noCopy?"使用中":id===c.equipment[slot]?"装備中":`×${ownedEquipmentCount(id)}`}</span></button>`;}).join("");
-    const item=equipmentCatalog[previewId]; const same=previewId===c.equipment[slot];
-    portrait.innerHTML=`<div class="equipment-picker"><div class="equipment-picker-head"><strong>${EQUIPMENT_SLOT_LABELS[slot]}を選択</strong><span>${items.length}個</span></div><div class="equipment-picker-list">${list}</div><div class="equipment-picker-footer"><div class="equipment-picker-desc"><strong>${item?.name||"装備なし"}</strong><br>${item?.desc||""}</div><div class="equipment-picker-actions"><button id="equipmentPickerCancel">キャンセル</button><button class="primary" id="equipmentPickerConfirm" ${same?"disabled":""}>装備する</button></div></div></div>`;
+    const list=items.map(id=>{
+      const item=equipmentCatalog[id];
+      const bits=equipmentItemBits(c,item);
+      const isEmpty=id===emptyId;
+      const free=freeEquipmentCount(id,c.id);
+      const noCopy=!isEmpty && id!==c.equipment[slot] && free<=0;
+      const unavailable=!!item.unavailable||noCopy;
+      const mark=item.unavailable?"保留":noCopy?"使用中":id===c.equipment[slot]?"装備中":isEmpty?"":`×${free}`;
+      return `<button class="equipment-picker-item${id===previewId?" preview":""}${id===c.equipment[slot]?" equipped":""}" data-picker-item="${id}" ${unavailable?"disabled":""}><span class="ico">${item.icon||"－"}</span><span><b>${item.name}</b><small>${bits.join(" / ")||"補正なし"}</small></span><span class="mark">${mark}</span></button>`;
+    }).join("");
+    const item=equipmentCatalog[previewId];
+    const same=previewId===c.equipment[slot];
+    const previewIsEmpty=previewId===emptyId;
+    const currentIsEmpty=c.equipment[slot]===emptyId;
+    const removeMode=(!currentIsEmpty && (same||previewIsEmpty));
+    const confirmLabel=removeMode?"装備をはずす":"装備する";
+    const confirmDisabled=same&&currentIsEmpty;
+    portrait.innerHTML=`<div class="equipment-picker"><div class="equipment-picker-head"><strong>${EQUIPMENT_SLOT_LABELS[slot]}を選択</strong><span>${items.length}個</span></div><div class="equipment-picker-list">${list}</div><div class="equipment-picker-footer"><div class="equipment-picker-desc"><strong>${item?.name||"装備なし"}</strong><br>${item?.desc||""}</div><div class="equipment-picker-actions"><button id="equipmentPickerCancel">キャンセル</button><button class="primary" id="equipmentPickerConfirm" ${confirmDisabled?"disabled":""}>${confirmLabel}</button></div></div></div>`;
     const listEl=portrait.querySelector(".equipment-picker-list");
     if(listEl) listEl.scrollTop=state.equipmentPickerScrollTop||0;
     portrait.querySelectorAll("[data-picker-item]").forEach(b=>b.onclick=()=>{
@@ -5219,7 +5235,11 @@
       renderEquipmentPicker(c,slot);
     });
     $("equipmentPickerCancel").onclick=()=>{state.equipmentPickerOpen=false;state.equipmentPreviewId=c.equipment[slot];state.equipmentPickerScrollTop=0;renderEquipmentTab(c);renderCharacterPortrait(c);};
-    $("equipmentPickerConfirm").onclick=()=>{changeEquipment(c,slot,state.equipmentPreviewId);state.equipmentPickerOpen=false;state.equipmentPreviewId=c.equipment[slot];state.equipmentPickerScrollTop=0;renderCharacterDetail(c.id,true);};
+    $("equipmentPickerConfirm").onclick=()=>{
+      const targetId=removeMode?emptyId:state.equipmentPreviewId;
+      changeEquipment(c,slot,targetId);
+      state.equipmentPickerOpen=false;state.equipmentPreviewId=c.equipment[slot];state.equipmentPickerScrollTop=0;renderCharacterDetail(c.id,true);
+    };
   }
 
   function renderEquipmentTab(c){
@@ -5351,7 +5371,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43d" : "ミレスタ・仲間編成 v0.43d";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43e" : "ミレスタ・仲間編成 v0.43e";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -5384,13 +5404,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43e";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43e";
     updateHeader();
   };
 
@@ -10590,7 +10610,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43e";
       updateHeader();
       return;
     }
@@ -10598,7 +10618,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43e";
   }
 
   async function attemptEscape(){
@@ -10902,7 +10922,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43e";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -10910,7 +10930,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43e";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -11118,7 +11138,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43e";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -11183,7 +11203,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43e";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -11209,7 +11229,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43d";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43e";
     updateHeader();
     toast("戦闘テストを終了");
   }
