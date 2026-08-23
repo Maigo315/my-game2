@@ -3557,7 +3557,7 @@
 
 
 
-  /* v0.43k limited merchant stock row + stable shop footer */
+  /* v0.43l limited merchant stock row + stable shop footer */
   .shop-row-side{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px;min-width:94px}
   .shop-row-meta{display:flex;align-items:center;justify-content:flex-end;gap:5px;white-space:nowrap;max-width:100%}
   .shop-stock-badge{
@@ -3583,7 +3583,7 @@
   }
 
 
-  /* v0.43k shared inventory browser: home = view only, exploration = field-use enabled */
+  /* v0.43l shared inventory browser: home = view only, exploration = field-use enabled */
   .inventory-panel{
     width:min(860px,96vw);height:min(610px,94vh);overflow:hidden!important;
     display:flex;flex-direction:column;
@@ -3654,10 +3654,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43k</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43l</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43k</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43l</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3669,7 +3669,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.43k</div>
+      <div class="title-version">DEV v0.43l</div>
     </section>
   </main>
 
@@ -4230,7 +4230,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.43k</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.43l</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4259,7 +4259,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.43k";
+  const DEV_VERSION = "v0.43l";
   const SAVE_SCHEMA_VERSION = 7;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4880,7 +4880,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43k" : "ミレスタ・仲間編成 v0.43k";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43l" : "ミレスタ・仲間編成 v0.43l";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4895,7 +4895,7 @@
     }
     openTownTalkModal();
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43k"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -5466,7 +5466,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43k" : "ミレスタ・仲間編成 v0.43k";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43l" : "ミレスタ・仲間編成 v0.43l";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -5499,13 +5499,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43k";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43k";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
     updateHeader();
   };
 
@@ -6013,7 +6013,7 @@
 
   };
 
-  // v0.43k: equipment icons are standardized by equipment category.
+  // v0.43l: equipment icons are standardized by equipment category.
   const EQUIPMENT_CATEGORY_ICONS={
     weapon:{fist:"🥊",sword:"🗡️",axe:"🪓",bow:"🏹",staff:"🪄",whip:"➰",gun:"🔫"},
     shield:"🛡️",
@@ -7498,17 +7498,17 @@
     arachne:{
       name:"アラクネ",img:IMG.arachne,exp:22,gold:9,critRate:0,evasionRate:0,
       bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.arachne.resist},
-      skills:["poison"],ai:"arachnePoison",stats:{hp:70,mp:10,atk:18,def:12,magic:16,mdef:14,spd:13}
+      skills:["poison"],ai:"arachnePoison",stats:{hp:85,mp:10,atk:28,def:14,magic:16,mdef:15,spd:18}
     },
     slimebes:{
       name:"スライムベス娘",img:IMG.slimebes,exp:28,gold:12,critRate:0,evasionRate:0,
       bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.slimebes.resist},
-      skills:[],ai:"basic",stats:{hp:110,mp:0,atk:29,def:9,magic:5,mdef:9,spd:12}
+      skills:[],ai:"basic",stats:{hp:110,mp:0,atk:34,def:9,magic:5,mdef:9,spd:12}
     },
     harpy:{
       name:"ハーピー",img:IMG.harpy,exp:24,gold:10,critRate:0,evasionRate:5,
       bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.harpy.resist},
-      skills:["sonic"],ai:"harpySonic",stats:{hp:60,mp:12,atk:20,def:8,magic:18,mdef:10,spd:28}
+      skills:["sonic"],ai:"harpySonic",stats:{hp:70,mp:12,atk:24,def:8,magic:27,mdef:11,spd:32}
     },
     vanguard:{
       name:"魔界の尖兵",img:HELLHOUND_IMG,exp:0,gold:0,critRate:0,evasionRate:0,boss:true,
@@ -7536,21 +7536,21 @@
       ["slime","slime","slime","slime"],["slime","slime","dog"],["slug","slug"],["fairy","fairy"],["dog","fairy","slug"]
     ]},
     caveSide:{label:"🕳️ 洞窟の横道",formations:[
-      ["slug","slug","slug"],
+      ["slug","slug","slug","slug"],
       ["momo","slug","slug"],
-      ["momo","momo"],
-      ["arachne"],
+      ["momo","momo","momo"],
       ["arachne","arachne"],
+      ["arachne","arachne","arachne"],
       ["slimebes"],
-      ["slug","arachne","slug"],
-      ["arachne","arachne","arachne"]
+      ["slug","arachne","arachne","slug"],
+      ["arachne","arachne","arachne","arachne"]
     ],rareFormationIndexes:[7],rareRate:.05},
     yodyRegion:{label:"🌊 ヨーディー地方",formations:[
-      ["arachne","arachne"],
-      ["slimebes"],
+      ["arachne","arachne","arachne"],
+      ["slimebes","slimebes"],
       ["slime","slimebes","slime"],
       ["arachne","slimebes"],
-      ["harpy","harpy"],
+      ["harpy","harpy","harpy"],
       ["slimebes","harpy"],
       ["arachne","harpy","slimebes"]
     ],rareFormationIndexes:[6],rareRate:.05},
@@ -10511,7 +10511,7 @@
     }
 
     if(enemy.ai==="harpySonic"){
-      if(enemySkillAvailable(enemy,"sonic") && Math.random()<.30) return {type:"skill",skillId:"sonic"};
+      if(enemySkillAvailable(enemy,"sonic") && Math.random()<.40) return {type:"skill",skillId:"sonic"};
       return {type:"attack"};
     }
 
@@ -10868,7 +10868,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43k";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
       updateHeader();
       return;
     }
@@ -10876,7 +10876,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43k";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
   }
 
   async function attemptEscape(){
@@ -11180,7 +11180,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43k";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -11188,7 +11188,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43k";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -11396,7 +11396,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43k";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -11461,7 +11461,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43k";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -11487,7 +11487,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43k";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
     updateHeader();
     toast("戦闘テストを終了");
   }
