@@ -729,6 +729,15 @@
   .battle-target-icon{font-size:28px;line-height:1}
   .battle-target-title{font-size:13px;font-weight:1000;color:#eaf7ff}
   .battle-target-hint{margin:0;color:#a9c4d8;font-size:9px;line-height:1.45}
+  .battle-target-list{width:100%;display:grid;grid-template-columns:1fr;gap:5px;margin:1px 0;min-height:0}
+  .battle-target-list[hidden]{display:none}
+  .battle-target-enemy{
+    width:100%;min-height:31px;padding:5px 7px;border:1px solid #4e7896;border-radius:8px;
+    background:linear-gradient(#18344a,#102536);color:#eef8ff;font-size:10px;font-weight:1000;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.15;
+  }
+  .battle-target-enemy:hover{border-color:#8bd7ff;filter:brightness(1.12)}
+  .battle-target-enemy:active{transform:translateY(1px)}
   .battle-target-back{
     width:100%;min-height:38px;margin-top:3px;border:1px solid #71869a;border-radius:9px;
     background:linear-gradient(#30465a,#1b2d3e);color:#eef6fc;font-size:11px;font-weight:1000;cursor:pointer;
@@ -3657,10 +3666,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43n</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43p</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43n</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43p</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3672,7 +3681,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.43n</div>
+      <div class="title-version">DEV v0.43p</div>
     </section>
   </main>
 
@@ -3942,6 +3951,7 @@
             <div class="battle-target-icon" id="battleTargetIcon">🎯</div>
             <div class="battle-target-title" id="battleTargetTitle">対象を選択</div>
             <p class="battle-target-hint" id="battleTargetHint">光っている対象をタップしてください。</p>
+            <div class="battle-target-list" id="battleTargetList" hidden></div>
             <button class="battle-target-back" id="battleTargetBackBtn" type="button">↩ 戻る</button>
           </div>
           <div class="command-grid">
@@ -4241,7 +4251,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.43n</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.43p</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4270,7 +4280,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.43o";
+  const DEV_VERSION = "v0.43p";
   const SAVE_SCHEMA_VERSION = 8;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4896,7 +4906,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43n" : "ミレスタ・仲間編成 v0.43n";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43p" : "ミレスタ・仲間編成 v0.43p";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4911,7 +4921,7 @@
     }
     openTownTalkModal();
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -5482,7 +5492,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43n" : "ミレスタ・仲間編成 v0.43n";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43p" : "ミレスタ・仲間編成 v0.43p";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -5515,13 +5525,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
     updateHeader();
   };
 
@@ -6691,7 +6701,7 @@
     return [...new Set([...state.battleActive,...state.battleReserve])];
   }
 
-  // v0.31 condition container. Poison / Blind / Silence / Shock are battle states and clear when battle ends.
+  // v0.43p condition container. Poison persists between battles during exploration; other battle-only conditions clear when battle ends.
   function conditionsOf(c){
     if(!c.conditions) c.conditions={poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false};
     return c.conditions;
@@ -6721,7 +6731,7 @@
   }
 
   function clearBattleEndStates(){
-    travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:false}));
+    travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:true}));
   }
 
   function battleStatusEffectMarkup(c){
@@ -8939,17 +8949,47 @@
     return skills[mode.skill]?.name || "スキル";
   }
 
+  function chooseBattleEnemyTarget(enemyUid){
+    if(state.battlePhase!=="input" || state.battleEnded || state.battleTargetMode?.kind!=="enemy") return;
+    const enemy=enemyByUid(enemyUid);
+    if(!enemy || enemy.hp<=0) return;
+    cancelScheduledTurnStart();
+    const mode=state.battleTargetMode;
+    state.battleTargetMode=null;
+    if(mode.source==="attack") queueAction({type:"attack",targetUid:enemy.uid});
+    else if(mode.source==="item") queueAction({type:"item",item:mode.item,targetUid:enemy.uid});
+    else if(mode.source==="skill") queueAction({type:"skill",skill:mode.skill,targetUid:enemy.uid});
+  }
+
+  function renderBattleTargetList(mode=state.battleTargetMode){
+    const list=$("battleTargetList");
+    if(!list) return;
+    list.innerHTML="";
+    const show=!!(mode && mode.kind==="enemy");
+    list.hidden=!show;
+    if(!show) return;
+    livingEnemies().slice(0,5).forEach(enemy=>{
+      const btn=document.createElement("button");
+      btn.type="button";
+      btn.className="battle-target-enemy";
+      btn.textContent=enemy.displayName;
+      btn.onclick=()=>chooseBattleEnemyTarget(enemy.uid);
+      list.appendChild(btn);
+    });
+  }
+
   function updateBattleTargetUi(){
     const commands=$("battleCommands"), mode=state.battleTargetMode;
     if(!commands) return;
     commands.classList.toggle("target-mode",!!mode);
+    renderBattleTargetList(mode);
     if(!mode) return;
     const name=targetModeName(mode);
     const enemy=mode.kind==="enemy";
     $("battleTargetIcon").textContent=enemy ? "🎯" : "💠";
     $("battleTargetTitle").textContent=`${name}：対象を選択`;
     $("battleTargetHint").textContent=enemy
-      ? "光っている敵をタップしてください。"
+      ? "敵の名前、または光っている敵をタップしてください。"
       : (mode.requireKO ? "光っている戦闘不能の仲間をタップしてください。" : "光っている仲間をタップしてください。");
   }
 
@@ -9349,16 +9389,7 @@
       div.append(img,name,hpWrap);
 
       if(state.battleTargetMode?.kind==="enemy") div.classList.add("targetable");
-      div.onclick=()=>{
-        if(state.battlePhase==="input") cancelScheduledTurnStart();
-        if(state.battlePhase!=="input" || state.battleEnded) return;
-        if(state.battleTargetMode?.kind!=="enemy") return;
-        const mode=state.battleTargetMode;
-        state.battleTargetMode=null;
-        if(mode.source==="attack") queueAction({type:"attack",targetUid:e.uid});
-        else if(mode.source==="item") queueAction({type:"item",item:mode.item,targetUid:e.uid});
-        else if(mode.source==="skill") queueAction({type:"skill",skill:mode.skill,targetUid:e.uid});
-      };
+      div.onclick=()=>chooseBattleEnemyTarget(e.uid);
       stage.appendChild(div);
     });
 
@@ -10902,7 +10933,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
       updateHeader();
       return;
     }
@@ -10910,7 +10941,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
   }
 
   async function attemptEscape(){
@@ -11214,7 +11245,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -11222,7 +11253,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -11430,7 +11461,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -11495,7 +11526,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -11521,7 +11552,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -12249,7 +12280,7 @@
     return card;
   }
 
-  function showExploreSkillEffect(actor,sk,before,changes,text,{battleOnly=false}={}){
+  function showExploreSkillEffect(actor,sk,before,changes,text,{battleOnly=false,returnToTarget=false}={}){
     setExploreSkillModalView("target");
     $("exploreSkillLead").textContent=`${actor.name}：${sk.name} の効果`;
     $("exploreSkillActorView").hidden=true;
@@ -12290,7 +12321,10 @@
     modalEl._effectTimer=setTimeout(()=>{
       modalEl._effectTimer=null;
       $("exploreSkillBackBtn").disabled=false;
-      if($("exploreSkillModal").classList.contains("show")) renderExploreSkillList();
+      if($("exploreSkillModal").classList.contains("show")){
+        if(returnToTarget) renderExploreSkillTargets();
+        else renderExploreSkillList();
+      }
     },1050);
   }
 
@@ -12424,7 +12458,7 @@
     }else if(sk.kind==="mpTransfer"){
       const amount=Math.min(tst.mpMax-tst.mp,sk.restoreMp); tst.mp+=amount; text=`${target.name} のMPが ${amount} 回復`; change={id:target.id,kind:"mp",amount};
     }
-    showExploreSkillEffect(actor,sk,before,change?[change]:[],text,{battleOnly:false});
+    showExploreSkillEffect(actor,sk,before,change?[change]:[],text,{battleOnly:false,returnToTarget:true});
     toast(`${actor.name} の${sk.name}：${text}`);
   }
 
