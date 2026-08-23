@@ -75,25 +75,57 @@
   .menu-btn .icon{font-size:28px;display:block;margin-bottom:5px}
   .locked{opacity:.45;filter:grayscale(.5);cursor:not-allowed!important}
 
-  /* World */
+  /* World: v0.44b pannable route map */
   #worldScreen{align-items:center;justify-content:center;padding-top:18px;padding-bottom:max(18px,var(--safe-bottom));padding-left:calc(18px + var(--safe-left));padding-right:calc(18px + var(--safe-right))}
-  .world-wrap{width:min(1000px,96vw);height:min(560px,calc(100dvh - 92px));display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+  .world-wrap{width:min(1120px,96vw);height:min(590px,calc(100dvh - 92px));display:grid;grid-template-columns:minmax(0,1.16fr) minmax(310px,.84fr);gap:16px}
   .map-panel,.info-panel,.party-panel,.explore-panel{background:rgba(15,27,39,.93);border:1px solid #3a5369;border-radius:18px;overflow:hidden}
-  .map-panel{padding:16px;position:relative}
-  .world-map{height:100%;position:relative;border-radius:14px;background:
-      radial-gradient(circle at 35% 55%,rgba(84,126,74,.55),transparent 26%),
-      radial-gradient(circle at 66% 43%,rgba(107,91,65,.5),transparent 25%),
-      linear-gradient(135deg,#243d42,#152632)}
-  .route{position:absolute;height:3px;background:#71879b;transform-origin:left center;opacity:.85}
+  .map-panel{padding:14px;position:relative;min-width:0;min-height:0}
+  .world-map-viewport{
+    width:100%;height:100%;overflow:auto;overscroll-behavior:contain;scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;cursor:grab;border-radius:14px;
+    background:#10212b;border:1px solid #29465a
+  }
+  .world-map-viewport::-webkit-scrollbar{width:0;height:0}
+  .world-map-viewport.dragging{cursor:grabbing;user-select:none}
+  .world-map{
+    width:1400px;height:950px;position:relative;overflow:hidden;
+    background:
+      radial-gradient(circle at 17% 52%,rgba(83,130,73,.55),transparent 17%),
+      radial-gradient(circle at 43% 29%,rgba(105,93,66,.46),transparent 18%),
+      radial-gradient(circle at 58% 49%,rgba(82,126,113,.34),transparent 20%),
+      linear-gradient(180deg,#203b3e 0%,#18323a 62%,#153647 63%,#102c42 100%)
+  }
+  .world-map:after{
+    content:"";position:absolute;left:0;right:0;top:610px;height:340px;pointer-events:none;
+    background:repeating-linear-gradient(172deg,rgba(105,181,214,.08) 0 3px,transparent 3px 29px);
+    border-top:1px solid rgba(130,190,214,.20)
+  }
+  .world-route-layer{position:absolute;inset:0;width:1400px;height:950px;overflow:visible;pointer-events:none;z-index:1}
+  .route{fill:none;stroke:#7892a7;stroke-width:6;stroke-linecap:round;opacity:.82;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
+  .route.sea-route{stroke:#7fb9ce;stroke-dasharray:14 11;opacity:.58}
+  .world-region-label{
+    position:absolute;z-index:2;padding:4px 9px;border-radius:999px;background:rgba(7,18,26,.48);
+    border:1px solid rgba(91,124,145,.28);color:#8fa9b8;font-size:11px;font-weight:900;letter-spacing:.08em;
+    pointer-events:none
+  }
+  .world-pan-hint{
+    position:absolute;left:50%;bottom:20px;z-index:9;transform:translateX(-50%);pointer-events:none;
+    padding:5px 10px;border-radius:999px;background:rgba(5,13,20,.78);border:1px solid #3b596f;
+    color:#b8c8d4;font-size:10px;font-weight:800;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.28)
+  }
   .area-pin{
-    position:absolute;width:104px;height:70px;transform:translate(-50%,-50%);
-    border-radius:16px;border:2px solid #7fa0bb;background:linear-gradient(#284761,#182e42);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    position:absolute;z-index:4;width:122px;min-height:76px;transform:translate(-50%,-50%);
+    border-radius:17px;border:2px solid #7fa0bb;background:linear-gradient(#284761,#182e42);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 9px;
     cursor:pointer;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.35)
   }
-  .area-pin strong{font-size:14px}
-  .area-pin span{font-size:22px}
-  .area-pin.selected{outline:3px solid var(--gold);border-color:#e3c568}
+  .area-pin strong{font-size:14px;line-height:1.25}
+  .area-pin span{font-size:23px}
+  .area-pin.selected{outline:4px solid var(--gold);border-color:#f0d16a;box-shadow:0 8px 20px rgba(0,0,0,.35),0 0 18px rgba(244,207,106,.22)}
+  @media(max-height:520px){
+    .world-wrap{height:calc(100dvh - 62px);gap:9px;grid-template-columns:minmax(0,1.22fr) minmax(280px,.78fr)}
+    .map-panel{padding:8px}.info-panel{padding:12px}.world-pan-hint{bottom:12px;font-size:8px;padding:4px 8px}
+  }
   .info-panel{padding:18px;display:flex;flex-direction:column}
   .info-panel h2{margin:0 0 8px}
   .info-panel p{color:#c0ccda;line-height:1.6}
@@ -3666,10 +3698,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44a</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44b</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44a</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44b</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3681,7 +3713,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.44a</div>
+      <div class="title-version">DEV v0.44b</div>
     </section>
   </main>
 
@@ -3828,27 +3860,35 @@
   <main id="worldScreen" class="screen">
     <div class="world-wrap">
       <section class="map-panel">
-        <div class="world-map" id="worldMap">
-          <div class="route" id="milestaRoute" style="left:18%;top:74%;width:19%;transform:rotate(-31deg)"></div>
-          <div class="route" id="caveRoute" style="left:34%;top:59%;width:29%;transform:rotate(-29deg)"></div>
-          <div class="route" id="yodyRoute" style="left:58%;top:43%;width:25%;transform:rotate(-27deg);display:none"></div>
-          <div class="route" id="yodyTownRoute" style="left:78%;top:28%;width:17%;transform:rotate(-30deg);display:none"></div>
-          <button class="area-pin" id="milestaTownPin" data-area="milestaTown" style="left:15%;top:78%">
-            <span>🏘️</span><strong>ミレスタ</strong>
-          </button>
-          <button class="area-pin selected" data-area="plains" style="left:31%;top:63%">
-            <span>🌿</span><strong>ミレスタ平原</strong>
-          </button>
-          <button class="area-pin locked" id="cavePin" data-area="cave" style="left:55%;top:45%">
-            <span>🕳️</span><strong>小さな洞窟</strong>
-          </button>
-          <button class="area-pin" id="yodyRegionPin" data-area="yodyRegion" style="left:76%;top:30%;display:none">
-            <span>🌊</span><strong>ヨーディー地方</strong>
-          </button>
-          <button class="area-pin" id="yodyTownPin" data-area="yodyTown" style="left:90%;top:15%;display:none">
-            <span>⚓</span><strong>港町ヨーディー</strong>
-          </button>
+        <div class="world-map-viewport" id="worldMapViewport" aria-label="世界マップ。指で上下左右にスライドできます">
+          <div class="world-map" id="worldMap">
+            <svg class="world-route-layer" viewBox="0 0 1400 950" aria-hidden="true">
+              <path class="route" id="milestaRoute" d="M 220 650 C 218 585, 230 510, 240 445"></path>
+              <path class="route" id="caveRoute" d="M 240 445 C 295 385, 365 315, 450 285"></path>
+              <path class="route" id="yodyRoute" d="M 450 285 C 555 270, 665 284, 760 300" style="display:none"></path>
+              <path class="route" id="yodyTownRoute" d="M 760 300 C 782 365, 792 438, 790 515" style="display:none"></path>
+            </svg>
+            <div class="world-region-label" style="left:92px;top:540px">ミレスタ周辺</div>
+            <div class="world-region-label" style="left:655px;top:205px">ヨーディー地方</div>
+            <div class="world-region-label" style="left:690px;top:680px">ヨーディー海</div>
+            <button class="area-pin" id="milestaTownPin" data-area="milestaTown" data-map-x="220" data-map-y="650" style="left:220px;top:650px">
+              <span>🏘️</span><strong>ミレスタ</strong>
+            </button>
+            <button class="area-pin selected" data-area="plains" data-map-x="240" data-map-y="445" style="left:240px;top:445px">
+              <span>🌿</span><strong>ミレスタ平原</strong>
+            </button>
+            <button class="area-pin locked" id="cavePin" data-area="cave" data-map-x="450" data-map-y="285" style="left:450px;top:285px">
+              <span>🕳️</span><strong>小さな洞窟</strong>
+            </button>
+            <button class="area-pin" id="yodyRegionPin" data-area="yodyRegion" data-map-x="760" data-map-y="300" style="left:760px;top:300px;display:none">
+              <span>🌊</span><strong>ヨーディー地方</strong>
+            </button>
+            <button class="area-pin" id="yodyTownPin" data-area="yodyTown" data-map-x="790" data-map-y="515" style="left:790px;top:515px;display:none">
+              <span>⚓</span><strong>港町ヨーディー</strong>
+            </button>
+          </div>
         </div>
+        <div class="world-pan-hint">☝️ 地図を上下左右にスライド</div>
       </section>
       <section class="info-panel">
         <button class="small-btn" id="backHome" style="align-self:flex-start;padding:8px 12px">← ミレスタへ</button>
@@ -4259,7 +4299,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.44a</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.44b</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4288,7 +4328,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.44a";
+  const DEV_VERSION = "v0.44b";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -5102,7 +5142,39 @@
     }
     openTownTalkModal();
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent=`世界マップ ${DEV_VERSION}`; updateWorld(); showScreen("worldScreen"); };
+  function centerWorldMapOn(area=state.selectedArea,behavior="auto"){
+    const viewport=$("worldMapViewport");
+    const pin=document.querySelector(`.area-pin[data-area="${area}"]`);
+    if(!viewport||!pin||pin.style.display==="none") return;
+    const x=Number(pin.dataset.mapX)||pin.offsetLeft;
+    const y=Number(pin.dataset.mapY)||pin.offsetTop;
+    const left=Math.max(0,Math.min(viewport.scrollWidth-viewport.clientWidth,x-viewport.clientWidth/2));
+    const top=Math.max(0,Math.min(viewport.scrollHeight-viewport.clientHeight,y-viewport.clientHeight/2));
+    viewport.scrollTo({left,top,behavior});
+  }
+  function enableWorldMapMousePan(){
+    const viewport=$("worldMapViewport");
+    if(!viewport||viewport.dataset.panReady) return;
+    viewport.dataset.panReady="1";
+    let dragging=false,startX=0,startY=0,startLeft=0,startTop=0;
+    viewport.addEventListener("pointerdown",e=>{
+      if(e.pointerType!=="mouse"||e.button!==0||e.target.closest(".area-pin")) return;
+      dragging=true;startX=e.clientX;startY=e.clientY;startLeft=viewport.scrollLeft;startTop=viewport.scrollTop;
+      viewport.classList.add("dragging");viewport.setPointerCapture?.(e.pointerId);e.preventDefault();
+    });
+    viewport.addEventListener("pointermove",e=>{
+      if(!dragging) return;
+      viewport.scrollLeft=startLeft-(e.clientX-startX);viewport.scrollTop=startTop-(e.clientY-startY);
+    });
+    const endDrag=e=>{if(!dragging)return;dragging=false;viewport.classList.remove("dragging");try{viewport.releasePointerCapture?.(e.pointerId);}catch(_){}};
+    viewport.addEventListener("pointerup",endDrag);viewport.addEventListener("pointercancel",endDrag);
+  }
+  enableWorldMapMousePan();
+  $("goWorld").onclick=()=>{
+    $("topSubtitle").textContent=`世界マップ ${DEV_VERSION}`;
+    updateWorld();showScreen("worldScreen");
+    requestAnimationFrame(()=>centerWorldMapOn(state.selectedArea,"auto"));
+  };
   $("saveLoadBtn").onclick=()=>openSaveUi(state.currentTown,"save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -5706,7 +5778,7 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
       updateHeader();
       return;
     }
@@ -6880,7 +6952,7 @@
     return [...new Set([...state.battleActive,...state.battleReserve])];
   }
 
-  // v0.44a condition container. Poison persists between battles during exploration; other battle-only conditions clear when battle ends.
+  // v0.44b condition container. Poison persists between battles during exploration; other battle-only conditions clear when battle ends.
   function conditionsOf(c){
     if(!c.conditions) c.conditions={poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false};
     return c.conditions;
@@ -6917,7 +6989,7 @@
     });
   }
 
-  // v0.44a: KO immediately removes temporary buffs and every status condition, including poison.
+  // v0.44b: KO immediately removes temporary buffs and every status condition, including poison.
   function clearStatesOnKo(c){
     if(!c || S(c).hp>0) return;
     c.defending=false;
@@ -7741,7 +7813,7 @@
     harpy:{
       name:"ハーピー",img:IMG.harpy,exp:24,gold:10,critRate:0,evasionRate:5,
       bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.harpy.resist},
-      skills:["sonic"],ai:"harpySonic",stats:{hp:70,mp:12,atk:24,def:8,magic:27,mdef:11,spd:32}
+      skills:["sonic"],ai:"harpySonic",stats:{hp:70,mp:12,atk:24,def:8,magic:27,mdef:11,spd:45}
     },
     vanguard:{
       name:"魔界の尖兵",img:HELLHOUND_IMG,exp:0,gold:0,critRate:0,evasionRate:0,boss:true,
@@ -11147,7 +11219,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
       updateHeader();
       return;
     }
@@ -11155,7 +11227,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
   }
 
   async function attemptEscape(){
@@ -11459,7 +11531,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -11467,7 +11539,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -11675,7 +11747,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -11740,7 +11812,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -11766,7 +11838,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -11990,11 +12062,11 @@
     const a=state.selectedArea;
     const caveVisible=!!state.caveUnlocked;
     if($("cavePin")) $("cavePin").style.display=caveVisible?"flex":"none";
-    if($("caveRoute")) $("caveRoute").style.display=caveVisible?"block":"none";
+    if($("caveRoute")) $("caveRoute").style.display=caveVisible?"":"none";
     if($("yodyRegionPin")) $("yodyRegionPin").style.display=yodyUnlocked?"flex":"none";
-    if($("yodyRoute")) $("yodyRoute").style.display=yodyUnlocked?"block":"none";
+    if($("yodyRoute")) $("yodyRoute").style.display=yodyUnlocked?"":"none";
     if($("yodyTownPin")) $("yodyTownPin").style.display=yodyTownUnlocked?"flex":"none";
-    if($("yodyTownRoute")) $("yodyTownRoute").style.display=yodyTownUnlocked?"block":"none";
+    if($("yodyTownRoute")) $("yodyTownRoute").style.display=yodyTownUnlocked?"":"none";
     document.querySelectorAll(".area-pin").forEach(p=>p.classList.toggle("selected",p.dataset.area===a));
     if(a==="milestaTown"){
       $("areaName").textContent="辺境の町ミレスタ";
