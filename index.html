@@ -130,6 +130,9 @@
   .explore-panel{flex:1;min-width:0;position:relative;background:
     radial-gradient(circle at 50% 38%,rgba(58,98,77,.28),transparent 42%),
     linear-gradient(#142437,#101a26)}
+  .map-scroll{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:contain}
+  .map-scroll.long-map{overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
+  .map-scroll.long-map #mapSvg{height:auto;min-height:0;aspect-ratio:1000/1420;display:block}
   #mapSvg{width:100%;height:100%;display:block;touch-action:manipulation}
   .edge{stroke:#607a91;stroke-width:4;opacity:.58;vector-effect:non-scaling-stroke}
   .edge.active{stroke:#d2c277;opacity:.9;stroke-width:5}
@@ -3557,7 +3560,7 @@
 
 
 
-  /* v0.43l limited merchant stock row + stable shop footer */
+  /* v0.43n limited merchant stock row + stable shop footer */
   .shop-row-side{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px;min-width:94px}
   .shop-row-meta{display:flex;align-items:center;justify-content:flex-end;gap:5px;white-space:nowrap;max-width:100%}
   .shop-stock-badge{
@@ -3583,7 +3586,7 @@
   }
 
 
-  /* v0.43l shared inventory browser: home = view only, exploration = field-use enabled */
+  /* v0.43n shared inventory browser: home = view only, exploration = field-use enabled */
   .inventory-panel{
     width:min(860px,96vw);height:min(610px,94vh);overflow:hidden!important;
     display:flex;flex-direction:column;
@@ -3654,10 +3657,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43l</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43n</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43l</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43n</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3669,7 +3672,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.43l</div>
+      <div class="title-version">DEV v0.43n</div>
     </section>
   </main>
 
@@ -3850,7 +3853,9 @@
     </aside>
 
     <section class="explore-panel">
-      <svg id="mapSvg" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid meet" aria-label="探索ノードマップ"></svg>
+      <div class="map-scroll" id="mapScroll">
+        <svg id="mapSvg" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid meet" aria-label="探索ノードマップ"></svg>
+      </div>
       <div class="map-header">
         <span class="chip" id="exploreAreaLabel">🌿 ミレスタ平原</span>
         <div class="grow"></div>
@@ -3879,6 +3884,8 @@
               <option value="plains">ミレスタ平原</option>
               <option value="cave1">小さな洞窟</option>
               <option value="cave2">洞窟 第二層</option>
+              <option value="caveSide">洞窟の横道</option>
+              <option value="yodyRegion">ヨーディー地方</option>
               <option value="rare">レア枠</option>
               <option value="caveBoss">魔界の尖兵</option>
             </select>
@@ -4230,7 +4237,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.43l</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.43n</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4259,8 +4266,8 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.43l";
-  const SAVE_SCHEMA_VERSION = 7;
+  const DEV_VERSION = "v0.43n";
+  const SAVE_SCHEMA_VERSION = 8;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
   let saveUiContext = "milesta";
@@ -4284,6 +4291,7 @@
     shopSelectedKey:null,
     travelMerchantMet:false,
     limitedShopPurchases:{},
+    limitedMapTreasures:{},
     caveUnlocked:false,
     caveBossDefeated:false,
     selectedArea: "plains",
@@ -4880,7 +4888,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43l" : "ミレスタ・仲間編成 v0.43l";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43n" : "ミレスタ・仲間編成 v0.43n";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4895,7 +4903,7 @@
     }
     openTownTalkModal();
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -5466,7 +5474,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43l" : "ミレスタ・仲間編成 v0.43l";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43n" : "ミレスタ・仲間編成 v0.43n";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -5499,13 +5507,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
     updateHeader();
   };
 
@@ -6013,7 +6021,7 @@
 
   };
 
-  // v0.43l: equipment icons are standardized by equipment category.
+  // v0.43n: equipment icons are standardized by equipment category.
   const EQUIPMENT_CATEGORY_ICONS={
     weapon:{fist:"🥊",sword:"🗡️",axe:"🪓",bow:"🏹",staff:"🪄",whip:"➰",gun:"🔫"},
     shield:"🛡️",
@@ -6898,6 +6906,7 @@
       items:{...(state.items||{})},
       travelMerchantMet:!!state.travelMerchantMet,
       limitedShopPurchases:{...(state.limitedShopPurchases||{})},
+      limitedMapTreasures:{...(state.limitedMapTreasures||{})},
       caveUnlocked:!!state.caveUnlocked,
       caveBossDefeated:!!state.caveBossDefeated,
       eventFlags:{...(state.eventFlags||{})},
@@ -6929,6 +6938,7 @@
     state.items={...(base.items||{}),...(data.items||{})};
     state.travelMerchantMet=!!data.travelMerchantMet;
     state.limitedShopPurchases={...(base.limitedShopPurchases||{}),...(data.limitedShopPurchases||{})};
+    state.limitedMapTreasures={...(base.limitedMapTreasures||{}),...(data.limitedMapTreasures||{})};
     state.caveUnlocked=!!data.caveUnlocked;
     state.caveBossDefeated=!!data.caveBossDefeated;
     state.eventFlags={...(base.eventFlags||{}),...(data.eventFlags||{})};
@@ -7861,7 +7871,8 @@
       {kind:"equip",id:"steel_claw"},{kind:"equip",id:"iron_sword"},{kind:"equip",id:"steel_axe"},{kind:"equip",id:"iron_bow"},{kind:"equip",id:"iron_rod"},{kind:"equip",id:"iron_whip"},{kind:"equip",id:"type_zel"}
     ],
     plains:[{kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"}],
-    cave:[{kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"},{kind:"equip",id:"alm_small_shield",stockLimit:1,stockKey:"travel:alm_small_shield"}]
+    cave:[{kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"},{kind:"equip",id:"alm_small_shield",stockLimit:1,stockKey:"travel:alm_small_shield"}],
+    caveSide:[{kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"},{kind:"equip",id:"hunter_charm"},{kind:"equip",id:"light_shoes"}]
   };
   function shopEntryData(entry){ return entry?.kind==="item"?ITEMS[entry.id]:equipmentCatalog[entry?.id]; }
   function shopEntryKey(entry){ return entry?`${entry.kind}:${entry.id}`:""; }
@@ -7980,7 +7991,7 @@
   function setShopMerchant(key){
     const img=$("shopMerchantImg"),sil=$("shopMerchantSilhouette");
     img.classList.remove("show");sil.classList.remove("show","female"); img.removeAttribute("src");
-    if(key==="plains" || key==="cave"){
+    if(key==="plains" || key==="cave" || key==="caveSide"){
       img.src=TRAVEL_MERCHANT_IMG; img.alt="旅の商人"; img.classList.add("show");
       const first=!state.travelMerchantMet;
       $("shopMerchantLine").textContent=first?"おや？お主は……ククク、これは面白い。私は旅の商人だ。さあ、買って行くといい":"ここで会ったのも何かの縁だ……。さあ、買って行くといい";
@@ -7992,7 +8003,7 @@
   }
   function openShop(key="town"){
     state.currentShop=key; state.shopMode="buy"; state.shopSelectedKey=null;
-    const shopTitles={town:"ミレスタ商店",yordy:"港町ヨーディー・武器屋",tileno:"ティレーノの街・武器屋",granzel:"グランゼル城下町・武器屋",cave:"洞窟の旅商人",plains:"旅の商人"};
+    const shopTitles={town:"ミレスタ商店",yordy:"港町ヨーディー・武器屋",tileno:"ティレーノの街・武器屋",granzel:"グランゼル城下町・武器屋",cave:"洞窟の旅商人",caveSide:"洞窟の横道・旅商人",plains:"旅の商人"};
     $("shopTitle").textContent=shopTitles[key]||"旅の商人";
     $("shopLead").textContent="商品を選ぶと、装備時の能力差をその場で確認できます。";
     setShopMerchant(key); renderShop(); const sf=$("shopFlash"); if(sf){sf.textContent=""; sf.className="shop-flash";} $("shopModal").classList.add("show");
@@ -10882,7 +10893,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
       updateHeader();
       return;
     }
@@ -10890,7 +10901,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
   }
 
   async function attemptEscape(){
@@ -11194,7 +11205,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -11202,7 +11213,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -11410,7 +11421,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -11475,7 +11486,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -11501,7 +11512,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43l";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43n";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -11770,26 +11781,42 @@
   }
   function weightedNode(layer,area="plains"){
     const battleMult=battleNodeWeightMultiplier();
-    if(layer===1) return weightedChoice([{type:"battle",weight:3*battleMult},{type:"chest",weight:1}]);
-    const base=area==="cave"
+    if(layer===1 && area!=="caveSide") return weightedChoice([{type:"battle",weight:3*battleMult},{type:"chest",weight:1}]);
+    const base=(area==="cave" || area==="caveSide")
       ? {battle:52,chest:18,heal:12,event:15,shop:3}
       : {battle:48,chest:18,heal:12,event:16,shop:6};
     return weightedChoice(Object.entries(base).map(([type,weight])=>({type,weight:type==="battle"?weight*battleMult:weight})));
   }
 
+  const CAVE_SIDE_NORMAL_LAYERS=12;
+  const CAVE_SIDE_GOAL_LAYER=13;
+  const CAVE_SIDE_VIEW_HEIGHT=1420;
+  function caveSideLayerY(layer){ return 1360-layer*100; }
+
   function buildMap(area="plains",caveLayer=1){
     const layers=[];
-    layers.push([{id:"L0N0",layer:0,index:0,x:500,y:655,type:"start",out:[]}]);
+    const isCaveSide=area==="caveSide";
+    const normalLayerCount=isCaveSide?CAVE_SIDE_NORMAL_LAYERS:5;
+    const goalLayer=isCaveSide?CAVE_SIDE_GOAL_LAYER:6;
     const yPositions=[655,555,455,355,255,155,65];
-    for(let l=1;l<=5;l++){
+    const yForLayer=isCaveSide ? caveSideLayerY : (layer=>yPositions[layer]);
+    layers.push([{id:"L0N0",layer:0,index:0,x:500,y:yForLayer(0),type:"start",out:[]}]);
+    for(let l=1;l<=normalLayerCount;l++){
       const count=2+rand(2);
       const xs=count===2?[350,650]:[245,500,755];
       layers.push(xs.map((x,i)=>({
-        id:`L${l}N${i}`,layer:l,index:i,x:x+(rand(41)-20),y:yPositions[l],
+        id:`L${l}N${i}`,layer:l,index:i,x:x+(rand(41)-20),y:yForLayer(l),
         type:weightedNode(l,area),out:[]
       })));
     }
-    if(area==="cave"){
+    if(isCaveSide){
+      const layer7=layers[7];
+      if(layer7?.length){
+        const guaranteed=choose(layer7);
+        guaranteed.type="heal";
+        guaranteed.guaranteedMidHeal=true;
+      }
+    }else if(area==="cave"){
       const normalNodes=layers.slice(1).flat();
       if(!normalNodes.some(n=>n.type==="chest")) choose(normalNodes).type="chest";
     }
@@ -11800,8 +11827,8 @@
     if(area==="plains" && prologueStage()>=4 && !recruitTutorialDone()){
       layers[1].forEach(n=>n.type="battle");
     }
-    const goalType=area==="cave"&&caveLayer===1?"stairs":"goal";
-    layers.push([{id:"L6N0",layer:6,index:0,x:500,y:yPositions[6],type:goalType,out:[]}]);
+    const goalType=!isCaveSide && area==="cave"&&caveLayer===1?"stairs":"goal";
+    layers.push([{id:`L${goalLayer}N0`,layer:goalLayer,index:0,x:500,y:yForLayer(goalLayer),type:goalType,out:[]}]);
 
     for(let l=0;l<layers.length-1;l++){
       const prev=layers[l],next=layers[l+1];
@@ -11822,6 +11849,12 @@
         }
       });
     }
+    if(isCaveSide){
+      const heal=layers[7]?.find(n=>n.guaranteedMidHeal);
+      if(heal){
+        layers[6].forEach(p=>{if(!p.out.includes(heal.id)) p.out.push(heal.id);});
+      }
+    }
 
     const flat=layers.flat();
     if(area==="cave"&&caveLayer===2){
@@ -11837,7 +11870,18 @@
   function setExploreAreaLabel(){
     if(!state.run) return;
     if(state.run.area==="cave") $("exploreAreaLabel").textContent=`🕳️ 小さな洞窟・第${state.run.caveLayer===1?"一":"二"}層`;
+    else if(state.run.area==="caveSide") $("exploreAreaLabel").textContent="🕳️ 洞窟の横道";
     else $("exploreAreaLabel").textContent="🌿 ミレスタ平原";
+  }
+
+  function resetRunMapLocalState(){
+    if(!state.run) return;
+    state.run.current="L0N0";
+    state.run.previous=null;
+    state.run.visited=new Set(["L0N0"]);
+    state.run.resolved=new Set();
+    state.run.stealthUsed=false;
+    state.run.slugTrapActive=false;
   }
 
   function startRun(area=state.selectedArea||"plains"){
@@ -11848,7 +11892,7 @@
       caveLayer:cave?1:0,
       nodes:buildMap(cave?"cave":"plains",1),
       current:"L0N0",previous:null,
-      visited:new Set(["L0N0"]),runGold:0,runExp:0,resolved:new Set(),stealthUsed:false
+      visited:new Set(["L0N0"]),runGold:0,runExp:0,resolved:new Set(),stealthUsed:false,slugTrapActive:false
     };
     setExploreAreaLabel();
     showScreen("exploreScreen"); renderMap(); updateRunHud();
@@ -11858,8 +11902,7 @@
     if(!state.run || state.run.area!=="cave") return;
     state.run.caveLayer=layer;
     state.run.nodes=buildMap("cave",layer);
-    state.run.current="L0N0"; state.run.previous=null;
-    state.run.visited=new Set(["L0N0"]); state.run.resolved=new Set(); state.run.stealthUsed=false;
+    resetRunMapLocalState();
     setExploreAreaLabel(); renderMap(); updateRunHud();
   }
 
@@ -11870,10 +11913,20 @@
     state.run.area="cave";
     state.run.caveLayer=1;
     state.run.nodes=buildMap("cave",1);
-    state.run.current="L0N0"; state.run.previous=null;
-    state.run.visited=new Set(["L0N0"]); state.run.resolved=new Set(); state.run.stealthUsed=false;
+    resetRunMapLocalState();
     setExploreAreaLabel(); renderMap(); updateRunHud();
     toast("小さな洞窟・第一層へ進んだ");
+  }
+
+  function enterCaveSidepath(){
+    if(!state.run) return;
+    state.run.area="caveSide";
+    state.run.caveLayer=0;
+    state.run.nodes=buildMap("caveSide",0);
+    resetRunMapLocalState();
+    setExploreAreaLabel(); renderMap(); updateRunHud();
+    requestAnimationFrame(()=>scrollMapToCurrent(true));
+    toast("洞窟の横道へ進んだ");
   }
 
   function byId(id){ return state.run.nodes.find(n=>n.id===id); }
@@ -11889,14 +11942,18 @@
   }
 
   function renderMap(){
-    const svg=$("mapSvg");
+    const svg=$("mapSvg"),scroller=$("mapScroll");
     svg.innerHTML="";
     const run=state.run;
+    const isLong=run?.area==="caveSide";
+    if(scroller) scroller.classList.toggle("long-map",isLong);
+    svg.setAttribute("viewBox",isLong?`0 0 1000 ${CAVE_SIDE_VIEW_HEIGHT}`:"0 0 1000 720");
     const reachable=reachableIds();
 
     // subtle floor separators
-    for(let l=1;l<=5;l++){
-      const y=655-l*100;
+    const floorCount=isLong?CAVE_SIDE_NORMAL_LAYERS:5;
+    for(let l=1;l<=floorCount;l++){
+      const y=isLong?caveSideLayerY(l):655-l*100;
       const line=svgEl("line",{x1:95,y1:y+45,x2:930,y2:y+45,stroke:"#263b4c","stroke-width":"2","stroke-dasharray":"8 12"});
       svg.appendChild(line);
       const label=svgEl("text",{x:35,y:y+6,class:"floor-label"});
@@ -11926,6 +11983,7 @@
       else if(!isVisited) g.classList.add("unreachable");
       g.setAttribute("transform",`translate(${n.x},${n.y})`);
       g.setAttribute("role","button");
+      g.setAttribute("data-node-id",n.id);
       g.setAttribute("aria-label",NODE[n.type].label);
       const c=svgEl("circle",{cx:0,cy:0,r:34,fill:NODE[n.type].color});
       const icon=svgEl("text",{x:0,y:2});
@@ -11936,6 +11994,16 @@
       }
       svg.appendChild(g);
     });
+  }
+
+  function scrollMapToCurrent(immediate=false){
+    if(!state.run || state.run.area!=="caveSide") return;
+    const scroller=$("mapScroll"),svg=$("mapSvg");
+    if(!scroller || !svg) return;
+    const current=byId(state.run.current); if(!current) return;
+    const scale=svg.getBoundingClientRect().height/CAVE_SIDE_VIEW_HEIGHT;
+    const target=Math.max(0,current.y*scale-scroller.clientHeight*.68);
+    scroller.scrollTo({top:target,behavior:immediate?"auto":"smooth"});
   }
 
   function renderExploreParty(){
@@ -12500,6 +12568,8 @@
     if(state.run.area==="cave"){
       const layerName=state.run.caveLayer===1?"第一層":"第二層";
       $("floorText").textContent=cur.layer===0?`${layerName} 入口`:cur.layer===6?`${layerName} 最奥`:`${layerName} ${cur.layer}F`;
+    }else if(state.run.area==="caveSide"){
+      $("floorText").textContent=cur.layer===0?"入口":cur.layer===CAVE_SIDE_GOAL_LAYER?"出口":`${cur.layer}F`;
     }else $("floorText").textContent=cur.layer===0 ? "入口" : cur.layer===6 ? "最奥" : `${cur.layer}F`;
     $("runGoldText").textContent=state.run.runGold;
     $("runExpText").textContent=state.run.runExp;
@@ -12515,6 +12585,7 @@
     state.run.visited.add(id);
     renderMap();
     updateRunHud();
+    scrollMapToCurrent(false);
     resolveNode(byId(id));
   }
 
@@ -12567,14 +12638,39 @@
     if(roll<98){addEquipmentOwned("paw_hand",1);return "肉球ハンド を手に入れた！";}
     addEquipmentOwned("ragged_robe",1);return "ボロボロローブ を手に入れた！";
   }
-  function grantChestReward(){
+  const LIMITED_MAP_TREASURES={
+    caveSide:[
+      {key:"caveSide:leather_armor",kind:"equip",id:"leather_armor"},
+      {key:"caveSide:gas_mask",kind:"equip",id:"gas_mask"}
+    ]
+  };
+  function grantLimitedMapTreasure(area){
+    if(!state.limitedMapTreasures || typeof state.limitedMapTreasures!=="object") state.limitedMapTreasures={};
+    const remaining=(LIMITED_MAP_TREASURES[area]||[]).filter(entry=>!state.limitedMapTreasures[entry.key]);
+    if(!remaining.length) return null;
+    const entry=choose(remaining);
+    state.limitedMapTreasures[entry.key]=true;
+    const data=entry.kind==="equip"?equipmentCatalog[entry.id]:ITEMS[entry.id];
+    if(entry.kind==="equip") addEquipmentOwned(entry.id,1); else addItemCount(entry.id,1);
+    return `✨ お宝！ ${data?.name||entry.id} を手に入れた！`;
+  }
+  function grantCaveSideChestReward({allowTreasure=true}={}){
+    const remaining=(LIMITED_MAP_TREASURES.caveSide||[]).some(entry=>!state.limitedMapTreasures?.[entry.key]);
+    if(allowTreasure && remaining && Math.random()<.30){
+      const treasure=grantLimitedMapTreasure("caveSide");
+      if(treasure) return treasure;
+    }
+    return grantCaveChestReward(2);
+  }
+  function grantChestReward({allowTreasure=true}={}){
+    if(state.run?.area==="caveSide") return grantCaveSideChestReward({allowTreasure});
     return state.run?.area==="cave"?grantCaveChestReward(state.run.caveLayer):grantPlainsChestReward();
   }
   function tryDiggingReward(){
     if(!travelPartyIds().includes("dog")) return null;
     const trait=characterProfiles.dog?.trait;
     if(trait?.id!=="digging" || Math.random()>=(Number(trait.chance)||0)) return null;
-    return grantChestReward();
+    return grantChestReward({allowTreasure:false});
   }
 
   function resolvePlainsEvent(){
@@ -12647,12 +12743,55 @@ ${reward}`,[["進む",closeModal]]);return;
     modal("？ 古びた祠","小さな祠がぽつりと立っている。",[["祈る",()=>{const hit=Math.random()<.01;if(hit){const b=seedBonusOf(roster.hero);b.fate=(Number(b.fate)||0)+1;roster.hero.fate=(Number(roster.hero.fate)||0)+1;}closeModal();modal("⛩ 古びた祠",hit?`何かが変わった気がする。\n${heroName}の運命値が1上がった！`:"しかし何も起こらなかった。",[["進む",closeModal]]);}],["立ち去る",()=>{closeModal();modal("？ 古びた祠",`${heroName}たちはそのまま立ち去った。`,[["進む",closeModal]]);}]]);
   }
 
+  function openRunBattle(area,options={}){
+    const trapped=!!state.run?.slugTrapActive;
+    if(trapped) state.run.slugTrapActive=false;
+    openBattle(true,area,{...options,escapeDisabled:!!options.escapeDisabled||trapped});
+    if(trapped) setTimeout(()=>toast("粘液が足に絡み、この戦闘では逃走できない！"),80);
+  }
+
+  function resolveCaveSideEvent(){
+    const heroName=roster.hero.name,event=rand(7);
+    if(event===0){
+      modal("？ 不安定な岩壁","ひび割れた岩壁の隙間に、何か光るものが見える。手を伸ばしますか？",[
+        ["手を伸ばす",()=>{const r=Math.random();let result;if(r<.80){const g=30+rand(31);addRunGold(g);result=`${g}G を手に入れた！`;}else if(r<.90){addItemCount("magicHerb",1);result="マジックハーブ ×1 を手に入れた！";}else{const id=state.battleActive[0],name=roster[id]?.name||heroName;damageFrontPercent(.15);result=`岩が崩れてきた！\n${name}が最大HPの15%ダメージを受けた。`;}closeModal();updateRunHud();modal("🪨 不安定な岩壁",result,[["進む",closeModal]]);}],
+        ["立ち去る",()=>{closeModal();modal("？ 不安定な岩壁",`${heroName}たちはその場を立ち去った。`,[["進む",closeModal]]);}]
+      ]);return;
+    }
+    if(event===1){
+      if(state.run) state.run.slugTrapActive=true;
+      modal("🐌 ナメクジトラップ","ネバネバの粘液を踏んでしまった！\n次の戦闘では逃走できない。",[["進む",closeModal]]);return;
+    }
+    if(event===2){
+      modal("？ 置き去りのビン","中身の入ったビンが地面に転がっている。拾いますか？",[["はい",()=>{if(Math.random()<.70){const r=Math.random(),id=r<.70?"potion":r<.80?"highPotion":r<.90?"polishDrink":"guardDrink";addItemCount(id,1);closeModal();modal("🧪 置き去りのビン",`${ITEMS[id].name} ×1 を手に入れた！`,[["進む",()=>{closeModal();updateRunHud();}]]);}else{damageActivePercent(.10);closeModal();updateRunHud();modal("💥 置き去りのビン","ビンが突然爆発した！\nバトルメンバー全員が最大HPの10%ダメージを受けた。",[["進む",closeModal]]);}}],["いいえ",()=>{closeModal();modal("？ 置き去りのビン",`${heroName}たちはその場を立ち去った。`,[["進む",closeModal]]);}]]);return;
+    }
+    if(event===3){
+      const id=state.battleActive[0],name=roster[id]?.name||heroName;damageFrontPercent(.30);updateRunHud();
+      modal("🪨 落石",`落石だ！\n${name}が最大HPの30%ダメージを受けた。`,[["進む",closeModal]]);return;
+    }
+    if(event===4){
+      modal("？ 蜘蛛の巣","蜘蛛の巣にアイテムが引っかかっている……。",[
+        ["手を伸ばす",()=>{const reward=grantChestReward({allowTreasure:false});closeModal();updateRunHud();modal("🕸️ 蜘蛛の巣",`${heroName}たちは${reward.replace(" を手に入れた！","")} を入手した！\n\nアラクネたちが襲ってきた！`,[["戦う",()=>{closeModal();openRunBattle("caveSide",{formationIndex:4});}]]);}],
+        ["立ち去る",()=>{closeModal();modal("？ 蜘蛛の巣",`${heroName}たちはその場を立ち去った。`,[["進む",closeModal]]);}]
+      ]);return;
+    }
+    if(event===5){
+      const fate=activeFateTotal();
+      if(fate%2!==0){modal("？ 不思議な手招き","何者かがこちらに手招きしている……。\nしかし見失ってしまった……。",[["進む",closeModal]]);return;}
+      const reward=grantChestReward();updateRunHud();modal("？ 不思議な手招き",`何者かを追った先で、宝箱を発見した！\n${reward}`,[["進む",closeModal]]);return;
+    }
+    modal("？ 古びた祠","小さな祠がぽつりと立っている。",[["祈る",()=>{const hit=Math.random()<.01;if(hit){const b=seedBonusOf(roster.hero);b.fate=(Number(b.fate)||0)+1;roster.hero.fate=(Number(roster.hero.fate)||0)+1;}closeModal();modal("⛩ 古びた祠",hit?`何かが変わった気がする。\n${heroName}の運命値が1上がった！`:"しかし何も起こらなかった。",[["進む",closeModal]]);}],["立ち去る",()=>{closeModal();modal("？ 古びた祠",`${heroName}たちはそのまま立ち去った。`,[["進む",closeModal]]);}]]);
+  }
+
   function returnToPreviousNode(){
     if(!state.run?.previous)return; state.run.current=state.run.previous; state.run.previous=null; renderMap(); updateRunHud();
   }
   function resolveCaveSidepath(){
     if(state.eventFlags?.caveSidepathUnlocked){
-      modal("🪨 崩れた岩壁","町の者たちによって岩壁が取り除かれ、横道が通れるようになっている。\n\n※「洞窟の横道」は今後実装予定です。",[["戻る",()=>{closeModal();returnToPreviousNode();}]]);
+      modal("🪨 崩れた岩壁","町の者たちによって岩壁が取り除かれ、横道が通れるようになっている。\n\n横道へ進みますか？",[
+        ["横道へ進む",()=>{closeModal();enterCaveSidepath();}],
+        ["戻る",()=>{closeModal();returnToPreviousNode();}]
+      ]);
     }else{
       modal("🪨 崩れた岩壁","岩壁が崩れていて通れそうにない……。",[["戻る",()=>{closeModal();returnToPreviousNode();}]]);
     }
@@ -12662,14 +12801,15 @@ ${reward}`,[["進む",closeModal]]);return;
     const repeatableSpecial=node.type==="stairs" || node.type==="sidepath";
     if(state.run.resolved.has(node.id) && !repeatableSpecial) return;
     if(!repeatableSpecial) state.run.resolved.add(node.id);
-    const cave=state.run.area==="cave",layer=state.run.caveLayer;
+    const cave=state.run.area==="cave",side=state.run.area==="caveSide",layer=state.run.caveLayer;
     switch(node.type){
       case "battle": {
-        const recruitTutorialBattle=!cave && node.layer===1 && prologueStage()>=4 && !recruitTutorialDone();
-        if(recruitTutorialBattle) openBattle(true,"plains",{formationIndex:0,special:"recruitTutorial",escapeDisabled:true});
-        else if(!cave) openBattle(true,"plains");
-        else if(layer===1) openBattle(true,"cave1");
-        else openBattle(true,Math.random()<.05?"rare":"cave2");
+        const recruitTutorialBattle=!cave && !side && node.layer===1 && prologueStage()>=4 && !recruitTutorialDone();
+        if(side) openRunBattle("caveSide");
+        else if(recruitTutorialBattle) openRunBattle("plains",{formationIndex:0,special:"recruitTutorial",escapeDisabled:true});
+        else if(!cave) openRunBattle("plains");
+        else if(layer===1) openRunBattle("cave1");
+        else openRunBattle(Math.random()<.05?"rare":"cave2");
         break;
       }
       case "chest": modal("🪎 宝箱",`宝箱を発見！
@@ -12693,8 +12833,8 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
         }else openRest();
         break;
       }
-      case "shop": openShop(cave?"cave":"plains"); break;
-      case "event": cave?resolveCaveEvent():resolvePlainsEvent(); break;
+      case "shop": openShop(side?"caveSide":cave?"cave":"plains"); break;
+      case "event": side?resolveCaveSideEvent():cave?resolveCaveEvent():resolvePlainsEvent(); break;
       case "empty": updateRunHud();toast("何も起こらなかった");break;
       case "sidepath": resolveCaveSidepath(); break;
       case "stairs":
@@ -12703,7 +12843,12 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
           ["まだ進まない",()=>{closeModal();returnToPreviousNode();}]
         ]);break;
       case "goal":
-        if(!cave){
+        if(side){
+          state.eventFlags.caveSidepathCleared=true;
+          modal("★ 洞窟の横道・出口","長い横道を抜け、洞窟の外へ出た。\n先にはヨーディー方面へ続く土地が広がっている。",[
+            ["ミレスタへ帰還",()=>{closeModal();finishRun("洞窟の横道を踏破してミレスタへ帰還しました");}]
+          ]);
+        }else if(!cave){
           if(prologueStage()===2){
             startStoryEvent("plainsPrologueEnd",{force:true});
           }else if(!state.caveUnlocked){
