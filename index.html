@@ -722,25 +722,25 @@
 
   /* v0.38e: command panel changes into a dedicated target-selection lane. */
   .battle-target-panel{
-    display:none;flex:1;min-height:0;flex-direction:column;align-items:center;justify-content:center;gap:7px;
-    padding:9px 7px;border:1px solid #536f86;border-radius:10px;background:linear-gradient(#13283a,#0d1b28);
-    text-align:center;box-shadow:inset 0 0 18px rgba(100,190,235,.05);
+    display:none;flex:1;min-height:0;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:3px;
+    padding:5px 5px;border:1px solid #536f86;border-radius:10px;background:linear-gradient(#13283a,#0d1b28);
+    text-align:center;box-shadow:inset 0 0 18px rgba(100,190,235,.05);overflow:hidden;
   }
-  .battle-target-icon{font-size:28px;line-height:1}
-  .battle-target-title{font-size:13px;font-weight:1000;color:#eaf7ff}
-  .battle-target-hint{margin:0;color:#a9c4d8;font-size:9px;line-height:1.45}
-  .battle-target-list{width:100%;display:grid;grid-template-columns:1fr;gap:5px;margin:1px 0;min-height:0}
+  .battle-target-icon{display:none}
+  .battle-target-title{font-size:11px;font-weight:1000;color:#eaf7ff;line-height:1.1;flex:0 0 auto}
+  .battle-target-hint{margin:0 1px 1px;color:#a9c4d8;font-size:7px;line-height:1.2;flex:0 0 auto}
+  .battle-target-list{width:100%;display:flex;flex:1 1 auto;flex-direction:column;gap:3px;margin:0;min-height:0;overflow:hidden}
   .battle-target-list[hidden]{display:none}
   .battle-target-enemy{
-    width:100%;min-height:31px;padding:5px 7px;border:1px solid #4e7896;border-radius:8px;
-    background:linear-gradient(#18344a,#102536);color:#eef8ff;font-size:10px;font-weight:1000;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.15;
+    width:100%;height:25px;min-height:25px;padding:2px 5px;border:1px solid #4e7896;border-radius:7px;
+    background:linear-gradient(#18344a,#102536);color:#eef8ff;font-size:9px;font-weight:1000;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.05;flex:0 0 25px;
   }
   .battle-target-enemy:hover{border-color:#8bd7ff;filter:brightness(1.12)}
   .battle-target-enemy:active{transform:translateY(1px)}
   .battle-target-back{
-    width:100%;min-height:38px;margin-top:3px;border:1px solid #71869a;border-radius:9px;
-    background:linear-gradient(#30465a,#1b2d3e);color:#eef6fc;font-size:11px;font-weight:1000;cursor:pointer;
+    width:100%;height:25px;min-height:25px;margin-top:0;border:1px solid #71869a;border-radius:7px;
+    background:linear-gradient(#30465a,#1b2d3e);color:#eef6fc;font-size:9px;font-weight:1000;cursor:pointer;flex:0 0 25px;
   }
   .battle-target-back:hover{filter:brightness(1.12)}
   .battle-target-back:active{transform:translateY(1px)}
@@ -3666,10 +3666,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43p</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.43q</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43p</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.43q</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3681,7 +3681,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.43p</div>
+      <div class="title-version">DEV v0.43q</div>
     </section>
   </main>
 
@@ -4251,7 +4251,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.43p</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.43q</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4280,7 +4280,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.43p";
+  const DEV_VERSION = "v0.43q";
   const SAVE_SCHEMA_VERSION = 8;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4906,7 +4906,7 @@
     if(context==="milesta") restorePartyFull();
     renderPartyManage();
     showScreen("partyScreen");
-    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43p" : "ミレスタ・仲間編成 v0.43p";
+    $("topSubtitle").textContent=context==="explore" ? "探索パーティ編成 v0.43q" : "ミレスタ・仲間編成 v0.43q";
   }
 
   $("dummyParty").onclick=()=>openPartyManage("milesta");
@@ -4921,7 +4921,7 @@
     }
     openTownTalkModal();
   };
-  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p"; updateWorld(); showScreen("worldScreen"); };
+  $("goWorld").onclick=()=>{ $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43q"; updateWorld(); showScreen("worldScreen"); };
   $("saveLoadBtn").onclick=()=>openSaveUi("milesta","save");
   $("returnTitleBtn").onclick=()=>confirmReturnToTitle();
   $("titleNewBtn").onclick=()=>startNewGame();
@@ -5492,7 +5492,7 @@
     configurePartyManageScreen(state.partyManageContext);
     renderPartyManage(false);
     showScreen("partyScreen");
-    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43p" : "ミレスタ・仲間編成 v0.43p";
+    $("topSubtitle").textContent=state.partyManageContext==="explore" ? "探索パーティ編成 v0.43q" : "ミレスタ・仲間編成 v0.43q";
   };
 
   $("partyWaitingOpenBtn").onclick=()=>{
@@ -5525,13 +5525,13 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43q";
       updateHeader();
       return;
     }
     restorePartyFull();
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43q";
     updateHeader();
   };
 
@@ -6701,7 +6701,7 @@
     return [...new Set([...state.battleActive,...state.battleReserve])];
   }
 
-  // v0.43p condition container. Poison persists between battles during exploration; other battle-only conditions clear when battle ends.
+  // v0.43q condition container. Poison persists between battles during exploration; other battle-only conditions clear when battle ends.
   function conditionsOf(c){
     if(!c.conditions) c.conditions={poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false};
     return c.conditions;
@@ -6731,7 +6731,29 @@
   }
 
   function clearBattleEndStates(){
-    travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:true}));
+    travelPartyIds().forEach(id=>{
+      const c=roster[id]; if(!c) return;
+      if(S(c).hp<=0) clearStatesOnKo(c);
+      else clearBattleOnlyStates(c,{preservePoison:true});
+    });
+  }
+
+  // v0.43q: KO immediately removes temporary buffs and every status condition, including poison.
+  function clearStatesOnKo(c){
+    if(!c || S(c).hp>0) return;
+    c.defending=false;
+    c.atkBuff=1;c.atkBuffRounds=0;
+    c.defBuff=1;c.defBuffRounds=0;
+    c.magicBuff=1;c.magicBuffRounds=0;
+    c.mdefBuff=1;c.mdefBuffRounds=0;
+    c.spdBuff=1;c.spdBuffRounds=0;
+    c.powerChargeMultiplier=1;c.powerChargeRounds=0;
+    c.magicConcentrationMultiplier=1;c.magicConcentrationRounds=0;
+    c.magicBarrierRounds=0;c.magicBarrierReduction=0;
+    c.shockRecoverFails=0;c.berserkRounds=0;
+    c._usedHealingMagicThisRound=false;
+    const cond=conditionsOf(c);
+    Object.keys(cond).forEach(key=>{cond[key]=false;});
   }
 
   function battleStatusEffectMarkup(c){
@@ -8444,6 +8466,7 @@
       await wait(BASE_TIME.message);
       if(S(c).hp<=0){
         const outName=c.name;
+        clearStatesOnKo(c);
         await maybeTriggerMaidGiftOnKo(c);
         renderBattleParty();
         if(livingActiveSlots().length===0){
@@ -8987,7 +9010,7 @@
     const name=targetModeName(mode);
     const enemy=mode.kind==="enemy";
     $("battleTargetIcon").textContent=enemy ? "🎯" : "💠";
-    $("battleTargetTitle").textContent=`${name}：対象を選択`;
+    $("battleTargetTitle").textContent=name;
     $("battleTargetHint").textContent=enemy
       ? "敵の名前、または光っている敵をタップしてください。"
       : (mode.requireKO ? "光っている戦闘不能の仲間をタップしてください。" : "光っている仲間をタップしてください。");
@@ -10144,6 +10167,7 @@
 
       if(S(actor).hp<=0){
         const outName=actor.name;
+        clearStatesOnKo(actor);
         await maybeTriggerMaidGiftOnKo(actor);
         renderBattleParty();
         if(livingActiveSlots().length===0){ loseBattle(); return; }
@@ -10295,6 +10319,7 @@
       let revived=0;
       const revivedCharacters=[];
       targets.forEach(({c})=>{
+        clearStatesOnKo(c);
         const hp=Math.max(1,Math.round(S(c).hpMax*(Number(sk.revivePercent)||.20)));
         S(c).hp=Math.min(S(c).hpMax,hp); revived++; revivedCharacters.push(c);
       });
@@ -10447,6 +10472,7 @@
     if(item.effect==="revive"){
       const {i,c:target}=allyTargets[0];
       if(S(target).hp>0){ setMessage(`${target.name} は戦闘不能ではなかった。`); await wait(BASE_TIME.message); return; }
+      clearStatesOnKo(target);
       S(target).hp=Math.max(1,Math.min(S(target).hpMax,Math.round(S(target).hpMax*(Number(item.revivePercent)||.20))));
       renderBattleParty(); flashPartyValue(i,S(target).hp,"heal");
       setMessage(`${item.icon} ${target.name} がHP ${S(target).hp}で復活した！`); await wait(BASE_TIME.heal);
@@ -10608,6 +10634,7 @@
 
   async function handleAllyKoFromEnemy(target,slot){
     if(S(target).hp>0) return false;
+    clearStatesOnKo(target);
     await maybeTriggerMaidGiftOnKo(target);
     renderBattleParty();
     updateActorPortrait();
@@ -10933,7 +10960,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43q";
       updateHeader();
       return;
     }
@@ -10941,7 +10968,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43q";
   }
 
   async function attemptEscape(){
@@ -11245,7 +11272,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43q";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -11253,7 +11280,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43q";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -11461,7 +11488,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43q";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -11526,7 +11553,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43q";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -11552,7 +11579,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43p";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.43q";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -12176,8 +12203,8 @@
       case "allyKO": return party.some(c=>S(c).hp<=0);
       case "allyAllKO": return party.some(c=>S(c).hp<=0);
       case "miracle": return party.some(c=>S(c).hp<=0 || S(c).hp<S(c).hpMax);
-      case "allyCleanse": return party.some(c=>["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]));
-      case "allyAllCleanse": return party.some(c=>["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]));
+      case "allyCleanse": return party.some(c=>S(c).hp>0 && ["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]));
+      case "allyAllCleanse": return party.some(c=>S(c).hp>0 && ["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]));
       case "allyMP": return party.some(c=>c.id!==actor.id && S(c).hp>0 && S(c).mp<S(c).mpMax);
       case "frontAllMP": return state.battleActive.some(id=>{const c=roster[id];return c&&S(c).hp>0&&S(c).mp<S(c).mpMax;});
       default:return true;
@@ -12271,10 +12298,11 @@
     const hp=Math.max(0,Math.min(100,old.hpMax?old.hp/old.hpMax*100:0));
     const mp=Math.max(0,Math.min(100,old.mpMax?old.mp/old.mpMax*100:0));
     let gain="";
-    if(change?.amount>0){
+    if(effectKind==="cleanse") gain='<span class="explore-skill-effect-gain">✨ 解除</span>';
+    else if(change?.amount>0){
       const prefix=effectKind==="mp"?"MP +":effectKind==="revive"?"✨ +":"HP +";
       gain=`<span class="explore-skill-effect-gain">${prefix}${change.amount}</span>`;
-    }else if(effectKind==="cleanse") gain='<span class="explore-skill-effect-gain">✨ 解除</span>';
+    }
     card.innerHTML=`<span class="explore-item-target-thumb">${portrait}</span><span class="explore-item-target-stats"><span class="explore-item-target-name">${c.name}</span><span class="explore-item-mini-resource"><b>HP</b><span class="value hp-value">${old.hp}/${old.hpMax}</span><span class="explore-item-mini-bar"><i class="hp-fill" style="width:${hp}%"></i></span></span><span class="explore-item-mini-resource"><b>MP</b><span class="value mp-value">${old.mp}/${old.mpMax}</span><span class="explore-item-mini-bar mp"><i class="mp-fill" style="width:${mp}%"></i></span></span></span>${gain}`;
     card.dataset.characterId=c.id;
     return card;
@@ -12346,6 +12374,7 @@
       });
     }else if(sk.kind==="revive"){
       party.filter(c=>S(c).hp<=0).forEach(c=>{
+        clearStatesOnKo(c);
         const old=S(c).hp;S(c).hp=Math.max(1,Math.round(S(c).hpMax*(Number(sk.revivePercent)||.20)));
         const amount=S(c).hp-old;count++;changes.push({id:c.id,kind:"revive",amount});
       });
@@ -12401,7 +12430,7 @@
     switch(sk.fieldUse){
       case "ally": return st.hp>0 && st.hp<st.hpMax;
       case "allyKO": return st.hp<=0;
-      case "allyCleanse": return ["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]);
+      case "allyCleanse": return st.hp>0 && ["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]);
       case "allyMP": return (!actor || c.id!==actor.id) && st.hp>0 && st.mp<st.mpMax;
       default:return false;
     }
@@ -12452,6 +12481,7 @@
       const power=healAmountForSkill(actor,sk),amount=Math.min(tst.hpMax-tst.hp,sk.fullHeal?tst.hpMax-tst.hp:power);
       tst.hp+=amount; text=`${target.name} のHPが ${amount} 回復`; change={id:target.id,kind:"hp",amount};
     }else if(sk.kind==="revive"){
+      clearStatesOnKo(target);
       const old=tst.hp,amount=Math.max(1,Math.round(tst.hpMax*(Number(sk.revivePercent)||.20))); tst.hp=Math.min(tst.hpMax,amount); text=`${target.name} がHP ${tst.hp}で復活`; change={id:target.id,kind:"revive",amount:tst.hp-old};
     }else if(sk.kind==="cleanse"){
       const removed=clearNegativeConditions(target,{poisonOnly:Array.isArray(sk.statuses)&&sk.statuses[0]==="poison"}); text=`${target.name} の状態異常を ${removed}個解除`; change={id:target.id,kind:"cleanse",amount:removed};
@@ -12631,6 +12661,7 @@
     }else if(item.effect==="cleanse"){
       const removed=clearNegativeConditions(c,{poisonOnly:!!item.poisonOnly}); text=removed?`状態異常を ${removed}個解除`:"解除できる状態異常はなかった";
     }else if(item.effect==="revive"){
+      clearStatesOnKo(c);
       st.hp=Math.max(1,Math.min(st.hpMax,Math.round(st.hpMax*(Number(item.revivePercent)||.20)))); text=`HP ${st.hp}で復活`;
     }else if(item.effect==="seed"){
       applySeedItem(c,item); text=`${item.desc}`;
@@ -12715,7 +12746,7 @@
 
   function addRunGold(amount){ state.gold+=amount; if(state.run)state.run.runGold+=amount; updateHeader(); }
   function travelPartyMembers(){ return travelPartyIds().map(id=>roster[id]).filter(Boolean); }
-  function applyPartyHpPercent(deltaRate,activeOnly=false){ let total=0;const ids=activeOnly?state.battleActive:travelPartyIds();ids.forEach(id=>{const st=S(roster[id]),delta=Math.floor(st.hpMax*Math.abs(deltaRate));const before=st.hp;if(deltaRate>=0)st.hp=Math.min(st.hpMax,st.hp+delta);else st.hp=Math.max(0,st.hp-delta);total+=Math.abs(st.hp-before);});return total; }
+  function applyPartyHpPercent(deltaRate,activeOnly=false){ let total=0;const ids=activeOnly?state.battleActive:travelPartyIds();ids.forEach(id=>{const c=roster[id],st=S(c),delta=Math.floor(st.hpMax*Math.abs(deltaRate));const before=st.hp;if(deltaRate>=0)st.hp=Math.min(st.hpMax,st.hp+delta);else st.hp=Math.max(0,st.hp-delta);if(st.hp<=0)clearStatesOnKo(c);total+=Math.abs(st.hp-before);});return total; }
   const INITIAL_WEAPON_IDS=["stone_claw","dagger","stone_axe","hinoki_staff","short_bow","whip","type_milesta"];
   const YODY_TIER_WEAPON_IDS=["bronze_knuckle","traveler_sword","bronze_axe","traveler_bow","bronze_whip","hunter"];
   const YODY_SHIELD_IDS=["wood_shield","stone_greatshield","buckler"];
@@ -12853,12 +12884,12 @@ ${reward}`,[["進む",()=>{closeModal();updateRunHud();}]]);}],["先を急ぐ",(
 
   function damageActivePercent(rate){
     let total=0;
-    state.battleActive.forEach(id=>{const c=roster[id];if(!c)return;const st=S(c),d=Math.max(1,Math.floor(st.hpMax*rate)),before=st.hp;st.hp=Math.max(0,st.hp-d);total+=Math.max(0,before-st.hp);});
+    state.battleActive.forEach(id=>{const c=roster[id];if(!c)return;const st=S(c),d=Math.max(1,Math.floor(st.hpMax*rate)),before=st.hp;st.hp=Math.max(0,st.hp-d);if(st.hp<=0)clearStatesOnKo(c);total+=Math.max(0,before-st.hp);});
     return total;
   }
   function damageFrontPercent(rate){
     const id=state.battleActive[0],c=roster[id]; if(!c)return 0;
-    const st=S(c),d=Math.max(1,Math.floor(st.hpMax*rate)),before=st.hp;st.hp=Math.max(0,st.hp-d);return Math.max(0,before-st.hp);
+    const st=S(c),d=Math.max(1,Math.floor(st.hpMax*rate)),before=st.hp;st.hp=Math.max(0,st.hp-d);if(st.hp<=0)clearStatesOnKo(c);return Math.max(0,before-st.hp);
   }
   function recoverTravelMpFlat(amount){
     let total=0; travelPartyMembers().forEach(c=>{const st=S(c),before=st.mp;st.mp=Math.min(st.mpMax,st.mp+amount);total+=st.mp-before;});return total;
