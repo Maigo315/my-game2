@@ -10613,16 +10613,16 @@
     let total=0,blocked=0,hitCount=0;
     const traitContext=makeTraitActionContext();
     const magicCounterCandidates=[];
+    const results=[];
     for(const entry of targets){
       const target=entry.c,slot=entry.i;
       if(!target || S(target).hp<=0) continue;
       const barrierWasActive=Number(target.magicBarrierRounds)>0;
       const defendWasActive=!!target.defending;
       const defense=enemyMagicDefense(target,{hasDamage:true});
-      const cardBefore=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
       if(defense.blocked){
         blocked++;
-        if(cardBefore) spawnFx("magicshot",defense.reason==="aura"?"🔮":"🚫",cardBefore);
+        results.push({target,slot,blocked:true,blockReason:defense.reason,barrierWasActive,defendWasActive,dmg:0});
         continue;
       }
       const baseDamage=enemySpellDamage(enemy,target,sk);
@@ -10630,20 +10630,34 @@
       S(target).hp=Math.max(0,S(target).hp-dmg);
       total+=dmg; hitCount++;
       if(dmg>0 && S(target).hp>0) magicCounterCandidates.push({target,slot});
-      renderBattleParty();
-      flashPartyValue(slot,dmg,"damage");
-      const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
-      if(card) spawnFx(sk.animation||"magicshot",sk.fxSymbol||sk.icon||"✦",card);
-      if(sk.target!=="enemyAll"){
-        const reduced=[];
-        if(barrierWasActive) reduced.push("魔力障壁");
-        if(defendWasActive) reduced.push("防御");
-        setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ ${target.name} に ${dmg} ダメージ。${reduced.length?`（${reduced.join("＋")}で軽減）`:""}`);
-      }
+      results.push({target,slot,blocked:false,barrierWasActive,defendWasActive,dmg});
     }
+
+    // Update the party HUD once, then apply hit reactions. Re-rendering after adding
+    // the .hit class would immediately replace the card and cancel its animation.
     renderBattleParty();
+    for(const result of results){
+      const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${result.slot}"]`);
+      if(result.blocked){
+        if(card) spawnFx("magicshot",result.blockReason==="aura"?"🔮":"🚫",card);
+        continue;
+      }
+      flashPartyValue(result.slot,result.dmg,"damage");
+      if(card) spawnFx(sk.animation||"magicshot",sk.fxSymbol||sk.icon||"✦",card);
+    }
+
     if(sk.target==="enemyAll"){
       setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ バトルメンバーに合計 ${total} ダメージ。${blocked?` ${blocked}人は魔法を無効化した。`:""}`);
+    }else{
+      const result=results[0];
+      if(result && !result.blocked){
+        const reduced=[];
+        if(result.barrierWasActive) reduced.push("魔力障壁");
+        if(result.defendWasActive) reduced.push("防御");
+        setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ ${result.target.name} に ${result.dmg} ダメージ。${reduced.length?`（${reduced.join("＋")}で軽減）`:""}`);
+      }else if(result && result.blocked){
+        setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ ${result.target.name} は魔法を無効化した！`);
+      }
     }
     await wait(BASE_TIME.enemyAfter);
     for(const {target,slot} of magicCounterCandidates){
