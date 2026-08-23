@@ -75,7 +75,7 @@
   .menu-btn .icon{font-size:28px;display:block;margin-bottom:5px}
   .locked{opacity:.45;filter:grayscale(.5);cursor:not-allowed!important}
 
-  /* World: v0.44b pannable route map */
+  /* World: v0.44c pannable route map, compact regional scale */
   #worldScreen{align-items:center;justify-content:center;padding-top:18px;padding-bottom:max(18px,var(--safe-bottom));padding-left:calc(18px + var(--safe-left));padding-right:calc(18px + var(--safe-right))}
   .world-wrap{width:min(1120px,96vw);height:min(590px,calc(100dvh - 92px));display:grid;grid-template-columns:minmax(0,1.16fr) minmax(310px,.84fr);gap:16px}
   .map-panel,.info-panel,.party-panel,.explore-panel{background:rgba(15,27,39,.93);border:1px solid #3a5369;border-radius:18px;overflow:hidden}
@@ -88,19 +88,19 @@
   .world-map-viewport::-webkit-scrollbar{width:0;height:0}
   .world-map-viewport.dragging{cursor:grabbing;user-select:none}
   .world-map{
-    width:1400px;height:950px;position:relative;overflow:hidden;
+    width:1180px;height:900px;position:relative;overflow:hidden;
     background:
-      radial-gradient(circle at 17% 52%,rgba(83,130,73,.55),transparent 17%),
-      radial-gradient(circle at 43% 29%,rgba(105,93,66,.46),transparent 18%),
-      radial-gradient(circle at 58% 49%,rgba(82,126,113,.34),transparent 20%),
-      linear-gradient(180deg,#203b3e 0%,#18323a 62%,#153647 63%,#102c42 100%)
+      radial-gradient(circle at 18% 42%,rgba(83,130,73,.55),transparent 15%),
+      radial-gradient(circle at 35% 24%,rgba(105,93,66,.46),transparent 16%),
+      radial-gradient(circle at 49% 40%,rgba(82,126,113,.34),transparent 17%),
+      linear-gradient(180deg,#203b3e 0%,#18323a 65%,#153647 66%,#102c42 100%)
   }
   .world-map:after{
-    content:"";position:absolute;left:0;right:0;top:610px;height:340px;pointer-events:none;
+    content:"";position:absolute;left:0;right:0;top:590px;height:310px;pointer-events:none;
     background:repeating-linear-gradient(172deg,rgba(105,181,214,.08) 0 3px,transparent 3px 29px);
     border-top:1px solid rgba(130,190,214,.20)
   }
-  .world-route-layer{position:absolute;inset:0;width:1400px;height:950px;overflow:visible;pointer-events:none;z-index:1}
+  .world-route-layer{position:absolute;inset:0;width:1180px;height:900px;overflow:visible;pointer-events:none;z-index:1}
   .route{fill:none;stroke:#7892a7;stroke-width:6;stroke-linecap:round;opacity:.82;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
   .route.sea-route{stroke:#7fb9ce;stroke-dasharray:14 11;opacity:.58}
   .world-region-label{
@@ -114,13 +114,13 @@
     color:#b8c8d4;font-size:10px;font-weight:800;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.28)
   }
   .area-pin{
-    position:absolute;z-index:4;width:122px;min-height:76px;transform:translate(-50%,-50%);
-    border-radius:17px;border:2px solid #7fa0bb;background:linear-gradient(#284761,#182e42);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 9px;
+    position:absolute;z-index:4;width:108px;min-height:68px;transform:translate(-50%,-50%);
+    border-radius:16px;border:2px solid #7fa0bb;background:linear-gradient(#284761,#182e42);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:7px 8px;
     cursor:pointer;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.35)
   }
-  .area-pin strong{font-size:14px;line-height:1.25}
-  .area-pin span{font-size:23px}
+  .area-pin strong{font-size:13px;line-height:1.22}
+  .area-pin span{font-size:21px}
   .area-pin.selected{outline:4px solid var(--gold);border-color:#f0d16a;box-shadow:0 8px 20px rgba(0,0,0,.35),0 0 18px rgba(244,207,106,.22)}
   @media(max-height:520px){
     .world-wrap{height:calc(100dvh - 62px);gap:9px;grid-template-columns:minmax(0,1.22fr) minmax(280px,.78fr)}
@@ -3698,10 +3698,10 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44b</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44c</div>
     </div>
     <div class="grow"></div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44b</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44c</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3713,7 +3713,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.44b</div>
+      <div class="title-version">DEV v0.44c</div>
     </section>
   </main>
 
@@ -3862,28 +3862,28 @@
       <section class="map-panel">
         <div class="world-map-viewport" id="worldMapViewport" aria-label="世界マップ。指で上下左右にスライドできます">
           <div class="world-map" id="worldMap">
-            <svg class="world-route-layer" viewBox="0 0 1400 950" aria-hidden="true">
-              <path class="route" id="milestaRoute" d="M 220 650 C 218 585, 230 510, 240 445"></path>
-              <path class="route" id="caveRoute" d="M 240 445 C 295 385, 365 315, 450 285"></path>
-              <path class="route" id="yodyRoute" d="M 450 285 C 555 270, 665 284, 760 300" style="display:none"></path>
-              <path class="route" id="yodyTownRoute" d="M 760 300 C 782 365, 792 438, 790 515" style="display:none"></path>
+            <svg class="world-route-layer" viewBox="0 0 1180 900" aria-hidden="true">
+              <path class="route" id="milestaRoute" d="M 210 440 C 210 403, 214 365, 220 330"></path>
+              <path class="route" id="caveRoute" d="M 220 330 C 258 298, 304 257, 350 240"></path>
+              <path class="route" id="yodyRoute" d="M 350 240 C 413 235, 484 245, 545 255" style="display:none"></path>
+              <path class="route" id="yodyTownRoute" d="M 545 255 C 551 305, 551 365, 545 420" style="display:none"></path>
             </svg>
-            <div class="world-region-label" style="left:92px;top:540px">ミレスタ周辺</div>
-            <div class="world-region-label" style="left:655px;top:205px">ヨーディー地方</div>
-            <div class="world-region-label" style="left:690px;top:680px">ヨーディー海</div>
-            <button class="area-pin" id="milestaTownPin" data-area="milestaTown" data-map-x="220" data-map-y="650" style="left:220px;top:650px">
+            <div class="world-region-label" style="left:105px;top:392px">ミレスタ周辺</div>
+            <div class="world-region-label" style="left:470px;top:170px">ヨーディー地方</div>
+            <div class="world-region-label" style="left:470px;top:625px">ヨーディー海</div>
+            <button class="area-pin" id="milestaTownPin" data-area="milestaTown" data-map-x="210" data-map-y="440" style="left:210px;top:440px">
               <span>🏘️</span><strong>ミレスタ</strong>
             </button>
-            <button class="area-pin selected" data-area="plains" data-map-x="240" data-map-y="445" style="left:240px;top:445px">
+            <button class="area-pin selected" data-area="plains" data-map-x="220" data-map-y="330" style="left:220px;top:330px">
               <span>🌿</span><strong>ミレスタ平原</strong>
             </button>
-            <button class="area-pin locked" id="cavePin" data-area="cave" data-map-x="450" data-map-y="285" style="left:450px;top:285px">
+            <button class="area-pin locked" id="cavePin" data-area="cave" data-map-x="350" data-map-y="240" style="left:350px;top:240px">
               <span>🕳️</span><strong>小さな洞窟</strong>
             </button>
-            <button class="area-pin" id="yodyRegionPin" data-area="yodyRegion" data-map-x="760" data-map-y="300" style="left:760px;top:300px;display:none">
+            <button class="area-pin" id="yodyRegionPin" data-area="yodyRegion" data-map-x="545" data-map-y="255" style="left:545px;top:255px;display:none">
               <span>🌊</span><strong>ヨーディー地方</strong>
             </button>
-            <button class="area-pin" id="yodyTownPin" data-area="yodyTown" data-map-x="790" data-map-y="515" style="left:790px;top:515px;display:none">
+            <button class="area-pin" id="yodyTownPin" data-area="yodyTown" data-map-x="545" data-map-y="420" style="left:545px;top:420px;display:none">
               <span>⚓</span><strong>港町ヨーディー</strong>
             </button>
           </div>
@@ -4299,7 +4299,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.44b</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.44c</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4328,7 +4328,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.44b";
+  const DEV_VERSION = "v0.44c";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -5778,7 +5778,7 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44c";
       updateHeader();
       return;
     }
@@ -6952,7 +6952,7 @@
     return [...new Set([...state.battleActive,...state.battleReserve])];
   }
 
-  // v0.44b condition container. Poison persists between battles during exploration; other battle-only conditions clear when battle ends.
+  // v0.44c condition container. Poison persists between battles during exploration; other battle-only conditions clear when battle ends.
   function conditionsOf(c){
     if(!c.conditions) c.conditions={poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false};
     return c.conditions;
@@ -6989,7 +6989,7 @@
     });
   }
 
-  // v0.44b: KO immediately removes temporary buffs and every status condition, including poison.
+  // v0.44c: KO immediately removes temporary buffs and every status condition, including poison.
   function clearStatesOnKo(c){
     if(!c || S(c).hp>0) return;
     c.defending=false;
@@ -11219,7 +11219,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44c";
       updateHeader();
       return;
     }
@@ -11227,7 +11227,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44c";
   }
 
   async function attemptEscape(){
@@ -11531,7 +11531,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44c";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -11539,7 +11539,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44c";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -11747,7 +11747,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44c";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -11812,7 +11812,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44c";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -11838,7 +11838,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44b";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44c";
     updateHeader();
     toast("戦闘テストを終了");
   }
