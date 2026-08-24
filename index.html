@@ -76,7 +76,7 @@
   .menu-btn .icon{font-size:28px;display:block;margin-bottom:5px}
   .locked{opacity:.45;filter:grayscale(.5);cursor:not-allowed!important}
 
-  /* World: v0.44j pannable route map, compact regional scale */
+  /* World: v0.44k pannable route map, compact regional scale */
   #worldScreen{align-items:center;justify-content:center;padding-top:18px;padding-bottom:max(18px,var(--safe-bottom));padding-left:calc(18px + var(--safe-left));padding-right:calc(18px + var(--safe-right))}
   .world-wrap{width:min(1120px,96vw);height:min(590px,calc(100dvh - 92px));display:grid;grid-template-columns:minmax(0,1.16fr) minmax(310px,.84fr);gap:16px}
   .map-panel,.info-panel,.party-panel,.explore-panel{background:rgba(15,27,39,.93);border:1px solid #3a5369;border-radius:18px;overflow:hidden}
@@ -166,8 +166,8 @@
   .map-scroll{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:contain}
   .map-scroll.long-map{overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
   .map-scroll.long-map #mapSvg{height:auto;min-height:0;aspect-ratio:1000/1420;display:block}
-  /* v0.44j: Yody Region is a broad route map. Keep it slightly zoomed and pan in both axes. */
-  .map-scroll.yody-map{overflow:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
+  /* v0.44k: Yody Region is a broad route map. Keep it slightly zoomed and pan in both axes. */
+  .map-scroll.yody-map{overflow:auto;scrollbar-width:none;-webkit-overflow-scrolling:auto;touch-action:pan-x pan-y}
   .map-scroll.yody-map::-webkit-scrollbar{width:0;height:0}
   .map-scroll.yody-map #mapSvg{width:132%;height:132%;max-width:none;max-height:none;display:block;touch-action:pan-x pan-y}
   #mapSvg{width:100%;height:100%;display:block;touch-action:manipulation}
@@ -3695,7 +3695,7 @@
     .inventory-row-side{min-width:82px}.inventory-row-count{font-size:9px}.inventory-row-note,.inventory-slot-tag{font-size:6px}
   }
 
-  /* v0.44j shop detail: reserve a permanent action lane; only the comparison pane scrolls. */
+  /* v0.44k shop detail: reserve a permanent action lane; only the comparison pane scrolls. */
   .shop-trade{overflow:hidden}
   .shop-main{height:100%;min-height:0;overflow:hidden}
   .shop-detail{
@@ -3729,7 +3729,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44j</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44k</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3739,7 +3739,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44j</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44k</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3751,7 +3751,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.44j</div>
+      <div class="title-version">DEV v0.44k</div>
     </section>
   </main>
 
@@ -4336,7 +4336,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.44j</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.44k</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4365,7 +4365,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.44j";
+  const DEV_VERSION = "v0.44k";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -5820,7 +5820,7 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44k";
       updateHeader();
       return;
     }
@@ -6995,7 +6995,7 @@
     return [...new Set([...state.battleActive,...state.battleReserve])];
   }
 
-  // v0.44j condition container. Poison persists between battles during exploration; other battle-only conditions clear when battle ends.
+  // v0.44k condition container. Poison persists between battles during exploration; other battle-only conditions clear when battle ends.
   function conditionsOf(c){
     if(!c.conditions) c.conditions={poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false};
     return c.conditions;
@@ -7032,7 +7032,7 @@
     });
   }
 
-  // v0.44j: KO immediately removes temporary buffs and every status condition, including poison.
+  // v0.44k: KO immediately removes temporary buffs and every status condition, including poison.
   function clearStatesOnKo(c){
     if(!c || S(c).hp>0) return;
     c.defending=false;
@@ -11379,7 +11379,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44k";
       updateHeader();
       return;
     }
@@ -11387,7 +11387,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44k";
   }
 
   async function attemptEscape(){
@@ -11691,7 +11691,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44k";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -11699,7 +11699,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44k";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -11907,7 +11907,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44k";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -11972,7 +11972,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44k";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -11998,7 +11998,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44k";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -12243,7 +12243,7 @@
       $("areaDesc").textContent="ミレスタの町の近くにある洞窟。ナメクジ娘の巣にもなっている。";
     }else if(a==="yodyTown"){
       $("areaName").textContent="港町ヨーディー";
-      $("areaDesc").textContent="サリードとの交易で栄える港町。ヨーディー地方を越えた先にある。";
+      $("areaDesc").textContent="サリード王国との交易で栄える港町。ヨーディー地方を越えた先にある。";
     }else if(a==="footpath"){
       $("areaName").textContent="麓の小道";
       $("areaDesc").textContent="ヨーディー北東の山脈、その麓から木立の中へ続く小道。珍しい薬草が採れるという。";
