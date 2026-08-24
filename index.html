@@ -76,7 +76,7 @@
   .menu-btn .icon{font-size:28px;display:block;margin-bottom:5px}
   .locked{opacity:.45;filter:grayscale(.5);cursor:not-allowed!important}
 
-  /* World: v0.44i pannable route map, compact regional scale */
+  /* World: v0.44j pannable route map, compact regional scale */
   #worldScreen{align-items:center;justify-content:center;padding-top:18px;padding-bottom:max(18px,var(--safe-bottom));padding-left:calc(18px + var(--safe-left));padding-right:calc(18px + var(--safe-right))}
   .world-wrap{width:min(1120px,96vw);height:min(590px,calc(100dvh - 92px));display:grid;grid-template-columns:minmax(0,1.16fr) minmax(310px,.84fr);gap:16px}
   .map-panel,.info-panel,.party-panel,.explore-panel{background:rgba(15,27,39,.93);border:1px solid #3a5369;border-radius:18px;overflow:hidden}
@@ -166,7 +166,12 @@
   .map-scroll{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:contain}
   .map-scroll.long-map{overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
   .map-scroll.long-map #mapSvg{height:auto;min-height:0;aspect-ratio:1000/1420;display:block}
+  /* v0.44j: Yody Region is a broad route map. Keep it slightly zoomed and pan in both axes. */
+  .map-scroll.yody-map{overflow:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
+  .map-scroll.yody-map::-webkit-scrollbar{width:0;height:0}
+  .map-scroll.yody-map #mapSvg{width:132%;height:132%;max-width:none;max-height:none;display:block;touch-action:pan-x pan-y}
   #mapSvg{width:100%;height:100%;display:block;touch-action:manipulation}
+  .yody-destination-label{fill:#edf5fb;font-size:22px;font-weight:1000;text-anchor:middle;paint-order:stroke;stroke:#07111a;stroke-width:8px;stroke-linejoin:round;pointer-events:none}
   .edge{stroke:#607a91;stroke-width:4;opacity:.58;vector-effect:non-scaling-stroke}
   .edge.active{stroke:#d2c277;opacity:.9;stroke-width:5}
   .node circle{stroke:#aac0d2;stroke-width:4;filter:drop-shadow(0 4px 5px rgba(0,0,0,.35))}
@@ -3690,7 +3695,7 @@
     .inventory-row-side{min-width:82px}.inventory-row-count{font-size:9px}.inventory-row-note,.inventory-slot-tag{font-size:6px}
   }
 
-  /* v0.44i shop detail: reserve a permanent action lane; only the comparison pane scrolls. */
+  /* v0.44j shop detail: reserve a permanent action lane; only the comparison pane scrolls. */
   .shop-trade{overflow:hidden}
   .shop-main{height:100%;min-height:0;overflow:hidden}
   .shop-detail{
@@ -3724,7 +3729,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44i</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44j</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3734,7 +3739,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44i</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44j</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3746,7 +3751,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.44i</div>
+      <div class="title-version">DEV v0.44j</div>
     </section>
   </main>
 
@@ -4331,7 +4336,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.44i</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.44j</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4360,7 +4365,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.44i";
+  const DEV_VERSION = "v0.44j";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -5815,7 +5820,7 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44i";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
       updateHeader();
       return;
     }
@@ -6990,7 +6995,7 @@
     return [...new Set([...state.battleActive,...state.battleReserve])];
   }
 
-  // v0.44i condition container. Poison persists between battles during exploration; other battle-only conditions clear when battle ends.
+  // v0.44j condition container. Poison persists between battles during exploration; other battle-only conditions clear when battle ends.
   function conditionsOf(c){
     if(!c.conditions) c.conditions={poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false};
     return c.conditions;
@@ -7027,7 +7032,7 @@
     });
   }
 
-  // v0.44i: KO immediately removes temporary buffs and every status condition, including poison.
+  // v0.44j: KO immediately removes temporary buffs and every status condition, including poison.
   function clearStatesOnKo(c){
     if(!c || S(c).hp>0) return;
     c.defending=false;
@@ -11374,7 +11379,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44i";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
       updateHeader();
       return;
     }
@@ -11382,7 +11387,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
   }
 
   async function attemptEscape(){
@@ -11686,7 +11691,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44i";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -11694,7 +11699,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -11902,7 +11907,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44i";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -11967,7 +11972,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -11993,7 +11998,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44i";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44j";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -12320,8 +12325,9 @@
   const YODY_NORMAL_LAYERS=8;
   const YODY_GOAL_LAYER=9;
   const YODY_VIEW_WIDTH=1320;
-  const YODY_VIEW_HEIGHT=920;
-  function yodyLayerY(layer){ return 850-layer*90; }
+  const YODY_VIEW_HEIGHT=1040;
+  // Leave a real top margin for the fixed area/legend HUD, while keeping the broad branching shape.
+  function yodyLayerY(layer){ return 930-layer*88; }
   function connectMapLayers(layers,{extraChance=.45,maxExtraDistance=390}={}){
     for(let l=0;l<layers.length-1;l++){
       const prev=layers[l],next=layers[l+1];
@@ -12477,6 +12483,7 @@
     };
     setExploreAreaLabel();
     showScreen("exploreScreen"); renderMap(); updateRunHud();
+    if(yody) requestAnimationFrame(()=>scrollMapToCurrent(true));
   }
 
   function enterCaveLayer(layer){
@@ -12519,6 +12526,7 @@
     state.run.nodes=buildMap("yodyRegion",0,{entryMode:"fromSideCave"});
     resetRunMapLocalState();
     setExploreAreaLabel(); renderMap(); updateRunHud();
+    requestAnimationFrame(()=>scrollMapToCurrent(true));
     toast("ヨーディー地方へ進んだ");
   }
 
@@ -12571,7 +12579,10 @@
     svg.innerHTML="";
     const run=state.run;
     const isLong=run?.area==="caveSide"||run?.area==="footpath",isFootpath=run?.area==="footpath",isYody=run?.area==="yodyRegion";
-    if(scroller) scroller.classList.toggle("long-map",isLong);
+    if(scroller){
+      scroller.classList.toggle("long-map",isLong);
+      scroller.classList.toggle("yody-map",isYody);
+    }
     svg.setAttribute("viewBox",isLong?`0 0 1000 ${isFootpath?FOOTPATH_VIEW_HEIGHT:CAVE_SIDE_VIEW_HEIGHT}`:isYody?`0 0 ${YODY_VIEW_WIDTH} ${YODY_VIEW_HEIGHT}`:"0 0 1000 720");
     const reachable=reachableIds();
 
@@ -12621,13 +12632,40 @@
       }
       svg.appendChild(g);
     });
+
+    // Destination names stay near the exit nodes so a branch has meaning before the player taps it.
+    if(isYody){
+      run.nodes.forEach(n=>{
+        let name="";
+        if(n.type==="yodyMountain") name="ヨーディー山道";
+        else if(n.type==="yodyFootpath") name="麓の小道";
+        else if(n.type==="yodyPort") name="港町ヨーディー";
+        if(!name) return;
+        const label=svgEl("text",{x:n.x,y:n.y+64,class:"yody-destination-label"});
+        label.textContent=name;
+        svg.appendChild(label);
+      });
+    }
   }
 
   function scrollMapToCurrent(immediate=false){
-    if(!state.run || !["caveSide","footpath"].includes(state.run.area)) return;
+    if(!state.run || !["caveSide","footpath","yodyRegion"].includes(state.run.area)) return;
     const scroller=$("mapScroll"),svg=$("mapSvg");
     if(!scroller || !svg) return;
     const current=byId(state.run.current); if(!current) return;
+    if(state.run.area==="yodyRegion"){
+      const nodeEl=svg.querySelector(`[data-node-id="${current.id}"]`);
+      if(!nodeEl) return;
+      const sr=scroller.getBoundingClientRect(),nr=nodeEl.getBoundingClientRect();
+      const centerX=scroller.scrollLeft+(nr.left+nr.width/2-sr.left);
+      const centerY=scroller.scrollTop+(nr.top+nr.height/2-sr.top);
+      const maxLeft=Math.max(0,scroller.scrollWidth-scroller.clientWidth);
+      const maxTop=Math.max(0,scroller.scrollHeight-scroller.clientHeight);
+      const targetLeft=Math.max(0,Math.min(maxLeft,centerX-scroller.clientWidth*.50));
+      const targetTop=Math.max(0,Math.min(maxTop,centerY-scroller.clientHeight*.58));
+      scroller.scrollTo({left:targetLeft,top:targetTop,behavior:immediate?"auto":"smooth"});
+      return;
+    }
     const viewHeight=state.run.area==="footpath"?FOOTPATH_VIEW_HEIGHT:CAVE_SIDE_VIEW_HEIGHT;
     const scale=svg.getBoundingClientRect().height/viewHeight;
     const target=Math.max(0,current.y*scale-scroller.clientHeight*.68);
