@@ -158,6 +158,8 @@
   .run-info{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:0}
   .statbox{padding:8px;border-radius:10px;background:#0c1722;border:1px solid #2a4256;text-align:center;font-size:12px}
   .statbox strong{display:block;font-size:17px;color:var(--gold)}
+  .statbox.progress-stat{display:flex;align-items:center;justify-content:center;min-width:0}
+  .statbox.progress-stat strong{font-size:17px;line-height:1.15;overflow-wrap:anywhere}
   .return-btn{border-color:#754646;background:linear-gradient(#623437,#3a2024);flex:0 0 auto}
 
   .explore-panel{flex:1;min-width:0;position:relative;background:
@@ -1487,6 +1489,7 @@
     .run-info{gap:4px;margin-top:0}
     .statbox{padding:4px 3px;font-size:9px;border-radius:8px}
     .statbox strong{font-size:13px}
+    .statbox.progress-stat strong{font-size:13px}
     .return-btn{padding:7px 6px;font-size:11px;border-radius:9px}
     .menu-btn{padding:10px}
     .map-hint{bottom:max(5px,var(--safe-bottom));padding:5px 10px;font-size:10px}
@@ -1508,6 +1511,7 @@
     .bar{height:3px}
     .statbox{padding:3px 2px}
     .statbox strong{font-size:12px}
+    .statbox.progress-stat strong{font-size:12px}
     .return-btn{padding:5px 5px;font-size:10px}
   }
 
@@ -3734,7 +3738,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.45a</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.45b</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3744,7 +3748,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.45a</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.45b</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3756,7 +3760,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.45a</div>
+      <div class="title-version">DEV v0.45b</div>
     </section>
   </main>
 
@@ -3910,7 +3914,7 @@
               <path class="route" id="caveRoute" d="M 220 330 C 258 298, 304 257, 350 240"></path>
               <path class="route" id="yodyRoute" d="M 350 240 C 413 235, 484 245, 545 255" style="display:none"></path>
               <path class="route" id="yodyTownRoute" d="M 545 255 C 551 305, 551 365, 545 420" style="display:none"></path>
-              <path class="route" id="footpathRoute" d="M 545 255 C 610 226, 681 197, 748 180" style="display:none"></path>
+              <path class="route" id="footpathRoute" d="M 545 255 C 585 242, 625 226, 665 215" style="display:none"></path>
               <path class="route" id="yodyMountainWorldRoute" d="M 545 255 C 576 203, 611 142, 650 95" style="display:none"></path>
               <path class="route" id="tilenoRegionWorldRoute" d="M 650 95 C 712 98, 776 112, 835 135" style="display:none"></path>
               <path class="route" id="tilenoTownWorldRoute" d="M 835 135 C 838 190, 838 252, 835 315" style="display:none"></path>
@@ -3919,8 +3923,7 @@
             </svg>
             <div class="world-region-label" style="left:105px;top:392px">ミレスタ周辺</div>
             <div class="world-region-label" style="left:470px;top:170px">ヨーディー地方</div>
-            <div class="world-region-label" style="left:720px;top:105px">北東山麓</div>
-            <div class="world-region-label" style="left:825px;top:185px">ティレーノ地方</div>
+                        <div class="world-region-label" style="left:825px;top:185px">ティレーノ地方</div>
             <div class="world-region-label" style="left:970px;top:70px">ゼルレーノ森林地帯</div>
             <div class="world-region-label" style="left:1205px;top:92px">グランゼル大平原</div>
             <div class="world-region-label" style="left:470px;top:625px">ヨーディー海</div>
@@ -3939,7 +3942,7 @@
             <button class="area-pin" id="yodyTownPin" data-area="yodyTown" data-map-x="545" data-map-y="420" style="left:545px;top:420px;display:none">
               <span>⚓</span><strong>港町ヨーディー</strong>
             </button>
-            <button class="area-pin" id="footpathPin" data-area="footpath" data-map-x="748" data-map-y="180" style="left:748px;top:180px;display:none">
+            <button class="area-pin" id="footpathPin" data-area="footpath" data-map-x="665" data-map-y="215" style="left:665px;top:215px;display:none">
               <span>🌲</span><strong>麓の小道</strong>
             </button>
             <button class="area-pin" id="yodyMountainWorldPin" data-area="yodyMountain" data-map-x="650" data-map-y="95" style="left:650px;top:95px;display:none">
@@ -3978,7 +3981,7 @@
       <button class="reserve-chip" id="exploreSkillBtn">✨ スキル</button>
       <button class="reserve-chip" id="exploreItemBtn">🎒 所持品</button>
       <div class="run-info">
-        <div class="statbox">進行<strong id="floorText">入口</strong></div>
+        <div class="statbox progress-stat"><strong id="floorText">入口</strong></div>
         <div class="statbox">獲得G<strong id="runGoldText">0</strong></div>
         <div class="statbox">獲得EXP<strong id="runExpText">0</strong></div>
       </div>
@@ -4369,7 +4372,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.45a</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.45b</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4398,7 +4401,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.45a";
+  const DEV_VERSION = "v0.45b";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -5960,7 +5963,7 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45b";
       updateHeader();
       return;
     }
@@ -6843,7 +6846,7 @@
   }
 
   const skills = {
-    // Standard attack magic: (18 + MAG×0.70) × rank × target modifier × MDEF × resistance × variance.
+    // Standard attack magic: (30 + MAG×1.20) × rank × target modifier × MDEF × resistance × variance.
     // E/D/C/B/A/S = 1.00/1.20/1.50/1.80/2.20/2.70. All-target = 0.75.
     fire:magicSkill("fire","ファイア","🔥",4,"enemy","fire","E"),
     flare:magicSkill("flare","フレア","🔥",10,"enemy","fire","C"),
@@ -9333,7 +9336,7 @@
     const rank=Number(sk.rankMultiplier)||1;
     const targetMod=Number(sk.targetMultiplier)||1;
     const special=Number(sk.powerMultiplier)||1;
-    const raw=(18+magic*.70)*rank*targetMod*special;
+    const raw=(30+magic*1.20)*rank*targetMod*special;
     const defense=defenseDamageFactor(magic,mdef,1);
     const resist=elementResistanceMultiplier(target,sk.element);
     const partyBoost=partyElementDamageMultiplier(sk.element);
@@ -11425,7 +11428,7 @@
     const rank=Number(sk.rankMultiplier)||1;
     const targetMod=Number(sk.targetMultiplier)||1;
     const special=Number(sk.powerMultiplier)||1;
-    const raw=(18+magic*.70)*rank*targetMod*special;
+    const raw=(30+magic*1.20)*rank*targetMod*special;
     const defense=defenseDamageFactor(magic,mdef,1);
     const resist=elementResistanceMultiplier(target,sk.element);
     const partyReduction=partyElementDamageTakenMultiplier(sk.element);
@@ -11874,7 +11877,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45b";
       updateHeader();
       return;
     }
@@ -11882,7 +11885,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45b";
   }
 
   async function attemptEscape(){
@@ -12193,7 +12196,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45b";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -12201,7 +12204,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45b";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -12422,7 +12425,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45a";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45b";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -12487,7 +12490,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45b";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -12521,7 +12524,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45a";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45b";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -12803,7 +12806,7 @@
       $("areaDesc").textContent="ティレーノ地方の東に広がる深い森林地帯。魔法に強い魔物娘も多く生息している。";
     }else if(a==="granzelPlains"){
       $("areaName").textContent="グランゼル大平原";
-      $("areaDesc").textContent="グランゼル王国中央部に広がる大平原。北は氷雪の回廊、南はルネル岩窟へと道が続いている。";
+      $("areaDesc").textContent="グランゼル王国中央部に広がる大平原。北は氷雪の回廊、南東はルネル岩窟へと道が続いている。";
     }else{
       $("areaName").textContent="ヨーディー地方";
       $("areaDesc").textContent="港町ヨーディー周辺に広がる海沿いの地方。山道や麓へ続く道が伸びている。";
@@ -14065,39 +14068,37 @@
     }else if(state.run.area==="yodyRegion"){
       if(cur.layer===0) $("floorText").textContent=state.run.entryMode==="fromYordy"?"港町側":"横道側";
       else if(cur.layer===YODY_GOAL_LAYER) $("floorText").textContent="出口";
-      else $("floorText").textContent=`進行 ${cur.layer}/${YODY_NORMAL_LAYERS}`;
+      else $("floorText").textContent=`${cur.layer}/${YODY_NORMAL_LAYERS}`;
     }else if(state.run.area==="tilenoRegion"){
       const shortRoute=state.run.entryMode==="fromMountain";
       const normalLayers=shortRoute?TILENO_SHORT_NORMAL_LAYERS:TILENO_NORMAL_LAYERS;
       const goalLayer=shortRoute?TILENO_SHORT_GOAL_LAYER:TILENO_GOAL_LAYER;
-      if(cur.layer===0) $("floorText").textContent=shortRoute?"山道側・入口":"入口";
-      else if(cur.type==="tilenoWetland") $("floorText").textContent="湿原への分岐";
+      if(cur.layer===0) $("floorText").textContent="入口";
+      else if(cur.type==="tilenoWetland") $("floorText").textContent="湿原";
       else if(cur.layer===goalLayer) $("floorText").textContent="出口";
-      else $("floorText").textContent=`進行 ${cur.layer}/${normalLayers}`;
+      else $("floorText").textContent=`${cur.layer}/${normalLayers}`;
     }else if(state.run.area==="zelrenoForest"){
-      if(cur.layer===0) $("floorText").textContent="ティレーノ側・入口";
-      else if(cur.type==="forestBlockedPath") $("floorText").textContent="森林の奥へ続く分岐";
-      else if(cur.layer===ZELRENO_FOREST_GOAL_LAYER) $("floorText").textContent="グランゼル側・出口";
-      else $("floorText").textContent=`進行 ${cur.layer}/${ZELRENO_FOREST_GOAL_LAYER}`;
+      if(cur.layer===0) $("floorText").textContent="入口";
+      else if(cur.type==="forestBlockedPath") $("floorText").textContent="分岐";
+      else if(cur.layer===ZELRENO_FOREST_GOAL_LAYER) $("floorText").textContent="出口";
+      else $("floorText").textContent=`${cur.layer}/${ZELRENO_FOREST_GOAL_LAYER}`;
     }else if(state.run.area==="granzelPlains"){
       const shortRoute=state.run.entryMode==="fromForest";
       const normalLayers=shortRoute?GRANZEL_PLAINS_SHORT_NORMAL_LAYERS:GRANZEL_PLAINS_NORMAL_LAYERS;
       const goalLayer=shortRoute?GRANZEL_PLAINS_SHORT_GOAL_LAYER:GRANZEL_PLAINS_GOAL_LAYER;
-      if(cur.layer===0) $("floorText").textContent=shortRoute?"森林地帯側・入口":"大平原・入口";
-      else if(cur.type==="granzelTown") $("floorText").textContent="グランゼル城下町";
-      else if(cur.type==="iceCorridor") $("floorText").textContent="氷雪の回廊側・出口";
-      else if(cur.type==="runelCavern") $("floorText").textContent="ルネル岩窟側・出口";
+      if(cur.layer===0) $("floorText").textContent="入口";
+      else if(cur.type==="granzelTown") $("floorText").textContent="城下町";
+      else if(cur.type==="iceCorridor") $("floorText").textContent="北出口";
+      else if(cur.type==="runelCavern") $("floorText").textContent="南東出口";
       else if(cur.layer===goalLayer) $("floorText").textContent="出口";
-      else $("floorText").textContent=`進行 ${cur.layer}/${normalLayers}`;
+      else $("floorText").textContent=`${cur.layer}/${normalLayers}`;
     }else if(state.run.area==="footpath"){
       $("floorText").textContent=cur.layer===0?"入口":cur.layer===FOOTPATH_GOAL_LAYER?"最奥":`${cur.layer}F`;
     }else if(state.run.area==="yodyMountain"){
-      if(cur.layer===0) $("floorText").textContent="ヨーディー側・入口";
-      else if(cur.layer<=5) $("floorText").textContent=`ヨーディー側山麓 ${cur.layer}/18`;
-      else if(cur.layer<YODY_MOUNTAIN_BOSS_LAYER) $("floorText").textContent=`峠道 ${cur.layer}/18`;
-      else if(cur.layer===YODY_MOUNTAIN_BOSS_LAYER) $("floorText").textContent="峠・強敵";
-      else if(cur.layer<YODY_MOUNTAIN_EXIT_LAYER) $("floorText").textContent=`ティレーノ側山麓 ${cur.layer}/18`;
-      else $("floorText").textContent="ティレーノ地方側・出口";
+      if(cur.layer===0) $("floorText").textContent="入口";
+      else if(cur.layer===YODY_MOUNTAIN_BOSS_LAYER) $("floorText").textContent="強敵";
+      else if(cur.layer<YODY_MOUNTAIN_EXIT_LAYER) $("floorText").textContent=`${cur.layer}/18`;
+      else $("floorText").textContent="出口";
     }else $("floorText").textContent=cur.layer===0 ? "入口" : cur.layer===6 ? "最奥" : `${cur.layer}F`;
     $("runGoldText").textContent=state.run.runGold;
     $("runExpText").textContent=state.run.runExp;
