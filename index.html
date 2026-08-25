@@ -3611,6 +3611,7 @@
   .town-talk-card:hover{border-color:#d8c56d;background:linear-gradient(180deg,#203a52 0%,#142536 100%)}
   .town-talk-card:active{transform:translateY(1px)}
   .town-talk-card-name{font-size:15px;font-weight:1000;letter-spacing:.04em}
+  .town-talk-empty{padding:22px 12px;border:1px dashed #3b5265;border-radius:10px;color:#8195a6;text-align:center;font-size:11px;line-height:1.6}
   @media (max-height:520px){.town-talk-modal{padding:7px}.town-talk-panel{max-height:calc(100vh - 14px);padding:9px;gap:6px}.town-talk-head h2{font-size:17px}.town-talk-head p{font-size:9px}.town-talk-close{min-height:30px;min-width:78px;font-size:10px}.town-talk-grid{gap:3px}.town-talk-card{min-height:30px;padding:4px 10px}.town-talk-card-name{font-size:12px}}
   .story-event-panel.narration{grid-template-columns:1fr;background:#020407;border-color:#26303a;box-shadow:0 24px 80px rgba(0,0,0,.82)}
   .story-event-panel.narration .story-event-portrait,.story-event-panel.narration .story-event-speaker,.story-event-panel.narration .story-event-choices{display:none!important}
@@ -3738,7 +3739,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.45c</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.45d</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3748,7 +3749,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.45c</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.45d</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3760,7 +3761,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.45c</div>
+      <div class="title-version">DEV v0.45d</div>
     </section>
   </main>
 
@@ -3920,6 +3921,7 @@
               <path class="route" id="tilenoTownWorldRoute" d="M 835 135 C 838 190, 838 252, 835 315" style="display:none"></path>
               <path class="route" id="zelrenoForestWorldRoute" d="M 835 135 C 900 128, 972 130, 1040 135" style="display:none"></path>
               <path class="route" id="granzelPlainsWorldRoute" d="M 1040 135 C 1110 136, 1195 145, 1280 155" style="display:none"></path>
+              <path class="route" id="granzelTownWorldRoute" d="M 1280 155 C 1315 195, 1342 245, 1365 300" style="display:none"></path>
             </svg>
             <div class="world-region-label" style="left:105px;top:392px">ミレスタ周辺</div>
             <div class="world-region-label" style="left:470px;top:170px">ヨーディー地方</div>
@@ -3959,6 +3961,9 @@
             </button>
             <button class="area-pin" id="granzelPlainsWorldPin" data-area="granzelPlains" data-map-x="1280" data-map-y="155" style="left:1280px;top:155px;display:none">
               <span>🌾</span><strong>グランゼル大平原</strong>
+            </button>
+            <button class="area-pin" id="granzelTownWorldPin" data-area="granzelTown" data-map-x="1365" data-map-y="300" style="left:1365px;top:300px;display:none">
+              <span>🏰</span><strong>グランゼル城下町</strong>
             </button>
           </div>
         </div>
@@ -4372,7 +4377,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.45c</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.45d</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4401,7 +4406,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.45c";
+  const DEV_VERSION = "v0.45d";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4607,6 +4612,18 @@
 起き上がった魔物娘は仲間にすることができます。`},
         {type:"end"}
       ]
+    },
+    granzelArrivalPoster: {
+      completionFlag:"granzelArrivalPosterDone",
+      steps:[
+        {type:"dialogue",speaker:"主人公",text:"……？"},
+        {type:"system",text:"『グランゼル城下町に到着した{{hero}}は、一枚の貼り紙に気付いた。』"},
+        {type:"system",text:`『魔縁者を見つけたら、王国軍まで。
+魔物娘を呼ぶ危険な存在です。決して近付かないでください。』`},
+        {type:"dialogue",speaker:"主人公",text:"…………"},
+        {type:"system",text:"『{{hero}}は、この町では仲間たちを隠して歩くことにした。』",effects:[{type:"flag",key:"granzelCompanionsHidden",value:true}]},
+        {type:"end"}
+      ]
     }
   };
 
@@ -4719,12 +4736,21 @@
   const TOWN_INFO={
     milesta:{name:"辺境の町ミレスタ",shortName:"ミレスタ",shop:"town"},
     yody:{name:"港町ヨーディー",shortName:"港町ヨーディー",shop:"yordy"},
-    tileno:{name:"ティレーノの街",shortName:"ティレーノの街",shop:"tileno"}
+    tileno:{name:"ティレーノの街",shortName:"ティレーノの街",shop:"tileno"},
+    granzel:{name:"グランゼル城下町",shortName:"グランゼル城下町",shop:"granzel"}
   };
-  function normalizeTownKey(town){ return town==="yody"?"yody":town==="tileno"?"tileno":"milesta"; }
+  function normalizeTownKey(town){ return town==="yody"?"yody":town==="tileno"?"tileno":town==="granzel"?"granzel":"milesta"; }
   function townInfo(town=state.currentTown){ return TOWN_INFO[normalizeTownKey(town)]; }
   function townDisplayName(town=state.currentTown){ return townInfo(town).shortName; }
   function waitingAccessAllowed(){ return state.partyManageContext==="milesta" && waitingUnlocked(); }
+  function maybeStartGranzelArrivalPoster(){
+    if(state.currentTown!=="granzel" || !state.eventFlags?.granzelTownReached || state.eventFlags?.granzelArrivalPosterDone || state.storyEventRuntime) return;
+    setTimeout(()=>{
+      if(state.currentTown==="granzel" && state.eventFlags?.granzelTownReached && !state.eventFlags?.granzelArrivalPosterDone && !state.storyEventRuntime){
+        startStoryEvent("granzelArrivalPoster",{force:true});
+      }
+    },80);
+  }
   function showTownScreen(town=state.currentTown){
     state.currentTown=normalizeTownKey(town);
     const info=townInfo();
@@ -4733,6 +4759,7 @@
     if($("topSubtitle")) $("topSubtitle").textContent=`${info.shortName} ${DEV_VERSION}`;
     showScreen("homeScreen");
     updateHeader();
+    maybeStartGranzelArrivalPoster();
   }
   function enterTown(town,message=""){
     state.currentTown=normalizeTownKey(town);
@@ -4744,6 +4771,10 @@
       state.eventFlags.tilenoTownReached=true;
       state.eventFlags.tilenoRegionReached=true;
       state.selectedArea="tilenoTown";
+    }else if(state.currentTown==="granzel"){
+      state.eventFlags.granzelTownReached=true;
+      state.eventFlags.granzelPlainsReached=true;
+      state.selectedArea="granzelTown";
     }else state.selectedArea="milestaTown";
     state.run=null;
     restorePartyFull();
@@ -4859,7 +4890,7 @@
   }
   function openTownTalkModal(){
     const town=normalizeTownKey(state.currentTown);
-    $("townTalkTitle").textContent=town==="yody"?"港町ヨーディーの住民":town==="tileno"?"ティレーノの街の住民":"ミレスタの住民";
+    $("townTalkTitle").textContent=town==="yody"?"港町ヨーディーの住民":town==="tileno"?"ティレーノの街の住民":town==="granzel"?"グランゼル城下町の住民":"ミレスタの住民";
     renderTownTalkMenu();
     $("townTalkModal").classList.add("show");
     $("townTalkModal").setAttribute("aria-hidden","false");
@@ -4869,7 +4900,7 @@
     $("townTalkModal").setAttribute("aria-hidden","true");
   }
   function currentTownTalkNpcs(){
-    const list=state.currentTown==="yody"?YODY_TALK_NPCS:state.currentTown==="tileno"?TILENO_TALK_NPCS:MILESTA_TALK_NPCS;
+    const list=state.currentTown==="yody"?YODY_TALK_NPCS:state.currentTown==="tileno"?TILENO_TALK_NPCS:state.currentTown==="granzel"?[]:MILESTA_TALK_NPCS;
     return list.filter(npc=>{
       if(npc.id==="yodyBoy" && state.eventFlags?.yodyBoyQuestCompleted) return false;
       if(npc.id==="tilenoBoy" && !state.eventFlags?.yodyBoyQuestCompleted) return false;
@@ -4880,7 +4911,15 @@
     const grid=$("townTalkGrid");
     if(!grid) return;
     grid.innerHTML="";
-    currentTownTalkNpcs().forEach(npc=>{
+    const npcs=currentTownTalkNpcs();
+    if(!npcs.length){
+      const empty=document.createElement("div");
+      empty.className="town-talk-empty";
+      empty.textContent=state.currentTown==="granzel"?"住民会話は今後追加予定です。":"現在話せる相手はいません。";
+      grid.appendChild(empty);
+      return;
+    }
+    npcs.forEach(npc=>{
       const btn=document.createElement("button");
       btn.className="town-talk-card";
       btn.innerHTML=`<span class="town-talk-card-name">${escapeHtml(npc.name)}</span>`;
@@ -5089,6 +5128,7 @@
   function startTownResidentTalk(id){
     if(state.currentTown==="yody") return startYodyResidentTalk(id);
     if(state.currentTown==="tileno") return startTilenoResidentTalk(id);
+    if(state.currentTown==="granzel") return false;
     const npc=townNpcData(id,"milesta"), phase=townTalkPhase();
     let steps=[];
     if(id==="girl"){
@@ -5287,12 +5327,13 @@
     const exploring=context==="explore";
     const yodyTown=context==="yody";
     const tilenoTown=context==="tileno";
-    const travelOnly=exploring||yodyTown||tilenoTown;
+    const granzelTown=context==="granzel";
+    const travelOnly=exploring||yodyTown||tilenoTown||granzelTown;
     const waitingOk=context==="milesta" && waitingUnlocked();
     $("partyManageShell").classList.toggle("explore-mode",travelOnly);
     if(travelOnly || !waitingOk) state.partyWaitingViewOpen=false;
     $("partyManageShell").classList.toggle("waiting-view-mode",!travelOnly && waitingOk && state.partyWaitingViewOpen);
-    $("partyManageKicker").textContent=exploring ? "EXPEDITION PARTY ORGANIZE" : yodyTown ? "YODY PARTY ORGANIZE" : tilenoTown ? "TILENO PARTY ORGANIZE" : "MILESTA PARTY ORGANIZE";
+    $("partyManageKicker").textContent=exploring ? "EXPEDITION PARTY ORGANIZE" : yodyTown ? "YODY PARTY ORGANIZE" : tilenoTown ? "TILENO PARTY ORGANIZE" : granzelTown ? "GRANZEL PARTY ORGANIZE" : "MILESTA PARTY ORGANIZE";
     $("partyManageTitle").textContent=exploring ? "探索パーティ編成" : "仲間編成";
     $("partyManageDesc").textContent=exploring
       ? "同行中の10枠を入れ替えます。1人目をタップして選び、次に移動先の枠をタップしてください。主人公も控えへ移動できます。"
@@ -5963,7 +6004,7 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45d";
       updateHeader();
       return;
     }
@@ -7647,7 +7688,7 @@
       closeModal(); modal("ロードできません","このセーブデータは、より新しい形式で作成されています。"); return;
     }
     applyPersistentState(data.game);
-    if(!data.game?.currentTown) state.currentTown=data.location==="港町ヨーディー"?"yody":"milesta";
+    if(!data.game?.currentTown) state.currentTown=data.location==="港町ヨーディー"?"yody":data.location==="ティレーノの街"?"tileno":data.location==="グランゼル城下町"?"granzel":"milesta";
     if(Number(data.saveVersion)<5 && roster.hero) roster.hero.name="ロイド";
     if(Number(data.saveVersion)<4 && state.caveBossDefeated){
       state.eventFlags.milestaWaitingUnlocked=true;
@@ -8494,8 +8535,8 @@
     $("debugBossToggleBtn").onclick=()=>{state.caveBossDefeated=!state.caveBossDefeated;debugRefreshProgress();};
     $("debugMerchantToggleBtn").onclick=()=>{state.travelMerchantMet=!state.travelMerchantMet;debugRefreshProgress();};
     $("debugIntroToggleBtn").onclick=()=>{const on=prologueStage()<1;state.eventFlags.milestaIntroDone=on;state.prologueStage=on?1:0;if(!on)leaveElizaEscort();debugRefreshProgress();};
-    $("debugProgressOpenBtn").onclick=()=>{state.caveUnlocked=true;state.caveBossDefeated=true;state.travelMerchantMet=true;state.eventFlags.milestaIntroDone=true;state.eventFlags.recruitTutorialDone=true;state.eventFlags.milestaWaitingUnlocked=true;state.eventFlags.caveSidepathUnlocked=true;state.eventFlags.yodyPortReached=true;state.eventFlags.yodyRegionUnlocked=true;state.eventFlags.yodyFootpathUnlocked=true;state.eventFlags.yodyMountainUnlocked=true;state.eventFlags.yodyMountainBossDefeated=true;state.eventFlags.yodyMountainCleared=true;state.eventFlags.tilenoRegionReached=true;state.eventFlags.tilenoTownReached=true;state.eventFlags.tilenoGuildPanaceaReceived=true;state.eventFlags.tilenoWetlandReached=true;state.eventFlags.zelrenoForestReached=true;state.eventFlags.granzelPlainsReached=true;state.eventFlags.granzelTownReached=true;state.eventFlags.prologueComplete=true;state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=6;toast("現行の進行フラグをすべてONにしました。");debugRefreshProgress();};
-    $("debugProgressResetBtn").onclick=()=>modal("進行フラグを初期化","現在実装されている進行フラグだけをOFFにします。仲間・所持品・Lv・装備は変わりません。",[["初期化する",()=>{state.caveUnlocked=false;state.caveBossDefeated=false;state.travelMerchantMet=false;state.eventFlags.milestaIntroDone=false;state.eventFlags.recruitTutorialDone=false;state.eventFlags.milestaWaitingUnlocked=false;state.eventFlags.caveSidepathUnlocked=false;state.eventFlags.yodyPortReached=false;state.eventFlags.yodyRegionUnlocked=false;state.eventFlags.yodyFootpathUnlocked=false;state.eventFlags.yodyMountainUnlocked=false;state.eventFlags.yodyMountainBossDefeated=false;state.eventFlags.yodyMountainCleared=false;state.eventFlags.tilenoRegionReached=false;state.eventFlags.tilenoTownReached=false;state.eventFlags.tilenoGuildPanaceaReceived=false;state.eventFlags.tilenoWetlandReached=false;state.eventFlags.zelrenoForestReached=false;state.eventFlags.granzelPlainsReached=false;state.eventFlags.granzelTownReached=false;state.eventFlags.iceCorridorReached=false;state.eventFlags.runelCavernReached=false;state.eventFlags.footpathHealLeafObtained=false;state.eventFlags.yodyBoyTalked=false;state.eventFlags.yodyBoyQuestCompleted=false;state.eventFlags.salidDesertUnlocked=false;state.eventFlags.prologueComplete=false;state.currentTown="milesta";state.selectedArea="plains";state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=0;leaveElizaEscort();closeModal();toast("進行フラグを初期状態にしました。");debugRefreshProgress();}],["やめる",closeModal]]);
+    $("debugProgressOpenBtn").onclick=()=>{state.caveUnlocked=true;state.caveBossDefeated=true;state.travelMerchantMet=true;state.eventFlags.milestaIntroDone=true;state.eventFlags.recruitTutorialDone=true;state.eventFlags.milestaWaitingUnlocked=true;state.eventFlags.caveSidepathUnlocked=true;state.eventFlags.yodyPortReached=true;state.eventFlags.yodyRegionUnlocked=true;state.eventFlags.yodyFootpathUnlocked=true;state.eventFlags.yodyMountainUnlocked=true;state.eventFlags.yodyMountainBossDefeated=true;state.eventFlags.yodyMountainCleared=true;state.eventFlags.tilenoRegionReached=true;state.eventFlags.tilenoTownReached=true;state.eventFlags.tilenoGuildPanaceaReceived=true;state.eventFlags.tilenoWetlandReached=true;state.eventFlags.zelrenoForestReached=true;state.eventFlags.granzelPlainsReached=true;state.eventFlags.granzelTownReached=true;state.eventFlags.granzelArrivalPosterDone=true;state.eventFlags.granzelCompanionsHidden=true;state.eventFlags.prologueComplete=true;state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=6;toast("現行の進行フラグをすべてONにしました。");debugRefreshProgress();};
+    $("debugProgressResetBtn").onclick=()=>modal("進行フラグを初期化","現在実装されている進行フラグだけをOFFにします。仲間・所持品・Lv・装備は変わりません。",[["初期化する",()=>{state.caveUnlocked=false;state.caveBossDefeated=false;state.travelMerchantMet=false;state.eventFlags.milestaIntroDone=false;state.eventFlags.recruitTutorialDone=false;state.eventFlags.milestaWaitingUnlocked=false;state.eventFlags.caveSidepathUnlocked=false;state.eventFlags.yodyPortReached=false;state.eventFlags.yodyRegionUnlocked=false;state.eventFlags.yodyFootpathUnlocked=false;state.eventFlags.yodyMountainUnlocked=false;state.eventFlags.yodyMountainBossDefeated=false;state.eventFlags.yodyMountainCleared=false;state.eventFlags.tilenoRegionReached=false;state.eventFlags.tilenoTownReached=false;state.eventFlags.tilenoGuildPanaceaReceived=false;state.eventFlags.tilenoWetlandReached=false;state.eventFlags.zelrenoForestReached=false;state.eventFlags.granzelPlainsReached=false;state.eventFlags.granzelTownReached=false;state.eventFlags.granzelArrivalPosterDone=false;state.eventFlags.granzelCompanionsHidden=false;state.eventFlags.iceCorridorReached=false;state.eventFlags.runelCavernReached=false;state.eventFlags.footpathHealLeafObtained=false;state.eventFlags.yodyBoyTalked=false;state.eventFlags.yodyBoyQuestCompleted=false;state.eventFlags.salidDesertUnlocked=false;state.eventFlags.prologueComplete=false;state.currentTown="milesta";state.selectedArea="plains";state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=0;leaveElizaEscort();closeModal();toast("進行フラグを初期状態にしました。");debugRefreshProgress();}],["やめる",closeModal]]);
     $("debugIntroReplayBtn").onclick=()=>{closeDebugTools();startStoryEvent("milestaIntroEliza",{preview:true,force:true});};
 
     areaSel.onchange=debugPopulateFormationIndex;$("debugFormationIndex").onchange=debugRefreshFormationStatus;
@@ -8542,8 +8583,11 @@
       {kind:"equip",id:"bandana"},{kind:"equip",id:"full_face"},{kind:"equip",id:"hunter_charm"},{kind:"equip",id:"light_shoes"}
     ],
     granzel:[
-      {kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},
-      {kind:"equip",id:"steel_claw"},{kind:"equip",id:"iron_sword"},{kind:"equip",id:"steel_axe"},{kind:"equip",id:"iron_bow"},{kind:"equip",id:"iron_rod"},{kind:"equip",id:"iron_whip"},{kind:"equip",id:"type_zel"}
+      {kind:"item",id:"highPotion"},{kind:"item",id:"panacea"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},
+      {kind:"equip",id:"steel_claw"},{kind:"equip",id:"iron_sword"},{kind:"equip",id:"steel_axe"},{kind:"equip",id:"iron_bow"},{kind:"equip",id:"iron_rod"},{kind:"equip",id:"iron_whip"},{kind:"equip",id:"type_zel"},
+      {kind:"equip",id:"iron_buckler"},{kind:"equip",id:"iron_greatshield"},
+      {kind:"equip",id:"traveler_clothes"},{kind:"equip",id:"iron_mail"},{kind:"equip",id:"mage_robe"},
+      {kind:"equip",id:"hunter_charm"},{kind:"equip",id:"light_shoes"},{kind:"equip",id:"magic_earrings"},{kind:"equip",id:"zel_leggings"}
     ],
     plains:[{kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"}],
     cave:[{kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"},{kind:"equip",id:"alm_small_shield",stockLimit:1,stockKey:"travel:alm_small_shield"}],
@@ -8694,7 +8738,7 @@
   }
   function openShop(key="town"){
     state.currentShop=key; state.shopMode="buy"; state.shopSelectedKey=null; state.shopSessionPurchases={};
-    const shopTitles={town:"ミレスタ商店",yordy:"港町ヨーディー商店",tileno:"ティレーノ商店",granzel:"グランゼル城下町・武器屋",cave:"洞窟の旅商人",caveSide:"洞窟の横道・旅商人",yodyRegion:"ヨーディー地方・旅商人",footpath:"麓の小道・旅商人",yodyMountain:"ヨーディー山道・旅商人",tilenoRegion:"ティレーノ地方・旅商人",zelrenoForest:"ゼルレーノ森林地帯・旅商人",granzelPlains:"グランゼル大平原・旅商人",plains:"旅の商人"};
+    const shopTitles={town:"ミレスタ商店",yordy:"港町ヨーディー商店",tileno:"ティレーノ商店",granzel:"グランゼル城下町商店",cave:"洞窟の旅商人",caveSide:"洞窟の横道・旅商人",yodyRegion:"ヨーディー地方・旅商人",footpath:"麓の小道・旅商人",yodyMountain:"ヨーディー山道・旅商人",tilenoRegion:"ティレーノ地方・旅商人",zelrenoForest:"ゼルレーノ森林地帯・旅商人",granzelPlains:"グランゼル大平原・旅商人",plains:"旅の商人"};
     $("shopTitle").textContent=shopTitles[key]||"旅の商人";
     $("shopLead").textContent="商品を選ぶと、装備時の能力差をその場で確認できます。";
     setShopMerchant(key); renderShop(); const sf=$("shopFlash"); if(sf){sf.textContent=""; sf.className="shop-flash";} $("shopModal").classList.add("show");
@@ -11877,7 +11921,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45d";
       updateHeader();
       return;
     }
@@ -11885,7 +11929,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45d";
   }
 
   async function attemptEscape(){
@@ -12196,7 +12240,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45d";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -12204,7 +12248,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45d";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -12425,7 +12469,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45c";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45d";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -12490,7 +12534,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45d";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -12524,7 +12568,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45c";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.45d";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -12747,6 +12791,7 @@
     const tilenoUnlocked=!!state.eventFlags?.tilenoTownReached;
     const forestUnlocked=!!state.eventFlags?.zelrenoForestReached;
     const granzelPlainsUnlocked=!!state.eventFlags?.granzelTownReached;
+    const granzelTownUnlocked=!!state.eventFlags?.granzelTownReached;
     if(!state.caveUnlocked && state.selectedArea==="cave") state.selectedArea="plains";
     if(!yodyUnlocked && state.selectedArea==="yodyRegion") state.selectedArea=state.caveUnlocked?"cave":"plains";
     if(!yodyTownUnlocked && state.selectedArea==="yodyTown") state.selectedArea=yodyUnlocked?"yodyRegion":state.caveUnlocked?"cave":"plains";
@@ -12756,6 +12801,7 @@
     if(!tilenoUnlocked && state.selectedArea==="tilenoTown") state.selectedArea=mountainUnlocked?"yodyMountain":yodyUnlocked?"yodyRegion":state.caveUnlocked?"cave":"plains";
     if(!forestUnlocked && state.selectedArea==="zelrenoForest") state.selectedArea=tilenoUnlocked?"tilenoRegion":mountainUnlocked?"yodyMountain":yodyUnlocked?"yodyRegion":"plains";
     if(!granzelPlainsUnlocked && state.selectedArea==="granzelPlains") state.selectedArea=forestUnlocked?"zelrenoForest":tilenoUnlocked?"tilenoRegion":"plains";
+    if(!granzelTownUnlocked && state.selectedArea==="granzelTown") state.selectedArea=forestUnlocked?"zelrenoForest":tilenoUnlocked?"tilenoRegion":"plains";
     const a=state.selectedArea;
     const caveVisible=!!state.caveUnlocked;
     if($("cavePin")) $("cavePin").style.display=caveVisible?"flex":"none";
@@ -12776,6 +12822,8 @@
     if($("zelrenoForestWorldRoute")) $("zelrenoForestWorldRoute").style.display=forestUnlocked?"":"none";
     if($("granzelPlainsWorldPin")) $("granzelPlainsWorldPin").style.display=granzelPlainsUnlocked?"flex":"none";
     if($("granzelPlainsWorldRoute")) $("granzelPlainsWorldRoute").style.display=granzelPlainsUnlocked?"":"none";
+    if($("granzelTownWorldPin")) $("granzelTownWorldPin").style.display=granzelTownUnlocked?"flex":"none";
+    if($("granzelTownWorldRoute")) $("granzelTownWorldRoute").style.display=granzelTownUnlocked?"":"none";
     document.querySelectorAll(".area-pin").forEach(p=>p.classList.toggle("selected",p.dataset.area===a));
     if(a==="milestaTown"){
       $("areaName").textContent="辺境の町ミレスタ";
@@ -12807,12 +12855,15 @@
     }else if(a==="granzelPlains"){
       $("areaName").textContent="グランゼル大平原";
       $("areaDesc").textContent="グランゼル王国中央部に広がる大平原。北は氷雪の回廊、南東はルネル岩窟へと道が続いている。";
+    }else if(a==="granzelTown"){
+      $("areaName").textContent="グランゼル城下町";
+      $("areaDesc").textContent="グランゼル王国の中心に築かれた大きな城下町。王国軍の兵士や旅人が行き交っている。";
     }else{
       $("areaName").textContent="ヨーディー地方";
       $("areaDesc").textContent="港町ヨーディー周辺に広がる海沿いの地方。山道や麓へ続く道が伸びている。";
     }
     $("backHome").textContent=`← ${townDisplayName(state.currentTown)}へ`;
-    $("departBtn").textContent=(a==="milestaTown"||a==="yodyTown"||a==="tilenoTown")?"町へ移動する":"探索を開始する";
+    $("departBtn").textContent=(a==="milestaTown"||a==="yodyTown"||a==="tilenoTown"||a==="granzelTown")?"町へ移動する":"探索を開始する";
     $("departBtn").disabled=false;
     $("departBtn").classList.remove("locked");
   }
@@ -12854,6 +12905,10 @@
         toast("グランゼル城下町に到着すると、ここへ直接向かえるようになります");
         return;
       }
+      if(pin.dataset.area==="granzelTown" && !state.eventFlags?.granzelTownReached){
+        toast("まだグランゼル城下町には到着していません");
+        return;
+      }
       state.selectedArea=pin.dataset.area;
       updateWorld();
     };
@@ -12863,6 +12918,7 @@
     if(state.selectedArea==="milestaTown"){ enterTown("milesta","ミレスタへ移動しました"); return; }
     if(state.selectedArea==="yodyTown"){ enterTown("yody","港町ヨーディーへ移動しました"); return; }
     if(state.selectedArea==="tilenoTown"){ enterTown("tileno","ティレーノの街へ移動しました"); return; }
+    if(state.selectedArea==="granzelTown"){ enterTown("granzel","グランゼル城下町へ移動しました"); return; }
     if(state.selectedArea==="plains" && prologueStage()===1){ startStoryEvent("plainsDepartEliza",{force:true}); return; }
     startRun(state.selectedArea);
   };
@@ -15049,14 +15105,11 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
       }
       case "granzelTown": {
         if(!state.eventFlags) state.eventFlags={};
-        const firstArrival=!state.eventFlags.granzelTownReached;
         state.eventFlags.granzelPlainsReached=true;
         state.eventFlags.granzelTownReached=true;
-        state.selectedArea="granzelPlains";
-        const text=firstArrival
-          ? `大平原を進み、ついにグランゼル城下町へ到着した。\n\nこれで世界マップから「グランゼル大平原」へ直接向かえるようになった。\n\n※グランゼル城下町の町機能は現在未実装です。`
-          : `グランゼル城下町へ到着した。\n\n※グランゼル城下町の町機能は現在未実装です。`;
-        modal("🏰 グランゼル城下町",text,[["ティレーノの街へ戻る",()=>{closeModal();state.currentTown="tileno";finishRun(firstArrival?"グランゼル城下町に到着しました":"ティレーノの街へ戻りました");}]]);
+        state.currentTown="granzel";
+        state.selectedArea="granzelTown";
+        finishRun("グランゼル城下町に到着しました");
         break;
       }
       case "iceCorridor":
