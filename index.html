@@ -3731,7 +3731,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44y</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44z</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3741,7 +3741,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44y</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44z</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3753,7 +3753,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.44y</div>
+      <div class="title-version">DEV v0.44z</div>
     </section>
   </main>
 
@@ -4361,7 +4361,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.44y</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.44z</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4390,7 +4390,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.44y";
+  const DEV_VERSION = "v0.44z";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -5949,7 +5949,7 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44z";
       updateHeader();
       return;
     }
@@ -8089,7 +8089,7 @@
     silverSlime:{
       name:"シルバースライム",img:IMG.silverSlime,exp:500,gold:45,critRate:0,evasionRate:10,
       bowInstantKillImmune:true,statusDeathImmune:true,statusImmuneAll:true,silverBodyDamageCompression:true,resist:{...characterProfiles.silverSlime.resist},
-      skills:["cold2"],ai:"silverSlimeMetal",basicBowInstantKillRate:2.0,basicAttackFx:"impact",basicAttackSymbol:"🪙",stats:{hp:8,mp:35,atk:60,def:0,magic:48,mdef:0,spd:68}
+      skills:["cold2"],ai:"silverSlimeMetal",basicBowInstantKillRate:2.0,basicAttackFx:"arrow",basicAttackSymbol:"🏹",stats:{hp:8,mp:35,atk:60,def:0,magic:48,mdef:0,spd:68}
     },
     podalge:{
       name:"ポダルゲ",img:PODALGE_IMG,exp:70,gold:35,critRate:0,evasionRate:5,boss:true,
@@ -8200,7 +8200,7 @@
       ["maidDevil","lamia","owl"],
       ["silverSlime"],
       ["silverSlime","silverSlime"]
-    ],rareFormationIndexes:[4,5],rareRate:.05},
+    ],rareFormationIndexes:[4,5],rareRate:.10},
     visualTest:{label:"🧪 画像表示テスト",formations:[
       ["sheep"],
       ["lindwurm"],
@@ -11829,7 +11829,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44z";
       updateHeader();
       return;
     }
@@ -11837,7 +11837,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44z";
   }
 
   async function attemptEscape(){
@@ -12148,7 +12148,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44z";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -12156,7 +12156,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44z";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -12377,7 +12377,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44z";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -12442,7 +12442,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44z";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -12476,7 +12476,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44z";
     updateHeader();
     toast("戦闘テストを終了");
   }
