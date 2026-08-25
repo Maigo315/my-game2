@@ -3730,7 +3730,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44s</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44t</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3740,7 +3740,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44s</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44t</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3752,7 +3752,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.44s</div>
+      <div class="title-version">DEV v0.44t</div>
     </section>
   </main>
 
@@ -4349,7 +4349,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.44s</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.44t</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4378,7 +4378,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.44s";
+  const DEV_VERSION = "v0.44t";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -5839,7 +5839,7 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44s";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
       updateHeader();
       return;
     }
@@ -5877,8 +5877,8 @@
     // A positive bias is early-blooming, a negative bias is late-blooming.
     // All curves still pass exactly through Lv1=0% and Lv100=100%, avoiding the huge Lv2-3 jump of x^a.
     ultraEarly:{label:"超早熟",bias:.80},
-    early:{label:"早熟",bias:.45},
-    slightlyEarly:{label:"やや早熟",bias:.22},
+    early:{label:"早熟",bias:.35},
+    slightlyEarly:{label:"やや早熟",bias:.18},
     normal:{label:"普通",bias:0},
     slightlyLate:{label:"やや晩成",bias:-.22},
     late:{label:"晩成",bias:-.45},
@@ -7122,6 +7122,18 @@
     }
   }
 
+  function catchUpExpMultiplier(c){
+    if(!c || c.id==="hero") return 1;
+    const hero=roster.hero;
+    if(!hero) return 1;
+    const gap=Math.max(0,(Number(hero.level)||1)-(Number(c.level)||1));
+    if(gap>=12) return 2.5;
+    if(gap>=9) return 2.0;
+    if(gap>=6) return 1.5;
+    if(gap>=3) return 1.25;
+    return 1;
+  }
+
   function awardExperience(amount,eligibleIds=null){
     const leveled=[];
     amount=Math.max(0,Math.round(Number(amount)||0));
@@ -7144,10 +7156,12 @@
       recipients.forEach((id,index)=>awards.set(id,(awards.get(id)||0)+each+(index<remainder?1:0)));
     }
 
-    // 個人EXP倍率は分配後に適用する。
+    // 個人EXP倍率と主人公とのレベル差による追いつき補正は、分配後にバトルメンバーへ適用する。
     recipients.forEach(id=>{
-      const c=roster[id],mult=Math.max(0,Number(equippedAccessory(c)?.expMultiplier)||1);
-      grantExperienceToCharacter(c,Math.round((awards.get(id)||0)*mult),leveled);
+      const c=roster[id];
+      const equipMult=Math.max(0,Number(equippedAccessory(c)?.expMultiplier)||1);
+      const catchUpMult=catchUpExpMultiplier(c);
+      grantExperienceToCharacter(c,Math.round((awards.get(id)||0)*equipMult*catchUpMult),leveled);
     });
 
     // 控えEXP装備。戦闘不能中の控えには入らない。
@@ -7173,6 +7187,7 @@
     let hpGain=0,mpGain=0;
     travelPartyIds().forEach(id=>{
       const c=roster[id],st=S(c);
+      if(st.hp<=0) return;
       const oldHp=st.hp,oldMp=st.mp;
       st.hp=Math.min(st.hpMax,st.hp+Math.floor(st.hpMax*hpRate));
       st.mp=Math.min(st.mpMax,st.mp+Math.floor(st.mpMax*mpRate));
@@ -11363,7 +11378,7 @@
     if(enemy.basicAttackAll){
       const traitContext=makeTraitActionContext();
       const attackPower=Number.isFinite(enemy.basicAttackPower)?enemy.basicAttackPower:.80;
-      setMessage(`➰ ${enemy.displayName} の鞭撃！ バトルメンバー全体を薙ぎ払う！`);
+      setMessage(`${enemy.displayName} の攻撃！`);
       await wait(BASE_TIME.actionLead);
       let total=0,missed=0,criticals=0;
       for(const target of [...targets]){
@@ -11372,11 +11387,11 @@
         if(!c || S(c).hp<=0) continue;
         if(blindedPhysicalMiss(enemy) || physicalAttackMisses(c)){
           missed++;
-          setMessage(`➰ ${c.name} は鞭撃をかわした！`);
+          setMessage(`${enemy.displayName} の攻撃！ ${c.name} はひらりとかわした！`);
           await wait(BASE_TIME.short);
           continue;
         }
-        if(await maybeNullifyPhysicalByGhost(c,target.i,enemy,"鞭撃")) continue;
+        if(await maybeNullifyPhysicalByGhost(c,target.i,enemy,"攻撃")) continue;
         let raw=physicalDamage(effectiveEnemyStat(enemy,"atk"),effectiveDef(c),attackPower,1);
         const critical=rollCritical(enemy.critRate||0);
         if(critical){
@@ -11389,7 +11404,7 @@
         if(enemyEl) spawnFx(enemy.basicAttackFx||"whip",critical?"‼":(enemy.basicAttackSymbol||"〰"),enemyEl);
         renderBattleParty();
         flashPartyValue(target.i,dmg,"damage");
-        setMessage(`➰ ${enemy.displayName} の鞭撃！${critical?" 会心！":""} ${c.name} に ${dmg} ダメージ。${c.defending?"（防御で軽減）":""}`);
+        setMessage(`${enemy.displayName} の攻撃！${critical?" 会心！":""} ${c.name} に ${dmg} ダメージ。${c.defending?"（防御で軽減）":""}`);
         await wait(BASE_TIME.enemyAfter);
         await maybeTriggerPoisonGelOnPhysicalHit(c,target.i,enemy);
         await maybeTriggerSlimeBody(c,target.i,traitContext);
@@ -11400,8 +11415,6 @@
         const ended=await handleAllyKoFromEnemy(c,target.i);
         if(ended || state.battleEnded) return;
       }
-      const notes=[missed?`${missed}人回避`:"",criticals?`${criticals}回会心`:""].filter(Boolean).join(" / ");
-      setMessage(`➰ ${enemy.displayName} の鞭撃：合計 ${total} ダメージ${notes?`（${notes}）`:""}`);
       return;
     }
 
@@ -11537,7 +11550,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44s";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
       updateHeader();
       return;
     }
@@ -11545,7 +11558,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44s";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
   }
 
   async function attemptEscape(){
@@ -11849,7 +11862,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44s";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -11857,7 +11870,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44s";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -12078,7 +12091,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44s";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -12143,7 +12156,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44s";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -12170,7 +12183,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44s";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
     updateHeader();
     toast("戦闘テストを終了");
   }
