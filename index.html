@@ -3730,7 +3730,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44t</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44u</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3740,7 +3740,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44t</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44u</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3752,7 +3752,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.44t</div>
+      <div class="title-version">DEV v0.44u</div>
     </section>
   </main>
 
@@ -3909,6 +3909,7 @@
               <path class="route" id="footpathRoute" d="M 545 255 C 610 226, 681 197, 748 180" style="display:none"></path>
               <path class="route" id="yodyMountainWorldRoute" d="M 545 255 C 576 203, 611 142, 650 95" style="display:none"></path>
               <path class="route" id="tilenoRegionWorldRoute" d="M 650 95 C 712 98, 776 112, 835 135" style="display:none"></path>
+              <path class="route" id="tilenoTownWorldRoute" d="M 835 135 C 838 190, 838 252, 835 315" style="display:none"></path>
             </svg>
             <div class="world-region-label" style="left:105px;top:392px">ミレスタ周辺</div>
             <div class="world-region-label" style="left:470px;top:170px">ヨーディー地方</div>
@@ -3938,6 +3939,9 @@
             </button>
             <button class="area-pin" id="tilenoRegionWorldPin" data-area="tilenoRegion" data-map-x="835" data-map-y="135" style="left:835px;top:135px;display:none">
               <span>🌿</span><strong>ティレーノ地方</strong>
+            </button>
+            <button class="area-pin" id="tilenoTownWorldPin" data-area="tilenoTown" data-map-x="835" data-map-y="315" style="left:835px;top:315px;display:none">
+              <span>🏘️</span><strong>ティレーノの街</strong>
             </button>
           </div>
         </div>
@@ -4349,7 +4353,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.44t</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.44u</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4378,7 +4382,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.44t";
+  const DEV_VERSION = "v0.44u";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4668,6 +4672,17 @@
     {id:"yodyCaptain",name:"サリード連絡船船長",gender:"male",silhouette:NPC_OLDMAN_IMG},
     {id:"yodyBoy",name:"少年",gender:"male",silhouette:NPC_BOY_IMG}
   ];
+  const TILENO_TALK_NPCS = [
+    {id:"tilenoYoungman",name:"若者",gender:"male",silhouette:NPC_YOUNGMAN_IMG},
+    {id:"tilenoGuildStaff",name:"冒険者ギルド職員",gender:"female",silhouette:NPC_YOUNGWOMAN_IMG},
+    {id:"tilenoSoldier",name:"兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
+    {id:"tilenoOldwoman",name:"おばあさん",gender:"female",silhouette:NPC_OLDWOMAN_IMG},
+    {id:"tilenoFemaleAdventurer",name:"女冒険者",gender:"female",silhouette:NPC_GIRL_IMG},
+    {id:"tilenoBrother",name:"お兄さん",gender:"male",silhouette:NPC_YOUNGMAN_IMG},
+    {id:"tilenoAdventurer",name:"冒険者",gender:"male",silhouette:MOB_MERCHANT_IMG},
+    {id:"tilenoOldman",name:"おじいさん",gender:"male",silhouette:NPC_OLDMAN_IMG},
+    {id:"tilenoBoy",name:"少年",gender:"male",silhouette:NPC_BOY_IMG}
+  ];
 
   const screens = [...document.querySelectorAll(".screen")];
   const $ = id => document.getElementById(id);
@@ -4679,9 +4694,10 @@
   }
   const TOWN_INFO={
     milesta:{name:"辺境の町ミレスタ",shortName:"ミレスタ",shop:"town"},
-    yody:{name:"港町ヨーディー",shortName:"港町ヨーディー",shop:"yordy"}
+    yody:{name:"港町ヨーディー",shortName:"港町ヨーディー",shop:"yordy"},
+    tileno:{name:"ティレーノの街",shortName:"ティレーノの街",shop:"tileno"}
   };
-  function normalizeTownKey(town){ return town==="yody"?"yody":"milesta"; }
+  function normalizeTownKey(town){ return town==="yody"?"yody":town==="tileno"?"tileno":"milesta"; }
   function townInfo(town=state.currentTown){ return TOWN_INFO[normalizeTownKey(town)]; }
   function townDisplayName(town=state.currentTown){ return townInfo(town).shortName; }
   function waitingAccessAllowed(){ return state.partyManageContext==="milesta" && waitingUnlocked(); }
@@ -4700,6 +4716,10 @@
       state.eventFlags.yodyPortReached=true;
       state.eventFlags.yodyRegionUnlocked=true;
       state.selectedArea="yodyTown";
+    }else if(state.currentTown==="tileno"){
+      state.eventFlags.tilenoTownReached=true;
+      state.eventFlags.tilenoRegionReached=true;
+      state.selectedArea="tilenoTown";
     }else state.selectedArea="milestaTown";
     state.run=null;
     restorePartyFull();
@@ -4815,7 +4835,7 @@
   }
   function openTownTalkModal(){
     const town=normalizeTownKey(state.currentTown);
-    $("townTalkTitle").textContent=town==="yody"?"港町ヨーディーの住民":"ミレスタの住民";
+    $("townTalkTitle").textContent=town==="yody"?"港町ヨーディーの住民":town==="tileno"?"ティレーノの街の住民":"ミレスタの住民";
     renderTownTalkMenu();
     $("townTalkModal").classList.add("show");
     $("townTalkModal").setAttribute("aria-hidden","false");
@@ -4825,8 +4845,12 @@
     $("townTalkModal").setAttribute("aria-hidden","true");
   }
   function currentTownTalkNpcs(){
-    const list=state.currentTown==="yody"?YODY_TALK_NPCS:MILESTA_TALK_NPCS;
-    return list.filter(npc=>!(npc.id==="yodyBoy" && state.eventFlags?.yodyBoyQuestCompleted));
+    const list=state.currentTown==="yody"?YODY_TALK_NPCS:state.currentTown==="tileno"?TILENO_TALK_NPCS:MILESTA_TALK_NPCS;
+    return list.filter(npc=>{
+      if(npc.id==="yodyBoy" && state.eventFlags?.yodyBoyQuestCompleted) return false;
+      if(npc.id==="tilenoBoy" && !state.eventFlags?.yodyBoyQuestCompleted) return false;
+      return true;
+    });
   }
   function renderTownTalkMenu(){
     const grid=$("townTalkGrid");
@@ -4853,7 +4877,7 @@
     return {type:"system",text,effects};
   }
   function townNpcData(id,town=state.currentTown){
-    const list=town==="yody"?YODY_TALK_NPCS:MILESTA_TALK_NPCS;
+    const list=town==="yody"?YODY_TALK_NPCS:town==="tileno"?TILENO_TALK_NPCS:MILESTA_TALK_NPCS;
     return list.find(n=>n.id===id)||list[0];
   }
   function startYodyCaptainBoarding(npc){
@@ -4964,8 +4988,83 @@
     steps.push({type:"end"});
     startTemporaryStoryEvent(steps);
   }
+  function startTilenoResidentTalk(id){
+    const npc=townNpcData(id,"tileno");
+    let steps=[];
+    if(id==="tilenoYoungman"){
+      steps=[talkDialogue("若者",npc.silhouette,npc.gender,`ここは冒険者ギルドの街、ティレーノだ。
+国中の冒険者たちが集まってるぜ！`)];
+    }else if(id==="tilenoGuildStaff"){
+      if(!state.eventFlags?.tilenoGuildPanaceaReceived){
+        steps=[
+          talkDialogue("冒険者ギルド職員",npc.silhouette,npc.gender,`冒険者さんですね？まずはこちらをどうぞ！`),
+          talkSystem("『{{hero}}は万能薬をもらった！』",[{type:"item",id:"panacea",amount:1},{type:"flag",key:"tilenoGuildPanaceaReceived",value:true}]),
+          talkDialogue("冒険者ギルド職員",npc.silhouette,npc.gender,`この辺りには毒の魔物娘やフクロウ娘がいますからね！
+状態異常対策を怠ってはいけませんよ！`)
+        ];
+      }else{
+        steps=[talkDialogue("冒険者ギルド職員",npc.silhouette,npc.gender,`この辺りには毒の魔物娘やフクロウ娘がいますからね！
+状態異常対策を怠ってはいけませんよ！`)];
+      }
+    }else if(id==="tilenoSoldier"){
+      steps=[
+        talkDialogue("兵士",npc.silhouette,npc.gender,`エルフは、射抜いて即死させてくることがある危険な魔物娘だ。
+万が一のことを考えて、命の石は用意しておきたいな。`),
+        talkDialogue("兵士",npc.silhouette,npc.gender,`あと、警戒心は強いが、礼儀正しく接すれば襲ってこない個体もいるらしい。
+俺は……逃げようとして矢を撃たれたよ。`)
+      ];
+    }else if(id==="tilenoOldwoman"){
+      steps=[
+        talkDialogue("おばあさん",npc.silhouette,npc.gender,`まったく……魔物娘魔物娘って。
+エルフはあたしが子供の頃は、魔物娘なんて扱いじゃなかったよ。`),
+        talkDialogue("おばあさん",npc.silhouette,npc.gender,`それが今じゃ人間と離れて暮らすようになって……。
+ああ、時代の変化ってのは恐ろしいね。`)
+      ];
+    }else if(id==="tilenoFemaleAdventurer"){
+      steps=[
+        talkDialogue("女冒険者",npc.silhouette,npc.gender,`ティレーノ湿原には行ったかい？
+あそこの奥地には、毒の魔物娘たちが巣食ってるんだ。かなり危険だよ。`),
+        talkDialogue("女冒険者",npc.silhouette,npc.gender,`今も、報酬目当ての冒険者たちが次々とやられて病院送りにされてる。
+あんたも行くなら覚悟をしておくんだね。`)
+      ];
+    }else if(id==="tilenoBrother"){
+      steps=[
+        talkDialogue("お兄さん",npc.silhouette,npc.gender,`ここから東に行くと、ゼルレーノ森林地帯だ。
+深い森だが、そこを抜ければグランゼル城下町に行けるぞ。`),
+        talkDialogue("お兄さん",npc.silhouette,npc.gender,`俺もグランゼルの鋼鉄製の装備欲しいし、行ってみるかな……。`)
+      ];
+    }else if(id==="tilenoAdventurer"){
+      steps=[
+        talkDialogue("冒険者",npc.silhouette,npc.gender,`今、俺たち冒険者を騒がせてる三つの依頼。
+『湿原の毒の魔物娘』、『ルネル地方の黒いラミア』、そして『魔縁者の捕獲』だ。`),
+        talkDialogue("冒険者",npc.silhouette,npc.gender,`『魔縁者』ってやつは、魔物娘と心を通わせるらしい。
+グランゼル王室直々の依頼らしいが、人間を捕まえるってのもなぁ……。`)
+      ];
+      if(travelingWithMonsterGirl()) steps.push(talkDialogue("冒険者",npc.silhouette,npc.gender,`え、あんた、魔物娘と一緒に……
+み、見なかったことにしておくよ。`));
+    }else if(id==="tilenoOldman"){
+      steps=[
+        talkDialogue("おじいさん",npc.silhouette,npc.gender,`森林地帯に行くのなら、魔法ばかりに頼るのは危険じゃぞ。
+あそこの魔物娘は、魔法に強い魔物娘も多いからのう。`),
+        talkDialogue("おじいさん",npc.silhouette,npc.gender,`ワシみたいな、斧を扱うパワーファイターを1人は連れて行くといいぞ。
+ふぉっふぉっふぉ……！`)
+      ];
+    }else if(id==="tilenoBoy"){
+      steps=[
+        talkDialogue("少年",npc.silhouette,npc.gender,`あ！あなたは……薬草をくれたお兄さん！
+来てくれたんですね！`),
+        talkDialogue("少年",npc.silhouette,npc.gender,`ただ……姉の傷はまだ治ってないんです。
+今回はいつもより無理してしまったみたいで。`),
+        talkDialogue("少年",npc.silhouette,npc.gender,`姉の傷が治ったら、一緒に何かお礼をしますから！
+またいらしてくださいね！`)
+      ];
+    }
+    steps.push({type:"end"});
+    startTemporaryStoryEvent(steps);
+  }
   function startTownResidentTalk(id){
     if(state.currentTown==="yody") return startYodyResidentTalk(id);
+    if(state.currentTown==="tileno") return startTilenoResidentTalk(id);
     const npc=townNpcData(id,"milesta"), phase=townTalkPhase();
     let steps=[];
     if(id==="girl"){
@@ -5163,12 +5262,13 @@
     state.partyManageContext=context;
     const exploring=context==="explore";
     const yodyTown=context==="yody";
-    const travelOnly=exploring||yodyTown;
+    const tilenoTown=context==="tileno";
+    const travelOnly=exploring||yodyTown||tilenoTown;
     const waitingOk=context==="milesta" && waitingUnlocked();
     $("partyManageShell").classList.toggle("explore-mode",travelOnly);
     if(travelOnly || !waitingOk) state.partyWaitingViewOpen=false;
     $("partyManageShell").classList.toggle("waiting-view-mode",!travelOnly && waitingOk && state.partyWaitingViewOpen);
-    $("partyManageKicker").textContent=exploring ? "EXPEDITION PARTY ORGANIZE" : yodyTown ? "YODY PARTY ORGANIZE" : "MILESTA PARTY ORGANIZE";
+    $("partyManageKicker").textContent=exploring ? "EXPEDITION PARTY ORGANIZE" : yodyTown ? "YODY PARTY ORGANIZE" : tilenoTown ? "TILENO PARTY ORGANIZE" : "MILESTA PARTY ORGANIZE";
     $("partyManageTitle").textContent=exploring ? "探索パーティ編成" : "仲間編成";
     $("partyManageDesc").textContent=exploring
       ? "同行中の10枠を入れ替えます。1人目をタップして選び、次に移動先の枠をタップしてください。主人公も控えへ移動できます。"
@@ -5190,7 +5290,7 @@
     $("topSubtitle").textContent=context==="explore" ? `探索パーティ編成 ${DEV_VERSION}` : `${townDisplayName(context)}・仲間編成 ${DEV_VERSION}`;
   }
 
-  $("dummyParty").onclick=()=>openPartyManage(state.currentTown==="yody"?"yody":"milesta");
+  $("dummyParty").onclick=()=>openPartyManage(state.currentTown);
   $("townShopBtn").onclick=()=>openShop(townInfo().shop);
   $("homeInventoryBtn").onclick=()=>openInventoryMenu("home","items");
   $("townTalkCloseBtn").onclick=()=>closeTownTalkModal();
@@ -5839,7 +5939,7 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
       updateHeader();
       return;
     }
@@ -5904,7 +6004,7 @@
 
   const characterProfiles = {
     hero:{
-      id:"hero",role:"万能型（主人公）",growthType:"normal",expType:"slow",recruitRank:null,fate:16,
+      id:"hero",role:"万能型（主人公）",isMonsterGirl:false,growthType:"normal",expType:"slow",recruitRank:null,fate:16,
       base:{hpMax:60,mpMax:24,atk:17,def:13,magic:17,mdef:11,spd:12},
       final:{hpMax:800,mpMax:550,atk:330,def:290,magic:320,mdef:280,spd:330},
       resist:{fire:"C",ice:"C",light:"C",dark:"C",thunder:"C",wind:"C",earth:"C",pleasure:"C",poison:"C",blind:"C",silence:"C",death:"C"},
@@ -5912,7 +6012,7 @@
       plannedSkills:{1:["fire"],2:["heal"],6:["blaze"],12:["death"],16:["flare"],19:["allMagic"],24:["heavenlyLight"],28:["pleasureOne"],32:["lastHeal"],37:["gigaRaise"],41:["allDeath"],50:["heroicTailwind"],60:["endBlaze"],75:["canceller"]}
     },
     eliza:{
-      id:"eliza",role:"同行NPC",growthType:"normal",expType:"normal",recruitRank:null,fate:20,
+      id:"eliza",role:"同行NPC",isMonsterGirl:false,growthType:"normal",expType:"normal",recruitRank:null,fate:20,
       base:{hpMax:60,mpMax:18,atk:21,def:15,magic:11,mdef:15,spd:18},
       final:{hpMax:780,mpMax:390,atk:350,def:310,magic:250,mdef:240,spd:370},
       resist:{fire:"C",ice:"C",light:"C",dark:"C",thunder:"C",wind:"C",earth:"C",pleasure:"C",poison:"C",blind:"C",silence:"C",death:"C"},
@@ -6103,7 +6203,7 @@
       plannedSkills:{1:["fire"],10:["pleasure"],17:["allHeal2"],25:["blaze2"],31:["allBlock"],43:["pleasureOne"],48:["demonSpiritFlow"]}
     },
     karen:{
-      id:"karen",role:"人間の仲間",growthType:"normal",expType:"normal",recruitRank:null,fate:15,
+      id:"karen",role:"人間の仲間",isMonsterGirl:false,growthType:"normal",expType:"normal",recruitRank:null,fate:15,
       base:{hpMax:58,mpMax:17,atk:19,def:16,magic:10,mdef:9,spd:12},
       final:{hpMax:870,mpMax:430,atk:360,def:280,magic:240,mdef:250,spd:290},
       resist:{fire:"C",ice:"C",light:"C",dark:"C",thunder:"C",wind:"C",earth:"C",pleasure:"D",poison:"D",blind:"C",silence:"B",death:"C"},
@@ -6951,6 +7051,14 @@
   function profileFor(cOrId){
     const id=typeof cOrId==="string" ? cOrId : cOrId?.profileId || cOrId?.id;
     return characterProfiles[id] || null;
+  }
+  function characterIsMonsterGirl(cOrId){
+    const profile=profileFor(cOrId);
+    if(typeof profile?.isMonsterGirl==="boolean") return profile.isMonsterGirl;
+    return !!profile?.recruitRank;
+  }
+  function travelingWithMonsterGirl(){
+    return travelPartyIds().some(id=>characterIsMonsterGirl(roster[id]));
   }
 
   function rebuildFormalCharacterStats(c,{fullHeal=false,preserveDeficit=true}={}){
@@ -8300,8 +8408,8 @@
     $("debugBossToggleBtn").onclick=()=>{state.caveBossDefeated=!state.caveBossDefeated;debugRefreshProgress();};
     $("debugMerchantToggleBtn").onclick=()=>{state.travelMerchantMet=!state.travelMerchantMet;debugRefreshProgress();};
     $("debugIntroToggleBtn").onclick=()=>{const on=prologueStage()<1;state.eventFlags.milestaIntroDone=on;state.prologueStage=on?1:0;if(!on)leaveElizaEscort();debugRefreshProgress();};
-    $("debugProgressOpenBtn").onclick=()=>{state.caveUnlocked=true;state.caveBossDefeated=true;state.travelMerchantMet=true;state.eventFlags.milestaIntroDone=true;state.eventFlags.recruitTutorialDone=true;state.eventFlags.milestaWaitingUnlocked=true;state.eventFlags.caveSidepathUnlocked=true;state.eventFlags.yodyPortReached=true;state.eventFlags.yodyRegionUnlocked=true;state.eventFlags.yodyFootpathUnlocked=true;state.eventFlags.yodyMountainUnlocked=true;state.eventFlags.yodyMountainBossDefeated=true;state.eventFlags.yodyMountainCleared=true;state.eventFlags.tilenoRegionReached=true;state.eventFlags.tilenoTownReached=true;state.eventFlags.tilenoWetlandReached=true;state.eventFlags.zelrenoForestReached=true;state.eventFlags.prologueComplete=true;state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=6;toast("現行の進行フラグをすべてONにしました。");debugRefreshProgress();};
-    $("debugProgressResetBtn").onclick=()=>modal("進行フラグを初期化","現在実装されている進行フラグだけをOFFにします。仲間・所持品・Lv・装備は変わりません。",[["初期化する",()=>{state.caveUnlocked=false;state.caveBossDefeated=false;state.travelMerchantMet=false;state.eventFlags.milestaIntroDone=false;state.eventFlags.recruitTutorialDone=false;state.eventFlags.milestaWaitingUnlocked=false;state.eventFlags.caveSidepathUnlocked=false;state.eventFlags.yodyPortReached=false;state.eventFlags.yodyRegionUnlocked=false;state.eventFlags.yodyFootpathUnlocked=false;state.eventFlags.yodyMountainUnlocked=false;state.eventFlags.yodyMountainBossDefeated=false;state.eventFlags.yodyMountainCleared=false;state.eventFlags.tilenoRegionReached=false;state.eventFlags.tilenoTownReached=false;state.eventFlags.tilenoWetlandReached=false;state.eventFlags.zelrenoForestReached=false;state.eventFlags.footpathHealLeafObtained=false;state.eventFlags.yodyBoyTalked=false;state.eventFlags.yodyBoyQuestCompleted=false;state.eventFlags.salidDesertUnlocked=false;state.eventFlags.prologueComplete=false;state.currentTown="milesta";state.selectedArea="plains";state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=0;leaveElizaEscort();closeModal();toast("進行フラグを初期状態にしました。");debugRefreshProgress();}],["やめる",closeModal]]);
+    $("debugProgressOpenBtn").onclick=()=>{state.caveUnlocked=true;state.caveBossDefeated=true;state.travelMerchantMet=true;state.eventFlags.milestaIntroDone=true;state.eventFlags.recruitTutorialDone=true;state.eventFlags.milestaWaitingUnlocked=true;state.eventFlags.caveSidepathUnlocked=true;state.eventFlags.yodyPortReached=true;state.eventFlags.yodyRegionUnlocked=true;state.eventFlags.yodyFootpathUnlocked=true;state.eventFlags.yodyMountainUnlocked=true;state.eventFlags.yodyMountainBossDefeated=true;state.eventFlags.yodyMountainCleared=true;state.eventFlags.tilenoRegionReached=true;state.eventFlags.tilenoTownReached=true;state.eventFlags.tilenoGuildPanaceaReceived=true;state.eventFlags.tilenoWetlandReached=true;state.eventFlags.zelrenoForestReached=true;state.eventFlags.prologueComplete=true;state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=6;toast("現行の進行フラグをすべてONにしました。");debugRefreshProgress();};
+    $("debugProgressResetBtn").onclick=()=>modal("進行フラグを初期化","現在実装されている進行フラグだけをOFFにします。仲間・所持品・Lv・装備は変わりません。",[["初期化する",()=>{state.caveUnlocked=false;state.caveBossDefeated=false;state.travelMerchantMet=false;state.eventFlags.milestaIntroDone=false;state.eventFlags.recruitTutorialDone=false;state.eventFlags.milestaWaitingUnlocked=false;state.eventFlags.caveSidepathUnlocked=false;state.eventFlags.yodyPortReached=false;state.eventFlags.yodyRegionUnlocked=false;state.eventFlags.yodyFootpathUnlocked=false;state.eventFlags.yodyMountainUnlocked=false;state.eventFlags.yodyMountainBossDefeated=false;state.eventFlags.yodyMountainCleared=false;state.eventFlags.tilenoRegionReached=false;state.eventFlags.tilenoTownReached=false;state.eventFlags.tilenoGuildPanaceaReceived=false;state.eventFlags.tilenoWetlandReached=false;state.eventFlags.zelrenoForestReached=false;state.eventFlags.footpathHealLeafObtained=false;state.eventFlags.yodyBoyTalked=false;state.eventFlags.yodyBoyQuestCompleted=false;state.eventFlags.salidDesertUnlocked=false;state.eventFlags.prologueComplete=false;state.currentTown="milesta";state.selectedArea="plains";state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=0;leaveElizaEscort();closeModal();toast("進行フラグを初期状態にしました。");debugRefreshProgress();}],["やめる",closeModal]]);
     $("debugIntroReplayBtn").onclick=()=>{closeDebugTools();startStoryEvent("milestaIntroEliza",{preview:true,force:true});};
 
     areaSel.onchange=debugPopulateFormationIndex;$("debugFormationIndex").onchange=debugRefreshFormationStatus;
@@ -8341,9 +8449,11 @@
       {kind:"equip",id:"traveler_clothes"},{kind:"equip",id:"bronze_mail"},{kind:"equip",id:"mage_robe"}
     ],
     tileno:[
-      {kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},
-      {kind:"equip",id:"bronze_knuckle"},{kind:"equip",id:"traveler_sword"},{kind:"equip",id:"traveler_bow"},
-      {kind:"equip",id:"bronze_axe"},{kind:"equip",id:"mage_staff"},{kind:"equip",id:"bronze_whip"},{kind:"equip",id:"hunter"}
+      {kind:"item",id:"potion"},{kind:"item",id:"highPotion"},{kind:"item",id:"antidote"},{kind:"item",id:"panacea"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},
+      {kind:"equip",id:"bronze_knuckle"},{kind:"equip",id:"traveler_sword"},{kind:"equip",id:"bronze_axe"},{kind:"equip",id:"traveler_bow"},{kind:"equip",id:"mage_staff"},{kind:"equip",id:"bronze_whip"},{kind:"equip",id:"hunter"},
+      {kind:"equip",id:"buckler"},{kind:"equip",id:"stone_greatshield"},
+      {kind:"equip",id:"traveler_clothes"},{kind:"equip",id:"bronze_mail"},{kind:"equip",id:"mage_robe"},
+      {kind:"equip",id:"bandana"},{kind:"equip",id:"full_face"},{kind:"equip",id:"hunter_charm"},{kind:"equip",id:"light_shoes"}
     ],
     granzel:[
       {kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},
@@ -8486,7 +8596,7 @@
   }
   function openShop(key="town"){
     state.currentShop=key; state.shopMode="buy"; state.shopSelectedKey=null;
-    const shopTitles={town:"ミレスタ商店",yordy:"港町ヨーディー商店",tileno:"ティレーノの街・武器屋",granzel:"グランゼル城下町・武器屋",cave:"洞窟の旅商人",caveSide:"洞窟の横道・旅商人",yodyRegion:"ヨーディー地方・旅商人",footpath:"麓の小道・旅商人",yodyMountain:"ヨーディー山道・旅商人",tilenoRegion:"ティレーノ地方・旅商人",plains:"旅の商人"};
+    const shopTitles={town:"ミレスタ商店",yordy:"港町ヨーディー商店",tileno:"ティレーノ商店",granzel:"グランゼル城下町・武器屋",cave:"洞窟の旅商人",caveSide:"洞窟の横道・旅商人",yodyRegion:"ヨーディー地方・旅商人",footpath:"麓の小道・旅商人",yodyMountain:"ヨーディー山道・旅商人",tilenoRegion:"ティレーノ地方・旅商人",plains:"旅の商人"};
     $("shopTitle").textContent=shopTitles[key]||"旅の商人";
     $("shopLead").textContent="商品を選ぶと、装備時の能力差をその場で確認できます。";
     setShopMerchant(key); renderShop(); const sf=$("shopFlash"); if(sf){sf.textContent=""; sf.className="shop-flash";} $("shopModal").classList.add("show");
@@ -11550,7 +11660,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
       updateHeader();
       return;
     }
@@ -11558,7 +11668,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
   }
 
   async function attemptEscape(){
@@ -11862,7 +11972,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -11870,7 +11980,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -12091,7 +12201,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -12156,7 +12266,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -12183,7 +12293,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44t";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -12410,6 +12520,7 @@
     if(!footpathUnlocked && state.selectedArea==="footpath") state.selectedArea=yodyUnlocked?"yodyRegion":state.caveUnlocked?"cave":"plains";
     if(!mountainUnlocked && state.selectedArea==="yodyMountain") state.selectedArea=yodyUnlocked?"yodyRegion":state.caveUnlocked?"cave":"plains";
     if(!tilenoUnlocked && state.selectedArea==="tilenoRegion") state.selectedArea=mountainUnlocked?"yodyMountain":yodyUnlocked?"yodyRegion":state.caveUnlocked?"cave":"plains";
+    if(!tilenoUnlocked && state.selectedArea==="tilenoTown") state.selectedArea=mountainUnlocked?"yodyMountain":yodyUnlocked?"yodyRegion":state.caveUnlocked?"cave":"plains";
     const a=state.selectedArea;
     const caveVisible=!!state.caveUnlocked;
     if($("cavePin")) $("cavePin").style.display=caveVisible?"flex":"none";
@@ -12424,6 +12535,8 @@
     if($("yodyMountainWorldRoute")) $("yodyMountainWorldRoute").style.display=mountainUnlocked?"":"none";
     if($("tilenoRegionWorldPin")) $("tilenoRegionWorldPin").style.display=tilenoUnlocked?"flex":"none";
     if($("tilenoRegionWorldRoute")) $("tilenoRegionWorldRoute").style.display=tilenoUnlocked?"":"none";
+    if($("tilenoTownWorldPin")) $("tilenoTownWorldPin").style.display=tilenoUnlocked?"flex":"none";
+    if($("tilenoTownWorldRoute")) $("tilenoTownWorldRoute").style.display=tilenoUnlocked?"":"none";
     document.querySelectorAll(".area-pin").forEach(p=>p.classList.toggle("selected",p.dataset.area===a));
     if(a==="milestaTown"){
       $("areaName").textContent="辺境の町ミレスタ";
@@ -12446,12 +12559,15 @@
     }else if(a==="tilenoRegion"){
       $("areaName").textContent="ティレーノ地方";
       $("areaDesc").textContent="草原・森・水辺が入り混じる緑豊かな地方。湿原やゼルレーノ森林地帯へ続く道が伸びている。";
+    }else if(a==="tilenoTown"){
+      $("areaName").textContent="ティレーノの街";
+      $("areaDesc").textContent="国中から冒険者が集まる、冒険者ギルドの街。湿原や森林地帯へ向かう者たちの拠点でもある。";
     }else{
       $("areaName").textContent="ヨーディー地方";
       $("areaDesc").textContent="港町ヨーディー周辺に広がる海沿いの地方。山道や麓へ続く道が伸びている。";
     }
     $("backHome").textContent=`← ${townDisplayName(state.currentTown)}へ`;
-    $("departBtn").textContent=(a==="milestaTown"||a==="yodyTown")?"町へ移動する":"探索を開始する";
+    $("departBtn").textContent=(a==="milestaTown"||a==="yodyTown"||a==="tilenoTown")?"町へ移動する":"探索を開始する";
     $("departBtn").disabled=false;
     $("departBtn").classList.remove("locked");
   }
@@ -12481,6 +12597,10 @@
         toast("ティレーノの街に到着すると、ここへ直接向かえるようになります");
         return;
       }
+      if(pin.dataset.area==="tilenoTown" && !state.eventFlags?.tilenoTownReached){
+        toast("まだティレーノの街には到着していません");
+        return;
+      }
       state.selectedArea=pin.dataset.area;
       updateWorld();
     };
@@ -12489,6 +12609,7 @@
   $("departBtn").onclick=()=>{
     if(state.selectedArea==="milestaTown"){ enterTown("milesta","ミレスタへ移動しました"); return; }
     if(state.selectedArea==="yodyTown"){ enterTown("yody","港町ヨーディーへ移動しました"); return; }
+    if(state.selectedArea==="tilenoTown"){ enterTown("tileno","ティレーノの街へ移動しました"); return; }
     if(state.selectedArea==="plains" && prologueStage()===1){ startStoryEvent("plainsDepartEliza",{force:true}); return; }
     startRun(state.selectedArea);
   };
@@ -14287,7 +14408,9 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
         if(!state.eventFlags) state.eventFlags={};
         state.eventFlags.tilenoTownReached=true;
         state.eventFlags.tilenoRegionReached=true;
-        modal("🏘️ ティレーノの街",`ティレーノ地方を抜け、ティレーノの街に到着した。\n\nこれで世界マップから「ティレーノ地方」へ直接向かえるようになった。\n\n※ティレーノの街の機能は次回実装予定です。`,[["港町ヨーディーへ戻る",()=>{closeModal();state.currentTown="yody";state.selectedArea="tilenoRegion";finishRun("ティレーノの街に到着しました");}]]);
+        modal("🏘️ ティレーノの街",`ティレーノ地方を抜け、ティレーノの街に到着した。
+
+これで世界マップから「ティレーノの街」と「ティレーノ地方」へ直接向かえるようになった。`,[["ティレーノの街へ",()=>{closeModal();state.currentTown="tileno";state.selectedArea="tilenoTown";finishRun("ティレーノの街に到着しました");}]]);
         break;
       case "tilenoWetland":
         if(!state.eventFlags) state.eventFlags={};
@@ -14297,7 +14420,7 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
       case "zelrenoForest":
         if(!state.eventFlags) state.eventFlags={};
         state.eventFlags.zelrenoForestReached=true;
-        modal("🌲 ゼルレーノ森林地帯","木々が密集し、深い森へ続く入口にたどり着いた。\n\nゼルレーノ森林地帯への道を発見した。\n※ゼルレーノ森林地帯は現在未実装です。",[["港町ヨーディーへ戻る",()=>{closeModal();state.currentTown="yody";state.selectedArea="tilenoRegion";finishRun("ゼルレーノ森林地帯への道を発見しました");}]]);
+        modal("🌲 ゼルレーノ森林地帯","木々が密集し、深い森へ続く入口にたどり着いた。\n\nゼルレーノ森林地帯への道を発見した。\n※ゼルレーノ森林地帯は現在未実装です。",[["ティレーノの街へ戻る",()=>{closeModal();state.currentTown="tileno";state.selectedArea="tilenoRegion";finishRun("ゼルレーノ森林地帯への道を発見しました");}]]);
         break;
       case "yodyFootpath":
         if(!state.eventFlags) state.eventFlags={};
