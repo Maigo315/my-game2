@@ -3730,7 +3730,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44v</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44w</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3740,7 +3740,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44v</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44w</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3752,7 +3752,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.44v</div>
+      <div class="title-version">DEV v0.44w</div>
     </section>
   </main>
 
@@ -4008,6 +4008,7 @@
               <option value="yodyMountain">ヨーディー山道</option>
               <option value="yodyMountainBoss">ヨーディー山道 ボス</option>
               <option value="tilenoRegion">ティレーノ地方</option>
+              <option value="zelrenoForest">ゼルレーノ森林地帯</option>
               <option value="rare">レア枠</option>
               <option value="caveBoss">魔界の尖兵</option>
             </select>
@@ -4353,7 +4354,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.44v</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.44w</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4382,7 +4383,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.44v";
+  const DEV_VERSION = "v0.44w";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -5939,7 +5940,7 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44w";
       updateHeader();
       return;
     }
@@ -7840,6 +7841,8 @@
     elf:{rare:{kind:"equipment",id:"elven_bow",rate:RARE_DROP_RATE}},
     sylph:{normal:{kind:"equipment",id:"hinoki_staff",rate:NORMAL_DROP_RATE},rare:{kind:"item",id:"intellectSeed",rate:SEED_DROP_RATE}},
     owl:{normal:{kind:"item",id:"returnFeather",rate:NORMAL_DROP_RATE},rare:{kind:"equipment",id:"bronze_knuckle",rate:RARE_DROP_RATE}},
+    moth:{rare:{kind:"item",id:"spiritSeed",rate:SEED_DROP_RATE}},
+    forestMage:{normal:{kind:"item",id:"potion",rate:NORMAL_DROP_RATE},rare:{kind:"item",id:"magicHerb",rate:RARE_DROP_RATE}},
     podalge:{normal:{kind:"item",id:"speedSeed",rate:1}}
   };
 
@@ -8035,19 +8038,29 @@
       skills:[],ai:"basic",stats:{hp:150,mp:1,atk:48,def:40,magic:2,mdef:10,spd:8}
     },
     elf:{
-      name:"エルフ",img:IMG.elf,exp:32,gold:22,critRate:0,evasionRate:0,
+      name:"エルフ",img:IMG.elf,exp:35,gold:22,critRate:0,evasionRate:0,
       bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.elf.resist},
       skills:["highHeal"],ai:"elfArcher",basicBowInstantKillRate:2.5,basicAttackFx:"arrow",basicAttackSymbol:"🏹",stats:{hp:135,mp:33,atk:49,def:32,magic:39,mdef:39,spd:40}
     },
     sylph:{
-      name:"シルフィ",img:IMG.sylph,exp:33,gold:23,critRate:0,evasionRate:0,
+      name:"シルフィ",img:IMG.sylph,exp:36,gold:23,critRate:0,evasionRate:0,
       bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.sylph.resist},
       skills:["sonic","wind"],ai:"sylphCaster",stats:{hp:100,mp:45,atk:21,def:20,magic:52,mdef:42,spd:57}
     },
     owl:{
-      name:"フクロウ娘",img:IMG.owl,exp:35,gold:25,critRate:0,evasionRate:0,
+      name:"フクロウ娘",img:IMG.owl,exp:38,gold:25,critRate:0,evasionRate:0,
       bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.owl.resist},
       skills:["neoBlind"],ai:"owlFighter",stats:{hp:160,mp:29,atk:53,def:36,magic:43,mdef:41,spd:41}
+    },
+    moth:{
+      name:"モス",img:IMG.moth,exp:39,gold:27,critRate:0,evasionRate:0,
+      bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.moth.resist},
+      skills:["neoSilence"],ai:"mothSilencer",stats:{hp:145,mp:42,atk:43,def:31,magic:47,mdef:68,spd:38}
+    },
+    forestMage:{
+      name:"フォレストメイジ",img:IMG.forestMage,exp:41,gold:29,critRate:0,evasionRate:0,
+      bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.forestMage.resist},
+      skills:["quake","allHeal2"],ai:"forestMageCaster",basicBowInstantKillRate:1.5,basicAttackFx:"arrow",basicAttackSymbol:"🏹",stats:{hp:135,mp:52,atk:38,def:33,magic:57,mdef:49,spd:40}
     },
     podalge:{
       name:"ポダルゲ",img:PODALGE_IMG,exp:70,gold:35,critRate:0,evasionRate:5,boss:true,
@@ -8079,7 +8092,7 @@
   const BATTLE_BG_BY_AREA = {
     plains:BATTLE_BG_PLAINS,eventDogs:BATTLE_BG_PLAINS,
     cave1:BATTLE_BG_CAVE,cave2:BATTLE_BG_CAVE,caveSide:BATTLE_BG_CAVE,rare:BATTLE_BG_CAVE,caveSlugEvent:BATTLE_BG_CAVE,caveBoss:BATTLE_BG_CAVE,yodyRegion:BATTLE_BG_PLAINS,
-    footpath:BATTLE_BG_FOREST,yodyMountain:BATTLE_BG_MOUNTAIN,yodyMountainBoss:BATTLE_BG_MOUNTAIN,tilenoRegion:BATTLE_BG_FOREST,tilenoElfEvent:BATTLE_BG_FOREST
+    footpath:BATTLE_BG_FOREST,yodyMountain:BATTLE_BG_MOUNTAIN,yodyMountainBoss:BATTLE_BG_MOUNTAIN,tilenoRegion:BATTLE_BG_FOREST,tilenoElfEvent:BATTLE_BG_FOREST,zelrenoForest:BATTLE_BG_FOREST
   };
 
   const battleFormations = {
@@ -8142,6 +8155,14 @@
     tilenoElfEvent:{label:"🌿 ティレーノ地方・警戒するエルフ",formations:[
       ["elf","elf","elf"]
     ]},
+    zelrenoForest:{label:"🌲 ゼルレーノ森林地帯",formations:[
+      ["owl","owl"],
+      ["demon","forestMage","owl"],
+      ["moth","owl","moth"],
+      ["owl","forestMage","moth"],
+      ["forestMage","moth","moth"],
+      ["owl","moth","forestMage","owl"]
+    ],rareFormationIndexes:[5],rareRate:.05},
     visualTest:{label:"🧪 画像表示テスト",formations:[
       ["sheep"],
       ["lindwurm"],
@@ -11219,6 +11240,25 @@
       return {type:"attack"};
     }
 
+    if(enemy.ai==="mothSilencer"){
+      const canSilence=enemySkillAvailable(enemy,"neoSilence") && livingActiveSlots().some(({c})=>S(c).hp>0 && !conditionsOf(c).silence);
+      if(canSilence && Math.random()<.25) return {type:"skill",skillId:"neoSilence"};
+      return {type:"attack"};
+    }
+
+    if(enemy.ai==="forestMageCaster"){
+      const canHeal=enemySkillAvailable(enemy,"allHeal2") && livingEnemies().some(e=>e.hp<e.hpMax);
+      const canQuake=enemySkillAvailable(enemy,"quake");
+      const roll=Math.random();
+      if(canHeal){
+        if(roll<.10) return {type:"skill",skillId:"allHeal2"};
+        if(canQuake && roll<.70) return {type:"skill",skillId:"quake"};
+      }else if(canQuake && roll<.60){
+        return {type:"skill",skillId:"quake"};
+      }
+      return {type:"attack"};
+    }
+
     if(enemy.ai==="podalgeBoss"){
       const roll=Math.random();
       if(roll<.40 && enemySkillAvailable(enemy,"wind")) return {type:"skill",skillId:"wind"};
@@ -11660,7 +11700,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44w";
       updateHeader();
       return;
     }
@@ -11668,7 +11708,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44w";
   }
 
   async function attemptEscape(){
@@ -11972,7 +12012,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44w";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -11980,7 +12020,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44w";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -12201,7 +12241,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44w";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -12266,7 +12306,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44w";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -12293,7 +12333,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44w";
     updateHeader();
     toast("戦闘テストを終了");
   }
