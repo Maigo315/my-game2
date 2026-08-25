@@ -3731,7 +3731,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44x</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44y</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3741,7 +3741,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44x</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44y</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3753,7 +3753,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.44x</div>
+      <div class="title-version">DEV v0.44y</div>
     </section>
   </main>
 
@@ -4015,6 +4015,7 @@
               <option value="yodyMountainBoss">ヨーディー山道 ボス</option>
               <option value="tilenoRegion">ティレーノ地方</option>
               <option value="zelrenoForest">ゼルレーノ森林地帯</option>
+              <option value="granzelPlains">グランゼル大平原</option>
               <option value="rare">レア枠</option>
               <option value="caveBoss">魔界の尖兵</option>
             </select>
@@ -4360,7 +4361,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.44x</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.44y</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4389,7 +4390,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.44x";
+  const DEV_VERSION = "v0.44y";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -5948,7 +5949,7 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44x";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
       updateHeader();
       return;
     }
@@ -6383,6 +6384,7 @@
     traveler_clothes:{id:"traveler_clothes",slot:"body",name:"旅人の服",icon:"👕",mods:{def:4,spd:7},price:130,desc:"旅人たちが好む動きやすい服。防御力+4 / 素早さ+7。"},
     bronze_mail:{id:"bronze_mail",slot:"body",name:"ブロンズメイル",icon:"🛡️",mods:{def:11},price:190,desc:"ブロンズ製の安価な鎧。防御力+11。"},
     mage_robe:{id:"mage_robe",slot:"body",name:"魔術師のローブ",icon:"🥻",mods:{def:5,magic:3,mdef:5},price:230,desc:"魔法を扱う者のためのローブ。防御力+5 / 魔力+3 / 魔防+5。"},
+    maid_dress:{id:"maid_dress",slot:"body",name:"メイドドレス",icon:"👗",mods:{def:11,mdef:3},fate:5,resist:{silence:1},price:420,desc:"戦闘用に作られた、比較的動きやすいメイド服。防御力+11 / 魔防+3 / 運命+5 / 封印耐性+1。"},
     iron_mail:{id:"iron_mail",slot:"body",name:"アイアンメイル",icon:"🛡️",mods:{def:18},price:440,desc:"鋼鉄でできた頑丈な鎧。防御力+18。"},
     runel_clothes:{id:"runel_clothes",slot:"body",name:"ルネルの服",icon:"👕",mods:{def:15,spd:10},price:1550,desc:"ルネル地方で親しまれている服。防御力+15 / 素早さ+10。"},
     silver_mail:{id:"silver_mail",slot:"body",name:"シルバーメイル",icon:"🛡️",mods:{def:27,mdef:5},price:1700,desc:"少し魔力がこめられた純銀製の鎧。防御力+27 / 魔防+5。"},
@@ -6479,7 +6481,7 @@
   const equipmentInventory={
     weapon:["bare","stone_claw","bronze_knuckle","steel_claw","silver_knuckle","restian_claw","platinum_claw","golden_claw","champion","dagger","traveler_sword","iron_sword","silver_sword","salid_saber","kirisute_maru","platinum_sword","golden_sword","breaker","stone_axe","bronze_axe","steel_axe","silver_axe","icebreaker_maul","platinum_axe","golden_axe","destroyer","short_bow","traveler_bow","elven_bow","iron_bow","silver_bow","restian_bow","hamaya_bow","platinum_bow","golden_bow","chiron","hinoki_staff","mage_staff","iron_rod","silver_rod","ritual_staff","platinum_rod","golden_staff","hecate","whip","alra_whip","bronze_whip","iron_whip","silver_whip","trainer_whip","platinum_whip","golden_whip","mad_dragon_tail","type_milesta","hunter","type_zel","type_runel","alm_hunting_gun","remaster_zel","limbo_magic_gun","fatality","paw_hand"],
     shield:["no_shield","wood_shield","stone_greatshield","buckler","iron_buckler","iron_greatshield","silver_shield","heat_bulwark","snow_bulwark","ritual_shield","water_mirror_shield","platinum_shield","limbo_shield","fire_god_shield","ice_god_shield","wind_god_shield","earth_god_shield","empty_mind_barrier","spirit_shield","angel_shield","dark_shield","alm_small_shield"],
-    body:["no_body","milesta_clothes","leather_armor","traveler_clothes","bronze_mail","mage_robe","iron_mail","runel_clothes","silver_mail","magical_cloth","restian_belt","miko_outfit","platinum_mail","light_robe","demon_clothes","golden_armor","field_runner","phalanx","yggdrasil","ragged_robe"],
+    body:["no_body","milesta_clothes","leather_armor","traveler_clothes","bronze_mail","mage_robe","maid_dress","iron_mail","runel_clothes","silver_mail","magical_cloth","restian_belt","miko_outfit","platinum_mail","light_robe","demon_clothes","golden_armor","field_runner","phalanx","yggdrasil","ragged_robe"],
     accessory:["no_accessory","hunter_charm","light_shoes","magic_earrings","forest_circlet","fate_ring","poison_gloves","hidden_smoke","sealing_talisman","veteran_charm","shadow_shoes","bandana","full_face","erosion_guard_helmet","golden_helmet","restian_tiara","thunder_god_helmet","zel_leggings","runel_sneakers","windcaller_shoes","earth_greaves","hero_shoes","gold_ring","platinum_ring","red_bracelet","blue_bracelet","white_bracelet","black_bracelet","red_orb","blue_orb","white_orb","black_orb","gas_mask","lightning_rod","night_vision_glasses","barrier_charm","talisman","spirit_gem","matchmaking_charm","demon_ocarina","war_god_charm","guardian_bracelet","demon_ancestor_earring","spirit_king_collar","energy_bottle","energy_tank","magic_bottle","magic_tank","growth_crystal","trial_crystal","hardship_crystal","training_sash","honing_eye","void_membrane","holy_beast_clock","martial_gauntlet","sword_god_hair","beast_god_belt","stardust_monocle","mana_amplifier","dragon_god_tattoo","ancient_patch"]
   };
   // Real ownership begins in v0.31. "装備なし" is unlimited; actual gear must be bought or found.
@@ -7852,6 +7854,9 @@
     owl:{normal:{kind:"item",id:"returnFeather",rate:NORMAL_DROP_RATE},rare:{kind:"equipment",id:"bronze_knuckle",rate:RARE_DROP_RATE}},
     moth:{rare:{kind:"item",id:"spiritSeed",rate:SEED_DROP_RATE}},
     forestMage:{normal:{kind:"item",id:"potion",rate:NORMAL_DROP_RATE},rare:{kind:"item",id:"magicHerb",rate:RARE_DROP_RATE}},
+    maidDevil:{normal:{kind:"item",id:"highPotion",rate:NORMAL_DROP_RATE},rare:{kind:"equipment",id:"maid_dress",rate:RARE_DROP_RATE}},
+    lamia:{rare:{kind:"item",id:"powerSeed",rate:SEED_DROP_RATE}},
+    silverSlime:{rare:{kind:"item",id:"emergencyEscapePack",rate:RARE_DROP_RATE}},
     podalge:{normal:{kind:"item",id:"speedSeed",rate:1}}
   };
 
@@ -8071,6 +8076,21 @@
       bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.forestMage.resist},
       skills:["quake","allHeal2"],ai:"forestMageCaster",basicBowInstantKillRate:1.5,basicAttackFx:"arrow",basicAttackSymbol:"🏹",stats:{hp:135,mp:52,atk:38,def:33,magic:57,mdef:49,spd:40}
     },
+    maidDevil:{
+      name:"メイドデビル",img:IMG.maidDevil,exp:46,gold:31,critRate:0,evasionRate:0,
+      bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.maidDevil.resist},
+      skills:["allPolish","allGuard"],ai:"maidDevilSupport",stats:{hp:155,mp:44,atk:49,def:38,magic:50,mdef:46,spd:45}
+    },
+    lamia:{
+      name:"ラミア",img:IMG.lamia,exp:48,gold:33,critRate:3.0,evasionRate:0,
+      bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.lamia.resist},
+      skills:[],ai:"basic",stats:{hp:215,mp:20,atk:63,def:37,magic:22,mdef:32,spd:31}
+    },
+    silverSlime:{
+      name:"シルバースライム",img:IMG.silverSlime,exp:500,gold:45,critRate:0,evasionRate:10,
+      bowInstantKillImmune:true,statusDeathImmune:true,statusImmuneAll:true,silverBodyDamageCompression:true,resist:{...characterProfiles.silverSlime.resist},
+      skills:["cold2"],ai:"silverSlimeMetal",basicBowInstantKillRate:2.0,basicAttackFx:"impact",basicAttackSymbol:"🪙",stats:{hp:8,mp:35,atk:60,def:0,magic:48,mdef:0,spd:68}
+    },
     podalge:{
       name:"ポダルゲ",img:PODALGE_IMG,exp:70,gold:35,critRate:0,evasionRate:5,boss:true,
       bowInstantKillImmune:true,statusDeathImmune:true,statusImmuneAll:true,
@@ -8101,7 +8121,7 @@
   const BATTLE_BG_BY_AREA = {
     plains:BATTLE_BG_PLAINS,eventDogs:BATTLE_BG_PLAINS,
     cave1:BATTLE_BG_CAVE,cave2:BATTLE_BG_CAVE,caveSide:BATTLE_BG_CAVE,rare:BATTLE_BG_CAVE,caveSlugEvent:BATTLE_BG_CAVE,caveBoss:BATTLE_BG_CAVE,yodyRegion:BATTLE_BG_PLAINS,
-    footpath:BATTLE_BG_FOREST,yodyMountain:BATTLE_BG_MOUNTAIN,yodyMountainBoss:BATTLE_BG_MOUNTAIN,tilenoRegion:BATTLE_BG_FOREST,tilenoElfEvent:BATTLE_BG_FOREST,zelrenoForest:BATTLE_BG_FOREST,zelrenoWitchApproach:BATTLE_BG_FOREST
+    footpath:BATTLE_BG_FOREST,yodyMountain:BATTLE_BG_MOUNTAIN,yodyMountainBoss:BATTLE_BG_MOUNTAIN,tilenoRegion:BATTLE_BG_FOREST,tilenoElfEvent:BATTLE_BG_FOREST,zelrenoForest:BATTLE_BG_FOREST,zelrenoWitchApproach:BATTLE_BG_FOREST,granzelPlains:BATTLE_BG_PLAINS
   };
 
   const battleFormations = {
@@ -8173,6 +8193,14 @@
       ["forestMage","moth","moth"],
       ["owl","moth","forestMage","owl"]
     ],rareFormationIndexes:[5],rareRate:.05},
+    granzelPlains:{label:"🌾 グランゼル大平原",formations:[
+      ["maidDevil","lamia","maidDevil"],
+      ["lamia","lamia"],
+      ["maidDevil","forestMage","moth"],
+      ["maidDevil","lamia","owl"],
+      ["silverSlime"],
+      ["silverSlime","silverSlime"]
+    ],rareFormationIndexes:[4,5],rareRate:.05},
     visualTest:{label:"🧪 画像表示テスト",formations:[
       ["sheep"],
       ["lindwurm"],
@@ -8665,7 +8693,7 @@
   }
   // v0.38e rule: unless a trait explicitly says otherwise, battle-start / in-battle / battle-end traits only work while the owner is in battleActive.
   function livingActiveSlots(){ return battleTraitSlots({livingOnly:true}); }
-  function livingEnemies(){ return state.battleEnemies.filter(e=>e.hp>0); }
+  function livingEnemies(){ return state.battleEnemies.filter(e=>e.hp>0 && !e.escaped); }
   function setMessage(text){ $("battleMessage").textContent=text; }
   function effectiveAtk(c){ return Math.round(S(c).atk*(c.atkBuff||1)*(conditionsOf(c).berserk?1.60:1)*((c.powerChargeRounds||0)>0?(c.powerChargeMultiplier||2):1)); }
   function effectiveDef(c){ return Math.round(S(c).def*(c.defBuff||1)); }
@@ -8717,7 +8745,9 @@
 
   function effectiveEnemyStat(enemy,key){
     const base=Math.max(0,Number(enemy?.[key])||0);
-    return Math.round(base*poisonedEnemyStatMultiplier(enemy));
+    const buffKey={atk:"atkBuff",def:"defBuff",magic:"magicBuff",mdef:"mdefBuff",spd:"spdBuff"}[key];
+    const buff=buffKey?Math.max(0,Number(enemy?.[buffKey])||1):1;
+    return Math.round(base*buff*poisonedEnemyStatMultiplier(enemy));
   }
 
   async function maybeTriggerPureHunterCounter(defender,slot,attacker,sk,context){
@@ -9023,6 +9053,15 @@
         if(c.berserkRounds<=0){ c.berserkRounds=0; conditionsOf(c).berserk=false; }
       }
     });
+    (state.battleEnemies||[]).forEach(enemy=>{
+      if(!enemy || enemy.escaped) return;
+      [["atkBuff","atkBuffRounds"],["defBuff","defBuffRounds"],["magicBuff","magicBuffRounds"],["mdefBuff","mdefBuffRounds"],["spdBuff","spdBuffRounds"]].forEach(([buffKey,roundKey])=>{
+        if((enemy[roundKey]||0)>0){
+          enemy[roundKey]--;
+          if(enemy[roundKey]<=0){ enemy[roundKey]=0; enemy[buffKey]=1; }
+        }
+      });
+    });
   }
 
   async function processTurnEndStatuses(){
@@ -9268,6 +9307,18 @@
       : damageVariance();
     return Math.max(1,Math.round(raw*defense*resist*partyBoost*variance));
   }
+  function silverBodyAdjustedDamage(target,damage,{critical=false}={}){
+    const raw=Math.max(0,Math.round(Number(damage)||0));
+    if(!target?.silverBodyDamageCompression || critical || raw<=0) return raw;
+    if(raw<150) return 1;
+    if(raw<160) return 2;
+    if(raw<170) return 3;
+    if(raw<180) return 5;
+    if(raw<190) return 10;
+    if(raw<200) return 25;
+    return Math.max(1,Math.round(raw*.25));
+  }
+
   function statusName(status){
     return {poison:"毒",blind:"暗闇",silence:"封印",shock:"感電",death:"即死"}[status]||status;
   }
@@ -9307,6 +9358,8 @@
     if(cond.blind) parts.push("🌫暗");
     if(cond.silence) parts.push("🔇封");
     if(cond.shock) parts.push("⚡感");
+    if((enemy.atkBuffRounds||0)>0) parts.push("ATK↑");
+    if((enemy.defBuffRounds||0)>0) parts.push("DEF↑");
     return parts.length?` [${parts.join(" ")}]`:"";
   }
   function blindedPhysicalMiss(actor){
@@ -9345,7 +9398,8 @@
   }
 
   function enemyByUid(uid){
-    return state.battleEnemies.find(e=>e.uid===uid) || null;
+    const enemy=state.battleEnemies.find(e=>e.uid===uid) || null;
+    return enemy && !enemy.escaped ? enemy : null;
   }
 
   function selectedEnemy(){
@@ -9991,6 +10045,8 @@
           critRate:clampRate(base.critRate||0),evasionRate:clampRate(base.evasionRate||0),
           critMultiplier:Number(base.critMultiplier)||BASE_CRITICAL_MULTIPLIER,
           bowInstantKillImmune:!!base.bowInstantKillImmune,statusDeathImmune:!!base.statusDeathImmune,statusImmuneAll:!!base.statusImmuneAll,boss:!!base.boss,
+          silverBodyDamageCompression:!!base.silverBodyDamageCompression,escaped:false,actionCount:0,
+          atkBuff:1,atkBuffRounds:0,defBuff:1,defBuffRounds:0,magicBuff:1,magicBuffRounds:0,mdefBuff:1,mdefBuffRounds:0,spdBuff:1,spdBuffRounds:0,
           conditions:{poison:false,blind:false,silence:false,shock:false,berserk:false,mount:false,aura:false},
           lastSkillId:null,
           shockRecoverFails:0,defeatOrder:0
@@ -9998,7 +10054,7 @@
       });
     }
 
-    const living=state.battleEnemies.filter(e=>e.hp>0);
+    const living=state.battleEnemies.filter(e=>e.hp>0 && !e.escaped);
     const stage=$("enemyStage");
     stage.dataset.count=String(Math.max(1,living.length));
     stage.innerHTML="";
@@ -10441,6 +10497,7 @@
     const canCrit=isBasic ? profile.canCrit : options.canCrit!==false;
     const critical=canCrit && (options.forceCrit===true || rollCritical(criticalRateForAttack(actor,target)));
     if(critical) dmg=Math.max(1,Math.round(dmg*criticalMultiplierForActor(actor)*Math.max(1,Number(options.critDamageMultiplier)||1)));
+    dmg=silverBodyAdjustedDamage(target,dmg,{critical});
 
     target.hp=Math.max(0,target.hp-dmg);
     const killed=target.hp<=0;
@@ -10502,6 +10559,7 @@
           criticals++;
           dmg=Math.max(1,Math.round(dmg*criticalMultiplierForActor(actor)));
         }
+        dmg=silverBodyAdjustedDamage(target,dmg,{critical});
         target.hp=Math.max(0,target.hp-dmg);
         const killed=target.hp<=0;
         if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
@@ -10553,6 +10611,7 @@
       let dmg=physicalDamage(effectiveAtk(actor),effectiveEnemyStat(target,"def"),Number(sk.hitPower)||1,1,Number(sk.defenseInfluence)||1);
       const critical=sk.canCrit!==false && rollCritical(criticalRateForAttack(actor,target));
       if(critical){ criticals++; dmg=Math.max(1,Math.round(dmg*criticalMultiplierForActor(actor))); }
+      dmg=silverBodyAdjustedDamage(target,dmg,{critical});
       target.hp=Math.max(0,target.hp-dmg);
       const killed=target.hp<=0;
       if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
@@ -10589,6 +10648,7 @@
       let dmg=physicalDamage(effectiveAtk(actor),effectiveEnemyStat(target,"def"),Number(sk.power)||1,1,Number(sk.defenseInfluence)||1);
       const critical=sk.canCrit!==false && rollCritical(criticalRateForAttack(actor,target));
       if(critical) dmg=Math.max(1,Math.round(dmg*criticalMultiplierForActor(actor)));
+      dmg=silverBodyAdjustedDamage(target,dmg,{critical});
       target.hp=Math.max(0,target.hp-dmg);
       const killed=target.hp<=0;
       if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
@@ -10651,7 +10711,8 @@
 
       const results=[];
       for(const target of targets){
-        const dmg=spellDamage(actor,target,sk);
+        let dmg=spellDamage(actor,target,sk);
+        dmg=silverBodyAdjustedDamage(target,dmg);
         target.hp=Math.max(0,target.hp-dmg);
         const killed=target.hp<=0;
         if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
@@ -11270,6 +11331,24 @@
       return {type:"attack"};
     }
 
+    if(enemy.ai==="maidDevilSupport"){
+      const living=livingEnemies();
+      const canPolish=enemySkillAvailable(enemy,"allPolish") && living.some(e=>(e.atkBuffRounds||0)<=0 || (e.atkBuff||1)<1.30);
+      const canGuard=enemySkillAvailable(enemy,"allGuard") && living.some(e=>(e.defBuffRounds||0)<=0 || (e.defBuff||1)<1.30);
+      const roll=Math.random();
+      if(canPolish && roll<.10) return {type:"skill",skillId:"allPolish"};
+      if(canGuard && roll<(canPolish ? .20 : .10)) return {type:"skill",skillId:"allGuard"};
+      return {type:"attack"};
+    }
+
+    if(enemy.ai==="silverSlimeMetal"){
+      const escapeChance=(Number(enemy.actionCount)||0)<=0 ? .25 : .40;
+      const roll=Math.random();
+      if(roll<escapeChance) return {type:"escape"};
+      if(enemySkillAvailable(enemy,"cold2") && Math.random()<.15) return {type:"skill",skillId:"cold2"};
+      return {type:"attack"};
+    }
+
     if(enemy.ai==="podalgeBoss"){
       const roll=Math.random();
       if(roll<.40 && enemySkillAvailable(enemy,"wind")) return {type:"skill",skillId:"wind"};
@@ -11358,6 +11437,42 @@
     if(sk.target==="allyAll") setMessage(`💚 ${sk.name}！ 敵全体を合計 ${total} 回復した。`);
     else setMessage(`💚 ${sk.name}！ ${targets[0].displayName} のHPが ${total} 回復した。`);
     await wait(BASE_TIME.heal);
+    return true;
+  }
+
+  async function executeEnemyBuffSkill(enemy,skillId){
+    const sk=skills[skillId];
+    if(!sk || sk.kind!=="buff" || !enemySkillAvailable(enemy,skillId)) return false;
+    const targets=sk.target==="allyAll" ? livingEnemies() : [enemy];
+    if(!targets.length) return false;
+    enemy.mp=Math.max(0,(Number(enemy.mp)||0)-Number(sk.cost||0));
+    enemy.lastSkillId=skillId;
+    setMessage(`${sk.icon||"✨"} ${enemy.displayName} は ${sk.name} を唱えた！`);
+    await wait(BASE_TIME.actionLead);
+    let applied=0;
+    targets.forEach(target=>{
+      const result=applyStatBuff(target,sk);
+      if(result.applied) applied++;
+      const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${target.uid}"]`);
+      if(el) spawnFx("buff",sk.icon||"✨",el);
+    });
+    renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+    setMessage(`${sk.icon||"✨"} ${sk.name}！ ${applied?`敵${sk.target==="allyAll"?"全体":""}の${BUFF_INFO[sk.buff]?.name||"能力"}が上がった！`:"より強い強化効果がかかっている。"}`);
+    await wait(BASE_TIME.buff);
+    return true;
+  }
+
+  async function executeEnemyEscape(enemy,enemyEl){
+    if(!enemy || enemy.escaped || enemy.hp<=0) return false;
+    enemy.escaped=true;
+    setMessage(`🏃 ${enemy.displayName} は逃げ出した！`);
+    if(enemyEl){
+      enemyEl.classList.add("dying");
+      await wait(BASE_TIME.short);
+    }
+    renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+    await wait(BASE_TIME.enemyAfter);
+    if(livingEnemies().length===0){ winBattle(); return true; }
     return true;
   }
 
@@ -11644,9 +11759,12 @@
     await wait(BASE_TIME.enemyLead);
 
     const action=chooseEnemyAiAction(enemy);
+    enemy.actionCount=(Number(enemy.actionCount)||0)+1;
+    if(action.type==="escape"){ await executeEnemyEscape(enemy,enemyEl); return; }
     if(action.type==="skill"){
       const sk=skills[action.skillId];
       if(sk?.kind==="heal" && await executeEnemyHealSkill(enemy,action.skillId)) return;
+      if(sk?.kind==="buff" && await executeEnemyBuffSkill(enemy,action.skillId)) return;
       if(sk?.kind==="magic" && await executeEnemyMagicSkill(enemy,action.skillId)) return;
       if(sk?.kind==="status" && await executeEnemyStatusSkill(enemy,action.skillId)) return;
       if(sk?.kind==="physical" && await executeEnemyPhysicalSkill(enemy,action.skillId,enemyEl)) return;
@@ -11711,7 +11829,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44x";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
       updateHeader();
       return;
     }
@@ -11719,7 +11837,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44x";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
   }
 
   async function attemptEscape(){
@@ -11977,8 +12095,9 @@
     hideBattleContinue();
 
     if(state.battleFromRun){
-      const gain=state.battleEnemies.reduce((sum,e)=>sum+(e.gold||0),0);
-      const expGain=state.battleEnemies.reduce((sum,e)=>sum+(e.exp||0),0);
+      const rewardEnemies=state.battleEnemies.filter(e=>e && e.hp<=0 && !e.escaped);
+      const gain=rewardEnemies.reduce((sum,e)=>sum+(e.gold||0),0);
+      const expGain=rewardEnemies.reduce((sum,e)=>sum+(e.exp||0),0);
       const leveled=awardExperience(expGain,expEligibleIds);
       const drops=rollBattleDrops();
 
@@ -11992,16 +12111,22 @@
         ? `　LEVEL UP：${leveled.map(x=>`${x.name} Lv${x.level}`).join("、")}`
         : "";
       const traitText=victoryTraitNotes.length?`　${victoryTraitNotes.join(" / ")}`:"";
+      const escapedOnly=rewardEnemies.length===0 && state.battleEnemies.some(e=>e.escaped);
       setMessage(state.battleSpecial==="caveBoss"
         ? "魔界の尖兵を撃退した！"
-        : `勝利！ ${gain}G / ${expGain}EXP を獲得。${levelText}${traitText}`);
+        : escapedOnly
+          ? `戦闘終了。敵は逃げ去った。報酬はなかった。${traitText}`
+          : `勝利！ ${gain}G / ${expGain}EXP を獲得。${levelText}${traitText}`);
       renderBattleParty();
       showBattleContinue();
     }else{
       state.battleVictoryData={gain:0,expGain:0,leveled:[],drops:[],dropIndex:0};
       state.levelUpPresentationDone=true;
       const traitText=victoryTraitNotes.length?` ${victoryTraitNotes.join(" / ")}`:"";
-      setMessage(`勝利！ 戦闘テストではEXP・ゴールドは獲得しません。${traitText}`);
+      const escapedOnly=state.battleEnemies.length>0 && state.battleEnemies.every(e=>e.escaped || e.hp>0);
+      setMessage(escapedOnly
+        ? `戦闘終了。敵は逃げ去った。戦闘テストではEXP・ゴールドは獲得しません。${traitText}`
+        : `勝利！ 戦闘テストではEXP・ゴールドは獲得しません。${traitText}`);
       showBattleContinue();
     }
   }
@@ -12023,7 +12148,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44x";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -12031,7 +12156,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44x";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -12252,7 +12377,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44x";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -12317,7 +12442,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44x";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -12351,7 +12476,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44x";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44y";
     updateHeader();
     toast("戦闘テストを終了");
   }
