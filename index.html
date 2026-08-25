@@ -3730,7 +3730,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44u</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.44v</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3740,7 +3740,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44u</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.44v</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3752,7 +3752,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.44u</div>
+      <div class="title-version">DEV v0.44v</div>
     </section>
   </main>
 
@@ -4353,7 +4353,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.44u</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.44v</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4382,7 +4382,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.44u";
+  const DEV_VERSION = "v0.44v";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -5939,7 +5939,7 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
       updateHeader();
       return;
     }
@@ -6799,7 +6799,7 @@
   changeEquipment(roster.hero,"body","milesta_clothes");
 
   const MAGIC_RANK_MULTIPLIERS={E:1.00,D:1.20,C:1.50,B:1.80,A:2.20,S:2.70};
-  const MAGIC_ALL_TARGET_MULTIPLIER=.70;
+  const MAGIC_ALL_TARGET_MULTIPLIER=.75;
   const PLEASURE_RESIST_DAMAGE={E:1.75,D:1.40,C:1.00,B:.65,A:.35,S:.15};
   const STATUS_BASE_RATE={single:.65,all:.50,deathSingle:.30,deathAll:.20};
 
@@ -6821,7 +6821,7 @@
 
   const skills = {
     // Standard attack magic: (18 + MAG×0.70) × rank × target modifier × MDEF × resistance × variance.
-    // E/D/C/B/A/S = 1.00/1.20/1.50/1.80/2.20/2.70. All-target = 0.70.
+    // E/D/C/B/A/S = 1.00/1.20/1.50/1.80/2.20/2.70. All-target = 0.75.
     fire:magicSkill("fire","ファイア","🔥",4,"enemy","fire","E"),
     flare:magicSkill("flare","フレア","🔥",10,"enemy","fire","C"),
     gigaFlare:magicSkill("gigaFlare","ギガフレア","🔥",18,"enemy","fire","A"),
@@ -11660,7 +11660,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
       updateHeader();
       return;
     }
@@ -11668,7 +11668,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
   }
 
   async function attemptEscape(){
@@ -11972,7 +11972,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -11980,7 +11980,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -12201,7 +12201,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
+      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -12266,7 +12266,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -12293,7 +12293,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44u";
+    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.44v";
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -14367,13 +14367,18 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
           ["第二層へ進む",()=>{closeModal();enterCaveLayer(2);toast("小さな洞窟・第二層へ進んだ");}],
           ["まだ進まない",()=>{closeModal();returnToPreviousNode();}]
         ]);break;
-      case "yodyPort":
+      case "yodyPort": {
+        const firstArrival=!state.eventFlags?.yodyPortReached;
         state.eventFlags.yodyPortReached=true;
         state.eventFlags.yodyRegionUnlocked=true;
         state.currentTown="yody";
         state.selectedArea="yodyTown";
-        modal("⚓ 港町ヨーディー",`ヨーディー地方を抜け、港町ヨーディーに到着した。\n\nこれで世界マップから「港町ヨーディー」と「ヨーディー地方」へ直接向かえるようになった。`,[["港町ヨーディーへ",()=>{closeModal();finishRun("港町ヨーディーに到着しました");}]]);
+        const arrivalText=firstArrival
+          ? `ヨーディー地方を抜け、港町ヨーディーに到着した。\n\nこれで世界マップから「港町ヨーディー」と「ヨーディー地方」へ直接向かえるようになった。`
+          : `ヨーディー地方を抜け、港町ヨーディーに到着した。`;
+        modal("⚓ 港町ヨーディー",arrivalText,[["港町ヨーディーへ",()=>{closeModal();finishRun("港町ヨーディーに到着しました");}]]);
         break;
+      }
       case "yodyMountain":
         if(!state.eventFlags) state.eventFlags={};
         state.eventFlags.yodyMountainUnlocked=true;
@@ -14404,14 +14409,19 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
           ["港町ヨーディーへ戻る",()=>{closeModal();state.currentTown="yody";state.selectedArea="yodyMountain";finishRun("ヨーディー山道を踏破しました");}]
         ]);
         break;
-      case "tilenoTown":
+      case "tilenoTown": {
         if(!state.eventFlags) state.eventFlags={};
+        const firstArrival=!state.eventFlags.tilenoTownReached;
         state.eventFlags.tilenoTownReached=true;
         state.eventFlags.tilenoRegionReached=true;
-        modal("🏘️ ティレーノの街",`ティレーノ地方を抜け、ティレーノの街に到着した。
+        const arrivalText=firstArrival
+          ? `ティレーノ地方を抜け、ティレーノの街に到着した。
 
-これで世界マップから「ティレーノの街」と「ティレーノ地方」へ直接向かえるようになった。`,[["ティレーノの街へ",()=>{closeModal();state.currentTown="tileno";state.selectedArea="tilenoTown";finishRun("ティレーノの街に到着しました");}]]);
+これで世界マップから「ティレーノの街」と「ティレーノ地方」へ直接向かえるようになった。`
+          : `ティレーノ地方を抜け、ティレーノの街に到着した。`;
+        modal("🏘️ ティレーノの街",arrivalText,[["ティレーノの街へ",()=>{closeModal();state.currentTown="tileno";state.selectedArea="tilenoTown";finishRun("ティレーノの街に到着しました");}]]);
         break;
+      }
       case "tilenoWetland":
         if(!state.eventFlags) state.eventFlags={};
         state.eventFlags.tilenoWetlandReached=true;
