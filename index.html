@@ -3790,6 +3790,9 @@
     .shop-equip-chip{min-height:14px;padding:1px 4px;font-size:6px}
   }
 
+
+  /* v0.46f: the current location now lives in the global top-left header during exploration/battle. */
+  .battle-area-label{display:none!important}
 </style>
 </head>
 <body>
@@ -3805,7 +3808,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.46a</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.46f</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3815,7 +3818,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.46a</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.46f</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3827,7 +3830,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.46d</div>
+      <div class="title-version">DEV v0.46f</div>
     </section>
   </main>
 
@@ -4473,7 +4476,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.46a</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.46f</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4502,7 +4505,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.46d";
+  const DEV_VERSION = "v0.46f";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -6634,7 +6637,7 @@
     if(state.partyManageContext==="explore"){
       renderExploreParty();
       showScreen("exploreScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.46a";
+      $("topSubtitle").textContent=`探索＋勧誘・装備試作 ${DEV_VERSION}`;
       updateHeader();
       return;
     }
@@ -6847,7 +6850,7 @@
       final:{hpMax:610,mpMax:710,atk:120,def:250,magic:380,mdef:320,spd:300},
       resist:{fire:"D",ice:"C",light:"C",dark:"C",thunder:"B",wind:"C",earth:"C",pleasure:"B",poison:"A",blind:"B",silence:"D",death:"D"},
       trait:{id:"sageWisdom",name:"賢者の知恵",icon:"📚",trigger:"allyRevived",desc:"戦闘中、味方の戦闘不能が解除された時、そのキャラの最も高い能力を1.3倍にする（5ラウンド）。",effect:{type:"buffHighestStatOnRevive",multiplier:1.30,duration:5}},
-      plannedSkills:{3:["stone"],6:["highHeal"],15:["holy"],31:["fairyHeal"],34:["gigaQuake"],40:["gigaRaise"],48:["stardust"],60:["judgmentLance"]}
+      plannedSkills:{3:["stone"],6:["highHeal"],13:["holy"],20:["allHeal2"],32:["gigaQuake"],36:["fairyHeal"],40:["gigaRaise"],48:["stardust"],60:["judgmentLance"]}
     },
     silverSlime:{
       id:"silverSlime",role:null,growthType:"late",expType:"superSlow",recruitRank:"B",fate:20,
@@ -6895,7 +6898,7 @@
       final:{hpMax:490,mpMax:540,atk:80,def:180,magic:310,mdef:290,spd:320},
       resist:{fire:"A",ice:"B",light:"E",dark:"A",thunder:"A",wind:"C",earth:"B",pleasure:"A",poison:"B",blind:"B",silence:"B",death:"S"},
       trait:{id:"swayingGhost",name:"ゆらゆらゴースト",icon:"👻",chance:.08,trigger:"onPhysicalIncoming",desc:"敵から物理属性の攻撃を受ける時、8%の確率でダメージを無効にする。",effect:{type:"physicalDamageNullify",chance:.08}},
-      plannedSkills:{1:["fire"],10:["pleasure"],17:["allHeal2"],25:["blaze2"],31:["allBlock"],43:["pleasureOne"],48:["demonSpiritFlow"]}
+      plannedSkills:{1:["fire"],10:["pleasure"],17:["magicConcentration"],25:["blaze2"],31:["allBlock"],43:["pleasureOne"],48:["demonSpiritFlow"]}
     },
     madGolem:{
       id:"madGolem",role:null,growthType:"early",expType:"fast",recruitRank:"C",fate:10,
@@ -6927,7 +6930,7 @@
       final:{hpMax:530,mpMax:430,atk:290,def:210,magic:230,mdef:240,spd:330},
       resist:{fire:"C",ice:"C",light:"C",dark:"C",thunder:"E",wind:"A",earth:"A",pleasure:"C",poison:"D",blind:"D",silence:"D",death:"C"},
       trait:{id:"happySong",name:"ハッピーソング",icon:"🎵",chance:.15,trigger:"battleVictory",desc:"戦闘勝利時、15%の確率で味方全員の獲得経験値が1.25倍になる。バトルメンバーにいる時のみ発動する。",effect:{type:"partyExpBoostChance",chance:.15,multiplier:1.25}},
-      plannedSkills:{1:["wind"],6:["blind"],12:["flare"],17:["allHeal2"],29:["allMagic"],38:["gigaWind"],45:["allFresh"],56:["lastFlare"]}
+      plannedSkills:{1:["wind"],6:["blind"],12:["flare"],20:["gigaHeal"],29:["allMagic"],38:["gigaWind"],45:["allFresh"],56:["lastFlare"]}
     },
     mermaid:{
       id:"mermaid",role:null,growthType:"slightlyEarly",expType:"normal",recruitRank:"C",fate:14,
@@ -7068,6 +7071,21 @@
       if(Number(lv)<=level) ids.push(...list);
     });
     return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","flare","gigaFlare","lastFlare","blaze","blaze2","endBlaze","ice","frost","gigaFrost","lastFrost","cold","cold2","endCold","petitThunder","thunder","gigaThunder","heavenlyThunder","stone","quake","gigaQuake","earthWrath","sonic","wind","gigaWind","annihilationWindBlade","holy","gigaHoly","judgmentLance","heavenlyLight","bigBang","dark","gigaDark","finalDarkHammer","hellDark","apocalypse","touch","pleasure","gigaPleasure","megidoPleasure","pleasureOne","erode","gigaErode","lastErode","ruinErosion","poison","neoPoison","blind","neoBlind","silence","neoSilence","death","allDeath","eraser","heal","highHeal","gigaHeal","lastHeal","allHeal","allHeal2","fairyHeal","eternal","raise","raise2","gigaRaise","miracleFestival","cure","fresh","allFresh","mount","allMount","aura","lastAura","polish","allPolish","warGodAura","guard","allGuard","guardianBlessing","magic","allMagic","demonSpiritFlow","block","allBlock","spiritKingBlessing","quick","allQuick","heroicTailwind","berserk","fortune","escape","supply","neoSupply","stealth","return","tackle","counterStance","doubleAttack","autoFresh","canceller","unyieldingHeart","powerCharge","magicConcentration","explosiveFist","swordDance","terraCrash","stardust","magicBarrier","dragonSpiral","nephilimLaser"].includes(id));
+  }
+
+  // v0.46f: reconcile natural skills whose acquisition levels/contents were rebalanced.
+  // Older saves may already contain the previous versions, so only the affected skill IDs are rebuilt.
+  const REBALANCED_NATURAL_SKILL_IDS={
+    forestMage:new Set(["holy","allHeal2","gigaQuake","fairyHeal"]),
+    ghost:new Set(["allHeal2","magicConcentration"]),
+    podalge:new Set(["allHeal2","gigaHeal"])
+  };
+  function reconcileRebalancedNaturalSkills(c){
+    const ids=REBALANCED_NATURAL_SKILL_IDS[c?.profileId||c?.id];
+    if(!ids) return;
+    const kept=(c.learnedSkills||[]).filter(id=>!ids.has(id));
+    const natural=plannedSkillIdsUpTo(profileFor(c),c.level||1).filter(id=>ids.has(id));
+    c.learnedSkills=[...new Set([...kept,...natural])];
   }
 
   // v0.24 formal weapon prototype: seven weapon identities + critical/evasion foundations.
@@ -8000,33 +8018,20 @@
 
   function levelUpCharacter(c){
     if(c.level>=MAX_LEVEL) return [];
-    const old=S(c);
-    const equipBefore=equipmentStatDelta(c);
-    Object.entries(equipBefore).forEach(([k,v])=>{if(k in old) old[k]-=v;});
-    const oldHpMax=old.hpMax,oldMpMax=old.mpMax;
-    c.level++;
-
     const profile=profileFor(c);
     if(profile){
-      const target=formalStatsAtLevel(profile,c.level,ensureCharacterFinalVariation(c));
-      const seed=seedBonusOf(c);
-      target.hpMax+=Number(seed.hpMax)||0; target.mpMax+=Number(seed.mpMax)||0;
-      target.atk+=Number(seed.atk)||0; target.def+=Number(seed.def)||0; target.magic+=Number(seed.magic)||0;
-      target.mdef+=Number(seed.mdef)||0; target.spd+=Number(seed.spd)||0;
-      const hpGain=Math.max(0,target.hpMax-oldHpMax);
-      const mpGain=Math.max(0,target.mpMax-oldMpMax);
-      old.hpMax=target.hpMax; old.mpMax=target.mpMax;
-      old.hp=Math.min(old.hpMax,old.hp+hpGain);
-      old.mp=Math.min(old.mpMax,old.mp+mpGain);
-      old.atk=target.atk; old.def=target.def; old.magic=target.magic; old.mdef=target.mdef; old.spd=target.spd;
+      // Percent equipment depends on the level-scaled base stats. Rebuilding from the equipped
+      // effective values preserves the current HP/MP deficit and guarantees current <= max.
+      c.level++;
+      rebuildFormalCharacterStats(c,{fullHeal:false,preserveDeficit:true});
     }else{
+      const old=S(c);
+      c.level++;
       const g=c.growth || {hp:7,mp:2,atk:2,def:1,magic:1,mdef:1,spd:1};
       old.hpMax+=g.hp; old.hp=Math.min(old.hpMax,old.hp+g.hp);
       old.mpMax+=g.mp; old.mp=Math.min(old.mpMax,old.mp+g.mp);
       old.atk+=g.atk; old.def+=g.def; old.magic+=g.magic; old.mdef+=g.mdef; old.spd+=g.spd;
     }
-    const equipAfter=equipmentStatDelta(c);
-    Object.entries(equipAfter).forEach(([k,v])=>{if(k in old) old[k]+=v;});
     return learnSkillsForLevel(c,c.level);
   }
 
@@ -8428,7 +8433,11 @@
         ...(r.learnedSkills||b.learnedSkills||[]),
         ...naturalSkillIdsAtLevel(c,c.level)
       ])];
+      reconcileRebalancedNaturalSkills(c);
       c.equipment={...(b.equipment||{}),...(r.equipment||{})};
+      // v0.46f migration: older percent-equipment level-ups could leave current HP/MP 1+ above max.
+      c.stats.hp=Math.max(0,Math.min(Number(c.stats.hpMax)||1,Number(c.stats.hp)||0));
+      c.stats.mp=Math.max(0,Math.min(Number(c.stats.mpMax)||0,Number(c.stats.mp)||0));
       c.conditions={...conditionsOf(c),...(r.conditions||{})};
       c._desertDogPolishPending=!!r.desertDogPolishPending;
       const needsVariationMigration=!!profileFor(c) && !r.finalVariation && (id==="hero" || state.ownedSpecies.has(id));
@@ -11414,6 +11423,11 @@
     updateBattleTargetUi();
 
     $("battleAreaLabel").textContent=pack.label;
+    const battleHeaderName=(state.battleFromRun && state.run)
+      ? currentRunAreaUi().name
+      : String(pack.label||"戦闘").replace(/^[^一-龠ぁ-んァ-ヶA-Za-z0-9]+/,"").trim();
+    if($("topTitle")) $("topTitle").textContent=battleHeaderName;
+    if($("topSubtitle")) $("topSubtitle").textContent=`戦闘 ${DEV_VERSION}`;
     $("formationAreaSelect").value=area;
     $("formationNum").textContent=`${index+1} / ${pack.formations.length}`;
   }
@@ -13385,7 +13399,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.46a";
+      $("topSubtitle").textContent=`探索＋勧誘・装備試作 ${DEV_VERSION}`;
       updateHeader();
       return;
     }
@@ -13393,7 +13407,7 @@
     state.battleFromRun=false;
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.46a";
+    $("topSubtitle").textContent=`探索＋勧誘・装備試作 ${DEV_VERSION}`;
   }
 
   async function attemptEscape(){
@@ -13709,7 +13723,7 @@
       state.battleDirectTest=false;
       state.battleFromRun=false;
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.46a";
+      $("topSubtitle").textContent=`探索＋勧誘・装備試作 ${DEV_VERSION}`;
       updateHeader();
       if(extraToast) toast(extraToast);
       return;
@@ -13717,7 +13731,7 @@
 
     updateRunHud();
     showScreen("exploreScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.46a";
+    $("topSubtitle").textContent=`探索＋勧誘・装備試作 ${DEV_VERSION}`;
     state.battleFromRun=false;
 
     if(state.battleSpecial==="recruitTutorial"){
@@ -13989,7 +14003,7 @@
         restorePartyFull();
       }
       showScreen("homeScreen");
-      $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.46a";
+      $("topSubtitle").textContent=`探索＋勧誘・装備試作 ${DEV_VERSION}`;
       state.battleFromRun=false;
       state.battleDirectTest=false;
       updateHeader();
@@ -14054,7 +14068,7 @@
     cancelScheduledTurnStart();
     updateAutoButtons();
 
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.46a";
+    $("topSubtitle").textContent=`探索＋勧誘・装備試作 ${DEV_VERSION}`;
     $("battleTestTools").style.display=fromRun?"none":"flex";
     $("battleWinBtn").style.display=fromRun?"none":"block";
     showScreen("battleScreen");
@@ -14090,7 +14104,7 @@
     state.battleTestSnapshot=null;
     state.battleDirectTest=false;
     showScreen("homeScreen");
-    $("topSubtitle").textContent="探索＋勧誘・装備試作 v0.46a";
+    $("topSubtitle").textContent=`探索＋勧誘・装備試作 ${DEV_VERSION}`;
     updateHeader();
     toast("戦闘テストを終了");
   }
@@ -15006,23 +15020,30 @@
     return flat;
   }
 
+  function currentRunAreaUi(){
+    if(!state.run) return {icon:"🌿",name:"ミレスタ平原"};
+    if(state.run.area==="cave") return {icon:"🕳️",name:`小さな洞窟・第${state.run.caveLayer===1?"一":"二"}層`};
+    if(state.run.area==="caveSide") return {icon:"🕳️",name:"洞窟の横道"};
+    if(state.run.area==="yodyRegion") return {icon:"🌊",name:"ヨーディー地方"};
+    if(state.run.area==="footpath") return {icon:"🌲",name:"麓の小道"};
+    if(state.run.area==="yodyMountain") return {icon:"⛰️",name:"ヨーディー山道"};
+    if(state.run.area==="tilenoRegion") return {icon:"🌿",name:"ティレーノ地方"};
+    if(state.run.area==="tilenoWetland") return {icon:"🌾",name:"ティレーノ湿原"};
+    if(state.run.area==="tilenoToxicWetland") return {icon:"☠️",name:"ティレーノ毒湿地"};
+    if(state.run.area==="zelrenoForest") return {icon:"🌲",name:"ゼルレーノ森林地帯"};
+    if(state.run.area==="zelrenoForestDeep") return {icon:"🌲",name:"ゼルレーノ森林地帯・奥地"};
+    if(state.run.area==="granzelPlains") return {icon:"🌾",name:"グランゼル大平原"};
+    if(state.run.area==="runelCavern") return {icon:"🪨",name:"ルネル岩窟"};
+    if(state.run.area==="runelRegion") return {icon:"🌿",name:"ルネル地方"};
+    if(state.run.area==="salidDesert") return {icon:"🏜️",name:"サリード砂漠"};
+    return {icon:"🌿",name:"ミレスタ平原"};
+  }
   function setExploreAreaLabel(){
     if(!state.run) return;
-    if(state.run.area==="cave") $("exploreAreaLabel").textContent=`🕳️ 小さな洞窟・第${state.run.caveLayer===1?"一":"二"}層`;
-    else if(state.run.area==="caveSide") $("exploreAreaLabel").textContent="🕳️ 洞窟の横道";
-    else if(state.run.area==="yodyRegion") $("exploreAreaLabel").textContent="🌊 ヨーディー地方";
-    else if(state.run.area==="footpath") $("exploreAreaLabel").textContent="🌲 麓の小道";
-    else if(state.run.area==="yodyMountain") $("exploreAreaLabel").textContent="⛰️ ヨーディー山道";
-    else if(state.run.area==="tilenoRegion") $("exploreAreaLabel").textContent="🌿 ティレーノ地方";
-    else if(state.run.area==="tilenoWetland") $("exploreAreaLabel").textContent="🌾 ティレーノ湿原";
-    else if(state.run.area==="tilenoToxicWetland") $("exploreAreaLabel").textContent="☠️ ティレーノ毒湿地";
-    else if(state.run.area==="zelrenoForest") $("exploreAreaLabel").textContent="🌲 ゼルレーノ森林地帯";
-    else if(state.run.area==="zelrenoForestDeep") $("exploreAreaLabel").textContent="🌲 ゼルレーノ森林地帯・奥地";
-    else if(state.run.area==="granzelPlains") $("exploreAreaLabel").textContent="🌾 グランゼル大平原";
-    else if(state.run.area==="runelCavern") $("exploreAreaLabel").textContent="🪨 ルネル岩窟";
-    else if(state.run.area==="runelRegion") $("exploreAreaLabel").textContent="🌿 ルネル地方";
-    else if(state.run.area==="salidDesert") $("exploreAreaLabel").textContent="🏜️ サリード砂漠";
-    else $("exploreAreaLabel").textContent="🌿 ミレスタ平原";
+    const ui=currentRunAreaUi();
+    $("exploreAreaLabel").textContent=`${ui.icon} ${ui.name}`;
+    if($("topTitle")) $("topTitle").textContent=ui.name;
+    if($("topSubtitle")) $("topSubtitle").textContent=`探索 ${DEV_VERSION}`;
   }
 
   function resetRunMapLocalState(){
