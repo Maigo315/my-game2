@@ -3792,7 +3792,7 @@
   }
 
 
-  /* v0.46h: the current location now lives in the global top-left header during exploration/battle. */
+  /* v0.46i: the current location now lives in the global top-left header during exploration/battle. */
   .battle-area-label{display:none!important}
 </style>
 </head>
@@ -3809,7 +3809,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.46h</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.46i</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3819,7 +3819,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.46h</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.46i</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3831,7 +3831,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.46h</div>
+      <div class="title-version">DEV v0.46i</div>
     </section>
   </main>
 
@@ -4486,7 +4486,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.46h</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.46i</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4515,7 +4515,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.46h";
+  const DEV_VERSION = "v0.46i";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -7085,7 +7085,7 @@
     return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","flare","gigaFlare","lastFlare","blaze","blaze2","endBlaze","ice","frost","gigaFrost","lastFrost","cold","cold2","endCold","petitThunder","thunder","gigaThunder","heavenlyThunder","stone","quake","gigaQuake","earthWrath","sonic","wind","gigaWind","annihilationWindBlade","holy","gigaHoly","judgmentLance","heavenlyLight","bigBang","dark","gigaDark","finalDarkHammer","hellDark","apocalypse","touch","pleasure","gigaPleasure","megidoPleasure","pleasureOne","erode","gigaErode","lastErode","ruinErosion","poison","neoPoison","blind","neoBlind","silence","neoSilence","death","allDeath","eraser","heal","highHeal","gigaHeal","lastHeal","allHeal","allHeal2","fairyHeal","eternal","raise","raise2","gigaRaise","miracleFestival","cure","fresh","allFresh","mount","allMount","aura","lastAura","polish","allPolish","warGodAura","guard","allGuard","guardianBlessing","magic","allMagic","demonSpiritFlow","block","allBlock","spiritKingBlessing","quick","allQuick","heroicTailwind","berserk","fortune","escape","supply","neoSupply","stealth","return","tackle","counterStance","doubleAttack","autoFresh","canceller","unyieldingHeart","powerCharge","magicConcentration","explosiveFist","swordDance","terraCrash","stardust","magicBarrier","dragonSpiral","nephilimLaser"].includes(id));
   }
 
-  // v0.46h: reconcile natural skills whose acquisition levels/contents were rebalanced.
+  // v0.46i: reconcile natural skills whose acquisition levels/contents were rebalanced.
   // Older saves may already contain the previous versions, so only the affected skill IDs are rebuilt.
   const REBALANCED_NATURAL_SKILL_IDS={
     forestMage:new Set(["holy","allHeal2","gigaQuake","fairyHeal"]),
@@ -8447,7 +8447,7 @@
       ])];
       reconcileRebalancedNaturalSkills(c);
       c.equipment={...(b.equipment||{}),...(r.equipment||{})};
-      // v0.46h migration: older percent-equipment level-ups could leave current HP/MP 1+ above max.
+      // v0.46i migration: older percent-equipment level-ups could leave current HP/MP 1+ above max.
       c.stats.hp=Math.max(0,Math.min(Number(c.stats.hpMax)||1,Number(c.stats.hp)||0));
       c.stats.mp=Math.max(0,Math.min(Number(c.stats.mpMax)||0,Number(c.stats.mp)||0));
       c.conditions={...conditionsOf(c),...(r.conditions||{})};
@@ -9200,14 +9200,14 @@
       name:"ハイラミア",img:IMG.lamia,exp:100,gold:65,critRate:3.0,evasionRate:0,
       bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.lamia.resist},
       skills:["highHeal","allGuard","allBlock"],ai:"highLamiaSupport",
-      stats:{hp:460,mp:120,atk:76,def:56,magic:82,mdef:62,spd:46}
+      stats:{hp:380,mp:120,atk:76,def:56,magic:82,mdef:62,spd:46}
     },
     vritra:{
       name:"ヴリトラ",img:VRITRA_IMG,exp:520,gold:220,critRate:0,evasionRate:0,boss:true,
       bowInstantKillImmune:true,statusDeathImmune:true,statusImmuneAll:true,
       resist:{fire:"C",ice:"E",light:"D",dark:"A",thunder:"D",wind:"C",earth:"C",pleasure:"D",poison:"S",blind:"A",silence:"E",death:"A"},
       skills:["silence","thunder","terraCrash"],ai:"vritraBoss",basicAttackAll:true,basicAttackPower:.75,basicAttackFx:"heavy",basicAttackSymbol:"💥",enemyCounterChance:.20,
-      stats:{hp:2200,mp:260,atk:112,def:90,magic:100,mdef:84,spd:96}
+      stats:{hp:1900,mp:260,atk:110,def:90,magic:80,mdef:84,spd:80}
     },
     podalgeBoss:{
       name:"ポダルゲ",img:PODALGE_IMG,exp:70,gold:35,critRate:0,evasionRate:5,boss:true,noRecruit:true,
