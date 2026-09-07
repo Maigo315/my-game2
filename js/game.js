@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.46t";
+  const DEV_VERSION = "v0.46u";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2073,8 +2073,9 @@
     const diff=(ci<0||pi<0)?0:pi-ci,cls=diff>0?"up":diff<0?"down":"same";
     const body=diff===0
       ? resistanceBadgeHtml(cur)
-      : `${resistanceBadgeHtml(cur)}<span class="resistance-arrow ${cls}" aria-hidden="true">→</span>${resistanceBadgeHtml(pre)}`;
-    return `<div class="equipment-resistance">${resistanceHeadHtml(key)}<div class="resistance-value-row">${body}</div></div>`;
+      : `<span class="resistance-delta ${cls}" aria-hidden="true">${diff>0?"▲":"▼"}</span>${resistanceBadgeHtml(pre)}`;
+    const changeLabel=diff===0?`${cur}`:`${cur}から${pre}へ${diff>0?"上昇":"低下"}`;
+    return `<div class="equipment-resistance" aria-label="${RESISTANCE_LABELS[key]||key} ${changeLabel}">${resistanceHeadHtml(key)}<div class="resistance-value-row">${body}</div></div>`;
   }
 
   function renderCharacterPortrait(c){
