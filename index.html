@@ -4519,7 +4519,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.46j";
+  const DEV_VERSION = "v0.46k";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4900,7 +4900,8 @@
     {id:"granzelCastleDepressedSoldier",name:"落ち込む兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
     {id:"granzelCastleWhisperSoldiers",name:"ひそひそ話す兵士たち",gender:"male",silhouette:NPC_SOLDIER_IMG},
     {id:"granzelCastleDrunkSoldier",name:"酒を飲む兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
-    {id:"granzelKing",name:"グランゼル王",gender:"male",portrait:GRANZEL_KING_IMG}
+    {id:"granzelKing",name:"グランゼル王",gender:"male",portrait:GRANZEL_KING_IMG},
+    {id:"granzelMargaret",name:"マーガレット",gender:"female",portrait:MARGARET_IMG}
   ];
 
   const screens = [...document.querySelectorAll(".screen")];
@@ -5093,7 +5094,13 @@
     openTownTalkModal(true);
   }
   function currentTownTalkNpcs(){
-    if(state.currentTown==="granzel" && townTalkSubarea==="castle") return GRANZEL_CASTLE_TALK_NPCS;
+    if(state.currentTown==="granzel" && townTalkSubarea==="castle"){
+      return GRANZEL_CASTLE_TALK_NPCS.filter(npc=>{
+        if(npc.id==="granzelCastleWhisperSoldiers" && state.eventFlags?.tilenoToxicBossDefeated) return false;
+        if(npc.id==="granzelMargaret" && !state.eventFlags?.runelRuinsBossDefeated) return false;
+        return true;
+      });
+    }
     const list=state.currentTown==="yody"?YODY_TALK_NPCS:state.currentTown==="tileno"?TILENO_TALK_NPCS:state.currentTown==="granzel"?GRANZEL_TALK_NPCS:state.currentTown==="runel"?RUNEL_TALK_NPCS:state.currentTown==="kunputei"?KUNPUTEI_TALK_NPCS:MILESTA_TALK_NPCS;
     return list.filter(npc=>{
       if(npc.id==="yodyBoy" && state.eventFlags?.yodyBoyQuestCompleted) return false;
@@ -5477,6 +5484,8 @@
 なあ！？兄ちゃんもそう思うよなぁ！？`),
         talkDialogue("主人公",null,null,`…………`)
       ];
+    }else if(id==="granzelMargaret"){
+      return startMargaretCastleTalk();
     }else if(id==="granzelKing"){
       if(state.eventFlags?.granzelKingAudienceDone){
         steps=[{type:"dialogue",speaker:"グランゼル王",portrait:GRANZEL_KING_IMG,text:`魔界の『扉』、魔縁者……。
@@ -5551,6 +5560,166 @@
     }
     steps.push({type:"end"});
     startTemporaryStoryEvent(steps);
+  }
+
+  function finishMargaretRunelFirstReport(){
+    if(!state.eventFlags) state.eventFlags={};
+    state.eventFlags.margaretRunelFirstReportDone=true;
+    state.eventFlags.margaretRunelReportPending=false;
+    state.currentTown="granzel";
+    state.selectedArea="granzelTown";
+    enterTown("granzel");
+  }
+  function startMargaretRunelFirstReport(){
+    const steps=[
+      talkDialogue("兵士",NPC_SOLDIER_IMG,"male",`こちらは王女マーガレット様の私室です。
+立ち入りはご遠慮ください。`),
+      talkDialogue("主人公",null,null,`…………`),
+      talkDialogue("兵士",NPC_SOLDIER_IMG,"male",`何？ルネルの黒蛇をやっつけた？
+貴様、何を訳の分からないことを……`),
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`その方は確かに私の客人です。
+問題ありませんよ。`},
+      talkDialogue("兵士",NPC_SOLDIER_IMG,"male",`マーガレット様！
+し、失礼いたしました。`),
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`{{hero}}さん。またお会いできると信じておりましたわ。
+さあ、中へどうぞ。`},
+      talkSystem(`『{{hero}}はマーガレットの私室に通された。』`),
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`あのルネルの黒蛇を倒すとは。
+さすがは{{hero}}さん。さすがは魔縁者ですね。`},
+      talkDialogue("主人公",null,null,`…………`),
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`……ヴリトラ。ルネルの黒蛇、あるいは対象Vという名で呼ばれたあの魔物娘は、本来は魔界に存在するはずの種族と言われています。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`ミレスタの洞窟でも『扉』が開かれ、魔界の魔物娘がこの世界に現れた。
+これは、偶然ではないのでしょう。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`誰かが、意図的に『扉』を開いている。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`噂によると、魔界の『扉』を開くには、魔縁者の血が不可欠だとか。
+父が魔縁者を捕らえていることにも、関係があるのかも……。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`……失礼しました。
+今は、そんな話をしている場合ではありませんでしたね。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`エリザさんが運び込まれた痕跡が無いのはおかしいですね。
+確かに、城下町跡に『荷物』が運び込まれたのは確認されています。`},
+      talkDialogue("主人公",null,null,`…………`),
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`ヴリトラの脅威が無くなった今、私たちも城下町跡の調査は行います。
+二日後、またここに来ていただけますか？`},
+      talkSystem(`『{{hero}}は頷くと、マーガレットの私室を後にした。』`),
+      talkSystem(`『{{hero}}はグランゼルに滞在し、時が過ぎるのを待った。
+そして、二日後……』`),
+      {type:"end"}
+    ];
+    startTemporaryStoryEvent(steps,{returnToTownTalk:false,after:finishMargaretRunelFirstReport});
+  }
+  function startMargaretRunelSecondReport(){
+    const steps=[
+      talkSystem(`『{{hero}}はマーガレットの私室に招かれた……。』`),
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`{{hero}}さん。エリザさんについて、続報があります。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`ルネルパリオ城下町跡に突如として現れ、霧のように消えて行った……。
+私の私兵たちが確かに目撃しています。`},
+      talkDialogue("主人公",null,null,`……！`),
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`私は……この一件には父が関わっていると見ています。
+父が魔縁者を捕らえている理由、それはまだわかりませんが……何か忌まわしい実験をしているのかも？`},
+      talkDialogue("主人公",null,null,`…………`),
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`ええ。エリザさんは、魔縁者ではないのですよね。
+ですが、魔縁者の子孫と思しき、ミレスタの民。目をつけられても不思議ではありません。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`とにかく、これ以上深入りするなら、グランゼル王国そのものと対立することになるかもしれません。
+それでも……あなたはエリザさんを諦めないのですか？`},
+      talkDialogue("主人公",null,null,`…………`),
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`……そうですか。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`…………`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`……私は、父を止めたい。
+今の父はどこかおかしいんです。疑心に支配され、かつての温厚な父はどこかに消えてしまった……。そう思ってしまうほどに。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`{{hero}}さん、協力しませんか？
+私は父を止めるために。あなたは、エリザさんと再会するために。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`私は、内側から父と王国軍の内情を探ります。
+ですが……そう簡単にはいかないでしょう。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`{{hero}}さんには、エリザさんを捜しつつ諸国を巡り、旅の魔縁者として、そこの君主たちの信頼を勝ち取ってほしいのです。`},
+      talkDialogue("主人公",null,null,`……？`),
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`あなたが信頼を勝ち取ったら、私はそこから個人的なパイプを使って関係を深めます。
+そうして築いた『後ろ盾』があれば、より深く調査に踏み込めるはずです。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`まあ、こちらは私にお任せください。
+グランゼルの軍事拡大に伴って、周辺諸国も問題に悩まされています。中には、魔縁者にしか解決できない問題もあるはず。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`行ってみればわかると思いますよ。
+……協力、してくださいますか？`},
+      talkDialogue("主人公",null,null,`…………`),
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`……ありがとうございます。
+それでは、お互い全力を尽くしましょう。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`{{hero}}さんに行っていただきたいのは、砂漠の国サリード、北の雪国アルム、そして魔物娘を信仰するレスティア公国……。
+順番はお任せしますが、まずはサリード王国に向かうことをお勧めしますわ。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`詳しく聞きたくなりましたら、また私の私室をお訪ねください。
+……ご武運を。`},
+      talkDialogue("主人公",null,null,`…………`),
+      talkSystem(`『{{hero}}はマーガレットの私室を後にした。』`,[
+        {type:"flag",key:"margaretRunelSecondReportDone",value:true},
+        {type:"flag",key:"margaretThreeNationQuestStarted",value:true}
+      ]),
+      {type:"end"}
+    ];
+    startTemporaryStoryEvent(steps);
+  }
+  function startMargaretCountryInfo(){
+    const menu={type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`{{hero}}さん。
+各国の情報について、お話しましょう。`,choices:[
+      {label:"サリード王国について",goto:"margaretSalidInfo"},
+      {label:"アルム王国について",goto:"margaretAlmInfo"},
+      {label:"レスティア公国について",goto:"margaretRestiaInfo"},
+      {label:"特に無い",goto:"margaretCountryInfoEnd"}
+    ]};
+    const steps=[
+      {type:"label",id:"margaretCountryInfoMenu"},
+      menu,
+
+      {type:"label",id:"margaretSalidInfo"},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`サリード王国は、南の大陸を支配する砂漠の国です。
+グランゼル王国とも、昔から関係は悪くありません。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`しかし、現在グランゼルが侵攻しようとしているアルム王国と同盟を結んでいるため、戦争が起きればグランゼルと衝突することになるでしょう。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`炎に耐性のある魔物娘が多く生息しているようですね。
+逆に、氷属性が弱点の魔物娘も多そうです。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`緊張が高まっているため、公式には渡航禁止になっていますが……
+港町ヨーディーの船乗りなら、乗せて行ってくれるかもしれません。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`他に聞きたいことはございますか？`},
+      {type:"jump",goto:"margaretCountryInfoMenu"},
+
+      {type:"label",id:"margaretAlmInfo"},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`アルム王国は、グランゼルの北に位置する雪国です。
+過去何度もグランゼルと衝突しています。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`……グランゼルが一方的に侵攻しようとしていると言った方が正しいですね。
+その度に、卓越した政治的手腕でなんとか切り抜けてきたと言われています。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`現在も父の意向で、グランゼルはアルム王国と戦争を起こそうとしています。
+アルムはサリード王国と同盟を結んでいるため、ひとたび戦争が始まればその規模は過去に類を見ないものになるでしょう。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`氷に耐性のある魔物娘が多く生息しているようですね。
+逆に、炎属性が弱点の魔物娘も多そうです。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`以前私たちが話した、氷雪の回廊を覚えていますか？
+あの回廊を抜けた先に、アルム王国の国境があります。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`当然、厳戒態勢なので一般の方は通ることはできませんが……
+アルム国王は魔縁者に『助力』を求めているそうです。あなたなら、もしかしたら……。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`他に聞きたいことはございますか？`},
+      {type:"jump",goto:"margaretCountryInfoMenu"},
+
+      {type:"label",id:"margaretRestiaInfo"},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`レスティア公国は、グランゼルの東に位置する、自然豊かな土地が広がる国です。
+魔物娘を崇拝している特殊な宗教国家でもあります。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`かつてはグランゼルの一部でしたが、紆余曲折を経て独立に至りました。
+しかし、父はレスティアの再併合も視野に入れています。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`当然、レスティア側の反発は激しいものです。
+一部の過激派が、大公の方針を無視してグランゼルに先制攻撃……テロを仕掛けようとしているとの噂もあります。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`個性豊かな魔物娘が生息しており、総合的な力が求められることになるでしょう。
+魔物娘だけで言えば、サリードやアルムよりも危険と言えます。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`ルネル岩窟の横道を抜けた先に、レスティア国境があります。
+当然、厳戒態勢ですが……レスティアは魔物娘だけではなく魔縁者も崇拝対象としています。あなたなら、通してもらえるかもしれません。`},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`他に聞きたいことはございますか？`},
+      {type:"jump",goto:"margaretCountryInfoMenu"},
+
+      {type:"label",id:"margaretCountryInfoEnd"},
+      {type:"dialogue",speaker:"マーガレット",portrait:MARGARET_IMG,text:`それでは、よろしくお願いします。
+情報が聞きたくなりましたら、またいつでもいらしてくださいね。`},
+      talkSystem(`『{{hero}}はマーガレットの私室を後にした。』`),
+      {type:"end"}
+    ];
+    startTemporaryStoryEvent(steps);
+  }
+  function startMargaretCastleTalk(){
+    if(!state.eventFlags?.runelRuinsBossDefeated) return false;
+    if(!state.eventFlags?.margaretRunelFirstReportDone) return startMargaretRunelFirstReport();
+    if(!state.eventFlags?.margaretRunelSecondReportDone) return startMargaretRunelSecondReport();
+    return startMargaretCountryInfo();
   }
 
   function margaretIceTopicsComplete(){
@@ -9687,8 +9856,8 @@
     $("debugBossToggleBtn").onclick=()=>{state.caveBossDefeated=!state.caveBossDefeated;debugRefreshProgress();};
     $("debugMerchantToggleBtn").onclick=()=>{state.travelMerchantMet=!state.travelMerchantMet;debugRefreshProgress();};
     $("debugIntroToggleBtn").onclick=()=>{const on=prologueStage()<1;state.eventFlags.milestaIntroDone=on;state.prologueStage=on?1:0;if(!on)leaveElizaEscort();debugRefreshProgress();};
-    $("debugProgressOpenBtn").onclick=()=>{state.caveUnlocked=true;state.caveBossDefeated=true;state.travelMerchantMet=true;state.eventFlags.milestaIntroDone=true;state.eventFlags.recruitTutorialDone=true;state.eventFlags.milestaWaitingUnlocked=true;state.eventFlags.caveSidepathUnlocked=true;state.eventFlags.yodyPortReached=true;state.eventFlags.yodyRegionUnlocked=true;state.eventFlags.yodyFootpathUnlocked=true;state.eventFlags.yodyMountainUnlocked=true;state.eventFlags.yodyMountainBossDefeated=true;state.eventFlags.yodyMountainCleared=true;state.eventFlags.tilenoRegionReached=true;state.eventFlags.tilenoTownReached=true;state.eventFlags.tilenoGuildPanaceaReceived=true;state.eventFlags.tilenoWetlandReached=true;state.eventFlags.tilenoToxicWetlandReached=true;state.eventFlags.tilenoToxicWarningFeatherReceived=true;state.eventFlags.tilenoToxicBossDefeated=true;state.eventFlags.margaretPoisonQuestCompleted=true;state.eventFlags.runelStoryLeadKnown=true;state.eventFlags.tilenoToxicBossAfterStoryDone=true;state.eventFlags.zelrenoForestReached=true;state.eventFlags.granzelPlainsReached=true;state.eventFlags.granzelTownReached=true;state.eventFlags.granzelArrivalPosterDone=true;state.eventFlags.granzelCompanionsHidden=true;state.eventFlags.granzelSoldierSceneDone=true;state.eventFlags.granzelKingAudienceDone=true;state.eventFlags.iceCorridorRouteUnlocked=true;state.eventFlags.iceCorridorReached=true;state.eventFlags.runelCavernReached=true;state.eventFlags.kunputeiReached=true;state.eventFlags.runelRegionReached=true;state.eventFlags.runelTownReached=true;state.eventFlags.runelRuinsReached=true;state.eventFlags.runelRuinsBossDefeated=true;state.eventFlags.runelRuinsCleared=true;state.eventFlags.margaretRunelReportPending=true;state.eventFlags.fairyGroveDiscovered=true;state.eventFlags.margaretIceTopicSelf=true;state.eventFlags.margaretIceTopicMagicBond=true;state.eventFlags.margaretIceTopicWar=true;state.eventFlags.margaretIceCorridorMeetingDone=true;state.eventFlags.margaretPoisonQuestAccepted=true;state.eventFlags.prologueComplete=true;state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=6;toast("現行の進行フラグをすべてONにしました。");debugRefreshProgress();};
-    $("debugProgressResetBtn").onclick=()=>modal("進行フラグを初期化","現在実装されている進行フラグだけをOFFにします。仲間・所持品・Lv・装備は変わりません。",[["初期化する",()=>{state.caveUnlocked=false;state.caveBossDefeated=false;state.travelMerchantMet=false;state.eventFlags.milestaIntroDone=false;state.eventFlags.recruitTutorialDone=false;state.eventFlags.milestaWaitingUnlocked=false;state.eventFlags.caveSidepathUnlocked=false;state.eventFlags.yodyPortReached=false;state.eventFlags.yodyRegionUnlocked=false;state.eventFlags.yodyFootpathUnlocked=false;state.eventFlags.yodyMountainUnlocked=false;state.eventFlags.yodyMountainBossDefeated=false;state.eventFlags.yodyMountainCleared=false;state.eventFlags.tilenoRegionReached=false;state.eventFlags.tilenoTownReached=false;state.eventFlags.tilenoGuildPanaceaReceived=false;state.eventFlags.tilenoWetlandReached=false;state.eventFlags.tilenoToxicWetlandReached=false;state.eventFlags.tilenoToxicWarningFeatherReceived=false;state.eventFlags.tilenoToxicBossDefeated=false;state.eventFlags.margaretPoisonQuestCompleted=false;state.eventFlags.runelStoryLeadKnown=false;state.eventFlags.tilenoToxicBossAfterStoryDone=false;state.eventFlags.zelrenoForestReached=false;state.eventFlags.granzelPlainsReached=false;state.eventFlags.granzelTownReached=false;state.eventFlags.granzelArrivalPosterDone=false;state.eventFlags.granzelCompanionsHidden=false;state.eventFlags.granzelSoldierSceneDone=false;state.eventFlags.granzelKingAudienceDone=false;state.eventFlags.iceCorridorRouteUnlocked=false;state.eventFlags.iceCorridorReached=false;state.eventFlags.margaretIceTopicSelf=false;state.eventFlags.margaretIceTopicMagicBond=false;state.eventFlags.margaretIceTopicWar=false;state.eventFlags.margaretIceCorridorMeetingDone=false;state.eventFlags.margaretPoisonQuestAccepted=false;state.eventFlags.runelCavernReached=false;state.eventFlags.kunputeiReached=false;state.eventFlags.runelRegionReached=false;state.eventFlags.runelTownReached=false;state.eventFlags.runelRuinsReached=false;state.eventFlags.runelRuinsBossDefeated=false;state.eventFlags.runelRuinsCleared=false;state.eventFlags.margaretRunelReportPending=false;state.eventFlags.fairyGroveDiscovered=false;state.eventFlags.footpathHealLeafObtained=false;state.eventFlags.yodyBoyTalked=false;state.eventFlags.yodyBoyQuestCompleted=false;state.eventFlags.salidDesertUnlocked=false;state.eventFlags.prologueComplete=false;state.currentTown="milesta";state.selectedArea="plains";state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=0;leaveElizaEscort();closeModal();toast("進行フラグを初期状態にしました。");debugRefreshProgress();}],["やめる",closeModal]]);
+    $("debugProgressOpenBtn").onclick=()=>{state.caveUnlocked=true;state.caveBossDefeated=true;state.travelMerchantMet=true;state.eventFlags.milestaIntroDone=true;state.eventFlags.recruitTutorialDone=true;state.eventFlags.milestaWaitingUnlocked=true;state.eventFlags.caveSidepathUnlocked=true;state.eventFlags.yodyPortReached=true;state.eventFlags.yodyRegionUnlocked=true;state.eventFlags.yodyFootpathUnlocked=true;state.eventFlags.yodyMountainUnlocked=true;state.eventFlags.yodyMountainBossDefeated=true;state.eventFlags.yodyMountainCleared=true;state.eventFlags.tilenoRegionReached=true;state.eventFlags.tilenoTownReached=true;state.eventFlags.tilenoGuildPanaceaReceived=true;state.eventFlags.tilenoWetlandReached=true;state.eventFlags.tilenoToxicWetlandReached=true;state.eventFlags.tilenoToxicWarningFeatherReceived=true;state.eventFlags.tilenoToxicBossDefeated=true;state.eventFlags.margaretPoisonQuestCompleted=true;state.eventFlags.runelStoryLeadKnown=true;state.eventFlags.tilenoToxicBossAfterStoryDone=true;state.eventFlags.zelrenoForestReached=true;state.eventFlags.granzelPlainsReached=true;state.eventFlags.granzelTownReached=true;state.eventFlags.granzelArrivalPosterDone=true;state.eventFlags.granzelCompanionsHidden=true;state.eventFlags.granzelSoldierSceneDone=true;state.eventFlags.granzelKingAudienceDone=true;state.eventFlags.iceCorridorRouteUnlocked=true;state.eventFlags.iceCorridorReached=true;state.eventFlags.runelCavernReached=true;state.eventFlags.kunputeiReached=true;state.eventFlags.runelRegionReached=true;state.eventFlags.runelTownReached=true;state.eventFlags.runelRuinsReached=true;state.eventFlags.runelRuinsBossDefeated=true;state.eventFlags.runelRuinsCleared=true;state.eventFlags.margaretRunelReportPending=false;state.eventFlags.margaretRunelFirstReportDone=true;state.eventFlags.margaretRunelSecondReportDone=true;state.eventFlags.margaretThreeNationQuestStarted=true;state.eventFlags.fairyGroveDiscovered=true;state.eventFlags.margaretIceTopicSelf=true;state.eventFlags.margaretIceTopicMagicBond=true;state.eventFlags.margaretIceTopicWar=true;state.eventFlags.margaretIceCorridorMeetingDone=true;state.eventFlags.margaretPoisonQuestAccepted=true;state.eventFlags.prologueComplete=true;state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=6;toast("現行の進行フラグをすべてONにしました。");debugRefreshProgress();};
+    $("debugProgressResetBtn").onclick=()=>modal("進行フラグを初期化","現在実装されている進行フラグだけをOFFにします。仲間・所持品・Lv・装備は変わりません。",[["初期化する",()=>{state.caveUnlocked=false;state.caveBossDefeated=false;state.travelMerchantMet=false;state.eventFlags.milestaIntroDone=false;state.eventFlags.recruitTutorialDone=false;state.eventFlags.milestaWaitingUnlocked=false;state.eventFlags.caveSidepathUnlocked=false;state.eventFlags.yodyPortReached=false;state.eventFlags.yodyRegionUnlocked=false;state.eventFlags.yodyFootpathUnlocked=false;state.eventFlags.yodyMountainUnlocked=false;state.eventFlags.yodyMountainBossDefeated=false;state.eventFlags.yodyMountainCleared=false;state.eventFlags.tilenoRegionReached=false;state.eventFlags.tilenoTownReached=false;state.eventFlags.tilenoGuildPanaceaReceived=false;state.eventFlags.tilenoWetlandReached=false;state.eventFlags.tilenoToxicWetlandReached=false;state.eventFlags.tilenoToxicWarningFeatherReceived=false;state.eventFlags.tilenoToxicBossDefeated=false;state.eventFlags.margaretPoisonQuestCompleted=false;state.eventFlags.runelStoryLeadKnown=false;state.eventFlags.tilenoToxicBossAfterStoryDone=false;state.eventFlags.zelrenoForestReached=false;state.eventFlags.granzelPlainsReached=false;state.eventFlags.granzelTownReached=false;state.eventFlags.granzelArrivalPosterDone=false;state.eventFlags.granzelCompanionsHidden=false;state.eventFlags.granzelSoldierSceneDone=false;state.eventFlags.granzelKingAudienceDone=false;state.eventFlags.iceCorridorRouteUnlocked=false;state.eventFlags.iceCorridorReached=false;state.eventFlags.margaretIceTopicSelf=false;state.eventFlags.margaretIceTopicMagicBond=false;state.eventFlags.margaretIceTopicWar=false;state.eventFlags.margaretIceCorridorMeetingDone=false;state.eventFlags.margaretPoisonQuestAccepted=false;state.eventFlags.runelCavernReached=false;state.eventFlags.kunputeiReached=false;state.eventFlags.runelRegionReached=false;state.eventFlags.runelTownReached=false;state.eventFlags.runelRuinsReached=false;state.eventFlags.runelRuinsBossDefeated=false;state.eventFlags.runelRuinsCleared=false;state.eventFlags.margaretRunelReportPending=false;state.eventFlags.margaretRunelFirstReportDone=false;state.eventFlags.margaretRunelSecondReportDone=false;state.eventFlags.margaretThreeNationQuestStarted=false;state.eventFlags.fairyGroveDiscovered=false;state.eventFlags.footpathHealLeafObtained=false;state.eventFlags.yodyBoyTalked=false;state.eventFlags.yodyBoyQuestCompleted=false;state.eventFlags.salidDesertUnlocked=false;state.eventFlags.prologueComplete=false;state.currentTown="milesta";state.selectedArea="plains";state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=0;leaveElizaEscort();closeModal();toast("進行フラグを初期状態にしました。");debugRefreshProgress();}],["やめる",closeModal]]);
     $("debugIntroReplayBtn").onclick=()=>{closeDebugTools();startStoryEvent("milestaIntroEliza",{preview:true,force:true});};
 
     areaSel.onchange=debugPopulateFormationIndex;$("debugFormationIndex").onchange=debugRefreshFormationStatus;
@@ -9914,7 +10083,7 @@
   function setShopMerchant(key){
     const img=$("shopMerchantImg"),sil=$("shopMerchantSilhouette");
     img.classList.remove("show");sil.classList.remove("show","female"); img.removeAttribute("src");
-    if(key==="plains" || key==="cave" || key==="caveSide" || key==="yodyRegion" || key==="footpath" || key==="yodyMountain" || key==="tilenoRegion" || key==="tilenoWetland" || key==="tilenoToxicWetland" || key==="zelrenoForest" || key==="zelrenoForestDeep" || key==="granzelPlains" || key==="runelCavern" || key==="runelRegion"){
+    if(key==="plains" || key==="cave" || key==="caveSide" || key==="yodyRegion" || key==="footpath" || key==="yodyMountain" || key==="tilenoRegion" || key==="tilenoWetland" || key==="tilenoToxicWetland" || key==="zelrenoForest" || key==="zelrenoForestDeep" || key==="granzelPlains" || key==="runelCavern" || key==="runelRegion" || key==="runelRuins"){
       img.src=TRAVEL_MERCHANT_IMG; img.alt="旅の商人"; img.classList.add("show");
       const first=!state.travelMerchantMet;
       $("shopMerchantLine").textContent=first?"おや？お主は……ククク、これは面白い。私は旅の商人だ。さあ、買って行くといい":"ここで会ったのも何かの縁だ……。さあ、買って行くといい";
@@ -9929,7 +10098,7 @@
   }
   function openShop(key="town"){
     state.currentShop=key; state.shopMode="buy"; state.shopSelectedKey=null; state.shopSessionPurchases={};
-    const shopTitles={town:"ミレスタ商店",yordy:"港町ヨーディー商店",tileno:"ティレーノ商店",granzel:"グランゼル城下町商店",runel:"ルネルの街商店",kunputei:"薫風亭・売店",cave:"洞窟の旅商人",caveSide:"洞窟の横道・旅商人",yodyRegion:"ヨーディー地方・旅商人",footpath:"麓の小道・旅商人",yodyMountain:"ヨーディー山道・旅商人",tilenoRegion:"ティレーノ地方・旅商人",tilenoWetland:"ティレーノ湿原・旅商人",tilenoToxicWetland:"ティレーノ毒湿地・旅商人",zelrenoForest:"ゼルレーノ森林地帯・旅商人",zelrenoForestDeep:"ゼルレーノ森林地帯・奥地・旅商人",granzelPlains:"グランゼル大平原・旅商人",runelCavern:"ルネル岩窟・旅商人",runelRegion:"ルネル地方・旅商人",plains:"旅の商人"};
+    const shopTitles={town:"ミレスタ商店",yordy:"港町ヨーディー商店",tileno:"ティレーノ商店",granzel:"グランゼル城下町商店",runel:"ルネルの街商店",kunputei:"薫風亭・売店",cave:"洞窟の旅商人",caveSide:"洞窟の横道・旅商人",yodyRegion:"ヨーディー地方・旅商人",footpath:"麓の小道・旅商人",yodyMountain:"ヨーディー山道・旅商人",tilenoRegion:"ティレーノ地方・旅商人",tilenoWetland:"ティレーノ湿原・旅商人",tilenoToxicWetland:"ティレーノ毒湿地・旅商人",zelrenoForest:"ゼルレーノ森林地帯・旅商人",zelrenoForestDeep:"ゼルレーノ森林地帯・奥地・旅商人",granzelPlains:"グランゼル大平原・旅商人",runelCavern:"ルネル岩窟・旅商人",runelRegion:"ルネル地方・旅商人",runelRuins:"ルネルパリオ城下町跡・旅商人",plains:"旅の商人"};
     $("shopTitle").textContent=shopTitles[key]||"旅の商人";
     $("shopLead").textContent="商品を選ぶと、装備時の能力差をその場で確認できます。";
     setShopMerchant(key); renderShop(); const sf=$("shopFlash"); if(sf){sf.textContent=""; sf.className="shop-flash";} $("shopModal").classList.add("show");
