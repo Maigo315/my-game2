@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.46q";
+  const DEV_VERSION = "v0.46r";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -1962,6 +1962,16 @@
   const ATTRIBUTE_RESISTANCE_KEYS=["fire","ice","light","dark","thunder","wind","earth","pleasure"];
   const STATUS_RESISTANCE_KEYS=["poison","blind","silence","death"];
 
+  function resistanceBadgeHtml(rank){
+    const cls=RESISTANCE_RANKS[rank] ? ` rank-${rank}` : "";
+    return `<span class="resistance-badge${cls}">${rank}</span>`;
+  }
+  function resistanceHeadHtml(key){
+    const icon=RESISTANCE_ICONS[key]||"◇";
+    const label=RESISTANCE_LABELS[key]||key;
+    return `<div class="resistance-head"><span class="resistance-icon" aria-hidden="true">${icon}</span><span class="resistance-label">${label}</span></div>`;
+  }
+
   function setCharacterDetailTab(tab="status"){
     const valid=["status","skills"].includes(tab) ? tab : "status";
     state.characterDetailTab=valid;
@@ -1979,10 +1989,7 @@
   function resistanceCards(profile,keys){
     return keys.map(key=>{
       const rank=profile?.resist?.[key] || "-";
-      const cls=RESISTANCE_RANKS[rank] ? ` rank-${rank}` : "";
-      const icon=RESISTANCE_ICONS[key]||"◇";
-      const label=RESISTANCE_LABELS[key]||key;
-      return `<div class="character-resistance${cls}"><div class="resistance-main"><span class="resistance-icon" aria-hidden="true">${icon}</span><span class="resistance-label">${label}</span></div><strong>${rank}</strong></div>`;
+      return `<div class="character-resistance">${resistanceHeadHtml(key)}<div class="resistance-value-row">${resistanceBadgeHtml(rank)}</div></div>`;
     }).join("");
   }
 
@@ -2064,11 +2071,10 @@
   function equipmentResistanceDiffHtml(key,cur,pre){
     const ci=RESISTANCE_RANK_ORDER.indexOf(cur),pi=RESISTANCE_RANK_ORDER.indexOf(pre);
     const diff=(ci<0||pi<0)?0:pi-ci,cls=diff>0?"up":diff<0?"down":"same";
-    const mark=diff>0?`▲ ${pre}`:diff<0?`▼ ${pre}`:"";
-    const rankCls=RESISTANCE_RANKS[cur] ? ` rank-${cur}` : "";
-    const icon=RESISTANCE_ICONS[key]||"◇";
-    const label=RESISTANCE_LABELS[key]||key;
-    return `<div class="equipment-resistance${rankCls}"><div class="resistance-main"><span class="resistance-icon" aria-hidden="true">${icon}</span><span class="resistance-label">${label}</span></div><strong>${cur}</strong><em class="${cls}">${mark}</em></div>`;
+    const body=diff===0
+      ? resistanceBadgeHtml(cur)
+      : `${resistanceBadgeHtml(cur)}<span class="resistance-arrow ${cls}" aria-hidden="true">→</span>${resistanceBadgeHtml(pre)}`;
+    return `<div class="equipment-resistance">${resistanceHeadHtml(key)}<div class="resistance-value-row">${body}</div></div>`;
   }
 
   function renderCharacterPortrait(c){
