@@ -1,0 +1,457 @@
+[
+  {
+    "source_label": "ELIZA_EVENT_IMG",
+    "file": "assets/npcs/eliza_event.webp",
+    "bytes": 215546,
+    "sha256": "c714f4f7b29385841fad3623d8b66417bf2cf9ef3d765cc0080d809cd621c340",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "NPC_OLDMAN_IMG",
+    "file": "assets/npcs/oldman.webp",
+    "bytes": 254190,
+    "sha256": "6f928531970e3413629e81821c139c127f250010c3116f5bf76522b14d98c11c",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "NPC_GIRL_IMG",
+    "file": "assets/npcs/girl.webp",
+    "bytes": 248648,
+    "sha256": "a198f39d497d6067479afee8574ce584edc7037f8691cfc9f2038f9948d867fb",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "NPC_SOLDIER_IMG",
+    "file": "assets/npcs/soldier.webp",
+    "bytes": 305482,
+    "sha256": "1ff7ae4ac865c2bfe9415487672b46d81a9a86415d5bc9fe6ffcb9950a3cd833",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "NPC_BOY_IMG",
+    "file": "assets/npcs/boy.webp",
+    "bytes": 262176,
+    "sha256": "f360d5f9efb510e6a131b22d6d25e797b0e2736fb9a77964b600a7c43b54d801",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "NPC_OLDWOMAN_IMG",
+    "file": "assets/npcs/oldwoman.webp",
+    "bytes": 322924,
+    "sha256": "2e781c14ab01373edf385b02c8fa70ba0fa6c147579890d27691647a53baec42",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "NPC_YOUNGMAN_IMG",
+    "file": "assets/npcs/youngman.webp",
+    "bytes": 277148,
+    "sha256": "4b5f119e9108dcd1fa4ee123b166c13edb307fbc8ef0311a747215614a883464",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "NPC_YOUNGWOMAN_IMG",
+    "file": "assets/npcs/youngwoman.webp",
+    "bytes": 320060,
+    "sha256": "6907ecd4648e4b6c8fd3ecb729ee33077206aa7e4f734db05f76f8a6a7e6a363",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "TRAVEL_MERCHANT_IMG",
+    "file": "assets/npcs/travel_merchant.webp",
+    "bytes": 365346,
+    "sha256": "cbb95ec790f1f680b3b7ed3327591105e9ac1f86cdcb23d83244ec2ed3cf57e0",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "hero",
+    "file": "assets/characters/hero.webp",
+    "bytes": 207336,
+    "sha256": "904d3a644c6b191f8a192aeddb1e54622a1db4c17c238a4ca728271a3b652685",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "slime",
+    "file": "assets/characters/slime.webp",
+    "bytes": 89500,
+    "sha256": "3f532c5f2a8ed59b786a7c26c4d2650e5ab094fac0072c5504b8b91688df254d",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "slimebes",
+    "file": "assets/characters/slimebes.webp",
+    "bytes": 94464,
+    "sha256": "7bcd656960e074af8a8c9b784f01e700b265dc428a92106041407d67e2a3f5eb",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "poison",
+    "file": "assets/characters/poison.webp",
+    "bytes": 103006,
+    "sha256": "a74d143837d3a105b8f5a9b766213ce1c77bb2b068a2964f941ff42f74be263a",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "dog",
+    "file": "assets/characters/dog.webp",
+    "bytes": 86820,
+    "sha256": "1aaf7e90ec5096acad002b26072056dea15d39e985f3b09b5d98b305759b4455",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "slug",
+    "file": "assets/characters/slug.webp",
+    "bytes": 96368,
+    "sha256": "9503bb4079a442585b5361a740450269c5827c7af49cb7f20a61a8d1a1ad7243",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "fairy",
+    "file": "assets/characters/fairy.webp",
+    "bytes": 101796,
+    "sha256": "7569ebfae6cade7baedabc6543277507afb65ea06ba1799a4e2d03cdce155d07",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "harpy",
+    "file": "assets/characters/harpy.webp",
+    "bytes": 144574,
+    "sha256": "f3ba257cd2df6f384785e909823cca32e851c053457bf4d0cefe5f4fac728fac",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "momo",
+    "file": "assets/characters/momo.webp",
+    "bytes": 96424,
+    "sha256": "600ea4ba5108ab3163dd7f5a5f810e86bf06ae235ebf5ccf58d98b9008cc83da",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "arachne",
+    "file": "assets/characters/arachne.webp",
+    "bytes": 129742,
+    "sha256": "d8881c3fd3a6efe0c22cfe734094d8d6777c2d76b2f98280284f7f437b59c74b",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "alraune",
+    "file": "assets/characters/alraune.webp",
+    "bytes": 131706,
+    "sha256": "877f679285c6f22d11ad434897edfff0ccf9d97de391bdb905a58e0b918d277a",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "rabbit",
+    "file": "assets/characters/rabbit.webp",
+    "bytes": 156836,
+    "sha256": "1ff06ea41d3ddeec25f007c14dc6090f78b712a2fd79b1ab1b73f5cb5617a269",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "demon",
+    "file": "assets/characters/demon.webp",
+    "bytes": 194588,
+    "sha256": "d6de335068ba2fe8d6ac2bec653f3eff0ccb12fe113d87f11cb1135e66cb134b",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "golem",
+    "file": "assets/characters/golem.webp",
+    "bytes": 159612,
+    "sha256": "694935e770bb7ac4c40fead069c8442beaf1e9a6a570b050157c73c54cbba652",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "elf",
+    "file": "assets/characters/elf.webp",
+    "bytes": 125118,
+    "sha256": "770cdbf98ba155dc74eab4cfd8e25324b7a0807f629794cb0f2ad6eb00a67661",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "sylph",
+    "file": "assets/characters/sylph.webp",
+    "bytes": 144934,
+    "sha256": "4e144b97489447161906b7a53e160a66587caae112f206ecfdb38055c21f0aab",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "owl",
+    "file": "assets/characters/owl.webp",
+    "bytes": 164414,
+    "sha256": "37b4a5738b223c6b58e6296335d14a709fb62315f9dbb6ea1014f7fa3377fb32",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "moth",
+    "file": "assets/characters/moth.webp",
+    "bytes": 137180,
+    "sha256": "920acbc485affaf4c1a0495b3c1d9ad81d61998237be19052f0cec7fba0ccbd6",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "forestMage",
+    "file": "assets/characters/forest_mage.webp",
+    "bytes": 229414,
+    "sha256": "14958b3ece048e316f4a453b0effa4af7b34ae7850aaf23f4a57fd777cffa89d",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "silverSlime",
+    "file": "assets/characters/silver_slime.webp",
+    "bytes": 96760,
+    "sha256": "8a3554f7b55676c64f729870836987726621ca99b443943b91488f208f3da2f9",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "maidDevil",
+    "file": "assets/characters/maid_devil.webp",
+    "bytes": 164710,
+    "sha256": "f7d8c1e2ab48311277df5a6ed72f0691fefe5b6335813b4c904de9c0cbecbfe1",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "lamia",
+    "file": "assets/characters/lamia.webp",
+    "bytes": 140310,
+    "sha256": "bf1d50e5d2c08878b7bea5b7402a316788a887c0163029ca6ceb2a5dd475d89e",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "poisonArachne",
+    "file": "assets/characters/poison_arachne.webp",
+    "bytes": 144810,
+    "sha256": "e7c94688763c0c9fa4b94b95277c3c6400add9d536cf88a061e54ee415644ddf",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "ghost",
+    "file": "assets/characters/ghost.webp",
+    "bytes": 202506,
+    "sha256": "09cdb5d8fb56a51291a0294c2d0b6f570f4bf8e1f1dea985705f49e4c09cd315",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "karen",
+    "file": "assets/characters/karen.webp",
+    "bytes": 359550,
+    "sha256": "142863af9478a14b10e6ba546a7eb2df73f305e9b68b84390e2763a65d55300e",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "sheep",
+    "file": "assets/characters/sheep.webp",
+    "bytes": 312592,
+    "sha256": "617745bbfb7cc8064aaa0f34888c04c18f0424ff614b258c157b96369eb30fea",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "lindwurm",
+    "file": "assets/characters/lindwurm.webp",
+    "bytes": 256956,
+    "sha256": "32891e7512ec44bfa41efc2dcdc4f268e21e62b23300f09766e9010185ce20be",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "madGolem",
+    "file": "assets/characters/mad_golem.webp",
+    "bytes": 156092,
+    "sha256": "694dcb2a76e99025aa7b46d468efc025eb95d64ec85d764d29c8603e11674ab5",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "scylla",
+    "file": "assets/characters/scylla.webp",
+    "bytes": 137782,
+    "sha256": "0616e7f1d4bd71890dc52bdf1d0af28855a475611bf667384b9cb4c0ea036730",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "mimic",
+    "file": "assets/characters/mimic.webp",
+    "bytes": 134382,
+    "sha256": "94277be8885cc24c7dc641e568dbc149bd08c205bf4d31a9bde76d190166ad93",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "podalge",
+    "file": "assets/characters/podalge.webp",
+    "bytes": 148916,
+    "sha256": "751719b6ecc650847aed1893c512b93cf393853fcece735d09883b0c2a729c26",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "mermaid",
+    "file": "assets/characters/mermaid.webp",
+    "bytes": 159378,
+    "sha256": "90ec51357213823d5783b3f1ef8350d5289041366222a585283d65d87184f56b",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "kitsune",
+    "file": "assets/characters/kitsune.webp",
+    "bytes": 178010,
+    "sha256": "493b9ec3e4967fc0565017d2807a7eb1059d40db6174736414f7e14fdc928d54",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "lloyd",
+    "file": "assets/characters/lloyd.webp",
+    "bytes": 145682,
+    "sha256": "c848d5138852362b94fdb2088942a4a902909000b2e9dba0af3581169069777d",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "dogu",
+    "file": "assets/characters/dogu.webp",
+    "bytes": 114726,
+    "sha256": "99e0d44a6429ac8c851a833ae9bf41be531e8d6213ed8f7b3cef7e5dd059a260",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "desertDog",
+    "file": "assets/characters/desert_dog.webp",
+    "bytes": 91290,
+    "sha256": "1b250fa4baff2f2c0384b6ea94c9d792d230189981aece7a41b60ea90148aaf6",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "hotSandTentacle",
+    "file": "assets/characters/hot_sand_tentacle.webp",
+    "bytes": 183212,
+    "sha256": "c68fc570405b817493dffa5fd11f9a0428e4851730bd9717dd38edf00f13e8d7",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "prominence",
+    "file": "assets/characters/prominence.webp",
+    "bytes": 143294,
+    "sha256": "7e60bcc35c5acbf8baadb616c3148fe34afb28a342932bda06ec3d6f2cd9ac07",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "magmaSlug",
+    "file": "assets/characters/magma_slug.webp",
+    "bytes": 92826,
+    "sha256": "fd41d1aa58bf38043c8618ae2f6f9a999517bb5ee045f99e4ad849a142c18986",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "scorpion",
+    "file": "assets/characters/scorpion.webp",
+    "bytes": 172344,
+    "sha256": "137aa4d249a6e309db24399640e64edf83e83963d31096d8b71fd03f3a1f3f6b",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "dragon",
+    "file": "assets/characters/dragon.webp",
+    "bytes": 180382,
+    "sha256": "1ef6f066ea100ef6684a6029bf7210ce4563d5bd24ef5718126848e383cc53cb",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "HELLHOUND_IMG",
+    "file": "assets/characters/hellhound.webp",
+    "bytes": 105660,
+    "sha256": "091e746226d5984874a07e0feea4114567decc869a9495592cd8a1dea0320e83",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "MOB_MERCHANT_IMG",
+    "file": "assets/npcs/mob_merchant.webp",
+    "bytes": 307106,
+    "sha256": "f21cd2a1161a4f8a5d9349edb9d9b3290e37bd7bc131bdae38382f13b7dde14c",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "GRANZEL_KING_IMG",
+    "file": "assets/npcs/granzel_king.webp",
+    "bytes": 381542,
+    "sha256": "2653c36baaaf61a97b9df824da9c4a88fa0971b57ceae28d33c2ef28df6382af",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "MARGARET_IMG",
+    "file": "assets/npcs/margaret.webp",
+    "bytes": 393274,
+    "sha256": "55c09b87c66dd3fb7a6288fccd269bc8caeff0fe856a63aea41d46d0ad804019",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "VRITRA_IMG",
+    "file": "assets/characters/vritra.webp",
+    "bytes": 153800,
+    "sha256": "d78a729e94de02237e9a616fd4b03dc65138e502dcde9833532d935616d5452e",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "PODALGE_IMG",
+    "file": "assets/characters/podalge.webp",
+    "bytes": 148916,
+    "sha256": "751719b6ecc650847aed1893c512b93cf393853fcece735d09883b0c2a729c26",
+    "deduplicated_reference": true
+  },
+  {
+    "source_label": "BATTLE_BG_MOUNTAIN",
+    "file": "assets/backgrounds/mountain.webp",
+    "bytes": 172618,
+    "sha256": "da7cabf6fcbc335ef3771c13fb9cf6f52d253e83974eb6884818aae148a6a79e",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "TENTACLE_IMG",
+    "file": "assets/characters/tentacle.webp",
+    "bytes": 223688,
+    "sha256": "fb95d061f5a22daaecd1cba87a28f9d37b16319ba4fb20a3fe7b92418af59a2f",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "IRON_OWL_IMG",
+    "file": "assets/characters/iron_owl.webp",
+    "bytes": 218470,
+    "sha256": "c217c63c215eba7a0f856ac7f60da061df71de09b9819d483011769dbc1bdfd2",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "BATTLE_BG_PLAINS",
+    "file": "assets/backgrounds/plains.webp",
+    "bytes": 212234,
+    "sha256": "f2b755dd389c2096155a03c29e51f64f399fa45164c6e403d0b99e60b4e13085",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "BATTLE_BG_CAVE",
+    "file": "assets/backgrounds/cave.webp",
+    "bytes": 58004,
+    "sha256": "eec9e7168353c9b30ccb9358dd5e2f6fbd4fd47d4c373a395d51145d0a643589",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "BATTLE_BG_FOREST",
+    "file": "assets/backgrounds/forest.webp",
+    "bytes": 246554,
+    "sha256": "4637a82e3a2d3dfcf6b8c7232d3a07de06a12c9192769e8f1faf7d5ecdf21c10",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "BATTLE_BG_WETLAND",
+    "file": "assets/backgrounds/wetland.webp",
+    "bytes": 243270,
+    "sha256": "e22dca5134bbe200a7f15adba55e65ca250177faedb7a0074c7bae4c148dbb05",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "BATTLE_BG_TOXIC_WETLAND",
+    "file": "assets/backgrounds/toxic_wetland.webp",
+    "bytes": 197808,
+    "sha256": "b1ccfd3cf39b84b4a10bea38a288bed26591cebf4dfd2810949ed084999693d3",
+    "deduplicated_reference": false
+  },
+  {
+    "source_label": "BATTLE_BG_RUINS",
+    "file": "assets/backgrounds/ruins.webp",
+    "bytes": 254082,
+    "sha256": "0cdc79fad249038cf09e7f702a0c565c6947c65cb4ac6cd46e25e1717894405d",
+    "deduplicated_reference": false
+  }
+]
