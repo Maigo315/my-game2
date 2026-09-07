@@ -294,7 +294,7 @@
   }
 
   .enemy-stage{
-    position:absolute;left:3%;right:3%;top:15%;bottom:15%;
+    position:absolute;left:2%;right:2%;top:8%;bottom:12%;
     display:flex;align-items:flex-end;justify-content:center;gap:clamp(2px,.9vw,12px);
   }
   .enemy{
@@ -303,7 +303,7 @@
     padding-bottom:var(--enemy-ui-lane);
     cursor:pointer;transition:transform .16s,filter .16s,opacity .16s;flex:0 1 auto;
   }
-  .enemy img{width:100%;height:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 9px 6px rgba(0,0,0,.42))}
+  .enemy img{width:100%;height:100%;object-fit:contain;object-position:center bottom;transform-origin:center bottom;filter:drop-shadow(0 9px 6px rgba(0,0,0,.42))}
   .enemy .enemy-name{
     position:absolute;left:50%;bottom:11px;transform:translateX(-50%);
     max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
@@ -363,10 +363,14 @@
   }
   .enemy-stage[data-count="1"] .enemy{width:48%}
   .enemy-stage[data-count="2"] .enemy{width:36%}
-  .enemy-stage[data-count="3"] .enemy{width:29%}
-  .enemy-stage[data-count="4"] .enemy{width:23%}
+  .enemy-stage[data-count="3"] .enemy{width:30.5%}
+  .enemy-stage[data-count="4"] .enemy{width:23.5%}
   .enemy-stage[data-count="5"] .enemy{width:19%}
   .enemy-stage[data-count="6"] .enemy{width:16%}
+  /* v0.46l: use the reclaimed vertical space to give common 3-4 enemy formations more presence. */
+  .enemy-stage[data-count="3"] .enemy img{transform:scale(1.10)}
+  .enemy-stage[data-count="4"] .enemy img{transform:scale(1.09)}
+  .enemy-stage[data-count="5"] .enemy img{transform:scale(1.05)}
 
   .battle-message{
     position:absolute;z-index:6;left:7px;right:7px;bottom:5px;
@@ -1375,7 +1379,7 @@
     .mini-bars{margin-top:2px;font-size:8px;grid-template-columns:20px 1fr 54px;gap:3px}
     .mini-bars > span:last-child{font-size:10px}
     .mini-bar{height:4px}
-    .enemy-stage{top:18%;bottom:16%}
+    .enemy-stage{top:10%;bottom:13%}
     .battle-message{font-size:10px;min-height:27px;padding:5px 7px}
     .reserve-card{height:72px;grid-template-columns:48px minmax(0,1fr)}
     .reserve-thumb{width:48px;height:58px}
@@ -3813,7 +3817,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.46i</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.46l</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3823,7 +3827,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.46i</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.46l</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3835,7 +3839,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.46i</div>
+      <div class="title-version">DEV v0.46l</div>
     </section>
   </main>
 
@@ -4490,7 +4494,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.46i</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.46l</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4519,7 +4523,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.46k";
+  const DEV_VERSION = "v0.46l";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
