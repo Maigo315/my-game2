@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.46r";
+  const DEV_VERSION = "v0.46s";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
