@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.46o";
+  const DEV_VERSION = "v0.46p";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -6999,7 +6999,7 @@
           updateActorPortrait();
           renderBattleParty();
           renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
-          setMessage(`${c.name} は戦闘不能。必要なら「交代」で控えと入れ替えてください。`);
+          // v0.46p: selecting a KO member no longer overwrites the battle message.
         }
       };
       row.appendChild(btn);
@@ -7238,7 +7238,7 @@
     }
   }
 
-  function scheduleTurnStart(delay=520){
+  function scheduleTurnStart(delay=0){
     if(state.battlePhase!=="input" || state.battleEnded || state.battleTargetMode || !commandsReady()) return;
     cancelScheduledTurnStart();
     const note=$("autoStartNote");
@@ -7391,7 +7391,7 @@
       setMessage(state.battleAutoContinuous
         ? "AUTO：4人の行動を選択しました。"
         : "1ターンオート：4人の行動を選択しました。");
-      scheduleTurnStart(650);
+      scheduleTurnStart(0);
       return true;
     }
     return false;
@@ -7481,7 +7481,7 @@
       updateActorPortrait();
       renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
       setMessage("全員の行動を選択済み。自動でターンを開始します。");
-      scheduleTurnStart(520);
+      scheduleTurnStart(0);
     }
   }
 
@@ -7658,7 +7658,7 @@
       const targets=[...livingEnemies()];
       if(!targets.length) return {battleWon:true};
       animateActor("attack");
-      setMessage(`➰ ${actor.name} の鞭撃！ 敵全体を薙ぎ払う！`);
+      setMessage(`➰ ${actor.name} の鞭撃！`);
       await wait(BASE_TIME.actionLead);
 
       let total=0,defeated=0,missed=0,criticals=0;
@@ -10034,7 +10034,7 @@
             renderBattleParty();
             renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
             updateExecuteButton();
-            setMessage(`${c.name} が戦闘に参加。ターンは消費しません。${c.name} の行動を選んでください。`);
+            setMessage(`${c.name} が戦闘に参加。`);
           }else{
             const next=nextUnqueuedSlot(activeSlot);
             const fallback=livingActiveSlots()[0];
@@ -10046,7 +10046,7 @@
             updateExecuteButton();
             if(commandsReady()){
               setMessage(`${c.name} が戦闘不能のまま前列に参加。全員の行動を選択済みです。`);
-              scheduleTurnStart(520);
+              scheduleTurnStart(0);
             }else{
               setMessage(`${c.name} が戦闘不能のまま前列に参加。${currentInputPrompt()}`);
             }
@@ -10067,7 +10067,7 @@
           renderBattleParty();
           renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
           updateExecuteButton();
-          setMessage(`${roster[outgoing].name} → ${c.name} に交代。ターンは消費しません。${c.name} の行動を選んでください。`);
+          setMessage(`${roster[outgoing].name} → ${c.name} に交代。`);
         }else{
           const next=nextUnqueuedSlot(activeSlot);
           const fallback=livingActiveSlots()[0];
@@ -10079,7 +10079,7 @@
           updateExecuteButton();
           if(commandsReady()){
             setMessage(`${roster[outgoing].name} → ${c.name} に交代。${c.name} は戦闘不能のまま前列へ出ました。`);
-            scheduleTurnStart(520);
+            scheduleTurnStart(0);
           }else{
             setMessage(`${roster[outgoing].name} → ${c.name} に交代。${c.name} は戦闘不能のまま前列へ。${currentInputPrompt()}`);
           }
@@ -13975,6 +13975,12 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
           modal("🏚️ 城下町跡・最奥","黒蛇の姿はもうない。周囲は静まり返っている。",[
             ["ルネルの街へ戻る",()=>{closeModal();state.currentTown="runel";state.selectedArea="runelTown";finishRun("ルネルの街へ帰還しました");}],
             ["戻る",()=>{closeModal();returnToPreviousNode();}]
+          ]);
+          break;
+        }
+        if(!state.eventFlags?.tilenoToxicBossDefeated){
+          modal("🏚️ 城下町跡・最奥","ここには何も無いようだ。\nルネルの街に帰還することにした。",[
+            ["ルネルの街へ戻る",()=>{closeModal();state.currentTown="runel";state.selectedArea="runelTown";finishRun("ルネルの街へ帰還しました");}]
           ]);
           break;
         }
