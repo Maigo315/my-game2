@@ -650,21 +650,21 @@
   .equipment-compare-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:5px;padding:3px;border:1px solid #293f51;border-radius:8px;background:#0a141e}
   .equipment-compare-tab{min-height:25px;border:1px solid #344d62;border-radius:6px;background:#132232;color:#9fb1c1;font-size:8px;font-weight:1000;cursor:pointer}
   .equipment-compare-tab.active{border-color:#d9c565;background:#3b321b;color:#fff0a2}
-  /* v0.46s: switch resistance grids to 3 columns so labels and comparison ranks fit more comfortably. */
+  /* v0.46t: keep the 3-column grid, but flatten each card into a single row to remove excess vertical whitespace. */
   .equipment-resistance-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
-  .equipment-resistance,.character-resistance{min-width:0;display:grid;grid-template-rows:auto auto;gap:4px;padding:5px 6px;border-radius:8px;background:#111e2a;border:1px solid #2c4457}
+  .equipment-resistance,.character-resistance{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 6px;padding:5px 6px;border-radius:8px;background:#111e2a;border:1px solid #2c4457}
   .resistance-head{display:flex;align-items:center;gap:4px;min-width:0}
   .resistance-icon{flex:0 0 auto;font-size:12px;line-height:1}
   .resistance-label{min-width:0;font-size:9px;color:#d7e1ea;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .resistance-value-row{display:flex;align-items:center;justify-content:center;gap:4px;min-height:23px}
-  .resistance-badge{display:inline-flex;align-items:center;justify-content:center;min-width:27px;height:22px;padding:0 6px;border-radius:7px;background:#192938;border:1px solid #3a546a;font-size:12px;font-weight:1000;color:#eef5f9;line-height:1}
+  .resistance-value-row{display:flex;align-items:center;justify-content:flex-end;gap:4px;min-width:0}
+  .resistance-badge{display:inline-flex;align-items:center;justify-content:center;min-width:27px;height:22px;padding:0 6px;border-radius:7px;background:#192938;border:1px solid #3a546a;font-size:12px;font-weight:1000;color:#eef5f9;line-height:1;flex:0 0 auto}
   .resistance-badge.rank-E{border-color:#b65b5b;color:#ffaaaa;background:#351d21}
   .resistance-badge.rank-D{border-color:#a67b50;color:#f3c38f;background:#30251c}
   .resistance-badge.rank-C{border-color:#4f677c;color:#dfeaf2;background:#172634}
   .resistance-badge.rank-B{border-color:#4f7b68;color:#aee6c7;background:#172c26}
   .resistance-badge.rank-A{border-color:#5878a8;color:#b8d4ff;background:#17243b}
   .resistance-badge.rank-S{border-color:#9a76bd;color:#e2c4ff;background:#2b1c39}
-  .resistance-arrow{font-size:11px;font-weight:1000;line-height:1;color:#7f91a1}
+  .resistance-arrow{font-size:11px;font-weight:1000;line-height:1;color:#7f91a1;flex:0 0 auto}
   .resistance-arrow.up{color:#7ee5a1}
   .resistance-arrow.down{color:#ff9b9b}
   .resistance-arrow.same{display:none}
@@ -1811,10 +1811,10 @@
     .character-tab{min-height:25px;font-size:8px}
     .character-trait-card{padding:5px 6px;grid-template-columns:30px minmax(0,1fr)}
     .character-trait-icon{font-size:20px}
-    .character-resistance,.equipment-resistance{padding:4px 5px;gap:3px}
+    .character-resistance,.equipment-resistance{padding:4px 5px;gap:3px 4px;grid-template-columns:minmax(0,1fr) auto}
     .character-resistance .resistance-icon,.equipment-resistance .resistance-icon{font-size:10px}
     .character-resistance .resistance-label,.equipment-resistance .resistance-label{font-size:8px}
-    .character-resistance .resistance-value-row,.equipment-resistance .resistance-value-row{min-height:20px;gap:3px}
+    .character-resistance .resistance-value-row,.equipment-resistance .resistance-value-row{gap:3px}
     .resistance-badge{min-width:24px;height:20px;padding:0 5px;font-size:10px}
     .resistance-arrow{font-size:9px}
     .equipment-resistance-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}
