@@ -7102,7 +7102,10 @@
     const field=$("battleField");
     if(!field) return;
     const src=BATTLE_BG_BY_AREA[area] || BATTLE_BG_PLAINS;
-    field.style.setProperty("--battle-bg",`url("${src}")`);
+    // Externalized CSS consumes this custom property, so resolve the image path
+    // against the document first instead of leaving a relative URL inside var().
+    const resolved=new URL(src,document.baseURI).href;
+    field.style.setProperty("--battle-bg",`url("${resolved}")`);
   }
 
   function makeBattleEnemyInstance(id,index,suffix="",options={}){
