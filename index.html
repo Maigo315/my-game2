@@ -202,9 +202,15 @@
   .node.unreachable{opacity:.36;pointer-events:none}
   .floor-label{fill:#8093a6;font-size:16px;font-weight:700}
   .map-header{
-    position:absolute;left:12px;top:10px;right:12px;display:flex;align-items:center;pointer-events:none
+    position:absolute;left:12px;top:10px;right:12px;display:flex;align-items:flex-start;pointer-events:none
   }
+  .map-header-left{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
   .map-header .chip{background:rgba(5,13,20,.75);border:1px solid #385069;border-radius:999px;padding:6px 10px;font-size:12px}
+  .map-treasure-counter{
+    background:rgba(5,13,20,.78);border:1px solid #6f6135;border-radius:999px;padding:4px 9px;
+    font-size:11px;font-weight:1000;color:#ffe69a;white-space:nowrap
+  }
+  .map-treasure-counter[hidden]{display:none!important}
   .map-header .grow{flex:1}
   .legend{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
   .legend span{background:rgba(5,13,20,.72);border-radius:999px;padding:5px 8px;font-size:11px;color:#c6d1dc}
@@ -361,7 +367,7 @@
   .enemy-stage[data-count="4"] .enemy{width:23.5%}
   .enemy-stage[data-count="5"] .enemy{width:19%}
   .enemy-stage[data-count="6"] .enemy{width:16%}
-  /* v0.46m: use the reclaimed vertical space to give common 3-4 enemy formations more presence. */
+  /* v0.46n: use the reclaimed vertical space to give common 3-4 enemy formations more presence. */
   .enemy-stage[data-count="3"] .enemy img{transform:scale(1.10)}
   .enemy-stage[data-count="4"] .enemy img{transform:scale(1.09)}
   .enemy-stage[data-count="5"] .enemy img{transform:scale(1.05)}
@@ -3811,7 +3817,7 @@
   <header class="topbar">
     <div>
       <div class="title" id="topTitle">辺境の町ミレスタ</div>
-      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.46m</div>
+      <div class="subtitle" id="topSubtitle">探索＋勧誘・装備試作 v0.46n</div>
     </div>
     <div class="grow"></div>
     <div class="battle-speed-box" id="battleSpeedBox" aria-label="戦闘速度">
@@ -3821,7 +3827,7 @@
       <button class="speed-btn" data-speed="1.5">速い</button>
       <button class="speed-btn" data-speed="2">高速</button>
     </div>
-    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.46m</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
+    <div class="resource"><span class="dev-badge" id="devBadge">DEV v0.46n</span><span class="badge">💰 <span id="goldText">0</span> G</span></div>
   </header>
 
   <main id="titleScreen" class="screen active">
@@ -3833,7 +3839,7 @@
         <button class="menu-btn title-action" id="titleNewBtn">はじめから</button>
         <button class="menu-btn title-action" id="titleContinueBtn">つづきから</button>
       </div>
-      <div class="title-version">DEV v0.46m</div>
+      <div class="title-version">DEV v0.46n</div>
     </section>
   </main>
 
@@ -4102,7 +4108,10 @@
         <svg id="mapSvg" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid meet" aria-label="探索ノードマップ"></svg>
       </div>
       <div class="map-header">
-        <span class="chip" id="exploreAreaLabel">🌿 ミレスタ平原</span>
+        <div class="map-header-left">
+          <span class="chip" id="exploreAreaLabel">🌿 ミレスタ平原</span>
+          <span class="map-treasure-counter" id="exploreTreasureCounter" hidden>🪎 お宝 0/0</span>
+        </div>
         <div class="grow"></div>
         <div class="legend">
           <span>⚔ 戦闘</span><span>🪎 宝箱</span><span>❤ 回復</span><span>🛒 店</span><span>？ イベント</span>
@@ -4488,7 +4497,7 @@
         <div class="debug-status">指定戦闘は現在の編成・Lv・装備を使う一時テストです。終了すると戦闘開始前のHP/MPなどへ戻ります。</div>
       </div>
     </div>
-    <div class="debug-foot"><strong>DEV v0.46m</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
+    <div class="debug-foot"><strong>DEV v0.46n</strong><span>デバッグ操作は手動セーブ可能</span><span id="debugFooterState"></span></div>
   </section>
 </div>
 
@@ -4517,7 +4526,7 @@
 
 <script>
 (() => {
-  const DEV_VERSION = "v0.46m";
+  const DEV_VERSION = "v0.46n";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4847,6 +4856,7 @@
     {id:"yodySoldier",name:"兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
     {id:"yodyAdventurer",name:"女冒険家",gender:"female",silhouette:NPC_GIRL_IMG},
     {id:"yodyBrother",name:"お兄さん",gender:"male",silhouette:MOB_MERCHANT_IMG},
+    {id:"yodyTreasureHunter",name:"トレジャーハンター",gender:"male",silhouette:MOB_MERCHANT_IMG},
     {id:"yodyCaptain",name:"サリード連絡船船長",gender:"male",silhouette:NPC_OLDMAN_IMG},
     {id:"yodyBoy",name:"少年",gender:"male",silhouette:NPC_BOY_IMG}
   ];
@@ -5211,6 +5221,13 @@
 冒険者ギルドもあって賑やかな街だぜ。`),
         talkDialogue("お兄さん",npc.silhouette,npc.gender,`ティレーノからさらに東に進んで森林地帯を抜ければグランゼル城が見えるが……
 あの森林地帯、魔物娘も多くて危険だからなぁ。行くなら気をつけろよな。`)
+      ];
+    }else if(id==="yodyTreasureHunter"){
+      steps=[
+        talkDialogue("トレジャーハンター",npc.silhouette,npc.gender,`探索マップの左上に、🪎 お宝 0/2 とか書いてあるのがわかるか？
+これは、そのエリアにある特別な「お宝」をいくつ見つけたかを表してるんだ。`),
+        talkDialogue("トレジャーハンター",npc.silhouette,npc.gender,`「お宝」が欲しければ、とにかく宝箱を開けることだな。
+一度の探索で全部見つけられなくても、何度だってチャレンジだ！`)
       ];
     }else if(id==="yodyCaptain"){
       steps=[
@@ -15516,6 +15533,7 @@
     if(!state.run) return;
     const ui=currentRunAreaUi();
     $("exploreAreaLabel").textContent=`${ui.icon} ${ui.name}`;
+    updateExploreTreasureCounter();
     if($("topTitle")) $("topTitle").textContent=ui.name;
     if($("topSubtitle")) $("topSubtitle").textContent=`探索 ${DEV_VERSION}`;
   }
@@ -16758,12 +16776,27 @@
       {key:"runelRuins:phoenix_feather",kind:"item",id:"phoenixTail"}
     ]
   };
+  function updateExploreTreasureCounter(){
+    const counter=$("exploreTreasureCounter");
+    if(!counter) return;
+    const area=state.run?.area;
+    const entries=area ? (LIMITED_MAP_TREASURES[area]||[]) : [];
+    if(!entries.length){
+      counter.hidden=true;
+      return;
+    }
+    const found=entries.reduce((count,entry)=>count+(state.limitedMapTreasures?.[entry.key]?1:0),0);
+    counter.textContent=`🪎 お宝 ${found}/${entries.length}`;
+    counter.hidden=false;
+  }
+
   function grantLimitedMapTreasure(area){
     if(!state.limitedMapTreasures || typeof state.limitedMapTreasures!=="object") state.limitedMapTreasures={};
     const remaining=(LIMITED_MAP_TREASURES[area]||[]).filter(entry=>!state.limitedMapTreasures[entry.key]);
     if(!remaining.length) return null;
     const entry=choose(remaining);
     state.limitedMapTreasures[entry.key]=true;
+    updateExploreTreasureCounter();
     const data=entry.kind==="equip"?equipmentCatalog[entry.id]:ITEMS[entry.id];
     if(entry.kind==="equip") addEquipmentOwned(entry.id,1); else addItemCount(entry.id,1);
     return `✨ お宝！ ${data?.name||entry.id} を手に入れた！`;
