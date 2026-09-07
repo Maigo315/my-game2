@@ -360,7 +360,7 @@
   .enemy-stage[data-count="4"] .enemy{width:23.5%}
   .enemy-stage[data-count="5"] .enemy{width:19%}
   .enemy-stage[data-count="6"] .enemy{width:16%}
-  /* v0.46o: use the reclaimed vertical space to give common 3-4 enemy formations more presence. */
+  /* v0.46p: use the reclaimed vertical space to give common 3-4 enemy formations more presence. */
   .enemy-stage[data-count="3"] .enemy img{transform:scale(1.10)}
   .enemy-stage[data-count="4"] .enemy img{transform:scale(1.09)}
   .enemy-stage[data-count="5"] .enemy img{transform:scale(1.05)}
@@ -650,11 +650,12 @@
   .equipment-compare-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:5px;padding:3px;border:1px solid #293f51;border-radius:8px;background:#0a141e}
   .equipment-compare-tab{min-height:25px;border:1px solid #344d62;border-radius:6px;background:#132232;color:#9fb1c1;font-size:8px;font-weight:1000;cursor:pointer}
   .equipment-compare-tab.active{border-color:#d9c565;background:#3b321b;color:#fff0a2}
-  .equipment-resistance-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
-  .equipment-resistance{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px;align-items:center;padding:5px 6px;border-radius:7px;background:#111e2a;border:1px solid #2c4457}
-  .equipment-resistance span{font-size:7px;color:#94a8b9;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .equipment-resistance strong{font-size:10px;color:#eef5f9}
-  .equipment-resistance em{grid-column:1/-1;text-align:right;font-style:normal;font-size:7px;font-weight:1000;min-height:9px}
+  /* v0.46p: resistance comparison is deliberately larger than the old 4-column “eye chart”. */
+  .equipment-resistance-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+  .equipment-resistance{display:grid;grid-template-columns:minmax(0,1fr) 32px;gap:4px 6px;align-items:center;padding:6px 7px;border-radius:8px;background:#111e2a;border:1px solid #2c4457}
+  .equipment-resistance span{font-size:9px;color:#a8b8c6;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .equipment-resistance strong{display:flex;align-items:center;justify-content:center;min-width:30px;height:24px;border-radius:6px;background:#192938;border:1px solid #3a546a;font-size:12px;color:#eef5f9}
+  .equipment-resistance em{grid-column:1/-1;text-align:right;font-style:normal;font-size:8px;font-weight:1000;min-height:10px}
   .equipment-resistance em.up{color:#7ee5a1}.equipment-resistance em.down{color:#ff9b9b}.equipment-resistance em.same{color:#687a8a}
   .character-compact-resources{display:grid;grid-template-columns:1fr 1fr minmax(170px,.9fr);gap:5px;margin-top:5px}
   .character-compact-resources .character-resource,.character-compact-resources .character-exp-box{margin:0;padding:4px 6px;border-radius:8px}
@@ -1816,6 +1817,11 @@
     .character-trait-icon{font-size:20px}
     .character-resistance{padding:4px 5px}
     .character-resistance strong{height:19px;font-size:9px}
+    .equipment-resistance-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}
+    .equipment-resistance{padding:4px 5px;grid-template-columns:minmax(0,1fr) 27px;gap:2px 4px}
+    .equipment-resistance span{font-size:8px}
+    .equipment-resistance strong{min-width:26px;height:20px;font-size:10px}
+    .equipment-resistance em{font-size:7px;min-height:8px}
   }
 
   /* v0.23f compact detail header: keep resources visible without pushing equipment below the fold */
