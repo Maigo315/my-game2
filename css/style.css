@@ -650,21 +650,24 @@
   .equipment-compare-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:5px;padding:3px;border:1px solid #293f51;border-radius:8px;background:#0a141e}
   .equipment-compare-tab{min-height:25px;border:1px solid #344d62;border-radius:6px;background:#132232;color:#9fb1c1;font-size:8px;font-weight:1000;cursor:pointer}
   .equipment-compare-tab.active{border-color:#d9c565;background:#3b321b;color:#fff0a2}
-  /* v0.46q: restore a compact 4-column resistance grid with icons and color-coded rank badges. */
+  /* v0.46r: keep the 4-column grid, but stack each card vertically so labels and ranks fit cleanly. */
   .equipment-resistance-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
-  .equipment-resistance{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) 28px;align-items:center;gap:4px 5px;padding:5px 6px;border-radius:8px;background:#111e2a;border:1px solid #2c4457}
-  .equipment-resistance .resistance-main,.character-resistance .resistance-main{display:flex;align-items:center;gap:4px;min-width:0}
-  .equipment-resistance .resistance-icon,.character-resistance .resistance-icon{flex:0 0 auto;font-size:12px;line-height:1}
-  .equipment-resistance .resistance-label,.character-resistance .resistance-label{min-width:0;font-size:9px;color:#d7e1ea;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .equipment-resistance strong{display:flex;align-items:center;justify-content:center;min-width:28px;height:23px;border-radius:7px;background:#192938;border:1px solid #3a546a;font-size:12px;font-weight:1000;color:#eef5f9}
-  .equipment-resistance.rank-E strong{border-color:#b65b5b;color:#ffaaaa;background:#351d21}
-  .equipment-resistance.rank-D strong{border-color:#a67b50;color:#f3c38f;background:#30251c}
-  .equipment-resistance.rank-C strong{border-color:#4f677c;color:#dfeaf2;background:#172634}
-  .equipment-resistance.rank-B strong{border-color:#4f7b68;color:#aee6c7;background:#172c26}
-  .equipment-resistance.rank-A strong{border-color:#5878a8;color:#b8d4ff;background:#17243b}
-  .equipment-resistance.rank-S strong{border-color:#9a76bd;color:#e2c4ff;background:#2b1c39}
-  .equipment-resistance em{grid-column:1/-1;text-align:right;font-style:normal;font-size:7px;font-weight:1000;line-height:1.1;min-height:0}
-  .equipment-resistance em.up{color:#7ee5a1}.equipment-resistance em.down{color:#ff9b9b}.equipment-resistance em.same{display:none}
+  .equipment-resistance,.character-resistance{min-width:0;display:grid;grid-template-rows:auto auto;gap:4px;padding:5px 6px;border-radius:8px;background:#111e2a;border:1px solid #2c4457}
+  .resistance-head{display:flex;align-items:center;gap:4px;min-width:0}
+  .resistance-icon{flex:0 0 auto;font-size:12px;line-height:1}
+  .resistance-label{min-width:0;font-size:9px;color:#d7e1ea;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .resistance-value-row{display:flex;align-items:center;justify-content:center;gap:4px;min-height:23px}
+  .resistance-badge{display:inline-flex;align-items:center;justify-content:center;min-width:27px;height:22px;padding:0 6px;border-radius:7px;background:#192938;border:1px solid #3a546a;font-size:12px;font-weight:1000;color:#eef5f9;line-height:1}
+  .resistance-badge.rank-E{border-color:#b65b5b;color:#ffaaaa;background:#351d21}
+  .resistance-badge.rank-D{border-color:#a67b50;color:#f3c38f;background:#30251c}
+  .resistance-badge.rank-C{border-color:#4f677c;color:#dfeaf2;background:#172634}
+  .resistance-badge.rank-B{border-color:#4f7b68;color:#aee6c7;background:#172c26}
+  .resistance-badge.rank-A{border-color:#5878a8;color:#b8d4ff;background:#17243b}
+  .resistance-badge.rank-S{border-color:#9a76bd;color:#e2c4ff;background:#2b1c39}
+  .resistance-arrow{font-size:11px;font-weight:1000;line-height:1;color:#7f91a1}
+  .resistance-arrow.up{color:#7ee5a1}
+  .resistance-arrow.down{color:#ff9b9b}
+  .resistance-arrow.same{display:none}
   .character-compact-resources{display:grid;grid-template-columns:1fr 1fr minmax(170px,.9fr);gap:5px;margin-top:5px}
   .character-compact-resources .character-resource,.character-compact-resources .character-exp-box{margin:0;padding:4px 6px;border-radius:8px}
   .character-compact-resources .character-resource-head,.character-compact-resources .character-exp-head{font-size:8px}
@@ -1757,20 +1760,6 @@
   .character-resistance-section{margin-top:8px}
   .character-resistance-title{margin:0 0 5px;font-size:8px;color:#91a6b8;font-weight:1000;letter-spacing:.08em}
   .character-resistance-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
-  .character-resistance{
-    min-width:0;display:grid;grid-template-columns:minmax(0,1fr) 28px;align-items:center;gap:4px 5px;
-    padding:5px 6px;border-radius:8px;background:#111e2a;border:1px solid #2c4457;
-  }
-  .character-resistance strong{
-    display:flex;align-items:center;justify-content:center;width:27px;height:23px;border-radius:7px;
-    font-size:12px;font-weight:1000;background:#192938;border:1px solid #3a546a;color:#eaf2f8;
-  }
-  .character-resistance.rank-E strong{border-color:#b65b5b;color:#ffaaaa;background:#351d21}
-  .character-resistance.rank-D strong{border-color:#a67b50;color:#f3c38f;background:#30251c}
-  .character-resistance.rank-C strong{border-color:#4f677c;color:#dfeaf2;background:#172634}
-  .character-resistance.rank-B strong{border-color:#4f7b68;color:#aee6c7;background:#172c26}
-  .character-resistance.rank-A strong{border-color:#5878a8;color:#b8d4ff;background:#17243b}
-  .character-resistance.rank-S strong{border-color:#9a76bd;color:#e2c4ff;background:#2b1c39}
   .character-resistance-note{margin-top:7px;color:#7f91a1;font-size:8px;line-height:1.45}
 
   .equipment-shell{display:grid;grid-template-columns:minmax(175px,.9fr) minmax(0,1.25fr);gap:7px;min-height:0}
@@ -1822,16 +1811,13 @@
     .character-tab{min-height:25px;font-size:8px}
     .character-trait-card{padding:5px 6px;grid-template-columns:30px minmax(0,1fr)}
     .character-trait-icon{font-size:20px}
-    .character-resistance{padding:4px 5px;gap:3px 4px}
-    .character-resistance .resistance-icon{font-size:11px}
-    .character-resistance .resistance-label{font-size:8px}
-    .character-resistance strong{height:20px;font-size:10px}
+    .character-resistance,.equipment-resistance{padding:4px 5px;gap:3px}
+    .character-resistance .resistance-icon,.equipment-resistance .resistance-icon{font-size:10px}
+    .character-resistance .resistance-label,.equipment-resistance .resistance-label{font-size:8px}
+    .character-resistance .resistance-value-row,.equipment-resistance .resistance-value-row{min-height:20px;gap:3px}
+    .resistance-badge{min-width:24px;height:20px;padding:0 5px;font-size:10px}
+    .resistance-arrow{font-size:9px}
     .equipment-resistance-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:3px}
-    .equipment-resistance{padding:4px 5px;grid-template-columns:minmax(0,1fr) 25px;gap:2px 4px}
-    .equipment-resistance .resistance-icon{font-size:10px}
-    .equipment-resistance .resistance-label{font-size:8px}
-    .equipment-resistance strong{min-width:24px;height:20px;font-size:10px}
-    .equipment-resistance em{font-size:7px;min-height:0}
   }
 
   /* v0.23f compact detail header: keep resources visible without pushing equipment below the fold */
