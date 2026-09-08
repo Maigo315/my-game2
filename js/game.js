@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.46z";
+  const DEV_VERSION = "v0.47a";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -7956,7 +7956,9 @@
     const profile=weaponAttackProfile(actor);
     const traitContext=options.traitContext || makeTraitActionContext();
     let result;
-    if(!profile.attackAll){
+    // v0.47a: counters always strike only the attacker, even when a whip is equipped.
+    // The weapon's normal power/effects are preserved; only the all-target behavior is suppressed.
+    if(!profile.attackAll || options.isCounter){
       let target=enemyByUid(action?.targetUid);
       if(!target || target.hp<=0){
         target=livingEnemies()[0]||null;
