@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47a";
+  const DEV_VERSION = "v0.47b";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -4552,6 +4552,10 @@
     kitsune:{rare:{kind:"equipment",id:"fluffy_tail",rate:RARE_DROP_RATE}},
     lloyd:{normal:{kind:"equipment",id:"bronze_mail",rate:NORMAL_DROP_RATE},rare:{kind:"item",id:"lifeSeed",rate:SEED_DROP_RATE}},
     dogu:{normal:{kind:"item",id:"blockDrink",rate:NORMAL_DROP_RATE},rare:{kind:"item",id:"holyWater",rate:RARE_DROP_RATE}},
+    desertDog:{normal:{kind:"equipment",id:"bandana",rate:NORMAL_DROP_RATE}},
+    hotSandTentacle:{normal:{kind:"item",id:"polishDrink",rate:NORMAL_DROP_RATE}},
+    prominence:{rare:{kind:"equipment",id:"heat_bulwark",rate:RARE_DROP_RATE}},
+    magmaSlug:{rare:{kind:"item",id:"guardSeed",rate:SEED_DROP_RATE}},
     tentacle:{normal:{kind:"item",id:"panacea",rate:1}},
     harpy:{normal:{kind:"item",id:"returnFeather",rate:NORMAL_DROP_RATE},rare:{kind:"equipment",id:"light_shoes",rate:RARE_DROP_RATE}},
     alraune:{normal:{kind:"equipment",id:"whip",rate:NORMAL_DROP_RATE},rare:{kind:"equipment",id:"alra_whip",rate:RARE_DROP_RATE}},
@@ -4886,8 +4890,32 @@
     dogu:{
       name:"土偶娘",img:IMG.dogu,exp:94,gold:62,critRate:0,evasionRate:0,
       bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.dogu.resist},
-      skills:["death","neoSilence"],ai:"doguCaster",elementNullifyRate:.15,elementNullifyElements:["fire","ice"],
+      skills:["death","neoSilence"],ai:"doguCaster",elementNullifyRate:.15,elementNullifyElements:["fire","ice"],elementNullifyName:"古代の遺産",elementNullifyIcon:"🏺",
       stats:{hp:210,mp:100,atk:77,def:79,magic:77,mdef:75,spd:69}
+    },
+    desertDog:{
+      name:"デザートドッグ",img:IMG.desertDog,exp:120,gold:75,critRate:10.0,evasionRate:0,
+      bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.desertDog.resist},
+      skills:["blaze"],ai:"desertDogBlaze",basicAttackFx:"claw",basicAttackSymbol:"🐾",
+      stats:{hp:275,mp:95,atk:88,def:72,magic:64,mdef:58,spd:91}
+    },
+    hotSandTentacle:{
+      name:"熱砂の触手",img:IMG.hotSandTentacle,exp:145,gold:80,critRate:0,evasionRate:0,
+      bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.hotSandTentacle.resist},
+      skills:["gigaHeal"],ai:"hotSandTentacleSupport",basicAttackAll:true,basicAttackPower:.75,basicAttackFx:"whip",basicAttackSymbol:"〰",
+      stats:{hp:355,mp:135,atk:86,def:66,magic:72,mdef:78,spd:68}
+    },
+    prominence:{
+      name:"プロミネンス",img:IMG.prominence,exp:140,gold:85,critRate:0,evasionRate:0,
+      bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.prominence.resist},
+      skills:["flare","death"],ai:"prominenceCaster",
+      stats:{hp:260,mp:145,atk:68,def:50,magic:94,mdef:80,spd:84}
+    },
+    magmaSlug:{
+      name:"マグマスラッグ",img:IMG.magmaSlug,exp:140,gold:82,critRate:0,evasionRate:0,
+      bowInstantKillImmune:false,statusDeathImmune:false,resist:{...characterProfiles.magmaSlug.resist},
+      skills:["flare","blaze2"],ai:"magmaSlugCaster",elementNullifyRate:1,elementNullifyElements:["fire"],elementNullifyName:"炎無効",elementNullifyIcon:"🌋",
+      stats:{hp:300,mp:130,atk:88,def:112,magic:90,mdef:50,spd:31}
     },
     highLamia:{
       name:"ハイラミア",img:IMG.lamia,exp:100,gold:65,critRate:3.0,evasionRate:0,
@@ -4942,6 +4970,7 @@
     madGolem:23,scylla:23,
     podalge:24,mermaid:24,
     kitsune:25,lloyd:25,dogu:25,
+    desertDog:27,hotSandTentacle:27,prominence:27,magmaSlug:27,
     mimic:30
   });
   Object.entries(ENEMY_LEVELS).forEach(([id,level])=>{
@@ -4955,12 +4984,14 @@
   const BATTLE_BG_WETLAND = "assets/backgrounds/wetland.webp";
   const BATTLE_BG_TOXIC_WETLAND = "assets/backgrounds/toxic_wetland.webp";
   const BATTLE_BG_RUINS = "assets/backgrounds/ruins.webp";
+  const BATTLE_BG_DESERT = "assets/backgrounds/desert.webp";
 
   const BATTLE_BG_BY_AREA = {
     plains:BATTLE_BG_PLAINS,eventDogs:BATTLE_BG_PLAINS,
     cave1:BATTLE_BG_CAVE,cave2:BATTLE_BG_CAVE,caveSide:BATTLE_BG_CAVE,rare:BATTLE_BG_CAVE,caveSlugEvent:BATTLE_BG_CAVE,caveBoss:BATTLE_BG_CAVE,runelCavern:BATTLE_BG_CAVE,runelScyllaPot:BATTLE_BG_CAVE,runelRegion:BATTLE_BG_PLAINS,runelRuins:BATTLE_BG_RUINS,runelRuinsMimic:BATTLE_BG_RUINS,runelRuinsKitsuneTrick:BATTLE_BG_RUINS,yodyRegion:BATTLE_BG_PLAINS,
     footpath:BATTLE_BG_FOREST,yodyMountain:BATTLE_BG_MOUNTAIN,yodyMountainBoss:BATTLE_BG_MOUNTAIN,tilenoRegion:BATTLE_BG_FOREST,tilenoElfEvent:BATTLE_BG_FOREST,zelrenoForest:BATTLE_BG_FOREST,zelrenoForestDeep:BATTLE_BG_FOREST,zelrenoForestDeepBoss:BATTLE_BG_FOREST,zelrenoWitchApproach:BATTLE_BG_FOREST,zelrenoWitchWatch:BATTLE_BG_FOREST,granzelPlains:BATTLE_BG_PLAINS,granzelSlimeParade:BATTLE_BG_PLAINS,
-    tilenoWetland:BATTLE_BG_WETLAND,tilenoToxicWetland:BATTLE_BG_TOXIC_WETLAND,tilenoToxicBoss:BATTLE_BG_TOXIC_WETLAND,tilenoToxicSlimeEvent:BATTLE_BG_TOXIC_WETLAND
+    tilenoWetland:BATTLE_BG_WETLAND,tilenoToxicWetland:BATTLE_BG_TOXIC_WETLAND,tilenoToxicBoss:BATTLE_BG_TOXIC_WETLAND,tilenoToxicSlimeEvent:BATTLE_BG_TOXIC_WETLAND,
+    salidDesertEast:BATTLE_BG_DESERT,salidEnemyTest:BATTLE_BG_DESERT
   };
 
   const battleFormations = {
@@ -5069,6 +5100,17 @@
       ["mermaid","podalge","kitsune","mermaid"],
       ["silverSlime"]
     ],rareFormationIndexes:[5,6],rareRate:.10},
+    salidDesertEast:{label:"🏜️ サリード砂漠・東",formations:[
+      ["desertDog","desertDog","desertDog"],
+      ["desertDog","hotSandTentacle","desertDog"],
+      ["prominence","prominence","desertDog"],
+      ["hotSandTentacle","hotSandTentacle"],
+      ["hotSandTentacle","desertDog","desertDog","lloyd"],
+      ["silverSlime","silverSlime"]
+    ],rareFormationIndexes:[4,5],rareRate:.10},
+    salidEnemyTest:{label:"🧪 サリード敵・単体テスト",formations:[
+      ["desertDog"],["hotSandTentacle"],["prominence"],["magmaSlug"]
+    ]},
     runelRuins:{label:"🏚️ ルネルパリオ城下町跡",formations:[
       ["dogu","dogu","kitsune","kitsune"],
       ["lloyd","dogu","dogu"],
@@ -5730,9 +5772,9 @@
     const rate=Math.max(0,Math.min(1,Number(target?.elementNullifyRate)||0));
     const elements=Array.isArray(target?.elementNullifyElements)?target.elementNullifyElements:[];
     if(raw>0 && element && rate>0 && elements.includes(element) && Math.random()<rate){
-      return {damage:0,nullified:true};
+      return {damage:0,nullified:true,name:target?.elementNullifyName||"古代の遺産",icon:target?.elementNullifyIcon||"🏺"};
     }
-    return {damage:raw,nullified:false};
+    return {damage:raw,nullified:false,name:null,icon:null};
   }
 
   function physicalAttackElementForActor(actor,skillElement=null){
@@ -7156,6 +7198,7 @@
       bowInstantKillImmune:!!base.bowInstantKillImmune,statusDeathImmune:!!base.statusDeathImmune,statusImmuneAll:!!base.statusImmuneAll,statusImmune:[...(base.statusImmune||[])],boss:!!base.boss,
       silverBodyDamageCompression:!!base.silverBodyDamageCompression,escaped:false,actionCount:0,
       elementNullifyRate:Math.max(0,Math.min(1,Number(base.elementNullifyRate)||0)),elementNullifyElements:[...(base.elementNullifyElements||[])],
+      elementNullifyName:base.elementNullifyName||"古代の遺産",elementNullifyIcon:base.elementNullifyIcon||"🏺",
       enemyCounterChance:Math.max(0,Math.min(1,Number(base.enemyCounterChance)||0)),
       noReward:!!options.noReward,noRecruit:!!options.noRecruit,summoned:!!options.summoned,lastSummonRound:0,
       atkBuff:1,atkBuffRounds:0,defBuff:1,defBuffRounds:0,magicBuff:1,magicBuffRounds:0,mdefBuff:1,mdefBuffRounds:0,spdBuff:1,spdBuffRounds:0,
@@ -7927,7 +7970,7 @@
     if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
     const critText=critical?" 会心の一撃！":"";
     setMessage(legacy.nullified
-      ? `🏺 ${target.displayName} は「古代の遺産」で${attackElement==="fire"?"炎":"氷"}属性ダメージを無効化した！`
+      ? `${legacy.icon||"🏺"} ${target.displayName} は「${legacy.name||"古代の遺産"}」で${attackElement==="fire"?"炎":attackElement==="ice"?"氷":"属性"}ダメージを無効化した！`
       : `${actor.name} の${skillName||"攻撃"}！${critText} ${target.displayName} に ${dmg} ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
     const hitFx=isBasic?profile.fx:{kind:fxKind,symbol:fxSymbol};
     await animateEnemyDamage(target,killed,hitFx.kind,hitFx.symbol,critical,dmg);
@@ -8168,7 +8211,7 @@
         if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
         let shock=null;
         if(!killed && Number(sk.shockRate)>0) shock=tryInflictStatus(target,"shock",sk.shockRate);
-        results.push({target,dmg,killed,shock,legacyNullified:legacy.nullified});
+        results.push({target,dmg,killed,shock,legacyNullified:legacy.nullified,legacyName:legacy.name,legacyIcon:legacy.icon});
       }
 
       if(sk.target==="enemyAll"){
@@ -8176,12 +8219,14 @@
         const defeated=results.filter(r=>r.killed).length;
         const shocked=results.filter(r=>r.shock?.success).length;
         const legacyNullified=results.filter(r=>r.legacyNullified).length;
-        setMessage(`${sk.icon||"✨"} ${sk.name}！ 敵全体に合計 ${total} ダメージ！${legacyNullified?` 🏺 ${legacyNullified}体は「古代の遺産」で属性ダメージを無効化。`:""}${shocked?` ${shocked}体が感電！`:""}${defeated?` ${defeated}体を倒した！`:""}`);
+        const nullifyNames=[...new Set(results.filter(r=>r.legacyNullified).map(r=>r.legacyName).filter(Boolean))];
+        const nullifyText=legacyNullified?` ${results.find(r=>r.legacyNullified)?.legacyIcon||"🏺"} ${legacyNullified}体は${nullifyNames.length===1?`「${nullifyNames[0]}」で`:""}属性ダメージを無効化。`:"";
+        setMessage(`${sk.icon||"✨"} ${sk.name}！ 敵全体に合計 ${total} ダメージ！${nullifyText}${shocked?` ${shocked}体が感電！`:""}${defeated?` ${defeated}体を倒した！`:""}`);
         await Promise.all(results.map(r=>animateEnemyDamage(r.target,r.killed,sk.animation||"magicshot",sk.fxSymbol||sk.icon||"✦")));
       }else{
         const r=results[0];
         setMessage(r.legacyNullified
-          ? `🏺 ${r.target.displayName} は「古代の遺産」で${sk.element==="fire"?"炎":"氷"}属性ダメージを無効化した！${r.shock?.success?" ⚡ 感電した！":""}`
+          ? `${r.legacyIcon||"🏺"} ${r.target.displayName} は「${r.legacyName||"古代の遺産"}」で${sk.element==="fire"?"炎":sk.element==="ice"?"氷":"属性"}ダメージを無効化した！${r.shock?.success?" ⚡ 感電した！":""}`
           : `${sk.icon||"✨"} ${sk.name}！ ${r.target.displayName} に ${r.dmg} ダメージ。${r.shock?.success?"⚡ 感電した！ ":""}${r.killed?`${r.target.displayName} を倒した！`:""}`);
         await animateEnemyDamage(r.target,r.killed,sk.animation||"magicshot",sk.fxSymbol||sk.icon||"✦");
       }
@@ -8899,6 +8944,31 @@
       const roll=Math.random();
       if(roll<.15 && enemySkillAvailable(enemy,"death")) return {type:"skill",skillId:"death"};
       if(roll<.30 && enemySkillAvailable(enemy,"neoSilence")) return {type:"skill",skillId:"neoSilence"};
+      return {type:"attack"};
+    }
+
+    if(enemy.ai==="desertDogBlaze"){
+      if(enemySkillAvailable(enemy,"blaze") && Math.random()<.30) return {type:"skill",skillId:"blaze"};
+      return {type:"attack"};
+    }
+
+    if(enemy.ai==="hotSandTentacleSupport"){
+      const wounded=livingEnemies().some(e=>e.hp<e.hpMax);
+      if(wounded && enemySkillAvailable(enemy,"gigaHeal") && Math.random()<.20) return {type:"skill",skillId:"gigaHeal"};
+      return {type:"attack"};
+    }
+
+    if(enemy.ai==="prominenceCaster"){
+      const roll=Math.random();
+      if(roll<.15 && enemySkillAvailable(enemy,"death")) return {type:"skill",skillId:"death"};
+      if(roll<.40 && enemySkillAvailable(enemy,"flare")) return {type:"skill",skillId:"flare"};
+      return {type:"attack"};
+    }
+
+    if(enemy.ai==="magmaSlugCaster"){
+      const roll=Math.random();
+      if(roll<.20 && enemySkillAvailable(enemy,"blaze2")) return {type:"skill",skillId:"blaze2"};
+      if(roll<.45 && enemySkillAvailable(enemy,"flare")) return {type:"skill",skillId:"flare"};
       return {type:"attack"};
     }
 
