@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.46u";
+  const DEV_VERSION = "v0.46v";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2839,16 +2839,16 @@
     golden_staff:{id:"golden_staff",slot:"weapon",weaponType:"staff",name:"煌金の杖",icon:"🪄",mods:{atk:34,magic:51,mdef:49},canCrit:false,normalAttackPower:1,price:52000,desc:"魔界の特別な金属で作られた魔法杖。攻撃力+34 / 魔力+51 / 魔防+49。"},
     hecate:{id:"hecate",slot:"weapon",weaponType:"staff",name:"ヘカテー",icon:"🪄",mods:{atk:56,magic:64,mdef:62},fate:3,canCrit:false,normalAttackPower:1,price:273000,desc:"女神の名を冠した究極の魔法杖。攻撃力+56 / 魔力+64 / 魔防+62 / 運命+3。"},
 
-    // 鞭：通常攻撃は敵全体へ80%威力。
-    whip:{id:"whip",slot:"weapon",weaponType:"whip",name:"ウィップ",icon:"➰",mods:{atk:6},canCrit:false,normalAttackPower:.80,attackAll:true,price:80,desc:"初心者用の鞭。攻撃力+6 / 通常攻撃は敵全体へ80%威力。"},
-    alra_whip:{id:"alra_whip",slot:"weapon",weaponType:"whip",name:"アルラウィップ",icon:"➰",mods:{atk:16},canCrit:false,normalAttackPower:.80,attackAll:true,roundEndHealRate:.05,roundEndHealPercent:.10,price:80,desc:"アルラウネの蔦でできた鞭。攻撃力+16 / 通常攻撃は敵全体へ80%威力。ラウンド終了時に5%の確率でHPを10%回復する。"},
-    bronze_whip:{id:"bronze_whip",slot:"weapon",weaponType:"whip",name:"ブロンズウィップ",icon:"➰",mods:{atk:17},canCrit:false,normalAttackPower:.80,attackAll:true,price:230,desc:"一部に銅が使われている鞭。攻撃力+17 / 通常攻撃は敵全体へ80%威力。"},
-    iron_whip:{id:"iron_whip",slot:"weapon",weaponType:"whip",name:"アイアンウィップ",icon:"➰",mods:{atk:30},canCrit:false,normalAttackPower:.80,attackAll:true,price:760,desc:"一部に鋼鉄が使われている鞭。攻撃力+30 / 通常攻撃は敵全体へ80%威力。"},
-    silver_whip:{id:"silver_whip",slot:"weapon",weaponType:"whip",name:"シルバーウィップ",icon:"➰",mods:{atk:50},canCrit:false,normalAttackPower:.80,attackAll:true,price:1900,desc:"一部に純銀が使われている鞭。攻撃力+50 / 通常攻撃は敵全体へ80%威力。"},
-    trainer_whip:{id:"trainer_whip",slot:"weapon",weaponType:"whip",name:"調教師の鞭",icon:"➰",mods:{atk:64},crit:1.5,canCrit:true,normalAttackPower:.80,attackAll:true,price:4200,desc:"砂漠の猛獣を躾けるための鞭。攻撃力+64 / 会心率+1.5% / 通常攻撃は敵全体へ80%威力。"},
-    platinum_whip:{id:"platinum_whip",slot:"weapon",weaponType:"whip",name:"プラチナウィップ",icon:"➰",mods:{atk:109},canCrit:false,normalAttackPower:.80,attackAll:true,price:23000,desc:"一部に白金が使われている高性能な鞭。攻撃力+109 / 通常攻撃は敵全体へ80%威力。"},
-    golden_whip:{id:"golden_whip",slot:"weapon",weaponType:"whip",name:"煌金の鞭",icon:"➰",mods:{atk:163},canCrit:false,normalAttackPower:.80,attackAll:true,price:54000,desc:"一部に白金が使われている高性能な鞭。攻撃力+163 / 通常攻撃は敵全体へ80%威力。"},
-    mad_dragon_tail:{id:"mad_dragon_tail",slot:"weapon",weaponType:"whip",name:"狂龍の尾",icon:"➰",mods:{atk:219},canCrit:false,normalAttackPower:.80,attackAll:true,price:269000,desc:"荒々しい龍を思わせる恐ろしい鞭。攻撃力+219 / 通常攻撃は敵全体へ80%威力。"},
+    // 鞭：通常攻撃は敵全体へ70%威力。
+    whip:{id:"whip",slot:"weapon",weaponType:"whip",name:"ウィップ",icon:"➰",mods:{atk:6},canCrit:false,normalAttackPower:.70,attackAll:true,price:80,desc:"初心者用の鞭。攻撃力+6 / 通常攻撃は敵全体へ70%威力。"},
+    alra_whip:{id:"alra_whip",slot:"weapon",weaponType:"whip",name:"アルラウィップ",icon:"➰",mods:{atk:16},canCrit:false,normalAttackPower:.70,attackAll:true,roundEndHealRate:.05,roundEndHealPercent:.10,price:80,desc:"アルラウネの蔦でできた鞭。攻撃力+16 / 通常攻撃は敵全体へ70%威力。ラウンド終了時に5%の確率でHPを10%回復する。"},
+    bronze_whip:{id:"bronze_whip",slot:"weapon",weaponType:"whip",name:"ブロンズウィップ",icon:"➰",mods:{atk:17},canCrit:false,normalAttackPower:.70,attackAll:true,price:230,desc:"一部に銅が使われている鞭。攻撃力+17 / 通常攻撃は敵全体へ70%威力。"},
+    iron_whip:{id:"iron_whip",slot:"weapon",weaponType:"whip",name:"アイアンウィップ",icon:"➰",mods:{atk:30},canCrit:false,normalAttackPower:.70,attackAll:true,price:760,desc:"一部に鋼鉄が使われている鞭。攻撃力+30 / 通常攻撃は敵全体へ70%威力。"},
+    silver_whip:{id:"silver_whip",slot:"weapon",weaponType:"whip",name:"シルバーウィップ",icon:"➰",mods:{atk:50},canCrit:false,normalAttackPower:.70,attackAll:true,price:1900,desc:"一部に純銀が使われている鞭。攻撃力+50 / 通常攻撃は敵全体へ70%威力。"},
+    trainer_whip:{id:"trainer_whip",slot:"weapon",weaponType:"whip",name:"調教師の鞭",icon:"➰",mods:{atk:64},crit:1.5,canCrit:true,normalAttackPower:.70,attackAll:true,price:4200,desc:"砂漠の猛獣を躾けるための鞭。攻撃力+64 / 会心率+1.5% / 通常攻撃は敵全体へ70%威力。"},
+    platinum_whip:{id:"platinum_whip",slot:"weapon",weaponType:"whip",name:"プラチナウィップ",icon:"➰",mods:{atk:109},canCrit:false,normalAttackPower:.70,attackAll:true,price:23000,desc:"一部に白金が使われている高性能な鞭。攻撃力+109 / 通常攻撃は敵全体へ70%威力。"},
+    golden_whip:{id:"golden_whip",slot:"weapon",weaponType:"whip",name:"煌金の鞭",icon:"➰",mods:{atk:163},canCrit:false,normalAttackPower:.70,attackAll:true,price:54000,desc:"一部に白金が使われている高性能な鞭。攻撃力+163 / 通常攻撃は敵全体へ70%威力。"},
+    mad_dragon_tail:{id:"mad_dragon_tail",slot:"weapon",weaponType:"whip",name:"狂龍の尾",icon:"➰",mods:{atk:219},canCrit:false,normalAttackPower:.70,attackAll:true,price:269000,desc:"荒々しい龍を思わせる恐ろしい鞭。攻撃力+219 / 通常攻撃は敵全体へ70%威力。"},
 
     // 銃：通常攻撃は85%威力、敵防御力の影響は50%。
     type_milesta:{id:"type_milesta",slot:"weapon",weaponType:"gun",name:"タイプ・ミレスタ",icon:"🔫",mods:{atk:9},canCrit:false,normalAttackPower:.85,defenseInfluence:.50,price:90,desc:"ミレスタ製の銃。攻撃力+9 / 敵防御力の影響50%。"},
@@ -4830,7 +4830,7 @@
       bowInstantKillImmune:true,statusDeathImmune:true,statusImmuneAll:true,
       resist:{fire:"D",ice:"C",light:"D",dark:"C",thunder:"E",wind:"C",earth:"C",pleasure:"C",poison:"S",blind:"B",silence:"C",death:"D"},
       skills:["frost","neoPoison"],ai:"tentacleBoss",basicAttackAll:true,basicAttackPower:.75,basicAttackFx:"whip",basicAttackSymbol:"〰",
-      stats:{hp:1050,mp:110,atk:78,def:52,magic:62,mdef:54,spd:36}
+      stats:{hp:1200,mp:110,atk:78,def:52,magic:62,mdef:54,spd:36}
     },
     maidDevil:{
       name:"メイドデビル",img:IMG.maidDevil,exp:46,gold:31,critRate:0,evasionRate:0,
