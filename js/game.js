@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.46y";
+  const DEV_VERSION = "v0.46z";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2589,7 +2589,7 @@
       final:{hpMax:660,mpMax:380,atk:180,def:290,magic:290,mdef:310,spd:310},
       resist:{fire:"D",ice:"C",light:"E",dark:"A",thunder:"C",wind:"C",earth:"C",pleasure:"B",poison:"S",blind:"A",silence:"B",death:"C"},
       trait:{id:"debilitatingPoison",name:"虚脱の毒",icon:"🕷️",trigger:"passive",desc:"戦闘中、このキャラがバトルメンバーにいる間、毒状態の敵の攻撃・防御・魔力・魔法防御・素早さを30%低下させる。",effect:{type:"poisonedEnemyAllStatDown",multiplier:.70}},
-      plannedSkills:{1:["poison"],10:["dark"],15:["neoPoison"],23:["cold2"],34:["pleasureOne"],42:["aura"],50:["escape"]}
+      plannedSkills:{1:["poison"],10:["dark"],15:["neoPoison"],23:["cold2"],34:["pleasureOne"],42:["aura"],50:["pandem"]}
     },
     ghost:{
       id:"ghost",role:null,growthType:"early",expType:"fast",recruitRank:"D",fate:4,
@@ -2769,7 +2769,7 @@
     Object.entries(profile.plannedSkills).forEach(([lv,list])=>{
       if(Number(lv)<=level) ids.push(...list);
     });
-    return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","flare","gigaFlare","lastFlare","blaze","blaze2","endBlaze","ice","frost","gigaFrost","lastFrost","cold","cold2","endCold","petitThunder","thunder","gigaThunder","heavenlyThunder","stone","quake","gigaQuake","earthWrath","sonic","wind","gigaWind","annihilationWindBlade","holy","gigaHoly","judgmentLance","heavenlyLight","bigBang","dark","gigaDark","finalDarkHammer","hellDark","apocalypse","touch","pleasure","gigaPleasure","megidoPleasure","pleasureOne","erode","gigaErode","lastErode","ruinErosion","poison","neoPoison","blind","neoBlind","silence","neoSilence","death","allDeath","eraser","heal","highHeal","gigaHeal","lastHeal","allHeal","allHeal2","fairyHeal","eternal","raise","raise2","gigaRaise","miracleFestival","cure","fresh","allFresh","mount","allMount","aura","lastAura","polish","allPolish","warGodAura","guard","allGuard","guardianBlessing","magic","allMagic","demonSpiritFlow","block","allBlock","spiritKingBlessing","quick","allQuick","heroicTailwind","berserk","fortune","escape","supply","neoSupply","stealth","return","tackle","counterStance","doubleAttack","autoFresh","canceller","unyieldingHeart","powerCharge","magicConcentration","explosiveFist","swordDance","terraCrash","stardust","magicBarrier","dragonSpiral","nephilimLaser"].includes(id));
+    return [...new Set(ids)].filter(id=>!implementedOnly || ["fire","flare","gigaFlare","lastFlare","blaze","blaze2","endBlaze","ice","frost","gigaFrost","lastFrost","cold","cold2","endCold","petitThunder","thunder","gigaThunder","heavenlyThunder","stone","quake","gigaQuake","earthWrath","sonic","wind","gigaWind","annihilationWindBlade","holy","gigaHoly","judgmentLance","heavenlyLight","bigBang","dark","gigaDark","finalDarkHammer","hellDark","apocalypse","touch","pleasure","gigaPleasure","megidoPleasure","pleasureOne","erode","gigaErode","lastErode","ruinErosion","poison","neoPoison","blind","neoBlind","silence","neoSilence","death","allDeath","pandem","calamityCry","eraser","heal","highHeal","gigaHeal","lastHeal","allHeal","allHeal2","fairyHeal","eternal","raise","raise2","gigaRaise","miracleFestival","cure","fresh","allFresh","mount","allMount","aura","lastAura","polish","allPolish","warGodAura","guard","allGuard","guardianBlessing","magic","allMagic","demonSpiritFlow","block","allBlock","spiritKingBlessing","quick","allQuick","heroicTailwind","berserk","fortune","escape","supply","neoSupply","stealth","return","tackle","counterStance","doubleAttack","autoFresh","canceller","unyieldingHeart","powerCharge","magicConcentration","explosiveFist","swordDance","terraCrash","stardust","magicBarrier","dragonSpiral","nephilimLaser"].includes(id));
   }
 
   // v0.46i: reconcile natural skills whose acquisition levels/contents were rebalanced.
@@ -2777,7 +2777,8 @@
   const REBALANCED_NATURAL_SKILL_IDS={
     forestMage:new Set(["holy","allHeal2","gigaQuake","fairyHeal"]),
     ghost:new Set(["allHeal2","magicConcentration"]),
-    podalge:new Set(["allHeal2","gigaHeal"])
+    podalge:new Set(["allHeal2","gigaHeal"]),
+    poisonArachne:new Set(["escape","pandem"])
   };
   function reconcileRebalancedNaturalSkills(c){
     const ids=REBALANCED_NATURAL_SKILL_IDS[c?.profileId||c?.id];
@@ -3501,12 +3502,14 @@
     neoSilence:statusSkill("neoSilence","ネオサイレンス","🔇",10,"enemyAll","silence",STATUS_BASE_RATE.all),
     death:statusSkill("death","デス","☠️",12,"enemy","death",STATUS_BASE_RATE.deathSingle),
     allDeath:statusSkill("allDeath","オールデス","☠️",24,"enemyAll","death",STATUS_BASE_RATE.deathAll),
+    pandem:{id:"pandem",name:"パンデム",icon:"☣️",cost:18,target:"enemyAll",kind:"multiStatus",statuses:["shock","poison","blind","silence"],baseRate:.25,magic:true,desc:"敵全体に感電・毒・暗闇・封印をそれぞれ25%を基礎確率として付与する"},
     eraser:{id:"eraser",name:"イレイザー",icon:"🫧",cost:15,target:"enemyAll",kind:"dispel",desc:"敵全体のバフ・強化状態をすべて解除する"},
 
     tackle:{
       id:"tackle",name:"体当たり",icon:"💥",cost:4,target:"enemy",
       desc:"敵1体に物理ダメージ。使用後、自身に反動ダメージ",kind:"physical",power:1.50,recoilRate:.10,animation:"impact"
     },
+    calamityCry:{id:"calamityCry",name:"厄災の叫び",icon:"📣",cost:9,target:"enemy",kind:"physicalSpecial",power:1.00,canCrit:false,animation:"impact",fxSymbol:"〽",statusRates:{shock:.25,poison:.25,blind:.25,silence:.25},desc:"敵1体に攻撃力依存の無属性物理ダメージ。感電・毒・暗闇・封印をそれぞれ25%を基礎確率として付与する"},
 
     // Physical passives. These never appear as selectable battle commands.
     counterStance:{id:"counterStance",name:"カウンタースタンス",icon:"↩️",cost:0,target:"passive",kind:"passive",battleUse:false,chance:.20,desc:"物理攻撃を受けた時、一定確率で通常攻撃による反撃を行う"},
@@ -3586,7 +3589,7 @@
     if(sk.kind==="heal" || sk.kind==="cleanse") return "💚";
     if(sk.kind==="revive") return "✨";
     if(sk.kind==="magic") return SKILL_ELEMENT_ICONS[sk.element] || "⚫";
-    if(sk.kind==="status") return "🟣";
+    if(sk.kind==="status" || sk.kind==="multiStatus") return "🟣";
     if(sk.kind==="dispel") return "⚪";
     if(["buff","barrier","charge","magicBarrier","mpTransfer","fortune","stealth","return","escape","berserk"].includes(sk.kind)) return "🔹";
     if(["physical","multiPhysical","physicalSpecial","physicalAll"].includes(sk.kind)) return "🟠";
@@ -3619,7 +3622,7 @@
     maidDevil:{3:["polish"],6:["guard"],9:["quick"],18:["allHeal2"],26:["hellDark"],39:["lastHeal"],47:["demonSpiritFlow"],54:["allMount"]},
     lamia:{3:["powerCharge"],8:["cure"],17:["allPolish"],30:["counterStance"],42:["terraCrash"]},
     poison:{1:["poison"],7:["blaze"],15:["neoPoison"],26:["neoBlind"],43:["allDeath"]},
-    poisonArachne:{1:["poison"],10:["dark"],15:["neoPoison"],23:["cold2"],34:["pleasureOne"],42:["aura"],50:["escape"]},
+    poisonArachne:{1:["poison"],10:["dark"],15:["neoPoison"],23:["cold2"],34:["pleasureOne"],42:["aura"],50:["pandem"]},
     ghost:{1:["fire"],10:["pleasure"],17:["allHeal2"],25:["blaze2"],31:["allBlock"],43:["pleasureOne"],48:["demonSpiritFlow"]},
     madGolem:{2:["stone"],9:["cure"],20:["allBlock"],29:["gigaQuake"],44:["doubleAttack"]},
     scylla:{1:["touch"],12:["pleasure"],20:["eraser"],31:["aura"],37:["gigaPleasure"],42:["dragonSpiral"]},
@@ -7418,6 +7421,10 @@
     return true;
   }
 
+  function autoEnemyCanReceiveAnyStatus(enemy,statuses=[]){
+    return Array.isArray(statuses) && statuses.some(status=>autoEnemyCanReceiveStatus(enemy,{status}));
+  }
+
   function autoBuffNeeded(c,sk){
     const info=BUFF_INFO[sk?.buff];
     if(!c || !info || S(c).hp<=0) return false;
@@ -7537,6 +7544,16 @@
       if(sk.kind==="physicalAll"){
         const count=enemies.length;
         entries.push({weight:costWeight*(count>=3?1.30:count===2?1.08:.40),action:{type:"skill",skill:sk.id}});
+        return;
+      }
+
+      if(sk.kind==="multiStatus"){
+        const viable=enemies.filter(e=>autoEnemyCanReceiveAnyStatus(e,sk.statuses));
+        if(!viable.length) return;
+        const statusCount=Math.max(1,Array.isArray(sk.statuses)?sk.statuses.length:1);
+        const opportunity=viable.reduce((sum,e)=>sum+(sk.statuses||[]).filter(status=>autoEnemyCanReceiveStatus(e,{status})).length,0)/(Math.max(1,viable.length)*statusCount);
+        const weight=costWeight*.42*Math.max(.35,opportunity)*(enemies.length>=2?1.12:.58);
+        entries.push({weight,action:{type:"skill",skill:sk.id}});
         return;
       }
 
@@ -8170,6 +8187,33 @@
       return;
     }
 
+    if(sk.kind==="multiStatus"){
+      const targets=sk.target==="enemyAll" ? [...livingEnemies()] : (()=>{let target=enemyByUid(action.targetUid);if(!target||target.hp<=0)target=livingEnemies()[0]||null;return target?[target]:[];})();
+      if(!targets.length) return;
+
+      animateActor("cast");
+      setMessage(`${sk.icon||"✨"} ${actor.name} は ${sk.name} を唱えた！`);
+      await wait(BASE_TIME.actionLead);
+      const statuses=Array.isArray(sk.statuses)?sk.statuses:[];
+      const successCounts=Object.fromEntries(statuses.map(status=>[status,0]));
+      let totalSuccess=0;
+      targets.forEach(target=>{
+        statuses.forEach(status=>{
+          const result=tryInflictStatus(target,status,Number(sk.baseRate)||0);
+          if(result.success){ successCounts[status]++; totalSuccess++; }
+        });
+        const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${target.uid}"]`);
+        if(el) spawnFx("magicshot","☣",el);
+      });
+      await wait(BASE_TIME.hit);
+      renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+      const parts=statuses.filter(status=>successCounts[status]>0).map(status=>`${statusName(status)}×${successCounts[status]}`);
+      setMessage(totalSuccess>0
+        ? `${sk.icon||"✨"} ${sk.name}！ ${parts.join(" / ")} を付与した！`
+        : `${sk.icon||"✨"} ${sk.name}！ しかし、状態異常は誰にも効かなかった。`);
+      return;
+    }
+
     if(sk.kind==="status"){
       let targets=[];
       if(sk.target==="enemyAll") targets=[...livingEnemies()];
@@ -8291,6 +8335,20 @@
       if(!target || target.hp<=0) target=livingEnemies()[0]||null;
       if(!target) return;
       const result=await resolveAttack(actor,target,sk.name,Number(sk.power)||1,sk.animation||"impact",sk.fxSymbol||sk.icon||"✦",{canCrit:sk.canCrit!==false,forceCrit:!!sk.forceCrit,critDamageMultiplier:Number(sk.critDamageMultiplier)||1,element:sk.element||null});
+      if(sk.statusRates && !result?.missed && !result?.killed && target.hp>0){
+        const applied=[];
+        Object.entries(sk.statusRates).forEach(([status,baseRate])=>{
+          const statusResult=tryInflictStatus(target,status,Number(baseRate)||0);
+          if(statusResult.success) applied.push(status);
+        });
+        if(applied.length){
+          const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${target.uid}"]`);
+          if(el) applied.forEach(status=>spawnFx("magicshot",statusIcon(status),el));
+          renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+          setMessage(`${sk.icon||"⚔️"} ${sk.name}！ ${target.displayName} は${applied.map(status=>statusName(status)).join("・")}状態になった！`);
+          await wait(BASE_TIME.short);
+        }
+      }
       if(sk.dispelOnHit && !result?.missed){
         const removed=clearEnemyBuffs(target);
         if(removed){
