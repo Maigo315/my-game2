@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47d";
+  const DEV_VERSION = "v0.47e";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -390,6 +390,22 @@
     {id:"granzelMargaret",name:"マーガレット",gender:"female",portrait:MARGARET_IMG}
   ];
 
+  const SALID_TALK_NPCS = [
+    {id:"salidYoungman",name:"青年",gender:"male",silhouette:NPC_YOUNGMAN_IMG},
+    {id:"salidMerchant",name:"商人",gender:"male",silhouette:MOB_MERCHANT_IMG},
+    {id:"salidOldman",name:"おじいさん",gender:"male",silhouette:NPC_OLDMAN_IMG},
+    {id:"salidDancer",name:"踊り子",gender:"female",silhouette:NPC_YOUNGWOMAN_IMG},
+    {id:"salidSoldier",name:"兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
+    {id:"salidAdventurer",name:"冒険者",gender:"male",silhouette:NPC_YOUNGMAN_IMG},
+    {id:"salidFemaleMerchant",name:"女商人",gender:"female",silhouette:NPC_YOUNGWOMAN_IMG},
+    {id:"salidCastleGate",name:"サリード城へ",gender:"male",silhouette:NPC_SOLDIER_IMG}
+  ];
+  const SALID_CASTLE_TALK_NPCS = [
+    {id:"salidCastleSeriousSoldier",name:"真面目な兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
+    {id:"salidCastleWaterSoldier",name:"水を飲む兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
+    {id:"salidCastleSighSoldier",name:"ため息をつく兵士",gender:"male",silhouette:NPC_SOLDIER_IMG}
+  ];
+
   const screens = [...document.querySelectorAll(".screen")];
   const $ = id => document.getElementById(id);
 
@@ -404,9 +420,10 @@
     tileno:{name:"ティレーノの街",shortName:"ティレーノの街",shop:"tileno"},
     granzel:{name:"グランゼル城下町",shortName:"グランゼル城下町",shop:"granzel"},
     runel:{name:"ルネルの街",shortName:"ルネルの街",shop:"runel"},
+    salid:{name:"サリード城下町",shortName:"サリード城下町",shop:"salid"},
     kunputei:{name:"薫風亭",shortName:"薫風亭",shop:"kunputei"}
   };
-  function normalizeTownKey(town){ return town==="yody"?"yody":town==="tileno"?"tileno":town==="granzel"?"granzel":town==="runel"?"runel":town==="kunputei"?"kunputei":"milesta"; }
+  function normalizeTownKey(town){ return town==="yody"?"yody":town==="tileno"?"tileno":town==="granzel"?"granzel":town==="runel"?"runel":town==="salid"?"salid":town==="kunputei"?"kunputei":"milesta"; }
   function townInfo(town=state.currentTown){ return TOWN_INFO[normalizeTownKey(town)]; }
   function townDisplayName(town=state.currentTown){ return townInfo(town).shortName; }
   function waitingAccessAllowed(){ return state.partyManageContext==="milesta" && waitingUnlocked(); }
@@ -447,6 +464,10 @@
       state.eventFlags.runelTownReached=true;
       state.eventFlags.runelRegionReached=true;
       state.selectedArea="runelTown";
+    }else if(state.currentTown==="salid"){
+      state.eventFlags.salidTownReached=true;
+      state.eventFlags.salidDesertUnlocked=true;
+      state.selectedArea="salidTown";
     }else state.selectedArea="milestaTown";
     state.run=null;
     restorePartyFull();
@@ -566,7 +587,9 @@
     const town=normalizeTownKey(state.currentTown);
     $("townTalkTitle").textContent=(town==="granzel" && townTalkSubarea==="castle")
       ? "グランゼル城"
-      : town==="yody"?"港町ヨーディーの住民":town==="tileno"?"ティレーノの街の住民":town==="granzel"?"グランゼル城下町の住民":town==="runel"?"ルネルの街の住民":town==="kunputei"?"薫風亭":"ミレスタの住民";
+      : (town==="salid" && townTalkSubarea==="castle")
+        ? "サリード城"
+        : town==="yody"?"港町ヨーディーの住民":town==="tileno"?"ティレーノの街の住民":town==="granzel"?"グランゼル城下町の住民":town==="runel"?"ルネルの街の住民":town==="salid"?"サリード城下町の住民":town==="kunputei"?"薫風亭":"ミレスタの住民";
     renderTownTalkMenu();
     $("townTalkModal").classList.add("show");
     $("townTalkModal").setAttribute("aria-hidden","false");
@@ -579,6 +602,10 @@
     townTalkSubarea="castle";
     openTownTalkModal(true);
   }
+  function openSalidCastleTalkMenu(){
+    townTalkSubarea="castle";
+    openTownTalkModal(true);
+  }
   function currentTownTalkNpcs(){
     if(state.currentTown==="granzel" && townTalkSubarea==="castle"){
       return GRANZEL_CASTLE_TALK_NPCS.filter(npc=>{
@@ -587,7 +614,8 @@
         return true;
       });
     }
-    const list=state.currentTown==="yody"?YODY_TALK_NPCS:state.currentTown==="tileno"?TILENO_TALK_NPCS:state.currentTown==="granzel"?GRANZEL_TALK_NPCS:state.currentTown==="runel"?RUNEL_TALK_NPCS:state.currentTown==="kunputei"?KUNPUTEI_TALK_NPCS:MILESTA_TALK_NPCS;
+    if(state.currentTown==="salid" && townTalkSubarea==="castle") return SALID_CASTLE_TALK_NPCS;
+    const list=state.currentTown==="yody"?YODY_TALK_NPCS:state.currentTown==="tileno"?TILENO_TALK_NPCS:state.currentTown==="granzel"?GRANZEL_TALK_NPCS:state.currentTown==="runel"?RUNEL_TALK_NPCS:state.currentTown==="salid"?SALID_TALK_NPCS:state.currentTown==="kunputei"?KUNPUTEI_TALK_NPCS:MILESTA_TALK_NPCS;
     return list.filter(npc=>{
       if(npc.id==="yodyBoy" && state.eventFlags?.yodyBoyQuestCompleted) return false;
       if(npc.id==="tilenoBoy"){
@@ -609,7 +637,8 @@
     if(!grid) return;
     grid.innerHTML="";
     const inGranzelCastle=state.currentTown==="granzel" && townTalkSubarea==="castle";
-    if(inGranzelCastle){
+    const inSalidCastle=state.currentTown==="salid" && townTalkSubarea==="castle";
+    if(inGranzelCastle || inSalidCastle){
       const back=document.createElement("button");
       back.className="town-talk-card";
       back.innerHTML='<span class="town-talk-card-name">← 城下町へ戻る</span>';
@@ -629,6 +658,7 @@
       btn.className="town-talk-card";
       btn.innerHTML=`<span class="town-talk-card-name">${escapeHtml(npc.name)}</span>`;
       if(npc.id==="granzelCastleGate") btn.onclick=()=>openGranzelCastleTalkMenu();
+      else if(npc.id==="salidCastleGate") btn.onclick=()=>openSalidCastleTalkMenu();
       else btn.onclick=()=>{closeTownTalkModal();startTownResidentTalk(npc.id);};
       grid.appendChild(btn);
     });
@@ -646,7 +676,7 @@
     return {type:"system",text,effects};
   }
   function townNpcData(id,town=state.currentTown){
-    const list=town==="yody"?YODY_TALK_NPCS:town==="tileno"?TILENO_TALK_NPCS:town==="granzel"?GRANZEL_TALK_NPCS:town==="granzelCastle"?GRANZEL_CASTLE_TALK_NPCS:town==="runel"?RUNEL_TALK_NPCS:town==="kunputei"?KUNPUTEI_TALK_NPCS:MILESTA_TALK_NPCS;
+    const list=town==="yody"?YODY_TALK_NPCS:town==="tileno"?TILENO_TALK_NPCS:town==="granzel"?GRANZEL_TALK_NPCS:town==="granzelCastle"?GRANZEL_CASTLE_TALK_NPCS:town==="runel"?RUNEL_TALK_NPCS:town==="salid"?SALID_TALK_NPCS:town==="salidCastle"?SALID_CASTLE_TALK_NPCS:town==="kunputei"?KUNPUTEI_TALK_NPCS:MILESTA_TALK_NPCS;
     return list.find(n=>n.id===id)||list[0];
   }
   function startYodyCaptainBoarding(npc){
@@ -1421,6 +1451,92 @@
     startTemporaryStoryEvent(steps);
   }
 
+  function startSalidResidentTalk(id){
+    const npc=townNpcData(id,"salid");
+    let steps=[];
+    if(id==="salidYoungman"){
+      steps=[
+        talkDialogue("青年",npc.silhouette,npc.gender,`ここはサリード城下町だよ。
+ゼル大陸は戦争だのなんだので物騒だけど、こっちは比較的マシな方さ。`),
+        talkDialogue("青年",npc.silhouette,npc.gender,`まあ、でも盗賊団がいるからなぁ……。
+この前もキャラバンが襲われたらしいし、君も気を付けなよ。`)
+      ];
+    }else if(id==="salidMerchant"){
+      steps=[
+        talkDialogue("商人",npc.silhouette,npc.gender,`ああくっそ！
+うちの国はアルム王国と同盟を結んでるから、グランゼルとの戦争に巻き込まれる！`),
+        talkDialogue("商人",npc.silhouette,npc.gender,`そんなことになったら商売上がったりだ！
+今でさえ渡航制限がかかってるって言うのに！`)
+      ];
+    }else if(id==="salidOldman"){
+      steps=[
+        talkDialogue("おじいさん",npc.silhouette,npc.gender,`サリード大陸が誇る二つの古代遺跡……『太陽の神殿』と『王家の墓』。
+それ目当てで訪れる冒険者も多いんじゃよ。`),
+        talkDialogue("おじいさん",npc.silhouette,npc.gender,`ただ、神殿は開かずの扉で塞がれておるし、王家の墓は近付いただけで恐ろしい魔物娘に呪い殺されるという噂……。
+大抵はがっかりして帰って行くよ。`)
+      ];
+    }else if(id==="salidDancer"){
+      steps=[
+        talkDialogue("踊り子",npc.silhouette,npc.gender,`私、西のカルザーンって町から来たの。
+城下町のステージに立つなんて、踊り子の夢だもの！`),
+        talkDialogue("踊り子",npc.silhouette,npc.gender,`……でも、なんか肩身が狭いのよねぇ。
+カルザーンは盗賊被害に遭ってないから、盗賊団とグルだと思われてるみたい。`)
+      ];
+    }else if(id==="salidSoldier"){
+      steps=[
+        talkDialogue("兵士",npc.silhouette,npc.gender,`サリード大陸は、炎属性に強く氷属性に弱い魔物娘が多い。
+フロストなどの氷属性魔法は積極的に使っていきたいな。`),
+        talkDialogue("兵士",npc.silhouette,npc.gender,`炎属性魔法を使ってくる魔物娘も多い。
+この町の店で紅のブレスレットを買っておくと、ダメージを軽減できるぞ。`)
+      ];
+    }else if(id==="salidAdventurer"){
+      steps=[
+        talkDialogue("冒険者",npc.silhouette,npc.gender,`あの踊り子の姉ちゃん、マジやばいな……。
+西から来たってことは、あの溶岩洞窟を抜けて来たってことだろ？`),
+        talkDialogue("冒険者",npc.silhouette,npc.gender,`俺なんか、ちょっと入っただけでギブアップ。
+炎耐性を付けて行かなかったのは無謀すぎたよ……。`)
+      ];
+    }else if(id==="salidFemaleMerchant"){
+      steps=[
+        talkDialogue("女商人",npc.silhouette,npc.gender,`はぁ……女王様はいい人なんだけど、盗賊団は早くどうにかしてほしいわ。
+この前も、仕入れ先が襲われたみたいでさ。うちも売り上げ落ちてるのよ。`),
+        talkDialogue("女商人",npc.silhouette,npc.gender,`ただでさえグランゼルのせいで外国と取引しづらいって言うのに……。
+女王様はどうするつもりなのかしら。`)
+      ];
+    }
+    steps.push({type:"end"});
+    startTemporaryStoryEvent(steps);
+  }
+
+  function startSalidCastleResidentTalk(id){
+    const npc=townNpcData(id,"salidCastle");
+    let steps=[];
+    if(id==="salidCastleSeriousSoldier"){
+      steps=[
+        talkDialogue("兵士",npc.silhouette,npc.gender,`ようこそ。
+ここはサリード城です。`),
+        talkDialogue("兵士",npc.silhouette,npc.gender,`女王様はお優しい御方ですが、最近は盗賊団に頭を悩まされておられます。
+くれぐれも無礼のないようお願いします。`)
+      ];
+    }else if(id==="salidCastleWaterSoldier"){
+      steps=[
+        talkDialogue("兵士",npc.silhouette,npc.gender,`砂漠で大事なのは、水分補給を怠らないことだ。
+カラカラに乾涸びて死ぬなんてことも珍しいことじゃない。`),
+        talkDialogue("兵士",npc.silhouette,npc.gender,`何事も準備は怠るなってことさ。
+アイテムを買い溜めておいたり、装備を整えたりとか……な。`)
+      ];
+    }else if(id==="salidCastleSighSoldier"){
+      steps=[
+        talkDialogue("兵士",npc.silhouette,npc.gender,`シャウラ盗賊団を知っているか？
+今、サリードを困らせている盗賊連中だ。`),
+        talkDialogue("兵士",npc.silhouette,npc.gender,`何が厄介って、奴ら魔物娘なんだよ。そこらの人間のごろつきとは訳が違う。
+グランゼルとの戦争に向けて戦力を整えないといけないって時に……はた迷惑な話だよ。`)
+      ];
+    }
+    steps.push({type:"end"});
+    startTemporaryStoryEvent(steps);
+  }
+
   function startTownResidentTalk(id){
     if(state.currentTown==="runel") return startRunelResidentTalk(id);
     if(state.currentTown==="kunputei") return startKunputeiResidentTalk(id);
@@ -1428,6 +1544,8 @@
     if(state.currentTown==="tileno") return startTilenoResidentTalk(id);
     if(state.currentTown==="granzel" && townTalkSubarea==="castle") return startGranzelCastleResidentTalk(id);
     if(state.currentTown==="granzel") return startGranzelResidentTalk(id);
+    if(state.currentTown==="salid" && townTalkSubarea==="castle") return startSalidCastleResidentTalk(id);
+    if(state.currentTown==="salid") return startSalidResidentTalk(id);
     const npc=townNpcData(id,"milesta"), phase=townTalkPhase();
     let steps=[];
     if(id==="girl"){
@@ -4318,7 +4436,7 @@
       closeModal(); modal("ロードできません","このセーブデータは、より新しい形式で作成されています。"); return;
     }
     applyPersistentState(data.game);
-    if(!data.game?.currentTown) state.currentTown=data.location==="港町ヨーディー"?"yody":data.location==="ティレーノの街"?"tileno":data.location==="グランゼル城下町"?"granzel":data.location==="ルネルの街"?"runel":data.location==="薫風亭"?"kunputei":"milesta";
+    if(!data.game?.currentTown) state.currentTown=data.location==="港町ヨーディー"?"yody":data.location==="ティレーノの街"?"tileno":data.location==="グランゼル城下町"?"granzel":data.location==="ルネルの街"?"runel":data.location==="サリード城下町"?"salid":data.location==="薫風亭"?"kunputei":"milesta";
     if(Number(data.saveVersion)<5 && roster.hero) roster.hero.name="ロイド";
     if(Number(data.saveVersion)<4 && state.caveBossDefeated){
       state.eventFlags.milestaWaitingUnlocked=true;
@@ -5484,6 +5602,12 @@
       {kind:"equip",id:"runel_clothes"},{kind:"equip",id:"silver_mail"},{kind:"equip",id:"magical_cloth"},
       {kind:"equip",id:"runel_sneakers"},{kind:"equip",id:"talisman"}
     ],
+    salid:[
+      {kind:"item",id:"highPotion"},{kind:"item",id:"exPotion"},{kind:"item",id:"panacea"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},
+      {kind:"equip",id:"salid_saber"},{kind:"equip",id:"trainer_whip"},
+      {kind:"equip",id:"silver_shield"},{kind:"equip",id:"silver_mail"},{kind:"equip",id:"magical_cloth"},
+      {kind:"equip",id:"red_bracelet"},{kind:"equip",id:"veteran_charm"},{kind:"equip",id:"shadow_shoes"}
+    ],
     kunputei:[{kind:"item",id:"highPotion"},{kind:"item",id:"palioCocktail"}],
     plains:[{kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"}],
     cave:[{kind:"item",id:"potion"},{kind:"item",id:"antidote"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"},{kind:"equip",id:"alm_small_shield",stockLimit:1,stockKey:"travel:alm_small_shield"}],
@@ -5666,7 +5790,7 @@
   }
   function openShop(key="town"){
     state.currentShop=key; state.shopMode="buy"; state.shopSelectedKey=null; state.shopSessionPurchases={};
-    const shopTitles={town:"ミレスタ商店",yordy:"港町ヨーディー商店",tileno:"ティレーノ商店",granzel:"グランゼル城下町商店",runel:"ルネルの街商店",kunputei:"薫風亭・売店",cave:"洞窟の旅商人",caveSide:"洞窟の横道・旅商人",yodyRegion:"ヨーディー地方・旅商人",footpath:"麓の小道・旅商人",yodyMountain:"ヨーディー山道・旅商人",tilenoRegion:"ティレーノ地方・旅商人",tilenoWetland:"ティレーノ湿原・旅商人",tilenoToxicWetland:"ティレーノ毒湿地・旅商人",zelrenoForest:"ゼルレーノ森林地帯・旅商人",zelrenoForestDeep:"ゼルレーノ森林地帯・奥地・旅商人",granzelPlains:"グランゼル大平原・旅商人",runelCavern:"ルネル岩窟・旅商人",runelRegion:"ルネル地方・旅商人",runelRuins:"ルネルパリオ城下町跡・旅商人",salidDesert:"サリード砂漠・東・旅商人",plains:"旅の商人"};
+    const shopTitles={town:"ミレスタ商店",yordy:"港町ヨーディー商店",tileno:"ティレーノ商店",granzel:"グランゼル城下町商店",runel:"ルネルの街商店",salid:"サリード城下町商店",kunputei:"薫風亭・売店",cave:"洞窟の旅商人",caveSide:"洞窟の横道・旅商人",yodyRegion:"ヨーディー地方・旅商人",footpath:"麓の小道・旅商人",yodyMountain:"ヨーディー山道・旅商人",tilenoRegion:"ティレーノ地方・旅商人",tilenoWetland:"ティレーノ湿原・旅商人",tilenoToxicWetland:"ティレーノ毒湿地・旅商人",zelrenoForest:"ゼルレーノ森林地帯・旅商人",zelrenoForestDeep:"ゼルレーノ森林地帯・奥地・旅商人",granzelPlains:"グランゼル大平原・旅商人",runelCavern:"ルネル岩窟・旅商人",runelRegion:"ルネル地方・旅商人",runelRuins:"ルネルパリオ城下町跡・旅商人",salidDesert:"サリード砂漠・東・旅商人",plains:"旅の商人"};
     $("shopTitle").textContent=shopTitles[key]||"旅の商人";
     $("shopLead").textContent="商品を選ぶと、装備時の能力差をその場で確認できます。";
     setShopMerchant(key); renderShop(); const sf=$("shopFlash"); if(sf){sf.textContent=""; sf.className="shop-flash";} $("shopModal").classList.add("show");
@@ -10684,6 +10808,8 @@
     if(!runelRuinsUnlocked && state.selectedArea==="runelRuins") state.selectedArea=runelTownUnlocked?"runelRegion":runelCavernUnlocked?"runelCavern":"plains";
     if(!fairyGroveKnown && state.selectedArea==="fairyGrove") state.selectedArea=runelTownUnlocked?"runelRegion":runelCavernUnlocked?"runelCavern":"plains";
     if(!salidContinentUnlocked && ["salidDesert","salidTown","salidLavaCave","salidSunTemple"].includes(state.selectedArea)) state.selectedArea=yodyTownUnlocked?"yodyTown":yodyUnlocked?"yodyRegion":"plains";
+    if(salidContinentUnlocked && !salidLavaCaveReached && state.selectedArea==="salidLavaCave") state.selectedArea="salidDesert";
+    if(salidContinentUnlocked && !salidSunTempleReached && state.selectedArea==="salidSunTemple") state.selectedArea="salidDesert";
     const a=state.selectedArea;
     const caveVisible=!!state.caveUnlocked;
     if($("cavePin")) $("cavePin").style.display=caveVisible?"flex":"none";
@@ -10724,9 +10850,12 @@
     if($("fairyGroveWorldRoute")) $("fairyGroveWorldRoute").style.display=fairyGroveKnown?"":"none";
     if($("salidDesertWorldPin")) $("salidDesertWorldPin").style.display=salidContinentUnlocked?"flex":"none";
     if($("salidTownWorldPin")) $("salidTownWorldPin").style.display=salidContinentUnlocked?"flex":"none";
-    if($("salidLavaCaveWorldPin")){ $("salidLavaCaveWorldPin").style.display=salidContinentUnlocked?"flex":"none"; $("salidLavaCaveWorldPin").classList.toggle("locked",!salidLavaCaveReached); }
-    if($("salidSunTempleWorldPin")){ $("salidSunTempleWorldPin").style.display=salidContinentUnlocked?"flex":"none"; $("salidSunTempleWorldPin").classList.toggle("locked",!salidSunTempleReached); }
-    ["salidSeaWorldRoute","salidTownWorldRoute","salidLavaCaveWorldRoute","salidSunTempleWorldRoute"].forEach(id=>{if($(id)) $(id).style.display=salidContinentUnlocked?"":"none";});
+    if($("salidLavaCaveWorldPin")){ $("salidLavaCaveWorldPin").style.display=salidLavaCaveReached?"flex":"none"; $("salidLavaCaveWorldPin").classList.remove("locked"); }
+    if($("salidSunTempleWorldPin")){ $("salidSunTempleWorldPin").style.display=salidSunTempleReached?"flex":"none"; $("salidSunTempleWorldPin").classList.remove("locked"); }
+    if($("salidSeaWorldRoute")) $("salidSeaWorldRoute").style.display=salidContinentUnlocked?"":"none";
+    if($("salidTownWorldRoute")) $("salidTownWorldRoute").style.display=salidContinentUnlocked?"":"none";
+    if($("salidLavaCaveWorldRoute")) $("salidLavaCaveWorldRoute").style.display=salidLavaCaveReached?"":"none";
+    if($("salidSunTempleWorldRoute")) $("salidSunTempleWorldRoute").style.display=salidSunTempleReached?"":"none";
     if($("salidContinentLabel")) $("salidContinentLabel").style.display=salidContinentUnlocked?"block":"none";
     document.querySelectorAll(".area-pin").forEach(p=>p.classList.toggle("selected",p.dataset.area===a));
     if(a==="milestaTown"){
@@ -10791,7 +10920,7 @@
       $("areaDesc").textContent="サリード大陸東部に広がる灼熱の砂漠。西には溶岩洞窟、南には太陽の神殿へ続く道がある。";
     }else if(a==="salidTown"){
       $("areaName").textContent="サリード城下町";
-      $("areaDesc").textContent="砂漠の先に築かれたサリード王国の城下町。現在、町の中身は未実装。";
+      $("areaDesc").textContent="サリード王国の中心に築かれた城下町。砂漠を越えて行き交う商人や旅人で賑わっている。";
     }else if(a==="salidLavaCave"){
       $("areaName").textContent="溶岩洞窟";
       $("areaDesc").textContent=salidLavaCaveReached?"サリード砂漠・東の西側にある、熱気に満ちた洞窟。現在、探索内容は未実装。":"サリード砂漠・東の西側にある洞窟。砂漠を抜けて一度到着すると直接向かえるようになる。";
@@ -10803,12 +10932,12 @@
       $("areaDesc").textContent="港町ヨーディー周辺に広がる海沿いの地方。山道や麓へ続く道が伸びている。";
     }
     $("backHome").textContent=`← ${townDisplayName(state.currentTown)}へ`;
-    if(a==="fairyGrove" || a==="salidTown" || a==="salidLavaCave" || a==="salidSunTemple"){
-      $("departBtn").textContent=(a==="salidLavaCave"&&!salidLavaCaveReached)||(a==="salidSunTemple"&&!salidSunTempleReached)?"まだ直接向かえない":"現在は入れない";
+    if(a==="fairyGrove" || a==="salidLavaCave" || a==="salidSunTemple"){
+      $("departBtn").textContent="現在は入れない";
       $("departBtn").disabled=true;
       $("departBtn").classList.add("locked");
     }else{
-      $("departBtn").textContent=(a==="milestaTown"||a==="yodyTown"||a==="tilenoTown"||a==="granzelTown"||a==="runelTown")?"町へ移動する":a==="iceCorridor"?"入口へ移動する":"探索を開始する";
+      $("departBtn").textContent=(a==="milestaTown"||a==="yodyTown"||a==="tilenoTown"||a==="granzelTown"||a==="runelTown"||a==="salidTown")?"町へ移動する":a==="iceCorridor"?"入口へ移動する":"探索を開始する";
       $("departBtn").disabled=false;
       $("departBtn").classList.remove("locked");
     }
@@ -10887,10 +11016,12 @@
         toast("まだこの場所は発見していません");
         return;
       }
-      if(["salidDesert","salidTown","salidLavaCave","salidSunTemple"].includes(pin.dataset.area) && !state.eventFlags?.salidTownReached){
+      if((pin.dataset.area==="salidDesert" || pin.dataset.area==="salidTown") && !state.eventFlags?.salidTownReached){
         toast("サリード城下町に到着すると、世界マップに表示されます");
         return;
       }
+      if(pin.dataset.area==="salidLavaCave" && !state.eventFlags?.salidLavaCaveReached) return;
+      if(pin.dataset.area==="salidSunTemple" && !state.eventFlags?.salidSunTempleReached) return;
       state.selectedArea=pin.dataset.area;
       updateWorld();
     };
@@ -10902,6 +11033,7 @@
     if(state.selectedArea==="tilenoTown"){ enterTown("tileno","ティレーノの街へ移動しました"); return; }
     if(state.selectedArea==="granzelTown"){ enterTown("granzel","グランゼル城下町へ移動しました"); return; }
     if(state.selectedArea==="runelTown"){ enterTown("runel","ルネルの街へ移動しました"); return; }
+    if(state.selectedArea==="salidTown"){ enterTown("salid","サリード城下町へ移動しました"); return; }
     if(state.selectedArea==="iceCorridor"){
       if(margaretIceMeetingPending()){ startMargaretIceCorridorMeeting(); return; }
       modal("❄️ 氷雪の回廊",`雪と氷に覆われた、氷雪の回廊の入口だ。`,[["世界マップへ戻る",closeModal]]);
@@ -14331,13 +14463,10 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
 
 サリード城下町に到着した！
 
-これで世界マップにサリード大陸が表示され、「サリード砂漠・東」へ直接向かえるようになった。`
+これで世界マップにサリード大陸が表示され、「サリード城下町」と「サリード砂漠・東」へ直接向かえるようになった。`
           : `サリード砂漠を抜け、サリード城下町に到着した。`;
-        modal("🏙️ サリード城下町",`${arrivalText}
-
-※サリード城下町の中身は現在未実装です。`,[
-          ["港町ヨーディーへ戻る",()=>{closeModal();state.currentTown="yody";state.selectedArea="yodyTown";finishRun("港町ヨーディーへ戻りました");}],
-          ["砂漠へ戻る",()=>{closeModal();returnToPreviousNode();}]
+        modal("🏙️ サリード城下町",arrivalText,[
+          ["サリード城下町へ",()=>{closeModal();state.currentTown="salid";state.selectedArea="salidTown";finishRun("サリード城下町に到着しました");}]
         ]);
         break;
       }
