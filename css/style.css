@@ -82,19 +82,21 @@
   .world-map-viewport::-webkit-scrollbar{width:0;height:0}
   .world-map-viewport.dragging{cursor:grabbing;user-select:none}
   .world-map{
-    width:1780px;height:900px;position:relative;overflow:hidden;
+    width:1780px;height:1200px;position:relative;overflow:hidden;
     background:
-      radial-gradient(circle at 18% 42%,rgba(83,130,73,.55),transparent 15%),
-      radial-gradient(circle at 35% 24%,rgba(105,93,66,.46),transparent 16%),
-      radial-gradient(circle at 49% 40%,rgba(82,126,113,.34),transparent 17%),
-      linear-gradient(180deg,#203b3e 0%,#18323a 65%,#153647 66%,#102c42 100%)
+      radial-gradient(circle at 18% 32%,rgba(83,130,73,.55),transparent 12%),
+      radial-gradient(circle at 35% 18%,rgba(105,93,66,.46),transparent 13%),
+      radial-gradient(circle at 49% 30%,rgba(82,126,113,.34),transparent 14%),
+      radial-gradient(ellipse at 46% 83%,rgba(194,150,70,.38),transparent 22%),
+      radial-gradient(ellipse at 59% 88%,rgba(132,87,43,.34),transparent 24%),
+      linear-gradient(180deg,#203b3e 0%,#18323a 49%,#153647 50%,#102c42 64%,#655235 65%,#8a6c3c 100%)
   }
   .world-map:after{
-    content:"";position:absolute;left:0;right:0;top:590px;height:310px;pointer-events:none;
-    background:repeating-linear-gradient(172deg,rgba(105,181,214,.08) 0 3px,transparent 3px 29px);
-    border-top:1px solid rgba(130,190,214,.20)
+    content:"";position:absolute;left:0;right:0;top:590px;height:180px;pointer-events:none;
+    background:repeating-linear-gradient(172deg,rgba(105,181,214,.09) 0 3px,transparent 3px 29px);
+    border-top:1px solid rgba(130,190,214,.20);border-bottom:1px solid rgba(208,171,100,.18)
   }
-  .world-route-layer{position:absolute;inset:0;width:1780px;height:900px;overflow:visible;pointer-events:none;z-index:1}
+  .world-route-layer{position:absolute;inset:0;width:1780px;height:1200px;overflow:visible;pointer-events:none;z-index:1}
   .route{fill:none;stroke:#7892a7;stroke-width:6;stroke-linecap:round;opacity:.82;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
   .route.sea-route{stroke:#7fb9ce;stroke-dasharray:14 11;opacity:.58}
   .world-region-label{
