@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.46v";
+  const DEV_VERSION = "v0.46w";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -47,7 +47,7 @@
     battleActions: [null,null,null,null],
     battleTargetMode: null,
     battleSpeed: 1,
-    battleAutoContinuous: false,
+    battleAutoMode: null,
     battleAutoStartTimer: null,
     battleTestSnapshot: null,
     devSkillTestSnapshot: null,
@@ -4151,7 +4151,7 @@
     state.battleActions=[null,null,null,null];
     state.battleTargetMode=null;
     state.battleEnded=false;
-    state.battleAutoContinuous=false;
+    state.battleAutoMode=null;
     state.battleTestSnapshot=null;
     state.devSkillTestSnapshot=null;
     state.pendingRecruitCandidate=null;
@@ -7229,7 +7229,6 @@
   function setCommandsEnabled(enabled){
     if(!enabled){ closeSkillMenu(); closeItemMenu(); }
     document.querySelectorAll(".cmd[data-command], #swapBtn, #escapeBtn").forEach(b=>b.disabled=!enabled);
-    $("turnAutoBtn").disabled=!enabled;
     updateSkillButton();
     updateAutoButtons();
   }
@@ -7242,6 +7241,12 @@
     btn.disabled=!ready;
   }
 
+  function battleAutoNoteText(){
+    if(state.battleAutoMode==="normal") return "⚔ 通常AUTO中";
+    if(state.battleAutoMode==="skill") return "✨ スキルAUTO中";
+    return "全員入力で自動開始";
+  }
+
   function cancelScheduledTurnStart(){
     if(state.battleAutoStartTimer){
       clearTimeout(state.battleAutoStartTimer);
@@ -7250,7 +7255,7 @@
     const note=$("autoStartNote");
     if(note){
       note.classList.remove("countdown");
-      note.textContent=state.battleAutoContinuous ? "継続オート中" : "全員入力で自動開始";
+      note.textContent=battleAutoNoteText();
     }
   }
 
@@ -7271,18 +7276,49 @@
   }
 
   function updateAutoButtons(){
-    const toggle=$("autoToggleBtn");
-    const one=$("turnAutoBtn");
-    if(toggle){
-      toggle.classList.toggle("on",state.battleAutoContinuous);
-      toggle.querySelector("span").innerHTML=state.battleAutoContinuous ? "AUTO<br>ON" : "AUTO<br>OFF";
+    const normal=$("turnAutoBtn");
+    const skill=$("autoToggleBtn");
+    if(normal){
+      const on=state.battleAutoMode==="normal";
+      normal.classList.toggle("on",on);
+      normal.disabled=!!state.battleEnded;
+      normal.setAttribute("aria-pressed",on?"true":"false");
     }
-    if(one) one.disabled=state.battlePhase!=="input" || state.battleEnded;
+    if(skill){
+      const on=state.battleAutoMode==="skill";
+      skill.classList.toggle("on",on);
+      skill.disabled=!!state.battleEnded;
+      skill.setAttribute("aria-pressed",on?"true":"false");
+    }
     const note=$("autoStartNote");
     if(note && !state.battleAutoStartTimer){
       note.classList.remove("countdown");
-      note.textContent=state.battleAutoContinuous ? "継続オート中" : "全員入力で自動開始";
+      note.textContent=battleAutoNoteText();
     }
+  }
+
+  function clearPlayerAutoActionsForManual(){
+    if(state.battlePhase!=="input") return;
+    cancelScheduledTurnStart();
+    refundAllQueuedItems();
+    state.battleTargetMode=null;
+    state.battleActions=[null,null,null,null];
+    livingActiveSlots().forEach(({i,c})=>{
+      if(c.npcAuto) state.battleActions[i]=chooseAutoAction(i,"skill");
+      else if(conditionsOf(c).berserk) state.battleActions[i]=makeAttackAction();
+    });
+    renderBattleParty();
+    renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+    updateActorPortrait();
+    updateExecuteButton();
+  }
+
+  function stopBattleAutoForManual(){
+    if(!state.battleAutoMode) return false;
+    state.battleAutoMode=null;
+    clearPlayerAutoActionsForManual();
+    updateAutoButtons();
+    return true;
   }
 
   function nextUnqueuedSlot(afterSlot){
@@ -7299,6 +7335,11 @@
     return [...livingEnemies()].sort((a,b)=>(a.hp/a.hpMax)-(b.hp/b.hpMax))[0] || null;
   }
 
+  function randomLivingEnemy(){
+    const enemies=livingEnemies();
+    return enemies.length ? choose(enemies) : null;
+  }
+
   function lowestHpAllySlot(){
     const living=livingActiveSlots();
     if(!living.length) return null;
@@ -7306,90 +7347,314 @@
     return living[0].i;
   }
 
-  function strongestUnbuffedAllySlot(){
-    const living=livingActiveSlots();
-    if(!living.length) return null;
-    const unbuffed=living.filter(x=>x.c.atkBuffRounds<=0);
-    const pool=unbuffed.length ? unbuffed : living;
-    pool.sort((a,b)=>effectiveAtk(b.c)-effectiveAtk(a.c));
-    return pool[0].i;
-  }
-
   function makeAttackAction(){
-    const target=lowestHpEnemy();
+    const target=randomLivingEnemy();
     return target ? {type:"attack",targetUid:target.uid} : null;
   }
 
-  function chooseAutoAction(slot){
-    const actor=roster[state.battleActive[slot]];
-    if(!actor || S(actor).hp<=0) return null;
-    if(conditionsOf(actor).silence) return makeAttackAction();
-    const firstSkillId=learnedSkillIds(actor)[0] || null;
-    const sk=firstSkillId ? skills[firstSkillId] : null;
-    const target=lowestHpEnemy();
+  const AUTO_FORBIDDEN_SKILL_KINDS=new Set(["passive","fortune","escape","mpTransfer","stealth","return"]);
 
-    // Eliza: fixed escort NPC. She heals when needed and otherwise uses ice magic automatically.
-    if(actor.id==="eliza"){
-      const living=livingActiveSlots();
-      const injured=[...living].sort((a,b)=>(S(a.c).hp/S(a.c).hpMax)-(S(b.c).hp/S(b.c).hpMax));
-      const worst=injured[0];
-      if(worst && S(worst.c).hp/S(worst.c).hpMax<.50 && S(actor).mp>=battleSkillCost(actor,skills.heal)){
-        return {type:"skill",skill:"heal",targetSlot:worst.i,targetId:state.battleActive[worst.i]};
-      }
-      const hurtCount=living.filter(x=>S(x.c).hp/S(x.c).hpMax<.72).length;
-      if(hurtCount>=2 && S(actor).mp>=battleSkillCost(actor,skills.allHeal)) return {type:"skill",skill:"allHeal"};
-      if(livingEnemies().length>=2 && S(actor).mp>=battleSkillCost(actor,skills.cold)) return {type:"skill",skill:"cold"};
-      if(target && S(actor).mp>=battleSkillCost(actor,skills.frost)) return {type:"skill",skill:"frost",targetUid:target.uid};
-      if(target && S(actor).mp>=battleSkillCost(actor,skills.ice)) return {type:"skill",skill:"ice",targetUid:target.uid};
-      return makeAttackAction();
+  function autoWeightedPick(entries){
+    const list=entries.filter(x=>x && Number(x.weight)>0 && x.action);
+    if(!list.length) return null;
+    const total=list.reduce((sum,x)=>sum+Number(x.weight),0);
+    let roll=Math.random()*total;
+    for(const entry of list){
+      roll-=Number(entry.weight);
+      if(roll<=0) return entry.action;
     }
+    return list[list.length-1].action;
+  }
 
-    // Hero: demonstrate the multi-skill setup. Blaze when 2+ enemies remain, otherwise Fire.
-    if(actor.id==="hero"){
-      const blaze=skills.blaze, fire=skills.fire;
-      if(livingEnemies().length>=2 && learnedSkillIds(actor).includes("blaze") && S(actor).mp>=battleSkillCost(actor,blaze)){
-        return {type:"skill",skill:"blaze"};
-      }
-      if(target && learnedSkillIds(actor).includes("fire") && S(actor).mp>=battleSkillCost(actor,fire)){
-        return {type:"skill",skill:"fire",targetUid:target.uid};
+  function autoSkillCostWeight(actor,sk){
+    const cost=battleSkillCost(actor,sk);
+    return 1/(1+cost/20);
+  }
+
+  function autoUsableSkills(actor){
+    if(!actor || conditionsOf(actor).silence) return [];
+    return knownSkills(actor).map(base=>effectiveSkillForActor(actor,base)).filter(sk=>
+      sk && sk.battleUse!==false && !AUTO_FORBIDDEN_SKILL_KINDS.has(sk.kind) &&
+      S(actor).mp>=battleSkillCost(actor,sk) && weaponRequirementMet(actor,sk)
+    );
+  }
+
+  function autoKoFrontSlots(){
+    return state.battleActive.map((id,i)=>({i,c:roster[id]})).filter(x=>x.c && S(x.c).hp<=0);
+  }
+
+  function autoNegativeCount(c,{poisonOnly=false}={}){
+    if(!c || S(c).hp<=0) return 0;
+    const cond=conditionsOf(c);
+    const keys=poisonOnly?["poison"]:["poison","blind","silence","shock"];
+    return keys.reduce((n,key)=>n+(cond[key]?1:0),0);
+  }
+
+  function autoEnemyHasBuff(enemy){
+    if(!enemy) return false;
+    if(["atkBuff","defBuff","magicBuff","mdefBuff","spdBuff"].some(key=>Number(enemy[key])>1 || Number(enemy[`${key}Rounds`])>0)) return true;
+    if(Number(enemy.powerChargeRounds)>0 || Number(enemy.magicConcentrationRounds)>0 || Number(enemy.magicBarrierRounds)>0) return true;
+    const cond=conditionsOf(enemy);
+    return !!(cond.mount || cond.aura || cond.berserk || (enemy.buffs && Object.keys(enemy.buffs).length));
+  }
+
+  function autoEnemyCanReceiveStatus(enemy,sk){
+    if(!enemy || enemy.hp<=0 || !sk?.status) return false;
+    if(enemy.statusImmuneAll) return false;
+    if(Array.isArray(enemy.statusImmune) && enemy.statusImmune.includes(sk.status)) return false;
+    if(sk.status==="death" && enemy.statusDeathImmune) return false;
+    if(sk.status!=="death" && conditionsOf(enemy)[sk.status]) return false;
+    return true;
+  }
+
+  function autoBuffNeeded(c,sk){
+    const info=BUFF_INFO[sk?.buff];
+    if(!c || !info || S(c).hp<=0) return false;
+    const current=Number(c[info.value])||1;
+    const rounds=Number(c[info.rounds])||0;
+    return rounds<=0 || current<Number(sk.multiplier||1);
+  }
+
+  function autoReviveAction(actor,usable,{forceChance=true}={}){
+    const ko=autoKoFrontSlots();
+    if(!ko.length) return null;
+    const revives=usable.filter(sk=>sk.kind==="revive");
+    if(!revives.length || (forceChance && Math.random()>=.88)) return null;
+    const entries=[];
+    revives.forEach(sk=>{
+      let weight=autoSkillCostWeight(actor,sk);
+      if(sk.target==="allyAll") weight*=ko.length>=2?1.55:.55;
+      else weight*=1.10;
+      const action=sk.target==="allyAll"
+        ? {type:"skill",skill:sk.id}
+        : (()=>{const target=choose(ko);return {type:"skill",skill:sk.id,targetSlot:target.i,targetId:target.c.id};})();
+      entries.push({weight,action});
+    });
+    return autoWeightedPick(entries);
+  }
+
+  function autoHealAction(actor,usable,{emergency=false}={}){
+    const living=livingActiveSlots();
+    if(!living.length) return null;
+    const heals=usable.filter(sk=>sk.kind==="heal");
+    if(!heals.length) return null;
+    const sorted=[...living].sort((a,b)=>(S(a.c).hp/S(a.c).hpMax)-(S(b.c).hp/S(b.c).hpMax));
+    const worst=sorted[0];
+    const worstPct=S(worst.c).hp/S(worst.c).hpMax;
+    if(emergency){
+      if(worstPct>=.40 || Math.random()>=.82) return null;
+    }else if(worstPct>=.72){
+      return null;
+    }
+    const hurt65=living.filter(x=>S(x.c).hp/S(x.c).hpMax<.65).length;
+    const hurt80=living.filter(x=>S(x.c).hp/S(x.c).hpMax<.80).length;
+    const entries=[];
+    heals.forEach(sk=>{
+      let weight=autoSkillCostWeight(actor,sk);
+      if(sk.target==="allyAll") weight*=emergency?(hurt65>=2?1.45:.55):(hurt80>=2?1.15:.45);
+      else weight*=1.05;
+      const action=sk.target==="allyAll"
+        ? {type:"skill",skill:sk.id}
+        : {type:"skill",skill:sk.id,targetSlot:worst.i,targetId:worst.c.id};
+      entries.push({weight,action});
+    });
+    return autoWeightedPick(entries);
+  }
+
+  function autoCleanseAction(actor,usable,{forceChance=true}={}){
+    const cleanses=usable.filter(sk=>sk.kind==="cleanse");
+    if(!cleanses.length) return null;
+    const living=livingActiveSlots();
+    const anyAfflicted=living.some(x=>autoNegativeCount(x.c)>0);
+    if(!anyAfflicted || (forceChance && Math.random()>=.60)) return null;
+    const entries=[];
+    cleanses.forEach(sk=>{
+      const poisonOnly=Array.isArray(sk.statuses) && sk.statuses.length===1 && sk.statuses[0]==="poison";
+      const targets=living.filter(x=>autoNegativeCount(x.c,{poisonOnly})>0);
+      if(!targets.length) return;
+      let weight=autoSkillCostWeight(actor,sk)*.75;
+      if(sk.target==="allyAll") weight*=targets.length>=2?1.40:.50;
+      const action=sk.target==="allyAll"
+        ? {type:"skill",skill:sk.id}
+        : (()=>{const target=choose(targets);return {type:"skill",skill:sk.id,targetSlot:target.i,targetId:target.c.id};})();
+      entries.push({weight,action});
+    });
+    return autoWeightedPick(entries);
+  }
+
+  function autoOffenseWeight(actor,sk,target=null){
+    let weight=autoSkillCostWeight(actor,sk);
+    const enemyCount=livingEnemies().length;
+    if(sk.target==="enemyAll") weight*=enemyCount>=3?1.35:enemyCount===2?1.12:.42;
+    if(sk.kind==="magic" && sk.element){
+      if(sk.target==="enemyAll"){
+        const enemies=livingEnemies();
+        const avg=enemies.length?enemies.reduce((sum,e)=>sum+elementResistanceMultiplier(e,sk.element),0)/enemies.length:1;
+        weight*=Math.max(.12,Math.min(1.55,avg));
+      }else if(target){
+        weight*=Math.max(.08,Math.min(1.60,elementResistanceMultiplier(target,sk.element)));
       }
     }
+    return weight;
+  }
 
-    // Slime: use Tackle while HP is above 30%; otherwise play safely.
-    if(actor.id==="slime" && sk?.id==="tackle" && S(actor).mp>=battleSkillCost(actor,sk) && S(actor).hp/S(actor).hpMax>.30 && target){
-      return {type:"skill",skill:"tackle",targetUid:target.uid};
-    }
+  function autoGeneralSkillAction(actor,usable){
+    const enemies=livingEnemies();
+    const living=livingActiveSlots();
+    if(!enemies.length) return null;
+    const entries=[];
 
-    // Dog: if somebody lacks the attack buff, use Polish on the strongest candidate.
-    if(actor.id==="dog" && sk?.id==="polish" && S(actor).mp>=battleSkillCost(actor,sk)){
-      const needsBuff=livingActiveSlots().some(x=>x.c.atkBuffRounds<=0);
-      if(needsBuff){
-        const targetSlot=strongestUnbuffedAllySlot();
-        if(targetSlot!==null) return {type:"skill",skill:"polish",targetSlot,targetId:state.battleActive[targetSlot]};
+    usable.forEach(sk=>{
+      const costWeight=autoSkillCostWeight(actor,sk);
+
+      if(sk.kind==="magic"){
+        const target=sk.target==="enemy"?randomLivingEnemy():null;
+        entries.push({weight:autoOffenseWeight(actor,sk,target),action:sk.target==="enemy"?{type:"skill",skill:sk.id,targetUid:target?.uid}:{type:"skill",skill:sk.id}});
+        return;
       }
-    }
 
-    // Fairy: heal the most injured ally below 50%; otherwise attack.
-    if(actor.id==="fairy" && sk?.id==="heal" && S(actor).mp>=battleSkillCost(actor,sk)){
-      const targetSlot=lowestHpAllySlot();
-      if(targetSlot!==null){
-        const ally=roster[state.battleActive[targetSlot]];
-        if(S(ally).hp/S(ally).hpMax<.50){
-          return {type:"skill",skill:"heal",targetSlot,targetId:state.battleActive[targetSlot]};
-        }
+      if(["physical","physicalSpecial"].includes(sk.kind)){
+        if(sk.recoilRate && S(actor).hp/S(actor).hpMax<=.30) return;
+        const target=randomLivingEnemy();
+        if(target) entries.push({weight:costWeight*1.05,action:{type:"skill",skill:sk.id,targetUid:target.uid}});
+        return;
       }
-    }
+      if(sk.kind==="multiPhysical"){
+        entries.push({weight:costWeight*.95,action:{type:"skill",skill:sk.id}});
+        return;
+      }
+      if(sk.kind==="physicalAll"){
+        const count=enemies.length;
+        entries.push({weight:costWeight*(count>=3?1.30:count===2?1.08:.40),action:{type:"skill",skill:sk.id}});
+        return;
+      }
 
+      if(sk.kind==="status"){
+        const viable=enemies.filter(e=>autoEnemyCanReceiveStatus(e,sk));
+        if(!viable.length) return;
+        const target=sk.target==="enemy"?choose(viable):null;
+        const resistFactor=sk.target==="enemy"
+          ? statusResistanceMultiplier(target,sk.status)
+          : viable.reduce((sum,e)=>sum+statusResistanceMultiplier(e,sk.status),0)/viable.length;
+        let weight=costWeight*(sk.status==="death"?.22:.38)*Math.max(.08,Math.min(1.35,resistFactor));
+        if(sk.target==="enemyAll") weight*=viable.length>=2?1.20:.48;
+        entries.push({weight,action:sk.target==="enemy"?{type:"skill",skill:sk.id,targetUid:target.uid}:{type:"skill",skill:sk.id}});
+        return;
+      }
+
+      if(sk.kind==="dispel"){
+        if(enemies.some(autoEnemyHasBuff)) entries.push({weight:costWeight*.62,action:{type:"skill",skill:sk.id}});
+        return;
+      }
+
+      if(sk.kind==="heal"){
+        const sorted=[...living].sort((a,b)=>(S(a.c).hp/S(a.c).hpMax)-(S(b.c).hp/S(b.c).hpMax));
+        const worst=sorted[0];
+        if(!worst || S(worst.c).hp/S(worst.c).hpMax>=.72) return;
+        const hurt=living.filter(x=>S(x.c).hp/S(x.c).hpMax<.80).length;
+        const weight=costWeight*(sk.target==="allyAll"?(hurt>=2?.72:.28):.62);
+        entries.push({weight,action:sk.target==="allyAll"?{type:"skill",skill:sk.id}:{type:"skill",skill:sk.id,targetSlot:worst.i,targetId:worst.c.id}});
+        return;
+      }
+
+      if(sk.kind==="revive"){
+        const ko=autoKoFrontSlots();
+        if(!ko.length) return;
+        const target=choose(ko);
+        entries.push({weight:costWeight*.45,action:sk.target==="allyAll"?{type:"skill",skill:sk.id}:{type:"skill",skill:sk.id,targetSlot:target.i,targetId:target.c.id}});
+        return;
+      }
+
+      if(sk.kind==="cleanse"){
+        const poisonOnly=Array.isArray(sk.statuses) && sk.statuses.length===1 && sk.statuses[0]==="poison";
+        const targets=living.filter(x=>autoNegativeCount(x.c,{poisonOnly})>0);
+        if(!targets.length) return;
+        const target=choose(targets);
+        entries.push({weight:costWeight*(sk.target==="allyAll"?(targets.length>=2?.58:.22):.48),action:sk.target==="allyAll"?{type:"skill",skill:sk.id}:{type:"skill",skill:sk.id,targetSlot:target.i,targetId:target.c.id}});
+        return;
+      }
+
+      if(sk.kind==="buff"){
+        const targets=living.filter(x=>autoBuffNeeded(x.c,sk));
+        if(!targets.length) return;
+        const target=choose(targets);
+        entries.push({weight:costWeight*(sk.target==="allyAll"?(targets.length>=2?.58:.26):.42),action:sk.target==="allyAll"?{type:"skill",skill:sk.id}:{type:"skill",skill:sk.id,targetSlot:target.i,targetId:target.c.id}});
+        return;
+      }
+
+      if(sk.kind==="barrier"){
+        const targets=living.filter(x=>!conditionsOf(x.c)[sk.barrier]);
+        if(!targets.length) return;
+        const target=choose(targets);
+        entries.push({weight:costWeight*(sk.target==="allyAll"?(targets.length>=2?.42:.18):.32),action:sk.target==="allyAll"?{type:"skill",skill:sk.id}:{type:"skill",skill:sk.id,targetSlot:target.i,targetId:target.c.id}});
+        return;
+      }
+
+      if(sk.kind==="magicBarrier"){
+        const need=living.filter(x=>Number(x.c.magicBarrierRounds)<=0).length;
+        if(need) entries.push({weight:costWeight*(need>=2?.34:.16),action:{type:"skill",skill:sk.id}});
+        return;
+      }
+
+      if(sk.kind==="charge"){
+        const active=sk.chargeStat==="atk"?Number(actor.powerChargeRounds)>0:Number(actor.magicConcentrationRounds)>0;
+        if(!active) entries.push({weight:costWeight*.30,action:{type:"skill",skill:sk.id,targetId:actor.id,targetSlot:state.battleActive.indexOf(actor.id)}});
+        return;
+      }
+
+      if(sk.kind==="berserk"){
+        if(!conditionsOf(actor).berserk) entries.push({weight:costWeight*.18,action:{type:"skill",skill:sk.id,targetId:actor.id,targetSlot:state.battleActive.indexOf(actor.id)}});
+      }
+    });
+
+    return autoWeightedPick(entries);
+  }
+
+  function chooseElizaAutoAction(actor){
+    const living=livingActiveSlots();
+    const injured=[...living].sort((a,b)=>(S(a.c).hp/S(a.c).hpMax)-(S(b.c).hp/S(b.c).hpMax));
+    const worst=injured[0];
+    if(worst && S(worst.c).hp/S(worst.c).hpMax<.50 && S(actor).mp>=battleSkillCost(actor,skills.heal)){
+      return {type:"skill",skill:"heal",targetSlot:worst.i,targetId:state.battleActive[worst.i]};
+    }
+    const hurtCount=living.filter(x=>S(x.c).hp/S(x.c).hpMax<.72).length;
+    if(hurtCount>=2 && S(actor).mp>=battleSkillCost(actor,skills.allHeal)) return {type:"skill",skill:"allHeal"};
+    if(livingEnemies().length>=2 && S(actor).mp>=battleSkillCost(actor,skills.cold)) return {type:"skill",skill:"cold"};
+    const target=randomLivingEnemy();
+    if(target && S(actor).mp>=battleSkillCost(actor,skills.frost)) return {type:"skill",skill:"frost",targetUid:target.uid};
+    if(target && S(actor).mp>=battleSkillCost(actor,skills.ice)) return {type:"skill",skill:"ice",targetUid:target.uid};
     return makeAttackAction();
   }
 
-  function fillAutoActions(){
-    if(state.battlePhase!=="input" || state.battleEnded) return false;
+  function chooseAutoAction(slot,mode="skill"){
+    const actor=roster[state.battleActive[slot]];
+    if(!actor || S(actor).hp<=0) return null;
+    if(conditionsOf(actor).berserk) return makeAttackAction();
+    if(actor.npcAuto && actor.id==="eliza") return chooseElizaAutoAction(actor);
+    if(mode==="normal" || conditionsOf(actor).silence) return makeAttackAction();
+
+    const usable=autoUsableSkills(actor);
+    if(!usable.length) return makeAttackAction();
+
+    const revive=autoReviveAction(actor,usable,{forceChance:true});
+    if(revive) return revive;
+    const heal=autoHealAction(actor,usable,{emergency:true});
+    if(heal) return heal;
+    const cleanse=autoCleanseAction(actor,usable,{forceChance:true});
+    if(cleanse) return cleanse;
+
+    // Normal attacks deliberately remain common. Skill AUTO is convenient, not an optimizer.
+    if(Math.random()<.45) return makeAttackAction();
+    return autoGeneralSkillAction(actor,usable) || makeAttackAction();
+  }
+
+  function fillAutoActions(mode=state.battleAutoMode){
+    if(state.battlePhase!=="input" || state.battleEnded || !mode) return false;
     cancelScheduledTurnStart();
     state.battleTargetMode=null;
 
-    livingActiveSlots().forEach(({i})=>{
-      const action=chooseAutoAction(i);
+    livingActiveSlots().forEach(({i,c})=>{
+      const action=chooseAutoAction(i,c.npcAuto?"skill":mode);
       if(action){
         refundQueuedItem(i);
         state.battleActions[i]=action;
@@ -7404,9 +7669,9 @@
     updateExecuteButton();
 
     if(commandsReady()){
-      setMessage(state.battleAutoContinuous
-        ? "AUTO：4人の行動を選択しました。"
-        : "1ターンオート：4人の行動を選択しました。");
+      setMessage(mode==="normal"
+        ? "通常AUTO：全員が通常攻撃を選択しました。"
+        : "スキルAUTO：行動を自動選択しました。");
       scheduleTurnStart(0);
       return true;
     }
@@ -7435,7 +7700,7 @@
     state.battleTargetMode=null;
     state.battleActive.forEach(id=>roster[id].defending=false);
     livingActiveSlots().forEach(({i,c})=>{
-      if(c.npcAuto) state.battleActions[i]=chooseAutoAction(i);
+      if(c.npcAuto) state.battleActions[i]=chooseAutoAction(i,"skill");
       else if(conditionsOf(c).berserk) state.battleActions[i]=makeAttackAction();
     });
 
@@ -7457,9 +7722,10 @@
       return;
     }
 
-    if(state.battleAutoContinuous){
-      setMessage(`ROUND ${state.battleRound}：AUTOが行動を選択します。`);
-      setTimeout(()=>fillAutoActions(),260);
+    if(state.battleAutoMode){
+      const mode=state.battleAutoMode;
+      setMessage(`ROUND ${state.battleRound}：${mode==="normal"?"通常AUTO":"スキルAUTO"}が行動を選択します。`);
+      setTimeout(()=>{ if(state.battleAutoMode===mode) fillAutoActions(mode); },0);
     }else{
       setMessage(currentInputPrompt());
     }
@@ -9258,7 +9524,7 @@
 
   function finishEscape(){
     state.battleEnded=true;
-    state.battleAutoContinuous=false;
+    state.battleAutoMode=null;
     cancelScheduledTurnStart();
     state.battlePhase="ended";
     state.battleTargetMode=null;
@@ -9290,7 +9556,7 @@
     if(state.battlePhase!=="input" || state.battleEnded) return;
     if(state.battleEscapeDisabled){ setMessage("この戦闘からは逃走できない！"); return; }
     cancelScheduledTurnStart();
-    state.battleAutoContinuous=false;
+    state.battleAutoMode=null;
     updateAutoButtons();
     closeSkillMenu();
     closeItemMenu();
@@ -9524,7 +9790,7 @@
   function winBattle(){
     if(state.battleEnded) return;
     state.battleEnded=true;
-    state.battleAutoContinuous=false;
+    state.battleAutoMode=null;
     cancelScheduledTurnStart();
     state.battlePhase="ended";
     state.battleTargetMode=null;
@@ -9860,7 +10126,7 @@
     if(state.battleEnded) return;
     if(tryUseHolyBeastClock()) return;
     state.battleEnded=true;
-    state.battleAutoContinuous=false;
+    state.battleAutoMode=null;
     cancelScheduledTurnStart();
     state.battlePhase="ended";
     state.battleTargetMode=null;
@@ -9933,7 +10199,7 @@
     state.battleEnded=false;
     state.battleActions=[null,null,null,null];
     state.battleTargetMode=null;
-    state.battleAutoContinuous=false;
+    state.battleAutoMode=null;
     state.battleVictoryData=null;
     state.pendingRecruitCandidate=null;
     state.levelUpPresentationDone=false;
@@ -9987,7 +10253,7 @@
       return;
     }
     state.battleEnded=true;
-    state.battleAutoContinuous=false;
+    state.battleAutoMode=null;
     hideBattleDrop();
     hideBattleContinue();
     cancelScheduledTurnStart();
@@ -10108,8 +10374,8 @@
 
   $("swapCloseBtn").onclick=()=>$("swapModal").classList.remove("show");
   $("swapModal").addEventListener("click",e=>{ if(e.target===$("swapModal")) $("swapModal").classList.remove("show"); });
-  $("swapBtn").onclick=()=>openSwap();
-  $("escapeBtn").onclick=attemptEscape;
+  $("swapBtn").onclick=()=>{ stopBattleAutoForManual(); openSwap(); };
+  $("escapeBtn").onclick=()=>{ stopBattleAutoForManual(); attemptEscape(); };
   $("battleTargetBackBtn").onclick=cancelBattleTargetSelection;
   $("skillCloseBtn").onclick=closeSkillMenu;
   $("skillModal").addEventListener("click",e=>{ if(e.target===$("skillModal")) closeSkillMenu(); });
@@ -10118,27 +10384,30 @@
   $("exploreReserveBtn").onclick=()=>openPartyManage("explore");
 
 
-  $("turnAutoBtn").onclick=()=>{
-    if(state.battlePhase!=="input" || state.battleEnded) return;
-    fillAutoActions();
-  };
-
-  $("autoToggleBtn").onclick=()=>{
+  function toggleBattleAutoMode(mode){
     if(state.battleEnded) return;
-    state.battleAutoContinuous=!state.battleAutoContinuous;
-    updateAutoButtons();
-    if(state.battleAutoContinuous){
-      setMessage("継続AUTOをONにしました。以後のラウンドは自動で行動を選択します。");
-      if(state.battlePhase==="input") fillAutoActions();
-    }else{
-      cancelScheduledTurnStart();
-      setMessage("継続AUTOをOFFにしました。次の行動から手動で選べます。");
+    if(state.battleAutoMode===mode){
+      state.battleAutoMode=null;
+      if(state.battlePhase==="input") clearPlayerAutoActionsForManual();
+      else cancelScheduledTurnStart();
+      updateAutoButtons();
+      setMessage("AUTOをOFFにしました。次の行動から手動で選べます。");
+      return;
     }
-  };
+    state.battleAutoMode=mode;
+    updateAutoButtons();
+    setMessage(mode==="normal"
+      ? "通常AUTOをONにしました。通常攻撃だけで自動戦闘します。"
+      : "スキルAUTOをONにしました。通常攻撃とスキルを自動で選びます。");
+    if(state.battlePhase==="input") fillAutoActions(mode);
+  }
+
+  $("turnAutoBtn").onclick=()=>toggleBattleAutoMode("normal");
+  $("autoToggleBtn").onclick=()=>toggleBattleAutoMode("skill");
 
   $("formationAreaSelect").onchange=e=>{
     if(state.battlePhase==="resolve" || state.battlePhase==="enemy") return;
-    state.battleAutoContinuous=false;
+    state.battleAutoMode=null;
     cancelScheduledTurnStart();
     updateAutoButtons();
     state.battleFormationIndex=0;
@@ -10158,7 +10427,7 @@
   };
   $("formationPrevBtn").onclick=()=>{
     if(state.battlePhase==="resolve" || state.battlePhase==="enemy") return;
-    state.battleAutoContinuous=false;
+    state.battleAutoMode=null;
     cancelScheduledTurnStart();
     updateAutoButtons();
     state.battleRound=1;
@@ -10177,7 +10446,7 @@
   };
   $("formationNextBtn").onclick=()=>{
     if(state.battlePhase==="resolve" || state.battlePhase==="enemy") return;
-    state.battleAutoContinuous=false;
+    state.battleAutoMode=null;
     cancelScheduledTurnStart();
     updateAutoButtons();
     state.battleRound=1;
@@ -10197,6 +10466,7 @@
 
   document.querySelectorAll(".cmd[data-command]").forEach(btn=>{
     btn.onclick=()=>{
+      stopBattleAutoForManual();
       const cmd=btn.dataset.command;
       if(cmd==="攻撃") queueAttack();
       else if(cmd==="防御") queueDefend();
