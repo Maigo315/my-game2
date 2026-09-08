@@ -192,7 +192,7 @@
       <section class="map-panel">
         <div class="world-map-viewport" id="worldMapViewport" aria-label="世界マップ。指で上下左右にスライドできます">
           <div class="world-map" id="worldMap">
-            <svg class="world-route-layer" viewBox="0 0 1780 900" aria-hidden="true">
+            <svg class="world-route-layer" viewBox="0 0 1780 1200" aria-hidden="true">
               <path class="route" id="milestaRoute" d="M 210 440 C 210 403, 214 365, 220 330"></path>
               <path class="route" id="caveRoute" d="M 220 330 C 258 298, 304 257, 350 240"></path>
               <path class="route" id="yodyRoute" d="M 350 240 C 413 235, 484 245, 545 255" style="display:none"></path>
@@ -212,6 +212,10 @@
               <path class="route" id="runelTownWorldRoute" d="M 1320 425 C 1325 468, 1328 520, 1325 565" style="display:none"></path>
               <path class="route" id="runelRuinsWorldRoute" d="M 1320 425 C 1260 420, 1195 420, 1135 425" style="display:none"></path>
               <path class="route" id="fairyGroveWorldRoute" d="M 1320 425 C 1275 468, 1220 525, 1170 565" style="display:none"></path>
+              <path class="route sea-route" id="salidSeaWorldRoute" d="M 545 420 C 585 555, 665 690, 790 800" style="display:none"></path>
+              <path class="route" id="salidTownWorldRoute" d="M 790 800 C 865 835, 955 885, 1050 930" style="display:none"></path>
+              <path class="route" id="salidLavaCaveWorldRoute" d="M 790 800 C 720 850, 635 905, 560 950" style="display:none"></path>
+              <path class="route" id="salidSunTempleWorldRoute" d="M 790 800 C 770 895, 735 995, 700 1080" style="display:none"></path>
             </svg>
             <div class="world-region-label" style="left:105px;top:392px">ミレスタ周辺</div>
             <div class="world-region-label" style="left:470px;top:170px">ヨーディー地方</div>
@@ -220,6 +224,7 @@
             <div class="world-region-label" style="left:1235px;top:118px">グランゼル大平原</div>
             <div class="world-region-label" style="left:1215px;top:355px">ルネル地方</div>
             <div class="world-region-label" style="left:470px;top:625px">ヨーディー海</div>
+            <div class="world-region-label" id="salidContinentLabel" style="left:720px;top:735px;display:none">サリード大陸</div>
             <button class="area-pin" id="milestaTownPin" data-area="milestaTown" data-map-x="210" data-map-y="440" style="left:210px;top:440px">
               <span>🏘️</span><strong>ミレスタ</strong>
             </button>
@@ -279,6 +284,18 @@
             </button>
             <button class="area-pin" id="fairyGroveWorldPin" data-area="fairyGrove" data-map-x="1170" data-map-y="565" style="left:1170px;top:565px;display:none">
               <span>✨</span><strong>妖精郷</strong>
+            </button>
+            <button class="area-pin" id="salidDesertWorldPin" data-area="salidDesert" data-map-x="790" data-map-y="800" style="left:790px;top:800px;display:none">
+              <span>🏜️</span><strong>サリード砂漠・東</strong>
+            </button>
+            <button class="area-pin" id="salidTownWorldPin" data-area="salidTown" data-map-x="1050" data-map-y="930" style="left:1050px;top:930px;display:none">
+              <span>🏙️</span><strong>サリード城下町</strong>
+            </button>
+            <button class="area-pin locked" id="salidLavaCaveWorldPin" data-area="salidLavaCave" data-map-x="560" data-map-y="950" style="left:560px;top:950px;display:none">
+              <span>🌋</span><strong>溶岩洞窟</strong>
+            </button>
+            <button class="area-pin locked" id="salidSunTempleWorldPin" data-area="salidSunTemple" data-map-x="700" data-map-y="1080" style="left:700px;top:1080px;display:none">
+              <span>☀️</span><strong>太陽の神殿</strong>
             </button>
           </div>
         </div>
