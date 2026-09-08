@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.46w";
+  const DEV_VERSION = "v0.46x";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -10130,8 +10130,10 @@
     cancelScheduledTurnStart();
     state.battlePhase="ended";
     state.battleTargetMode=null;
+    state.battleActions=[null,null,null,null];
     setCommandsEnabled(false);
     updateExecuteButton();
+    updateAutoButtons();
     clearEnemyActing();
     clearBattleEndStates();
     renderBattleParty();
@@ -10139,24 +10141,40 @@
     hideRecruitOverlay();
     hideBattleDrop();
     hideBattleContinue();
-    setMessage(state.battleFromRun
-      ? "パーティは力尽きた……。探索を終了してミレスタへ戻ります。"
-      : "パーティは力尽きた……。戦闘テストを終了します。");
 
-    setTimeout(()=>{
-      if(state.battleDirectTest){
+    const partyName=storyHeroName();
+    if(state.battleDirectTest){
+      setMessage(`${partyName}たちは全滅した……。\n戦闘テストを終了します。`);
+      setTimeout(()=>{
         restorePartySnapshot(state.battleTestSnapshot);
         state.battleTestSnapshot=null;
-      }else{
-        state.run=null;
-        restorePartyFull();
-      }
-      showScreen("homeScreen");
-      $("topSubtitle").textContent=`探索＋勧誘・装備試作 ${DEV_VERSION}`;
+        state.battleFromRun=false;
+        state.battleDirectTest=false;
+        showScreen("homeScreen");
+        $("topSubtitle").textContent=`探索＋勧誘・装備試作 ${DEV_VERSION}`;
+        updateHeader();
+      },t(1600));
+      return;
+    }
+
+    const goldBefore=Math.max(0,Math.floor(Number(state.gold)||0));
+    const goldAfter=Math.floor(goldBefore/2);
+    state.gold=goldAfter;
+    setMessage(`${partyName}たちは全滅した……。\n所持金を半分失い、ミレスタへ戻された。`);
+
+    setTimeout(()=>{
+      state.run=null;
+      state.battleSpecial=null;
+      state.battleEscapeDisabled=false;
       state.battleFromRun=false;
       state.battleDirectTest=false;
-      updateHeader();
-    },t(1600));
+      state.currentTown="milesta";
+      state.selectedArea="milestaTown";
+      restorePartyFull();
+      updateWorld();
+      showTownScreen("milesta");
+      toast(`所持金：${goldBefore}G → ${goldAfter}G`);
+    },t(1800));
   }
 
   function updateSpeedButtons(){
