@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.46x";
+  const DEV_VERSION = "v0.46y";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -381,6 +381,7 @@
     {id:"granzelCastleEntranceSoldier",name:"入口の兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
     {id:"granzelCastleDepressedSoldier",name:"落ち込む兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
     {id:"granzelCastleWhisperSoldiers",name:"ひそひそ話す兵士たち",gender:"male",silhouette:NPC_SOLDIER_IMG},
+    {id:"granzelCastleTrainingSoldier",name:"鍛錬する兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
     {id:"granzelCastleDrunkSoldier",name:"酒を飲む兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
     {id:"granzelKing",name:"グランゼル王",gender:"male",portrait:GRANZEL_KING_IMG},
     {id:"granzelMargaret",name:"マーガレット",gender:"female",portrait:MARGARET_IMG}
@@ -962,6 +963,13 @@
         talkDialogue("兵士B",NPC_SOLDIER_IMG,"male",`はい。対象Vの動向も確認済み。あとは予定通りに……`),
         talkDialogue("兵士A",NPC_SOLDIER_IMG,"male",`失敗は許されない。誰も死なないよう、万全の体制で臨むぞ。`),
         talkDialogue("主人公",null,null,`……？`)
+      ];
+    }else if(id==="granzelCastleTrainingSoldier"){
+      steps=[
+        talkDialogue("兵士",npc.silhouette,npc.gender,`得意武器種というものがあることは知っているか？
+キャラ詳細の画面から確認できるぞ。`),
+        talkDialogue("兵士",npc.silhouette,npc.gender,`得意でない武器種を装備しても、その能力を十分に発揮することができない。
+何事にも向き不向きがあるってことだ。`)
       ];
     }else if(id==="granzelCastleDrunkSoldier"){
       steps=[
@@ -3052,14 +3060,17 @@
     return c.equipment;
   }
   function equippedWeapon(c){ return equipmentCatalog[ensureEquipment(c).weapon]||equipmentCatalog.bare; }
+  const NON_FAVORITE_WEAPON_STAT_RATE=0.70;
   function itemModsFor(c,item){
     const mods={...(item?.mods||{})};
-    const favored=item?.slot==="weapon" && item.weaponType && favoriteWeaponTypes(c).includes(item.weaponType);
-    if(favored){
-      // Proficiency strengthens positive flat stat bonuses by 10%, with at least +1. Penalties and percentage stats are unchanged.
+    const isWeapon=item?.slot==="weapon" && !!item.weaponType;
+    const favored=isWeapon && favoriteWeaponTypes(c).includes(item.weaponType);
+    if(isWeapon && !favored){
+      // Non-favorite weapons can still be equipped, but only 70% of their positive flat stat bonuses are effective.
+      // Penalties, percentage effects, weapon properties, and special effects are unchanged.
       Object.keys(mods).forEach(k=>{
         const v=Number(mods[k])||0;
-        if(v>0) mods[k]=v+Math.max(1,Math.round(v*.10));
+        if(v>0) mods[k]=Math.round(v*NON_FAVORITE_WEAPON_STAT_RATE);
       });
     }
     return mods;
