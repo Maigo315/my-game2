@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47b";
+  const DEV_VERSION = "v0.47c";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -308,6 +308,7 @@
     forestBlockedPath:{icon:"🌳", label:"倒木の分岐", color:"#5d4932"},
     forestDeepBoss:{icon:"🦉", label:"魔物娘", color:"#66546f"},
     salidPreview:{icon:"🏜️", label:"サリード砂漠", color:"#8b7544"},
+    salidTown:{icon:"🏙️", label:"サリード城下町", color:"#b98249"},
     goal:   {icon:"★", label:"最奥", color:"#8d7136"}
   };
 
@@ -4991,7 +4992,7 @@
     cave1:BATTLE_BG_CAVE,cave2:BATTLE_BG_CAVE,caveSide:BATTLE_BG_CAVE,rare:BATTLE_BG_CAVE,caveSlugEvent:BATTLE_BG_CAVE,caveBoss:BATTLE_BG_CAVE,runelCavern:BATTLE_BG_CAVE,runelScyllaPot:BATTLE_BG_CAVE,runelRegion:BATTLE_BG_PLAINS,runelRuins:BATTLE_BG_RUINS,runelRuinsMimic:BATTLE_BG_RUINS,runelRuinsKitsuneTrick:BATTLE_BG_RUINS,yodyRegion:BATTLE_BG_PLAINS,
     footpath:BATTLE_BG_FOREST,yodyMountain:BATTLE_BG_MOUNTAIN,yodyMountainBoss:BATTLE_BG_MOUNTAIN,tilenoRegion:BATTLE_BG_FOREST,tilenoElfEvent:BATTLE_BG_FOREST,zelrenoForest:BATTLE_BG_FOREST,zelrenoForestDeep:BATTLE_BG_FOREST,zelrenoForestDeepBoss:BATTLE_BG_FOREST,zelrenoWitchApproach:BATTLE_BG_FOREST,zelrenoWitchWatch:BATTLE_BG_FOREST,granzelPlains:BATTLE_BG_PLAINS,granzelSlimeParade:BATTLE_BG_PLAINS,
     tilenoWetland:BATTLE_BG_WETLAND,tilenoToxicWetland:BATTLE_BG_TOXIC_WETLAND,tilenoToxicBoss:BATTLE_BG_TOXIC_WETLAND,tilenoToxicSlimeEvent:BATTLE_BG_TOXIC_WETLAND,
-    salidDesertEast:BATTLE_BG_DESERT,salidEnemyTest:BATTLE_BG_DESERT
+    salidDesertEast:BATTLE_BG_DESERT,salidDesertDogs:BATTLE_BG_DESERT,salidEnemyTest:BATTLE_BG_DESERT
   };
 
   const battleFormations = {
@@ -5108,6 +5109,9 @@
       ["hotSandTentacle","desertDog","desertDog","lloyd"],
       ["silverSlime","silverSlime"]
     ],rareFormationIndexes:[4,5],rareRate:.10},
+    salidDesertDogs:{label:"🏜️ サリード砂漠・東・砂漠のわんこたち",formations:[
+      ["desertDog","desertDog","desertDog","desertDog"]
+    ]},
     salidEnemyTest:{label:"🧪 サリード敵・単体テスト",formations:[
       ["desertDog"],["hotSandTentacle"],["prominence"],["magmaSlug"]
     ]},
@@ -5417,8 +5421,8 @@
     $("debugBossToggleBtn").onclick=()=>{state.caveBossDefeated=!state.caveBossDefeated;debugRefreshProgress();};
     $("debugMerchantToggleBtn").onclick=()=>{state.travelMerchantMet=!state.travelMerchantMet;debugRefreshProgress();};
     $("debugIntroToggleBtn").onclick=()=>{const on=prologueStage()<1;state.eventFlags.milestaIntroDone=on;state.prologueStage=on?1:0;if(!on)leaveElizaEscort();debugRefreshProgress();};
-    $("debugProgressOpenBtn").onclick=()=>{state.caveUnlocked=true;state.caveBossDefeated=true;state.travelMerchantMet=true;state.eventFlags.milestaIntroDone=true;state.eventFlags.recruitTutorialDone=true;state.eventFlags.milestaWaitingUnlocked=true;state.eventFlags.caveSidepathUnlocked=true;state.eventFlags.yodyPortReached=true;state.eventFlags.yodyRegionUnlocked=true;state.eventFlags.yodyFootpathUnlocked=true;state.eventFlags.yodyMountainUnlocked=true;state.eventFlags.yodyMountainBossDefeated=true;state.eventFlags.yodyMountainCleared=true;state.eventFlags.tilenoRegionReached=true;state.eventFlags.tilenoTownReached=true;state.eventFlags.tilenoGuildPanaceaReceived=true;state.eventFlags.tilenoWetlandReached=true;state.eventFlags.tilenoToxicWetlandReached=true;state.eventFlags.tilenoToxicWarningFeatherReceived=true;state.eventFlags.tilenoToxicBossDefeated=true;state.eventFlags.margaretPoisonQuestCompleted=true;state.eventFlags.runelStoryLeadKnown=true;state.eventFlags.tilenoToxicBossAfterStoryDone=true;state.eventFlags.zelrenoForestReached=true;state.eventFlags.granzelPlainsReached=true;state.eventFlags.granzelTownReached=true;state.eventFlags.granzelArrivalPosterDone=true;state.eventFlags.granzelCompanionsHidden=true;state.eventFlags.granzelSoldierSceneDone=true;state.eventFlags.granzelKingAudienceDone=true;state.eventFlags.iceCorridorRouteUnlocked=true;state.eventFlags.iceCorridorReached=true;state.eventFlags.runelCavernReached=true;state.eventFlags.kunputeiReached=true;state.eventFlags.runelRegionReached=true;state.eventFlags.runelTownReached=true;state.eventFlags.runelRuinsReached=true;state.eventFlags.runelRuinsBossDefeated=true;state.eventFlags.runelRuinsCleared=true;state.eventFlags.margaretRunelReportPending=false;state.eventFlags.margaretRunelFirstReportDone=true;state.eventFlags.margaretRunelSecondReportDone=true;state.eventFlags.margaretThreeNationQuestStarted=true;state.eventFlags.fairyGroveDiscovered=true;state.eventFlags.margaretIceTopicSelf=true;state.eventFlags.margaretIceTopicMagicBond=true;state.eventFlags.margaretIceTopicWar=true;state.eventFlags.margaretIceCorridorMeetingDone=true;state.eventFlags.margaretPoisonQuestAccepted=true;state.eventFlags.prologueComplete=true;state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=6;toast("現行の進行フラグをすべてONにしました。");debugRefreshProgress();};
-    $("debugProgressResetBtn").onclick=()=>modal("進行フラグを初期化","現在実装されている進行フラグだけをOFFにします。仲間・所持品・Lv・装備は変わりません。",[["初期化する",()=>{state.caveUnlocked=false;state.caveBossDefeated=false;state.travelMerchantMet=false;state.eventFlags.milestaIntroDone=false;state.eventFlags.recruitTutorialDone=false;state.eventFlags.milestaWaitingUnlocked=false;state.eventFlags.caveSidepathUnlocked=false;state.eventFlags.yodyPortReached=false;state.eventFlags.yodyRegionUnlocked=false;state.eventFlags.yodyFootpathUnlocked=false;state.eventFlags.yodyMountainUnlocked=false;state.eventFlags.yodyMountainBossDefeated=false;state.eventFlags.yodyMountainCleared=false;state.eventFlags.tilenoRegionReached=false;state.eventFlags.tilenoTownReached=false;state.eventFlags.tilenoGuildPanaceaReceived=false;state.eventFlags.tilenoWetlandReached=false;state.eventFlags.tilenoToxicWetlandReached=false;state.eventFlags.tilenoToxicWarningFeatherReceived=false;state.eventFlags.tilenoToxicBossDefeated=false;state.eventFlags.margaretPoisonQuestCompleted=false;state.eventFlags.runelStoryLeadKnown=false;state.eventFlags.tilenoToxicBossAfterStoryDone=false;state.eventFlags.zelrenoForestReached=false;state.eventFlags.granzelPlainsReached=false;state.eventFlags.granzelTownReached=false;state.eventFlags.granzelArrivalPosterDone=false;state.eventFlags.granzelCompanionsHidden=false;state.eventFlags.granzelSoldierSceneDone=false;state.eventFlags.granzelKingAudienceDone=false;state.eventFlags.iceCorridorRouteUnlocked=false;state.eventFlags.iceCorridorReached=false;state.eventFlags.margaretIceTopicSelf=false;state.eventFlags.margaretIceTopicMagicBond=false;state.eventFlags.margaretIceTopicWar=false;state.eventFlags.margaretIceCorridorMeetingDone=false;state.eventFlags.margaretPoisonQuestAccepted=false;state.eventFlags.runelCavernReached=false;state.eventFlags.kunputeiReached=false;state.eventFlags.runelRegionReached=false;state.eventFlags.runelTownReached=false;state.eventFlags.runelRuinsReached=false;state.eventFlags.runelRuinsBossDefeated=false;state.eventFlags.runelRuinsCleared=false;state.eventFlags.margaretRunelReportPending=false;state.eventFlags.margaretRunelFirstReportDone=false;state.eventFlags.margaretRunelSecondReportDone=false;state.eventFlags.margaretThreeNationQuestStarted=false;state.eventFlags.fairyGroveDiscovered=false;state.eventFlags.footpathHealLeafObtained=false;state.eventFlags.yodyBoyTalked=false;state.eventFlags.yodyBoyQuestCompleted=false;state.eventFlags.salidDesertUnlocked=false;state.eventFlags.prologueComplete=false;state.currentTown="milesta";state.selectedArea="plains";state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=0;leaveElizaEscort();closeModal();toast("進行フラグを初期状態にしました。");debugRefreshProgress();}],["やめる",closeModal]]);
+    $("debugProgressOpenBtn").onclick=()=>{state.caveUnlocked=true;state.caveBossDefeated=true;state.travelMerchantMet=true;state.eventFlags.milestaIntroDone=true;state.eventFlags.recruitTutorialDone=true;state.eventFlags.milestaWaitingUnlocked=true;state.eventFlags.caveSidepathUnlocked=true;state.eventFlags.yodyPortReached=true;state.eventFlags.yodyRegionUnlocked=true;state.eventFlags.yodyFootpathUnlocked=true;state.eventFlags.yodyMountainUnlocked=true;state.eventFlags.yodyMountainBossDefeated=true;state.eventFlags.yodyMountainCleared=true;state.eventFlags.tilenoRegionReached=true;state.eventFlags.tilenoTownReached=true;state.eventFlags.tilenoGuildPanaceaReceived=true;state.eventFlags.tilenoWetlandReached=true;state.eventFlags.tilenoToxicWetlandReached=true;state.eventFlags.tilenoToxicWarningFeatherReceived=true;state.eventFlags.tilenoToxicBossDefeated=true;state.eventFlags.margaretPoisonQuestCompleted=true;state.eventFlags.runelStoryLeadKnown=true;state.eventFlags.tilenoToxicBossAfterStoryDone=true;state.eventFlags.zelrenoForestReached=true;state.eventFlags.granzelPlainsReached=true;state.eventFlags.granzelTownReached=true;state.eventFlags.granzelArrivalPosterDone=true;state.eventFlags.granzelCompanionsHidden=true;state.eventFlags.granzelSoldierSceneDone=true;state.eventFlags.granzelKingAudienceDone=true;state.eventFlags.iceCorridorRouteUnlocked=true;state.eventFlags.iceCorridorReached=true;state.eventFlags.runelCavernReached=true;state.eventFlags.kunputeiReached=true;state.eventFlags.runelRegionReached=true;state.eventFlags.runelTownReached=true;state.eventFlags.runelRuinsReached=true;state.eventFlags.runelRuinsBossDefeated=true;state.eventFlags.runelRuinsCleared=true;state.eventFlags.margaretRunelReportPending=false;state.eventFlags.margaretRunelFirstReportDone=true;state.eventFlags.margaretRunelSecondReportDone=true;state.eventFlags.margaretThreeNationQuestStarted=true;state.eventFlags.salidDesertUnlocked=true;state.eventFlags.salidTownReached=true;state.eventFlags.fairyGroveDiscovered=true;state.eventFlags.margaretIceTopicSelf=true;state.eventFlags.margaretIceTopicMagicBond=true;state.eventFlags.margaretIceTopicWar=true;state.eventFlags.margaretIceCorridorMeetingDone=true;state.eventFlags.margaretPoisonQuestAccepted=true;state.eventFlags.prologueComplete=true;state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=6;toast("現行の進行フラグをすべてONにしました。");debugRefreshProgress();};
+    $("debugProgressResetBtn").onclick=()=>modal("進行フラグを初期化","現在実装されている進行フラグだけをOFFにします。仲間・所持品・Lv・装備は変わりません。",[["初期化する",()=>{state.caveUnlocked=false;state.caveBossDefeated=false;state.travelMerchantMet=false;state.eventFlags.milestaIntroDone=false;state.eventFlags.recruitTutorialDone=false;state.eventFlags.milestaWaitingUnlocked=false;state.eventFlags.caveSidepathUnlocked=false;state.eventFlags.yodyPortReached=false;state.eventFlags.yodyRegionUnlocked=false;state.eventFlags.yodyFootpathUnlocked=false;state.eventFlags.yodyMountainUnlocked=false;state.eventFlags.yodyMountainBossDefeated=false;state.eventFlags.yodyMountainCleared=false;state.eventFlags.tilenoRegionReached=false;state.eventFlags.tilenoTownReached=false;state.eventFlags.tilenoGuildPanaceaReceived=false;state.eventFlags.tilenoWetlandReached=false;state.eventFlags.tilenoToxicWetlandReached=false;state.eventFlags.tilenoToxicWarningFeatherReceived=false;state.eventFlags.tilenoToxicBossDefeated=false;state.eventFlags.margaretPoisonQuestCompleted=false;state.eventFlags.runelStoryLeadKnown=false;state.eventFlags.tilenoToxicBossAfterStoryDone=false;state.eventFlags.zelrenoForestReached=false;state.eventFlags.granzelPlainsReached=false;state.eventFlags.granzelTownReached=false;state.eventFlags.granzelArrivalPosterDone=false;state.eventFlags.granzelCompanionsHidden=false;state.eventFlags.granzelSoldierSceneDone=false;state.eventFlags.granzelKingAudienceDone=false;state.eventFlags.iceCorridorRouteUnlocked=false;state.eventFlags.iceCorridorReached=false;state.eventFlags.margaretIceTopicSelf=false;state.eventFlags.margaretIceTopicMagicBond=false;state.eventFlags.margaretIceTopicWar=false;state.eventFlags.margaretIceCorridorMeetingDone=false;state.eventFlags.margaretPoisonQuestAccepted=false;state.eventFlags.runelCavernReached=false;state.eventFlags.kunputeiReached=false;state.eventFlags.runelRegionReached=false;state.eventFlags.runelTownReached=false;state.eventFlags.runelRuinsReached=false;state.eventFlags.runelRuinsBossDefeated=false;state.eventFlags.runelRuinsCleared=false;state.eventFlags.margaretRunelReportPending=false;state.eventFlags.margaretRunelFirstReportDone=false;state.eventFlags.margaretRunelSecondReportDone=false;state.eventFlags.margaretThreeNationQuestStarted=false;state.eventFlags.fairyGroveDiscovered=false;state.eventFlags.footpathHealLeafObtained=false;state.eventFlags.yodyBoyTalked=false;state.eventFlags.yodyBoyQuestCompleted=false;state.eventFlags.salidDesertUnlocked=false;state.eventFlags.salidTownReached=false;state.eventFlags.prologueComplete=false;state.currentTown="milesta";state.selectedArea="plains";state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=0;leaveElizaEscort();closeModal();toast("進行フラグを初期状態にしました。");debugRefreshProgress();}],["やめる",closeModal]]);
     $("debugIntroReplayBtn").onclick=()=>{closeDebugTools();startStoryEvent("milestaIntroEliza",{preview:true,force:true});};
 
     areaSel.onchange=debugPopulateFormationIndex;$("debugFormationIndex").onchange=debugRefreshFormationStatus;
@@ -5496,7 +5500,8 @@
     granzelPlains:[{kind:"item",id:"highPotion"},{kind:"item",id:"panacea"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"},{kind:"equip",id:"lightning_rod"},{kind:"item",id:"lifeSeed",stockLimit:1,sessionLimited:true},{kind:"item",id:"magicSeed",stockLimit:1,sessionLimited:true}],
     runelCavern:[{kind:"item",id:"highPotion"},{kind:"item",id:"panacea"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"},{kind:"item",id:"powerSeed",stockLimit:1,stockKey:"travel:runelRoute:powerSeed"},{kind:"item",id:"guardSeed",stockLimit:1,stockKey:"travel:runelRoute:guardSeed"}],
     runelRegion:[{kind:"item",id:"highPotion"},{kind:"item",id:"panacea"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"fate_ring"},{kind:"item",id:"powerSeed",stockLimit:1,stockKey:"travel:runelRoute:powerSeed"},{kind:"item",id:"guardSeed",stockLimit:1,stockKey:"travel:runelRoute:guardSeed"}],
-    runelRuins:[{kind:"item",id:"highPotion"},{kind:"item",id:"panacea"},{kind:"item",id:"lifeStone"},{kind:"item",id:"returnFeather"},{kind:"item",id:"magicSeed",stockLimit:1,stockKey:"travel:runelRuins:magicSeed"},{kind:"item",id:"spiritSeed",stockLimit:1,stockKey:"travel:runelRuins:spiritSeed"}]
+    runelRuins:[{kind:"item",id:"highPotion"},{kind:"item",id:"panacea"},{kind:"item",id:"lifeStone"},{kind:"item",id:"returnFeather"},{kind:"item",id:"magicSeed",stockLimit:1,stockKey:"travel:runelRuins:magicSeed"},{kind:"item",id:"spiritSeed",stockLimit:1,stockKey:"travel:runelRuins:spiritSeed"}],
+    salidDesert:[{kind:"item",id:"highPotion"},{kind:"item",id:"exPotion"},{kind:"item",id:"panacea"},{kind:"item",id:"returnFeather"},{kind:"item",id:"lifeStone"},{kind:"equip",id:"heat_bulwark",stockLimit:1,sessionLimited:true}]
   };
   function shopEntryData(entry){ return entry?.kind==="item"?ITEMS[entry.id]:equipmentCatalog[entry?.id]; }
   function shopEntryKey(entry){ return entry?`${entry.kind}:${entry.id}`:""; }
@@ -5659,7 +5664,7 @@
   }
   function openShop(key="town"){
     state.currentShop=key; state.shopMode="buy"; state.shopSelectedKey=null; state.shopSessionPurchases={};
-    const shopTitles={town:"ミレスタ商店",yordy:"港町ヨーディー商店",tileno:"ティレーノ商店",granzel:"グランゼル城下町商店",runel:"ルネルの街商店",kunputei:"薫風亭・売店",cave:"洞窟の旅商人",caveSide:"洞窟の横道・旅商人",yodyRegion:"ヨーディー地方・旅商人",footpath:"麓の小道・旅商人",yodyMountain:"ヨーディー山道・旅商人",tilenoRegion:"ティレーノ地方・旅商人",tilenoWetland:"ティレーノ湿原・旅商人",tilenoToxicWetland:"ティレーノ毒湿地・旅商人",zelrenoForest:"ゼルレーノ森林地帯・旅商人",zelrenoForestDeep:"ゼルレーノ森林地帯・奥地・旅商人",granzelPlains:"グランゼル大平原・旅商人",runelCavern:"ルネル岩窟・旅商人",runelRegion:"ルネル地方・旅商人",runelRuins:"ルネルパリオ城下町跡・旅商人",plains:"旅の商人"};
+    const shopTitles={town:"ミレスタ商店",yordy:"港町ヨーディー商店",tileno:"ティレーノ商店",granzel:"グランゼル城下町商店",runel:"ルネルの街商店",kunputei:"薫風亭・売店",cave:"洞窟の旅商人",caveSide:"洞窟の横道・旅商人",yodyRegion:"ヨーディー地方・旅商人",footpath:"麓の小道・旅商人",yodyMountain:"ヨーディー山道・旅商人",tilenoRegion:"ティレーノ地方・旅商人",tilenoWetland:"ティレーノ湿原・旅商人",tilenoToxicWetland:"ティレーノ毒湿地・旅商人",zelrenoForest:"ゼルレーノ森林地帯・旅商人",zelrenoForestDeep:"ゼルレーノ森林地帯・奥地・旅商人",granzelPlains:"グランゼル大平原・旅商人",runelCavern:"ルネル岩窟・旅商人",runelRegion:"ルネル地方・旅商人",runelRuins:"ルネルパリオ城下町跡・旅商人",salidDesert:"サリード砂漠・東・旅商人",plains:"旅の商人"};
     $("shopTitle").textContent=shopTitles[key]||"旅の商人";
     $("shopLead").textContent="商品を選ぶと、装備時の能力差をその場で確認できます。";
     setShopMerchant(key); renderShop(); const sf=$("shopFlash"); if(sf){sf.textContent=""; sf.className="shop-flash";} $("shopModal").classList.add("show");
@@ -10910,7 +10915,7 @@
 
   function weightedNode(layer,area="plains"){
     const battleMult=battleNodeWeightMultiplier();
-    if(layer===1 && area!=="caveSide" && area!=="yodyRegion" && area!=="yodyMountain" && area!=="tilenoRegion" && area!=="tilenoWetland" && area!=="tilenoToxicWetland" && area!=="zelrenoForest" && area!=="zelrenoForestDeep" && area!=="granzelPlains" && area!=="runelCavern" && area!=="runelRegion" && area!=="runelRuins") return weightedChoice([{type:"battle",weight:3*battleMult},{type:"chest",weight:1}]);
+    if(layer===1 && area!=="caveSide" && area!=="yodyRegion" && area!=="yodyMountain" && area!=="tilenoRegion" && area!=="tilenoWetland" && area!=="tilenoToxicWetland" && area!=="zelrenoForest" && area!=="zelrenoForestDeep" && area!=="granzelPlains" && area!=="runelCavern" && area!=="runelRegion" && area!=="runelRuins" && area!=="salidDesert") return weightedChoice([{type:"battle",weight:3*battleMult},{type:"chest",weight:1}]);
     const base=area==="tilenoToxicWetland"
       ? {battle:55,chest:18,heal:8,event:16,shop:3}
       : area==="zelrenoForestDeep"
@@ -10923,6 +10928,8 @@
       ? {battle:52,chest:18,heal:11,event:16,shop:3}
       : area==="runelRuins"
       ? {battle:54,chest:18,heal:9,event:16,shop:3}
+      : area==="salidDesert"
+      ? {battle:54,chest:18,heal:8,event:17,shop:3}
       : (area==="cave" || area==="caveSide" || area==="yodyMountain" || area==="zelrenoForest")
         ? {battle:52,chest:18,heal:12,event:15,shop:3}
         : {battle:48,chest:18,heal:12,event:16,shop:6};
@@ -11179,6 +11186,36 @@
     return layers.flat();
   }
 
+  const SALID_DESERT_NORMAL_LAYERS=12;
+  const SALID_DESERT_GOAL_LAYER=13;
+  const SALID_DESERT_VIEW_WIDTH=1500;
+  const SALID_DESERT_VIEW_HEIGHT=1600;
+  function salidDesertLayerY(layer){ return 1540-layer*110; }
+  function salidDesertLayerCount(){
+    const r=Math.random();
+    return r<.20?2:r<.60?3:r<.90?4:5;
+  }
+  function salidDesertXs(count){
+    if(count===2) return [500,1000];
+    if(count===3) return [300,750,1200];
+    if(count===4) return [180,560,940,1320];
+    return [150,450,750,1050,1350];
+  }
+  function buildSalidDesertMap(entryMode="fromYodyShip"){
+    const layers=[];
+    layers.push([{id:"L0N0",layer:0,index:0,x:750,y:salidDesertLayerY(0),type:"start",out:[]}]);
+    for(let l=1;l<=SALID_DESERT_NORMAL_LAYERS;l++){
+      const count=salidDesertLayerCount(),xs=salidDesertXs(count);
+      layers.push(xs.map((x,i)=>({
+        id:`L${l}N${i}`,layer:l,index:i,x:x+(rand(51)-25),y:salidDesertLayerY(l),
+        type:weightedNode(l,"salidDesert"),out:[]
+      })));
+    }
+    layers.push([{id:"SALID_TOWN",layer:SALID_DESERT_GOAL_LAYER,index:0,x:750,y:salidDesertLayerY(SALID_DESERT_GOAL_LAYER),type:"salidTown",out:[]}]);
+    connectMapLayers(layers,{extraChance:.64,maxExtraDistance:720});
+    return layers.flat();
+  }
+
   const RUNEL_CAVERN_NORMAL_LAYERS=10;
   const RUNEL_CAVERN_EXIT_LAYER=11;
   const RUNEL_CAVERN_BORDER_LAYER=7;
@@ -11358,6 +11395,7 @@
     if(area==="runelCavern") return buildRunelCavernMap();
     if(area==="runelRegion") return buildRunelRegionMap(options.entryMode||"fromKunputei");
     if(area==="runelRuins") return buildRunelRuinsMap();
+    if(area==="salidDesert") return buildSalidDesertMap(options.entryMode||"fromYodyShip");
     const layers=[];
     const isCaveSide=area==="caveSide";
     const isFootpath=area==="footpath";
@@ -11448,7 +11486,7 @@
     if(state.run.area==="runelCavern") return {icon:"🪨",name:"ルネル岩窟"};
     if(state.run.area==="runelRegion") return {icon:"🌿",name:"ルネル地方"};
     if(state.run.area==="runelRuins") return {icon:"🏚️",name:"ルネルパリオ城下町跡"};
-    if(state.run.area==="salidDesert") return {icon:"🏜️",name:"サリード砂漠"};
+    if(state.run.area==="salidDesert") return {icon:"🏜️",name:"サリード砂漠・東"};
     return {icon:"🌿",name:"ミレスタ平原"};
   }
   function setExploreAreaLabel(){
@@ -11715,17 +11753,16 @@
     state.currentTown="yody";
     state.run={
       area:"salidDesert",caveLayer:0,entryMode:"fromYodyShip",
-      nodes:[
-        {id:"L0N0",layer:0,index:0,x:500,y:650,type:"start",out:["SALID_PREVIEW"]},
-        {id:"SALID_PREVIEW",layer:1,index:0,x:500,y:170,type:"salidPreview",out:[]}
-      ],
-      current:"L0N0",previous:null,visited:new Set(["L0N0"]),runGold:0,runExp:0,resolved:new Set(),stealthUsed:false,slugTrapActive:false
+      nodes:applyMapEntryTraits(buildMap("salidDesert",0,{entryMode:"fromYodyShip"})),
+      current:"L0N0",previous:null,visited:new Set(["L0N0"]),runGold:0,runExp:0,resolved:new Set(),
+      stealthUsed:false,slugTrapActive:false,toxicGateCleared:false,wagonRideActive:false
     };
     setExploreAreaLabel();
     showScreen("exploreScreen");
     renderMap();
     updateRunHud();
-    toast("サリード砂漠へ到着した");
+    requestAnimationFrame(()=>scrollMapToCurrent(true));
+    toast("サリード砂漠・東へ到着した");
   }
 
   function byId(id){ return state.run.nodes.find(n=>n.id===id); }
@@ -11733,7 +11770,7 @@
     const cur=byId(state.run.current);
     if(cur?.type==="mountainBoss" && !state.run?.mountainBossDefeated && !state.eventFlags?.yodyMountainBossDefeated) return new Set();
     if(cur?.type==="toxicGate" && !state.run?.toxicGateCleared) return new Set();
-    if(["granzelPlains","runelRegion"].includes(state.run?.area) && state.run?.wagonRideActive && cur){
+    if(["granzelPlains","runelRegion","salidDesert"].includes(state.run?.area) && state.run?.wagonRideActive && cur){
       return new Set(state.run.nodes.filter(n=>n.layer===cur.layer+1).map(n=>n.id));
     }
     return new Set(cur.out || []);
@@ -11759,8 +11796,9 @@
     const isRunel=run?.area==="runelCavern";
     const isRunelRegion=run?.area==="runelRegion";
     const isRunelRuins=run?.area==="runelRuins";
+    const isSalid=run?.area==="salidDesert";
     const isRunelRegionShort=isRunelRegion && run?.entryMode==="fromWorld";
-    const isLong=run?.area==="caveSide"||run?.area==="footpath"||isMountain||isForest||isForestDeep||isRunel,isFootpath=run?.area==="footpath",isYody=run?.area==="yodyRegion",isBroad=isYody||isTileno||isTilenoWetland||isGranzel||isRunelRegion||isRunelRuins;
+    const isLong=run?.area==="caveSide"||run?.area==="footpath"||isMountain||isForest||isForestDeep||isRunel,isFootpath=run?.area==="footpath",isYody=run?.area==="yodyRegion",isBroad=isYody||isTileno||isTilenoWetland||isGranzel||isRunelRegion||isRunelRuins||isSalid;
     if(scroller){
       scroller.classList.toggle("long-map",isLong);
       scroller.classList.toggle("yody-map",isYody||isTileno||isTilenoWetland);
@@ -11768,20 +11806,20 @@
       scroller.classList.toggle("mountain-map",isMountain);
       scroller.classList.toggle("forest-map",isForest);
       scroller.classList.toggle("forest-deep-map",isForestDeep);
-      scroller.classList.toggle("granzel-map",isGranzel);
+      scroller.classList.toggle("granzel-map",isGranzel||isSalid);
       scroller.classList.toggle("runel-region-map",isRunelRegion);
       scroller.classList.toggle("runel-region-short",isRunelRegionShort);
       scroller.classList.toggle("runel-ruins-map",isRunelRuins);
     }
     const longHeight=isMountain?YODY_MOUNTAIN_VIEW_HEIGHT:isForest?ZELRENO_FOREST_VIEW_HEIGHT:isForestDeep?ZELRENO_FOREST_DEEP_VIEW_HEIGHT:isRunel?RUNEL_CAVERN_VIEW_HEIGHT:(isFootpath?FOOTPATH_VIEW_HEIGHT:CAVE_SIDE_VIEW_HEIGHT);
-    svg.setAttribute("viewBox",isRunelRuins?`0 0 ${RUNEL_RUINS_VIEW_WIDTH} ${RUNEL_RUINS_VIEW_HEIGHT}`:isRunelRegion?`0 0 ${RUNEL_REGION_VIEW_WIDTH} ${isRunelRegionShort?RUNEL_REGION_WORLD_VIEW_HEIGHT:RUNEL_REGION_VIEW_HEIGHT}`:isGranzel?`0 0 ${GRANZEL_PLAINS_VIEW_WIDTH} ${GRANZEL_PLAINS_VIEW_HEIGHT}`:isToxic?`0 0 ${TILENO_TOXIC_VIEW_WIDTH} ${TILENO_TOXIC_VIEW_HEIGHT}`:isTilenoWetland?`0 0 ${TILENO_WETLAND_VIEW_WIDTH} ${TILENO_WETLAND_VIEW_HEIGHT}`:isLong?`0 0 1000 ${longHeight}`:isBroad?`0 0 ${YODY_VIEW_WIDTH} ${YODY_VIEW_HEIGHT}`:"0 0 1000 720");
+    svg.setAttribute("viewBox",isSalid?`0 0 ${SALID_DESERT_VIEW_WIDTH} ${SALID_DESERT_VIEW_HEIGHT}`:isRunelRuins?`0 0 ${RUNEL_RUINS_VIEW_WIDTH} ${RUNEL_RUINS_VIEW_HEIGHT}`:isRunelRegion?`0 0 ${RUNEL_REGION_VIEW_WIDTH} ${isRunelRegionShort?RUNEL_REGION_WORLD_VIEW_HEIGHT:RUNEL_REGION_VIEW_HEIGHT}`:isGranzel?`0 0 ${GRANZEL_PLAINS_VIEW_WIDTH} ${GRANZEL_PLAINS_VIEW_HEIGHT}`:isToxic?`0 0 ${TILENO_TOXIC_VIEW_WIDTH} ${TILENO_TOXIC_VIEW_HEIGHT}`:isTilenoWetland?`0 0 ${TILENO_WETLAND_VIEW_WIDTH} ${TILENO_WETLAND_VIEW_HEIGHT}`:isLong?`0 0 1000 ${longHeight}`:isBroad?`0 0 ${YODY_VIEW_WIDTH} ${YODY_VIEW_HEIGHT}`:"0 0 1000 720");
     const reachable=reachableIds();
 
     // subtle floor / route separators
-    const floorCount=isMountain?(YODY_MOUNTAIN_EXIT_LAYER-1):isForest?ZELRENO_FOREST_NORMAL_LAYERS:isForestDeep?ZELRENO_FOREST_DEEP_NORMAL_LAYERS:isRunelRuins?RUNEL_RUINS_NORMAL_LAYERS:isRunelRegion?(isRunelRegionShort?RUNEL_REGION_WORLD_NORMAL_LAYERS:RUNEL_REGION_NORMAL_LAYERS):isGranzel?(run.entryMode==="fromForest"?GRANZEL_PLAINS_SHORT_NORMAL_LAYERS:GRANZEL_PLAINS_NORMAL_LAYERS):isRunel?RUNEL_CAVERN_NORMAL_LAYERS:isToxic?TILENO_TOXIC_NORMAL_LAYERS:isTilenoWetland?TILENO_WETLAND_NORMAL_LAYERS:isLong?(isFootpath?FOOTPATH_NORMAL_LAYERS:CAVE_SIDE_NORMAL_LAYERS):isYody?YODY_NORMAL_LAYERS:isTileno?(run.entryMode==="fromMountain"?TILENO_SHORT_NORMAL_LAYERS:TILENO_NORMAL_LAYERS):5;
+    const floorCount=isSalid?SALID_DESERT_NORMAL_LAYERS:isMountain?(YODY_MOUNTAIN_EXIT_LAYER-1):isForest?ZELRENO_FOREST_NORMAL_LAYERS:isForestDeep?ZELRENO_FOREST_DEEP_NORMAL_LAYERS:isRunelRuins?RUNEL_RUINS_NORMAL_LAYERS:isRunelRegion?(isRunelRegionShort?RUNEL_REGION_WORLD_NORMAL_LAYERS:RUNEL_REGION_NORMAL_LAYERS):isGranzel?(run.entryMode==="fromForest"?GRANZEL_PLAINS_SHORT_NORMAL_LAYERS:GRANZEL_PLAINS_NORMAL_LAYERS):isRunel?RUNEL_CAVERN_NORMAL_LAYERS:isToxic?TILENO_TOXIC_NORMAL_LAYERS:isTilenoWetland?TILENO_WETLAND_NORMAL_LAYERS:isLong?(isFootpath?FOOTPATH_NORMAL_LAYERS:CAVE_SIDE_NORMAL_LAYERS):isYody?YODY_NORMAL_LAYERS:isTileno?(run.entryMode==="fromMountain"?TILENO_SHORT_NORMAL_LAYERS:TILENO_NORMAL_LAYERS):5;
     for(let l=1;l<=floorCount;l++){
-      const y=isMountain?yodyMountainLayerY(l):isForest?zelrenoForestLayerY(l):isForestDeep?zelrenoForestDeepLayerY(l):isRunelRuins?runelRuinsLayerY(l):isRunelRegion?(isRunelRegionShort?runelRegionWorldLayerY(l):runelRegionLayerY(l)):isGranzel?granzelPlainsLayerY(l):isRunel?runelCavernLayerY(l):isToxic?tilenoToxicLayerY(l):isTilenoWetland?tilenoWetlandLayerY(l):isLong?(isFootpath?footpathLayerY(l):caveSideLayerY(l)):isBroad?yodyLayerY(l):655-l*100;
-      const line=svgEl("line",{x1:(isGranzel||isRunelRegion||isRunelRuins)?90:isBroad?90:isToxic?90:95,y1:y+45,x2:(isGranzel||isRunelRegion||isRunelRuins)?1410:isBroad?1230:isToxic?1110:930,y2:y+45,stroke:"#263b4c","stroke-width":"2","stroke-dasharray":"8 12"});
+      const y=isSalid?salidDesertLayerY(l):isMountain?yodyMountainLayerY(l):isForest?zelrenoForestLayerY(l):isForestDeep?zelrenoForestDeepLayerY(l):isRunelRuins?runelRuinsLayerY(l):isRunelRegion?(isRunelRegionShort?runelRegionWorldLayerY(l):runelRegionLayerY(l)):isGranzel?granzelPlainsLayerY(l):isRunel?runelCavernLayerY(l):isToxic?tilenoToxicLayerY(l):isTilenoWetland?tilenoWetlandLayerY(l):isLong?(isFootpath?footpathLayerY(l):caveSideLayerY(l)):isBroad?yodyLayerY(l):655-l*100;
+      const line=svgEl("line",{x1:(isGranzel||isRunelRegion||isRunelRuins||isSalid)?90:isBroad?90:isToxic?90:95,y1:y+45,x2:(isGranzel||isRunelRegion||isRunelRuins||isSalid)?1410:isBroad?1230:isToxic?1110:930,y2:y+45,stroke:"#263b4c","stroke-width":"2","stroke-dasharray":"8 12"});
       svg.appendChild(line);
       if(!isBroad && !isMountain && !isToxic){
         const label=svgEl("text",{x:35,y:y+6,class:"floor-label"});
@@ -11856,6 +11894,7 @@
         else if(n.type==="runelTown") name="ルネルの街";
         else if(n.type==="runelRuins") name="ルネルパリオ城下町跡";
         else if(n.type==="fairyGrove") name="妖精郷";
+        else if(n.type==="salidTown") name="サリード城下町";
         if(!name) return;
         const label=svgEl("text",{x:n.x,y:n.y+64,class:"yody-destination-label"});
         label.textContent=name;
@@ -11887,11 +11926,11 @@
   }
 
   function scrollMapToCurrent(immediate=false){
-    if(!state.run || !["caveSide","footpath","yodyRegion","yodyMountain","tilenoRegion","tilenoWetland","tilenoToxicWetland","zelrenoForest","zelrenoForestDeep","granzelPlains","runelCavern","runelRegion","runelRuins"].includes(state.run.area)) return;
+    if(!state.run || !["caveSide","footpath","yodyRegion","yodyMountain","tilenoRegion","tilenoWetland","tilenoToxicWetland","zelrenoForest","zelrenoForestDeep","granzelPlains","runelCavern","runelRegion","runelRuins","salidDesert"].includes(state.run.area)) return;
     const scroller=$("mapScroll"),svg=$("mapSvg");
     if(!scroller || !svg) return;
     const current=byId(state.run.current); if(!current) return;
-    if(state.run.area==="yodyRegion" || state.run.area==="tilenoRegion" || state.run.area==="tilenoWetland" || state.run.area==="granzelPlains" || state.run.area==="runelRegion" || state.run.area==="runelRuins"){
+    if(state.run.area==="yodyRegion" || state.run.area==="tilenoRegion" || state.run.area==="tilenoWetland" || state.run.area==="granzelPlains" || state.run.area==="salidDesert" || state.run.area==="runelRegion" || state.run.area==="runelRuins"){
       const nodeEl=svg.querySelector(`[data-node-id="${current.id}"]`);
       if(!nodeEl) return;
       const sr=scroller.getBoundingClientRect(),nr=nodeEl.getBoundingClientRect();
@@ -12521,6 +12560,10 @@
       else if(cur.type==="runelCavern") $("floorText").textContent="南東出口";
       else if(cur.layer===goalLayer) $("floorText").textContent="出口";
       else $("floorText").textContent=`${cur.layer}/${normalLayers}`;
+    }else if(state.run.area==="salidDesert"){
+      if(cur.layer===0) $("floorText").textContent="入口";
+      else if(cur.type==="salidTown") $("floorText").textContent="城下町";
+      else $("floorText").textContent=`${cur.layer}/${SALID_DESERT_NORMAL_LAYERS}`;
     }else if(state.run.area==="runelCavern"){
       if(cur.layer===0) $("floorText").textContent="入口";
       else if(cur.type==="restiaBorder") $("floorText").textContent="分岐";
@@ -12558,7 +12601,7 @@
   function moveTo(id){
     const reachable=reachableIds();
     if(!reachable.has(id)) return;
-    const wagonRide=["granzelPlains","runelRegion"].includes(state.run?.area) && !!state.run.wagonRideActive;
+    const wagonRide=["granzelPlains","runelRegion","salidDesert"].includes(state.run?.area) && !!state.run.wagonRideActive;
     state.run.previous=state.run.current;
     state.run.current=id;
     state.run.visited.add(id);
@@ -12567,10 +12610,10 @@
     renderMap();
     updateRunHud();
     scrollMapToCurrent(false);
-    const fixedGoal=["granzelTown","iceCorridor","runelCavern","runelTown","runelRuins","fairyGrove"].includes(node?.type);
+    const fixedGoal=["granzelTown","iceCorridor","runelCavern","runelTown","runelRuins","fairyGrove","salidTown"].includes(node?.type);
     if(wagonRide && !fixedGoal){
       state.run.resolved.add(node.id);
-      toast("荷馬車で一段先まで進んだ");
+      toast(state.run.area==="salidDesert"?"キャラバンで一段先まで進んだ":"荷馬車で一段先まで進んだ");
       return;
     }
     resolveNode(node);
@@ -12696,6 +12739,9 @@
     runelRuins:[
       {key:"runelRuins:lightning_rod",kind:"equip",id:"lightning_rod"},
       {key:"runelRuins:phoenix_feather",kind:"item",id:"phoenixTail"}
+    ],
+    salidDesert:[
+      {key:"salidDesert:super_drink",kind:"item",id:"superDrink"}
     ]
   };
   function updateExploreTreasureCounter(){
@@ -12948,6 +12994,34 @@
     }
     return grantYodyMountainNormalChestReward();
   }
+  function grantSalidDesertNormalChestReward(){
+    const roll=Math.random()*100;
+    if(roll<28){const g=70+rand(71);addRunGold(g);return `${g}G を手に入れた！`;}
+    if(roll<40){addItemCount("highPotion",1);return "ハイポーション ×1 を手に入れた！";}
+    if(roll<48){addItemCount("exPotion",1);return "エクスポーション ×1 を手に入れた！";}
+    if(roll<56){addItemCount("panacea",1);return "万能薬 ×1 を手に入れた！";}
+    if(roll<61){addItemCount("returnFeather",1);return "帰還の羽 ×1 を手に入れた！";}
+    if(roll<66){addItemCount("lifeStone",1);return "命の石 ×1 を手に入れた！";}
+    if(roll<72){addItemCount("magicHerb",1);return "マジックハーブ ×1 を手に入れた！";}
+    if(roll<73.5){addItemCount("magicCondenseGrass",1);return "魔凝草 ×1 を手に入れた！";}
+    if(roll<80.5){const id=choose(BASIC_DRINK_IDS);addItemCount(id,1);return `${ITEMS[id].name} ×1 を手に入れた！`;}
+    if(roll<81.5){addItemCount("poisonGasBottle",1);return "毒ガス瓶 ×1 を手に入れた！";}
+    if(roll<82.5){addItemCount("smokeBomb",1);return "煙幕玉 ×1 を手に入れた！";}
+    if(roll<83.5){addItemCount("sealingCrystal",1);return "封印の水晶 ×1 を手に入れた！";}
+    if(roll<84.5){addEquipmentOwned("fate_ring",1);return "運命の指輪を手に入れた！";}
+    if(roll<89.5){const id=choose(["red_bracelet","blue_bracelet","white_bracelet","black_bracelet","talisman"]);addEquipmentOwned(id,1);return `${equipmentCatalog[id].name} を手に入れた！`;}
+    if(roll<95.5){const id=choose(NORMAL_SEED_IDS);addItemCount(id,1);return `${ITEMS[id].name} ×1 を手に入れた！`;}
+    if(roll<96){addItemCount("allSeed",1);return "全能の種 ×1 を手に入れた！";}
+    const id=choose(RUNEL_TIER_EQUIP_IDS);addEquipmentOwned(id,1);return `${equipmentCatalog[id].name} を手に入れた！`;
+  }
+  function grantSalidDesertChestReward({allowTreasure=true}={}){
+    const remaining=(LIMITED_MAP_TREASURES.salidDesert||[]).some(entry=>!state.limitedMapTreasures?.[entry.key]);
+    if(allowTreasure && remaining && Math.random()<.30){
+      const treasure=grantLimitedMapTreasure("salidDesert");
+      if(treasure) return treasure;
+    }
+    return grantSalidDesertNormalChestReward();
+  }
   function grantChestReward({allowTreasure=true}={}){
     if(state.run?.area==="caveSide") return grantCaveSideChestReward({allowTreasure});
     if(state.run?.area==="yodyRegion") return grantYodyRegionChestReward({allowTreasure});
@@ -12961,6 +13035,7 @@
     if(state.run?.area==="runelCavern") return grantRunelCavernChestReward({allowTreasure});
     if(state.run?.area==="runelRegion") return grantRunelRegionChestReward({allowTreasure});
     if(state.run?.area==="runelRuins") return grantRunelRuinsChestReward({allowTreasure});
+    if(state.run?.area==="salidDesert") return grantSalidDesertChestReward({allowTreasure});
     return state.run?.area==="cave"?grantCaveChestReward(state.run.caveLayer):grantPlainsChestReward();
   }
   function markDesertDogRestPolish(){
@@ -13639,6 +13714,62 @@ ${heroName}の運命値が1上がった！`:"しかし何も起こらなかっ�
     st.hp=Math.max(0,st.hp-d);if(st.hp<=0)clearStatesOnKo(c);
     return Math.max(0,before-st.hp);
   }
+  function resolveSalidDesertEvent(){
+    const heroName=roster.hero.name,event=rand(7);
+    if(event===0){
+      const r=Math.random();
+      if(r<.85){const g=70+rand(71);addRunGold(g);modal("？ 砂漠の落とし物",`おや？砂の中に何か埋もれている。\n\n${g}G を手に入れた！`,[["進む",()=>{closeModal();updateRunHud();}]]);}
+      else if(r<.95){addItemCount("highPotion",1);modal("？ 砂漠の落とし物",`おや？砂の中に何か埋もれている。\n\nハイポーション ×1 を手に入れた！`,[["進む",()=>{closeModal();updateRunHud();}]]);}
+      else{addItemCount("exPotion",1);modal("？ 砂漠の落とし物",`おや？砂の中に何か埋もれている。\n\nエクスポーション ×1 を手に入れた！`,[["進む",()=>{closeModal();updateRunHud();}]]);}
+      return;
+    }
+    if(event===1){
+      changeLivingTravelHpPercent(.10);changeLivingTravelMpPercent(.10);updateRunHud();
+      modal("🏝️ 癒しのオアシス",`オアシスを見つけた。\n\n同行メンバー全員のHPとMPが10%回復した。`,[["進む",closeModal]]);return;
+    }
+    if(event===2){
+      const canBuy=state.gold>=400;
+      modal("🥤 砂漠の飲み物",`「そこのお兄さん。喉渇いてないかい？飲み物一本400Gでどうだい？」\n砂漠の商人が話しかけてきた。`,[
+        [canBuy?"買う（400G）":"買う（400G・所持金不足）",()=>{
+          if(state.gold<400)return;
+          state.gold-=400;
+          const r=Math.random();let id;
+          if(r<.30) id="highPotion";
+          else if(r<.50) id="exPotion";
+          else if(r<.60) id="lastPotion";
+          else if(r<.90) id=choose(BASIC_DRINK_IDS);
+          else if(r<.98) id="holyWater";
+          else id="deliciousMilk";
+          addItemCount(id,1);updateRunHud();closeModal();
+          modal("🥤 砂漠の飲み物",`「まいど！水分補給は大事だよ！」\n\n${heroName}は${ITEMS[id].name}を入手した！`,[["進む",closeModal]]);
+        },null,!canBuy],
+        ["立ち去る",()=>{closeModal();modal("？ 砂漠の飲み物",`${heroName}たちはその場を立ち去った。`,[["進む",closeModal]]);}]
+      ]);return;
+    }
+    if(event===3){
+      const nodes=remainingModifiableNodes(),pool=["battle","chest","heal","event"];
+      nodes.forEach(n=>n.type=choose(pool));renderMap();updateRunHud();
+      modal("🌪️ 砂嵐",`砂嵐がひどい……。\n視界が晴れた時には、景色が少し変わっていた。`,[["進む",closeModal]]);return;
+    }
+    if(event===4){
+      modal("🐪 旅は道連れ",`通りすがりのキャラバンが、少し先まで乗せてくれることになった！\n乗りますか？`,[
+        ["乗る",()=>{if(state.run)state.run.wagonRideActive=true;closeModal();renderMap();updateRunHud();toast("次の段階の好きなノードを選べます");}],
+        ["断る",()=>{closeModal();modal("？ 旅は道連れ",`${heroName}たちは自分の足で歩くことにした。`,[["進む",closeModal]]);}]
+      ]);return;
+    }
+    if(event===5){
+      modal("🐕 砂漠のわんこたち","デザートドッグたちが興味深そうに後ろからついて来ている……。",[
+        ["撫でる",()=>{damageHeroPercent(.20);closeModal();updateRunHud();modal("🐕 砂漠のわんこたち",`噛まれた！\nデザートドッグたちは笑いながら走り去って行った……。\n\n主人公が最大HPの20%ダメージを受けた。`,[["進む",closeModal]]);}],
+        ["無視する",()=>{closeModal();modal("🐕 砂漠のわんこたち","デザートドッグたちは興味を失って去って行った。",[["進む",closeModal]]);}],
+        ["追い払う",()=>{closeModal();modal("⚔ 砂漠のわんこたち","デザートドッグたちは襲いかかってきた！",[["戦う",()=>{closeModal();openRunBattle("salidDesertDogs");}]]);}]
+      ]);return;
+    }
+    modal("？ 古びた祠","小さな祠が砂に埋もれている。",[
+      ["祈る",()=>{const hit=Math.random()<.01;if(hit){const b=seedBonusOf(roster.hero);b.fate=(Number(b.fate)||0)+1;roster.hero.fate=(Number(roster.hero.fate)||0)+1;}closeModal();modal("⛩ 古びた祠",hit?`何かが変わった気がする。\n${heroName}の運命値が1上がった！`:"しかし何も起こらなかった。",[["進む",closeModal]]);}],
+      ["立ち去る",()=>{closeModal();modal("？ 古びた祠",`${heroName}たちはそのまま立ち去った。`,[["進む",closeModal]]);}]
+    ]);
+  }
+
   function resolveRunelRuinsEvent(){
     const heroName=roster.hero.name,event=rand(7);
     if(event===0){
@@ -14086,13 +14217,13 @@ ${heroName}の運命値が1上がった！`:"しかし何も起こらなかっ�
   }
 
   function resolveNode(node){
-    const repeatableSpecial=node.type==="stairs" || node.type==="sidepath" || node.type==="mountainBoss" || node.type==="tilenoWetland" || node.type==="tilenoToxicWetland" || node.type==="toxicGate" || node.type==="toxicBoss" || node.type==="forestBlockedPath" || node.type==="forestDeepBoss" || node.type==="iceCorridor" || node.type==="runelCavern" || node.type==="restiaBorder" || node.type==="runelExit" || node.type==="runelTown" || node.type==="runelRuins" || node.type==="runelRuinsBoss" || node.type==="fairyGrove";
+    const repeatableSpecial=node.type==="stairs" || node.type==="sidepath" || node.type==="mountainBoss" || node.type==="tilenoWetland" || node.type==="tilenoToxicWetland" || node.type==="toxicGate" || node.type==="toxicBoss" || node.type==="forestBlockedPath" || node.type==="forestDeepBoss" || node.type==="iceCorridor" || node.type==="runelCavern" || node.type==="restiaBorder" || node.type==="runelExit" || node.type==="runelTown" || node.type==="runelRuins" || node.type==="runelRuinsBoss" || node.type==="fairyGrove" || node.type==="salidTown";
     if(state.run.resolved.has(node.id) && !repeatableSpecial) return;
     if(!repeatableSpecial) state.run.resolved.add(node.id);
-    const cave=state.run.area==="cave",side=state.run.area==="caveSide",yody=state.run.area==="yodyRegion",footpath=state.run.area==="footpath",mountain=state.run.area==="yodyMountain",tileno=state.run.area==="tilenoRegion",wetland=state.run.area==="tilenoWetland",toxic=state.run.area==="tilenoToxicWetland",forest=state.run.area==="zelrenoForest",forestDeep=state.run.area==="zelrenoForestDeep",granzel=state.run.area==="granzelPlains",runel=state.run.area==="runelCavern",runelRegion=state.run.area==="runelRegion",runelRuins=state.run.area==="runelRuins",layer=state.run.caveLayer;
+    const cave=state.run.area==="cave",side=state.run.area==="caveSide",yody=state.run.area==="yodyRegion",footpath=state.run.area==="footpath",mountain=state.run.area==="yodyMountain",tileno=state.run.area==="tilenoRegion",wetland=state.run.area==="tilenoWetland",toxic=state.run.area==="tilenoToxicWetland",forest=state.run.area==="zelrenoForest",forestDeep=state.run.area==="zelrenoForestDeep",granzel=state.run.area==="granzelPlains",runel=state.run.area==="runelCavern",runelRegion=state.run.area==="runelRegion",runelRuins=state.run.area==="runelRuins",salid=state.run.area==="salidDesert",layer=state.run.caveLayer;
     switch(node.type){
       case "battle": {
-        const recruitTutorialBattle=!cave && !side && !yody && !footpath && !mountain && !tileno && !wetland && !toxic && !forest && !forestDeep && !granzel && node.layer===1 && prologueStage()>=4 && !recruitTutorialDone();
+        const recruitTutorialBattle=!cave && !side && !yody && !footpath && !mountain && !tileno && !wetland && !toxic && !forest && !forestDeep && !granzel && !runel && !runelRegion && !runelRuins && !salid && node.layer===1 && prologueStage()>=4 && !recruitTutorialDone();
         if(side) openRunBattle("caveSide");
         else if(yody) openRunBattle("yodyRegion");
         else if(footpath) openRunBattle("footpath");
@@ -14106,6 +14237,7 @@ ${heroName}の運命値が1上がった！`:"しかし何も起こらなかっ�
         else if(runel) openRunBattle("runelCavern");
         else if(runelRegion) openRunBattle("runelRegion");
         else if(runelRuins) openRunBattle("runelRuins");
+        else if(salid) openRunBattle("salidDesertEast");
         else if(recruitTutorialBattle) openRunBattle("plains",{formationIndex:0,special:"recruitTutorial",escapeDisabled:true});
         else if(!cave) openRunBattle("plains");
         else if(layer===1) openRunBattle("cave1");
@@ -14135,14 +14267,29 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
         }else openRest();
         break;
       }
-      case "shop": openShop(side?"caveSide":yody?"yodyRegion":footpath?"footpath":mountain?"yodyMountain":tileno?"tilenoRegion":wetland?"tilenoWetland":toxic?"tilenoToxicWetland":forest?"zelrenoForest":forestDeep?"zelrenoForestDeep":granzel?"granzelPlains":runel?"runelCavern":runelRegion?"runelRegion":runelRuins?"runelRuins":cave?"cave":"plains"); break;
-      case "event": side?resolveCaveSideEvent():yody?resolveYodyRegionEvent():footpath?resolveFootpathEvent():mountain?resolveYodyMountainEvent():tileno?resolveTilenoRegionEvent():wetland?resolveTilenoWetlandEvent():toxic?resolveTilenoToxicWetlandEvent():forest?resolveZelrenoForestEvent():forestDeep?resolveZelrenoForestDeepEvent():granzel?resolveGranzelPlainsEvent():runel?resolveRunelCavernEvent():runelRegion?resolveRunelRegionEvent():runelRuins?resolveRunelRuinsEvent():cave?resolveCaveEvent():resolvePlainsEvent(); break;
+      case "shop": openShop(salid?"salidDesert":side?"caveSide":yody?"yodyRegion":footpath?"footpath":mountain?"yodyMountain":tileno?"tilenoRegion":wetland?"tilenoWetland":toxic?"tilenoToxicWetland":forest?"zelrenoForest":forestDeep?"zelrenoForestDeep":granzel?"granzelPlains":runel?"runelCavern":runelRegion?"runelRegion":runelRuins?"runelRuins":cave?"cave":"plains"); break;
+      case "event": side?resolveCaveSideEvent():yody?resolveYodyRegionEvent():footpath?resolveFootpathEvent():mountain?resolveYodyMountainEvent():tileno?resolveTilenoRegionEvent():wetland?resolveTilenoWetlandEvent():toxic?resolveTilenoToxicWetlandEvent():forest?resolveZelrenoForestEvent():forestDeep?resolveZelrenoForestDeepEvent():granzel?resolveGranzelPlainsEvent():runel?resolveRunelCavernEvent():runelRegion?resolveRunelRegionEvent():runelRuins?resolveRunelRuinsEvent():salid?resolveSalidDesertEvent():cave?resolveCaveEvent():resolvePlainsEvent(); break;
       case "empty": updateRunHud();toast("何も起こらなかった");break;
       case "salidPreview":
-        modal("🏜️ サリード砂漠",`船を降りると、乾いた砂漠がどこまでも広がっている。
-
-※サリード砂漠の探索内容は現在未実装です。`,[["港町ヨーディーへ戻る",()=>{closeModal();state.currentTown="yody";state.selectedArea="yodyTown";finishRun("港町ヨーディーへ戻りました");}]]);
         break;
+      case "salidTown": {
+        if(!state.eventFlags) state.eventFlags={};
+        const firstArrival=!state.eventFlags.salidTownReached;
+        state.eventFlags.salidDesertUnlocked=true;
+        state.eventFlags.salidTownReached=true;
+        const arrivalText=firstArrival
+          ? `長い砂漠を越え、城壁に囲まれた大きな街が見えてきた。
+
+サリード城下町に到着した！`
+          : `サリード砂漠を抜け、サリード城下町に到着した。`;
+        modal("🏙️ サリード城下町",`${arrivalText}
+
+※サリード城下町の中身は現在未実装です。`,[
+          ["港町ヨーディーへ戻る",()=>{closeModal();state.currentTown="yody";state.selectedArea="yodyTown";finishRun("港町ヨーディーへ戻りました");}],
+          ["砂漠へ戻る",()=>{closeModal();returnToPreviousNode();}]
+        ]);
+        break;
+      }
       case "sidepath": resolveCaveSidepath(); break;
       case "stairs":
         modal("⬇ 小さな洞窟・第一層","さらに奥へ続く道がある。第二層へ進みますか？\nHP・MPなどの状態はそのまま引き継がれます。",[
