@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47e";
+  const DEV_VERSION = "v0.47f";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -368,6 +368,7 @@
 
   const GRANZEL_KING_IMG = "assets/npcs/granzel_king.webp";
   const MARGARET_IMG = "assets/npcs/margaret.webp";
+  const SAPHIRA_IMG = "assets/npcs/saphira.webp";
 
   const GRANZEL_TALK_NPCS = [
     {id:"granzelYoungman",name:"若者",gender:"male",silhouette:NPC_YOUNGMAN_IMG},
@@ -403,7 +404,8 @@
   const SALID_CASTLE_TALK_NPCS = [
     {id:"salidCastleSeriousSoldier",name:"真面目な兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
     {id:"salidCastleWaterSoldier",name:"水を飲む兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
-    {id:"salidCastleSighSoldier",name:"ため息をつく兵士",gender:"male",silhouette:NPC_SOLDIER_IMG}
+    {id:"salidCastleSighSoldier",name:"ため息をつく兵士",gender:"male",silhouette:NPC_SOLDIER_IMG},
+    {id:"salidQueen",name:"サリード女王",gender:"female",portrait:SAPHIRA_IMG}
   ];
 
   const screens = [...document.querySelectorAll(".screen")];
@@ -1532,6 +1534,44 @@
         talkDialogue("兵士",npc.silhouette,npc.gender,`何が厄介って、奴ら魔物娘なんだよ。そこらの人間のごろつきとは訳が違う。
 グランゼルとの戦争に向けて戦力を整えないといけないって時に……はた迷惑な話だよ。`)
       ];
+    }else if(id==="salidQueen"){
+      if(!state.eventFlags?.margaretThreeNationQuestStarted){
+        steps=[
+          talkDialogue("兵士",NPC_SOLDIER_IMG,"male",`女王サフィーラ様は現在執務中で在られます。
+謁見でしたら、日を改めてお越しください。`)
+        ];
+      }else if(!state.eventFlags?.salidQueenFirstAudienceDone){
+        steps=[
+          {type:"dialogue",speaker:"サフィーラ",portrait:SAPHIRA_IMG,text:`サリード王国へようこそ。
+私がこの国の女王、サフィーラです。`},
+          talkDialogue("主人公",null,null,`…………`),
+          {type:"dialogue",speaker:"サフィーラ",portrait:SAPHIRA_IMG,text:`…………`},
+          {type:"dialogue",speaker:"サフィーラ",portrait:SAPHIRA_IMG,text:`……なんと、あなたは魔縁者なのですね。
+魔物娘と心を通わせるとは、なんと稀有な能力でしょう。`},
+          talkDialogue("主人公",null,null,`…………`),
+          {type:"dialogue",speaker:"サフィーラ",portrait:SAPHIRA_IMG,text:`困っていること……ですか？
+ふふ、面白いことを言いますね、旅の魔縁者。`},
+          {type:"dialogue",speaker:"サフィーラ",portrait:SAPHIRA_IMG,text:`目下、我が国が解決すべき事案は、魔物娘の盗賊団……通称『シャウラ盗賊団』による町やキャラバンへの襲撃。
+数年前から彼女たちの行動は確認されていましたが、ここ最近は特に活発です。`},
+          {type:"dialogue",speaker:"サフィーラ",portrait:SAPHIRA_IMG,text:`シャウラ盗賊団は、西のカルザーン地方を拠点としています。
+溶岩洞窟を越えて城下町にまで出没するようになったことには、何か理由があるのでしょう。`},
+          {type:"dialogue",speaker:"サフィーラ",portrait:SAPHIRA_IMG,text:`グランゼルでは、魔界の『扉』が開いたそうですが……何か関係あるかもしれませんね。`},
+          {type:"dialogue",speaker:"サフィーラ",portrait:SAPHIRA_IMG,text:`とにかく、グランゼルとの戦争が差し迫っている中、盗賊団の問題まで抱えている状況です。
+一刻も早くシャウラ盗賊団を壊滅させねばなりません。`},
+          {type:"dialogue",speaker:"サフィーラ",portrait:SAPHIRA_IMG,text:`……とはいえ、これは我が国の問題です。旅の魔縁者であるあなたを巻き込むわけにはいきません。
+あなたはこの国を楽しんでください。グランゼルと違い、我が国は魔縁者を捕らえたりはしませんよ。`},
+          talkDialogue("主人公",null,null,`…………`),
+          talkSystem(`『{{hero}}は謁見の間を後にした。』`,[{type:"flag",key:"salidQueenFirstAudienceDone",value:true}])
+        ];
+      }else{
+        steps=[
+          {type:"dialogue",speaker:"サフィーラ",portrait:SAPHIRA_IMG,text:`これは旅の魔縁者さん。
+我が国は楽しんでいますか？`},
+          {type:"dialogue",speaker:"サフィーラ",portrait:SAPHIRA_IMG,text:`溶岩洞窟を挟んで西のカルザーン地方に行くのでしたら、気を付けてくださいね。
+シャウラ盗賊団の拠点もある危険な場所です。`},
+          {type:"dialogue",speaker:"サフィーラ",portrait:SAPHIRA_IMG,text:`カルザーンの街は、何故か盗賊被害に遭っていないようですが……。`}
+        ];
+      }
     }
     steps.push({type:"end"});
     startTemporaryStoryEvent(steps);
@@ -5541,8 +5581,8 @@
     $("debugBossToggleBtn").onclick=()=>{state.caveBossDefeated=!state.caveBossDefeated;debugRefreshProgress();};
     $("debugMerchantToggleBtn").onclick=()=>{state.travelMerchantMet=!state.travelMerchantMet;debugRefreshProgress();};
     $("debugIntroToggleBtn").onclick=()=>{const on=prologueStage()<1;state.eventFlags.milestaIntroDone=on;state.prologueStage=on?1:0;if(!on)leaveElizaEscort();debugRefreshProgress();};
-    $("debugProgressOpenBtn").onclick=()=>{state.caveUnlocked=true;state.caveBossDefeated=true;state.travelMerchantMet=true;state.eventFlags.milestaIntroDone=true;state.eventFlags.recruitTutorialDone=true;state.eventFlags.milestaWaitingUnlocked=true;state.eventFlags.caveSidepathUnlocked=true;state.eventFlags.yodyPortReached=true;state.eventFlags.yodyRegionUnlocked=true;state.eventFlags.yodyFootpathUnlocked=true;state.eventFlags.yodyMountainUnlocked=true;state.eventFlags.yodyMountainBossDefeated=true;state.eventFlags.yodyMountainCleared=true;state.eventFlags.tilenoRegionReached=true;state.eventFlags.tilenoTownReached=true;state.eventFlags.tilenoGuildPanaceaReceived=true;state.eventFlags.tilenoWetlandReached=true;state.eventFlags.tilenoToxicWetlandReached=true;state.eventFlags.tilenoToxicWarningFeatherReceived=true;state.eventFlags.tilenoToxicBossDefeated=true;state.eventFlags.margaretPoisonQuestCompleted=true;state.eventFlags.runelStoryLeadKnown=true;state.eventFlags.tilenoToxicBossAfterStoryDone=true;state.eventFlags.zelrenoForestReached=true;state.eventFlags.granzelPlainsReached=true;state.eventFlags.granzelTownReached=true;state.eventFlags.granzelArrivalPosterDone=true;state.eventFlags.granzelCompanionsHidden=true;state.eventFlags.granzelSoldierSceneDone=true;state.eventFlags.granzelKingAudienceDone=true;state.eventFlags.iceCorridorRouteUnlocked=true;state.eventFlags.iceCorridorReached=true;state.eventFlags.runelCavernReached=true;state.eventFlags.kunputeiReached=true;state.eventFlags.runelRegionReached=true;state.eventFlags.runelTownReached=true;state.eventFlags.runelRuinsReached=true;state.eventFlags.runelRuinsBossDefeated=true;state.eventFlags.runelRuinsCleared=true;state.eventFlags.margaretRunelReportPending=false;state.eventFlags.margaretRunelFirstReportDone=true;state.eventFlags.margaretRunelSecondReportDone=true;state.eventFlags.margaretThreeNationQuestStarted=true;state.eventFlags.salidDesertUnlocked=true;state.eventFlags.salidTownReached=true;state.eventFlags.salidLavaCaveReached=true;state.eventFlags.salidSunTempleReached=true;state.eventFlags.fairyGroveDiscovered=true;state.eventFlags.margaretIceTopicSelf=true;state.eventFlags.margaretIceTopicMagicBond=true;state.eventFlags.margaretIceTopicWar=true;state.eventFlags.margaretIceCorridorMeetingDone=true;state.eventFlags.margaretPoisonQuestAccepted=true;state.eventFlags.prologueComplete=true;state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=6;toast("現行の進行フラグをすべてONにしました。");debugRefreshProgress();};
-    $("debugProgressResetBtn").onclick=()=>modal("進行フラグを初期化","現在実装されている進行フラグだけをOFFにします。仲間・所持品・Lv・装備は変わりません。",[["初期化する",()=>{state.caveUnlocked=false;state.caveBossDefeated=false;state.travelMerchantMet=false;state.eventFlags.milestaIntroDone=false;state.eventFlags.recruitTutorialDone=false;state.eventFlags.milestaWaitingUnlocked=false;state.eventFlags.caveSidepathUnlocked=false;state.eventFlags.yodyPortReached=false;state.eventFlags.yodyRegionUnlocked=false;state.eventFlags.yodyFootpathUnlocked=false;state.eventFlags.yodyMountainUnlocked=false;state.eventFlags.yodyMountainBossDefeated=false;state.eventFlags.yodyMountainCleared=false;state.eventFlags.tilenoRegionReached=false;state.eventFlags.tilenoTownReached=false;state.eventFlags.tilenoGuildPanaceaReceived=false;state.eventFlags.tilenoWetlandReached=false;state.eventFlags.tilenoToxicWetlandReached=false;state.eventFlags.tilenoToxicWarningFeatherReceived=false;state.eventFlags.tilenoToxicBossDefeated=false;state.eventFlags.margaretPoisonQuestCompleted=false;state.eventFlags.runelStoryLeadKnown=false;state.eventFlags.tilenoToxicBossAfterStoryDone=false;state.eventFlags.zelrenoForestReached=false;state.eventFlags.granzelPlainsReached=false;state.eventFlags.granzelTownReached=false;state.eventFlags.granzelArrivalPosterDone=false;state.eventFlags.granzelCompanionsHidden=false;state.eventFlags.granzelSoldierSceneDone=false;state.eventFlags.granzelKingAudienceDone=false;state.eventFlags.iceCorridorRouteUnlocked=false;state.eventFlags.iceCorridorReached=false;state.eventFlags.margaretIceTopicSelf=false;state.eventFlags.margaretIceTopicMagicBond=false;state.eventFlags.margaretIceTopicWar=false;state.eventFlags.margaretIceCorridorMeetingDone=false;state.eventFlags.margaretPoisonQuestAccepted=false;state.eventFlags.runelCavernReached=false;state.eventFlags.kunputeiReached=false;state.eventFlags.runelRegionReached=false;state.eventFlags.runelTownReached=false;state.eventFlags.runelRuinsReached=false;state.eventFlags.runelRuinsBossDefeated=false;state.eventFlags.runelRuinsCleared=false;state.eventFlags.margaretRunelReportPending=false;state.eventFlags.margaretRunelFirstReportDone=false;state.eventFlags.margaretRunelSecondReportDone=false;state.eventFlags.margaretThreeNationQuestStarted=false;state.eventFlags.fairyGroveDiscovered=false;state.eventFlags.footpathHealLeafObtained=false;state.eventFlags.yodyBoyTalked=false;state.eventFlags.yodyBoyQuestCompleted=false;state.eventFlags.salidDesertUnlocked=false;state.eventFlags.salidTownReached=false;state.eventFlags.salidLavaCaveReached=false;state.eventFlags.salidSunTempleReached=false;state.eventFlags.prologueComplete=false;state.currentTown="milesta";state.selectedArea="plains";state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=0;leaveElizaEscort();closeModal();toast("進行フラグを初期状態にしました。");debugRefreshProgress();}],["やめる",closeModal]]);
+    $("debugProgressOpenBtn").onclick=()=>{state.caveUnlocked=true;state.caveBossDefeated=true;state.travelMerchantMet=true;state.eventFlags.milestaIntroDone=true;state.eventFlags.recruitTutorialDone=true;state.eventFlags.milestaWaitingUnlocked=true;state.eventFlags.caveSidepathUnlocked=true;state.eventFlags.yodyPortReached=true;state.eventFlags.yodyRegionUnlocked=true;state.eventFlags.yodyFootpathUnlocked=true;state.eventFlags.yodyMountainUnlocked=true;state.eventFlags.yodyMountainBossDefeated=true;state.eventFlags.yodyMountainCleared=true;state.eventFlags.tilenoRegionReached=true;state.eventFlags.tilenoTownReached=true;state.eventFlags.tilenoGuildPanaceaReceived=true;state.eventFlags.tilenoWetlandReached=true;state.eventFlags.tilenoToxicWetlandReached=true;state.eventFlags.tilenoToxicWarningFeatherReceived=true;state.eventFlags.tilenoToxicBossDefeated=true;state.eventFlags.margaretPoisonQuestCompleted=true;state.eventFlags.runelStoryLeadKnown=true;state.eventFlags.tilenoToxicBossAfterStoryDone=true;state.eventFlags.zelrenoForestReached=true;state.eventFlags.granzelPlainsReached=true;state.eventFlags.granzelTownReached=true;state.eventFlags.granzelArrivalPosterDone=true;state.eventFlags.granzelCompanionsHidden=true;state.eventFlags.granzelSoldierSceneDone=true;state.eventFlags.granzelKingAudienceDone=true;state.eventFlags.iceCorridorRouteUnlocked=true;state.eventFlags.iceCorridorReached=true;state.eventFlags.runelCavernReached=true;state.eventFlags.kunputeiReached=true;state.eventFlags.runelRegionReached=true;state.eventFlags.runelTownReached=true;state.eventFlags.runelRuinsReached=true;state.eventFlags.runelRuinsBossDefeated=true;state.eventFlags.runelRuinsCleared=true;state.eventFlags.margaretRunelReportPending=false;state.eventFlags.margaretRunelFirstReportDone=true;state.eventFlags.margaretRunelSecondReportDone=true;state.eventFlags.margaretThreeNationQuestStarted=true;state.eventFlags.salidDesertUnlocked=true;state.eventFlags.salidTownReached=true;state.eventFlags.salidLavaCaveReached=true;state.eventFlags.salidLavaCaveRouteUnlocked=true;state.eventFlags.salidQueenFirstAudienceDone=true;state.eventFlags.salidSunTempleReached=true;state.eventFlags.fairyGroveDiscovered=true;state.eventFlags.margaretIceTopicSelf=true;state.eventFlags.margaretIceTopicMagicBond=true;state.eventFlags.margaretIceTopicWar=true;state.eventFlags.margaretIceCorridorMeetingDone=true;state.eventFlags.margaretPoisonQuestAccepted=true;state.eventFlags.prologueComplete=true;state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=6;toast("現行の進行フラグをすべてONにしました。");debugRefreshProgress();};
+    $("debugProgressResetBtn").onclick=()=>modal("進行フラグを初期化","現在実装されている進行フラグだけをOFFにします。仲間・所持品・Lv・装備は変わりません。",[["初期化する",()=>{state.caveUnlocked=false;state.caveBossDefeated=false;state.travelMerchantMet=false;state.eventFlags.milestaIntroDone=false;state.eventFlags.recruitTutorialDone=false;state.eventFlags.milestaWaitingUnlocked=false;state.eventFlags.caveSidepathUnlocked=false;state.eventFlags.yodyPortReached=false;state.eventFlags.yodyRegionUnlocked=false;state.eventFlags.yodyFootpathUnlocked=false;state.eventFlags.yodyMountainUnlocked=false;state.eventFlags.yodyMountainBossDefeated=false;state.eventFlags.yodyMountainCleared=false;state.eventFlags.tilenoRegionReached=false;state.eventFlags.tilenoTownReached=false;state.eventFlags.tilenoGuildPanaceaReceived=false;state.eventFlags.tilenoWetlandReached=false;state.eventFlags.tilenoToxicWetlandReached=false;state.eventFlags.tilenoToxicWarningFeatherReceived=false;state.eventFlags.tilenoToxicBossDefeated=false;state.eventFlags.margaretPoisonQuestCompleted=false;state.eventFlags.runelStoryLeadKnown=false;state.eventFlags.tilenoToxicBossAfterStoryDone=false;state.eventFlags.zelrenoForestReached=false;state.eventFlags.granzelPlainsReached=false;state.eventFlags.granzelTownReached=false;state.eventFlags.granzelArrivalPosterDone=false;state.eventFlags.granzelCompanionsHidden=false;state.eventFlags.granzelSoldierSceneDone=false;state.eventFlags.granzelKingAudienceDone=false;state.eventFlags.iceCorridorRouteUnlocked=false;state.eventFlags.iceCorridorReached=false;state.eventFlags.margaretIceTopicSelf=false;state.eventFlags.margaretIceTopicMagicBond=false;state.eventFlags.margaretIceTopicWar=false;state.eventFlags.margaretIceCorridorMeetingDone=false;state.eventFlags.margaretPoisonQuestAccepted=false;state.eventFlags.runelCavernReached=false;state.eventFlags.kunputeiReached=false;state.eventFlags.runelRegionReached=false;state.eventFlags.runelTownReached=false;state.eventFlags.runelRuinsReached=false;state.eventFlags.runelRuinsBossDefeated=false;state.eventFlags.runelRuinsCleared=false;state.eventFlags.margaretRunelReportPending=false;state.eventFlags.margaretRunelFirstReportDone=false;state.eventFlags.margaretRunelSecondReportDone=false;state.eventFlags.margaretThreeNationQuestStarted=false;state.eventFlags.fairyGroveDiscovered=false;state.eventFlags.footpathHealLeafObtained=false;state.eventFlags.yodyBoyTalked=false;state.eventFlags.yodyBoyQuestCompleted=false;state.eventFlags.salidDesertUnlocked=false;state.eventFlags.salidTownReached=false;state.eventFlags.salidLavaCaveReached=false;state.eventFlags.salidLavaCaveRouteUnlocked=false;state.eventFlags.salidQueenFirstAudienceDone=false;state.eventFlags.salidSunTempleReached=false;state.eventFlags.prologueComplete=false;state.currentTown="milesta";state.selectedArea="plains";state.eventFlags.milestaWomanFeatherReceived=false;state.prologueStage=0;leaveElizaEscort();closeModal();toast("進行フラグを初期状態にしました。");debugRefreshProgress();}],["やめる",closeModal]]);
     $("debugIntroReplayBtn").onclick=()=>{closeDebugTools();startStoryEvent("milestaIntroEliza",{preview:true,force:true});};
 
     areaSel.onchange=debugPopulateFormationIndex;$("debugFormationIndex").onchange=debugRefreshFormationStatus;
@@ -10788,6 +10828,7 @@
     const fairyGroveKnown=!!state.eventFlags?.fairyGroveDiscovered;
     const salidContinentUnlocked=!!state.eventFlags?.salidTownReached;
     const salidLavaCaveReached=!!state.eventFlags?.salidLavaCaveReached;
+    const salidLavaCaveRouteUnlocked=!!state.eventFlags?.salidLavaCaveRouteUnlocked;
     const salidSunTempleReached=!!state.eventFlags?.salidSunTempleReached;
     if(!state.caveUnlocked && state.selectedArea==="cave") state.selectedArea="plains";
     if(!yodyUnlocked && state.selectedArea==="yodyRegion") state.selectedArea=state.caveUnlocked?"cave":"plains";
@@ -10850,7 +10891,7 @@
     if($("fairyGroveWorldRoute")) $("fairyGroveWorldRoute").style.display=fairyGroveKnown?"":"none";
     if($("salidDesertWorldPin")) $("salidDesertWorldPin").style.display=salidContinentUnlocked?"flex":"none";
     if($("salidTownWorldPin")) $("salidTownWorldPin").style.display=salidContinentUnlocked?"flex":"none";
-    if($("salidLavaCaveWorldPin")){ $("salidLavaCaveWorldPin").style.display=salidLavaCaveReached?"flex":"none"; $("salidLavaCaveWorldPin").classList.remove("locked"); }
+    if($("salidLavaCaveWorldPin")){ $("salidLavaCaveWorldPin").style.display=salidLavaCaveReached?"flex":"none"; $("salidLavaCaveWorldPin").classList.toggle("locked",salidLavaCaveReached&&!salidLavaCaveRouteUnlocked); }
     if($("salidSunTempleWorldPin")){ $("salidSunTempleWorldPin").style.display=salidSunTempleReached?"flex":"none"; $("salidSunTempleWorldPin").classList.remove("locked"); }
     if($("salidSeaWorldRoute")) $("salidSeaWorldRoute").style.display=salidContinentUnlocked?"":"none";
     if($("salidTownWorldRoute")) $("salidTownWorldRoute").style.display=salidContinentUnlocked?"":"none";
@@ -10923,7 +10964,9 @@
       $("areaDesc").textContent="サリード王国の中心に築かれた城下町。砂漠を越えて行き交う商人や旅人で賑わっている。";
     }else if(a==="salidLavaCave"){
       $("areaName").textContent="溶岩洞窟";
-      $("areaDesc").textContent=salidLavaCaveReached?"サリード砂漠・東の西側にある、熱気に満ちた洞窟。現在、探索内容は未実装。":"サリード砂漠・東の西側にある洞窟。砂漠を抜けて一度到着すると直接向かえるようになる。";
+      $("areaDesc").textContent=salidLavaCaveRouteUnlocked
+        ? "サリード砂漠・東の西側にある、熱気に満ちた洞窟。カルザーン地方へ続いている。現在、探索内容は未実装。"
+        : "サリード砂漠・東の西側にある、熱気に満ちた洞窟。現在は兵士によって立ち入りが制限されている。";
     }else if(a==="salidSunTemple"){
       $("areaName").textContent="太陽の神殿";
       $("areaDesc").textContent=salidSunTempleReached?"サリード砂漠の南に建つ古い神殿。現在、探索内容は未実装。":"サリード砂漠の南に建つ神殿。砂漠を抜けて一度到着すると直接向かえるようになる。";
@@ -10932,12 +10975,12 @@
       $("areaDesc").textContent="港町ヨーディー周辺に広がる海沿いの地方。山道や麓へ続く道が伸びている。";
     }
     $("backHome").textContent=`← ${townDisplayName(state.currentTown)}へ`;
-    if(a==="fairyGrove" || a==="salidLavaCave" || a==="salidSunTemple"){
+    if(a==="fairyGrove" || (a==="salidLavaCave" && !salidLavaCaveRouteUnlocked) || a==="salidSunTemple"){
       $("departBtn").textContent="現在は入れない";
       $("departBtn").disabled=true;
       $("departBtn").classList.add("locked");
     }else{
-      $("departBtn").textContent=(a==="milestaTown"||a==="yodyTown"||a==="tilenoTown"||a==="granzelTown"||a==="runelTown"||a==="salidTown")?"町へ移動する":a==="iceCorridor"?"入口へ移動する":"探索を開始する";
+      $("departBtn").textContent=(a==="milestaTown"||a==="yodyTown"||a==="tilenoTown"||a==="granzelTown"||a==="runelTown"||a==="salidTown")?"町へ移動する":(a==="iceCorridor"||a==="salidLavaCave")?"入口へ移動する":"探索を開始する";
       $("departBtn").disabled=false;
       $("departBtn").classList.remove("locked");
     }
@@ -11034,6 +11077,12 @@
     if(state.selectedArea==="granzelTown"){ enterTown("granzel","グランゼル城下町へ移動しました"); return; }
     if(state.selectedArea==="runelTown"){ enterTown("runel","ルネルの街へ移動しました"); return; }
     if(state.selectedArea==="salidTown"){ enterTown("salid","サリード城下町へ移動しました"); return; }
+    if(state.selectedArea==="salidLavaCave" && state.eventFlags?.salidLavaCaveRouteUnlocked){
+      modal("🌋 溶岩洞窟",`兵士から通行を認められた溶岩洞窟の入口だ。
+
+※溶岩洞窟の探索内容は現在未実装です。`,[["世界マップへ戻る",closeModal]]);
+      return;
+    }
     if(state.selectedArea==="iceCorridor"){
       if(margaretIceMeetingPending()){ startMargaretIceCorridorMeeting(); return; }
       modal("❄️ 氷雪の回廊",`雪と氷に覆われた、氷雪の回廊の入口だ。`,[["世界マップへ戻る",closeModal]]);
@@ -14474,14 +14523,62 @@ ${diggingReward}`,[["休息地点を見る",()=>{closeModal();openRest();}]]);
         if(!state.eventFlags) state.eventFlags={};
         state.eventFlags.salidLavaCaveReached=true;
         state.selectedArea="salidLavaCave";
-        modal("🌋 溶岩洞窟",`砂漠の西側に、熱気を吐き出す洞窟の入口が口を開けている。
-
-溶岩洞窟に到着した！
+        if(state.eventFlags.salidLavaCaveRouteUnlocked){
+          modal("🌋 溶岩洞窟",`兵士から通行を認められた溶岩洞窟の入口だ。
 
 ※溶岩洞窟の探索内容は現在未実装です。`,[
-          ["探索を終える",()=>{closeModal();finishRun("溶岩洞窟を発見しました");}],
-          ["砂漠へ戻る",()=>{closeModal();returnToPreviousNode();}]
-        ]);
+            ["そのまま進む",()=>{closeModal();state.currentTown="salid";state.selectedArea="salidLavaCave";finishRun("溶岩洞窟へ進みました");}],
+            ["一度城下町に帰る",()=>{closeModal();state.currentTown="salid";state.selectedArea="salidTown";finishRun("サリード城下町へ帰還しました");}]
+          ]);
+          break;
+        }
+        const guardBase=[
+          talkDialogue("兵士",NPC_SOLDIER_IMG,"male",`ん？お前、冒険者だな？
+溶岩洞窟は、今は立ち入り禁止だ。`),
+          talkDialogue("兵士",NPC_SOLDIER_IMG,"male",`ここを抜けた先、西のカルザーン地方で盗賊団の動きが活発でな。
+女王様の方針で、許可がある者以外通さないことになったんだ。`),
+          talkDialogue("兵士",NPC_SOLDIER_IMG,"male",`というわけで、観光ならこっちの東側だけにしてくれ。
+さ、城下町に帰るんだ。`),
+          talkDialogue("主人公",null,null,`…………`)
+        ];
+        if(!state.eventFlags.salidQueenFirstAudienceDone){
+          guardBase.push({type:"end"});
+          startTemporaryStoryEvent(guardBase,{returnToTownTalk:false,after:()=>{
+            state.currentTown="salid";
+            state.selectedArea="salidTown";
+            finishRun("サリード城下町へ帰還しました");
+          }});
+          break;
+        }
+        guardBase.push(
+          talkDialogue("兵士",NPC_SOLDIER_IMG,"male",`え？お前が盗賊団をやっつける？
+おいおい、冗談言っても通さないからな？`),
+          talkDialogue("兵士",NPC_SOLDIER_IMG,"male",`……え、ま、魔縁者！？
+マジかよ、俺初めて見た……。`),
+          talkDialogue("兵士",NPC_SOLDIER_IMG,"male",`そ、そうか、魔縁者か。魔縁者って、魔物娘と心を通わせるっていうアレだろ？
+それなら、もしかしたら……。`),
+          talkDialogue("兵士",NPC_SOLDIER_IMG,"male",`……よし！
+ここだけの話、俺は盗賊団に頭を悩ませる女王様を見てらんねえ。
+お前が解決してくれるって言うなら、内緒でお前を通してやる！`),
+          talkDialogue("兵士",NPC_SOLDIER_IMG,"male",`ただ、命の保証はできねえ。行くんだったら、覚悟を決めて、準備を整えてから行くんだぞ！`),
+          talkDialogue("主人公",null,null,`…………`,[{type:"flag",key:"salidLavaCaveRouteUnlocked",value:true}]),
+          {type:"system",text:"世界マップから溶岩洞窟へ進めるようになった。",choices:[
+            {label:"そのまま進む",action:()=>{
+              finishStoryEvent();
+              state.selectedArea="salidLavaCave";
+              modal("🌋 溶岩洞窟",`兵士に通してもらい、溶岩洞窟へ足を踏み入れた。
+
+※溶岩洞窟の探索内容は現在未実装です。`,[["サリード城下町へ戻る",()=>{closeModal();state.currentTown="salid";state.selectedArea="salidTown";finishRun("サリード城下町へ帰還しました");}]]);
+            }},
+            {label:"一度城下町に帰る",action:()=>{
+              finishStoryEvent();
+              state.currentTown="salid";
+              state.selectedArea="salidTown";
+              finishRun("サリード城下町へ帰還しました");
+            }}
+          ]}
+        );
+        startTemporaryStoryEvent(guardBase,{returnToTownTalk:false});
         break;
       }
       case "salidSunTemple": {
