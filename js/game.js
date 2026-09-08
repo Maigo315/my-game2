@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47f";
+  const DEV_VERSION = "v0.47g";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -11429,8 +11429,8 @@
     }
     if(fromWorld){
       layers.push([
-        {id:"SALID_LAVA_CAVE",layer:goalLayer,index:0,x:420,y:salidDesertLayerY(goalLayer,entryMode)-18,type:"salidLavaCave",out:[]},
-        {id:"SALID_SUN_TEMPLE",layer:goalLayer,index:1,x:1080,y:salidDesertLayerY(goalLayer,entryMode)+18,type:"salidSunTemple",out:[]}
+        {id:"SALID_SUN_TEMPLE",layer:goalLayer,index:0,x:420,y:salidDesertLayerY(goalLayer,entryMode)-18,type:"salidSunTemple",out:[]},
+        {id:"SALID_LAVA_CAVE",layer:goalLayer,index:1,x:1080,y:salidDesertLayerY(goalLayer,entryMode)+18,type:"salidLavaCave",out:[]}
       ]);
     }else{
       layers.push([{id:"SALID_TOWN",layer:goalLayer,index:0,x:750,y:salidDesertLayerY(goalLayer,entryMode),type:"salidTown",out:[]}]);
