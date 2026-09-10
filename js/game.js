@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47h";
+  const DEV_VERSION = "v0.47i";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2023,6 +2023,7 @@
     const arr=source.group==="battle" ? state.battleActive : state.battleReserve;
     arr.splice(source.index,1);
     if(traitOf(roster[sel.id])?.effect?.type==="nextBattlePolishFromHealNode") roster[sel.id]._desertDogPolishPending=false;
+    if(traitOf(roster[sel.id])?.effect?.type==="nextBattleMountFromHealNode") roster[sel.id]._hellhoundMountPending=false;
     clearPartySelection(`${roster[sel.id].name}をミレスタ待機にしました。`);
   }
 
@@ -2035,6 +2036,7 @@
     const arr=source.group==="battle" ? state.battleActive : state.battleReserve;
     arr[source.index]=waitId;
     if(traitOf(roster[sel.id])?.effect?.type==="nextBattlePolishFromHealNode") roster[sel.id]._desertDogPolishPending=false;
+    if(traitOf(roster[sel.id])?.effect?.type==="nextBattleMountFromHealNode") roster[sel.id]._hellhoundMountPending=false;
     clearPartySelection(`${roster[sel.id].name}と${roster[waitId].name}を入れ替えました。`);
   }
 
@@ -2603,6 +2605,15 @@
     if(name==="リンドヴルム") return {...base,id:"dragonKingWrath",implemented:true,effect:{type:"lowHpSelfCritBoost",threshold:.50,critBonus:10,critMultiplierBonus:.20}};
     if(name==="モルガナイト") return {...base,id:"beautifulMorganite",implemented:true,effect:{type:"nonDamageSkillMpMultiplier",multiplier:.80}};
     if(name==="ミストドラゴン") return {...base,id:"mistDragon",implemented:true,effect:{type:"lowHpEvasionLinear",startRatio:.75,maxRatio:.25,maxBonus:20}};
+    if(name==="ティターニア") return {...base,id:"mysticFairyMoth",implemented:true,effect:{type:"partyStatusResistanceBonus",statuses:["blind","silence"],steps:1,excludeSelf:true}};
+    if(name==="レイヴン") return {...base,id:"nightRaven",implemented:true,effect:{type:"darkMagicRankBoost",maxRank:"B",steps:1}};
+    if(name==="死神") return {...base,id:"reaper",implemented:true,effect:{type:"reaperDeathMastery",deathResistanceSteps:-1,skillIds:["death","allDeath"],casts:2,costMultiplier:2}};
+    if(name==="黒土偶") return {...base,id:"blackCurse",implemented:true,chance:.30,effect:{type:"battleStartAutoSkill",skillId:"neoSilence"}};
+    if(name==="怨霊娘") return {...base,id:"vengefulCurse",implemented:true,chance:.30,effect:{type:"battleStartRandomAutoSkill",skillIds:["pandem","hellDark"]}};
+    if(name==="ヘルハウンド") return {...base,id:"hellhoundRest",implemented:true,effect:{type:"nextBattleMountFromHealNode"}};
+    if(name==="ドミネーター") return {...base,id:"domination",implemented:true,effect:{type:"highestOtherHpBoost",percent:.15}};
+    if(name==="白ノ不浄") return {...base,id:"impureWhiteSpider",implemented:true,chance:.30,effect:{type:"battleStartAutoSkillAndPartyStatusRate",skillId:"pandem",rateBonus:.10,excludeStatus:"death"}};
+    if(name==="ハイドラ") return {...base,id:"forbiddenPoison",implemented:true,effect:{type:"battleStartPoisonAllyAndDamageBoost",percent:.30}};
     return {...base,id:`confirmedPending_${confirmedRuntimeId(record)||record.character_id}`,implemented:false};
   }
 
@@ -3250,7 +3261,19 @@
   function effectiveSkillForActor(actor,baseSkill){
     if(!actor || !baseSkill) return baseSkill;
     const boost=equippedAccessory(actor)?.skillBoost;
-    return confirmedRules.weaponSkill(baseSkill, {accessory:boost?.skillId===baseSkill.id});
+    let result=confirmedRules.weaponSkill(baseSkill, {accessory:boost?.skillId===baseSkill.id});
+    const effect=traitOf(actor)?.effect;
+    if(effect?.type==="darkMagicRankBoost" && result.kind==="magic" && result.element==="dark"){
+      const order=["E","D","C","B","A","S"];
+      const current=order.indexOf(result.rank);
+      const max=order.indexOf(effect.maxRank||"B");
+      if(current>=0 && max>=0 && current<=max){
+        const next=Math.min(order.length-1,current+Math.max(1,Number(effect.steps)||1));
+        const rank=order[next];
+        result={...result,rank,rankMultiplier:MAGIC_RANK_MULTIPLIERS[rank]||result.rankMultiplier};
+      }
+    }
+    return result;
   }
 
   function applyEquipmentPhysicalStatus(actor,target){
@@ -3983,8 +4006,17 @@
     return c.conditions;
   }
 
+  function clearDominationHpBoost(c){
+    if(!c?._dominationHpBaseMax) return;
+    const st=S(c),currentMax=Math.max(1,Number(st.hpMax)||1),ratio=Math.max(0,Math.min(1,(Number(st.hp)||0)/currentMax));
+    st.hpMax=Math.max(1,Math.round(Number(c._dominationHpBaseMax)||currentMax));
+    st.hp=Math.max(0,Math.min(st.hpMax,Math.round(st.hpMax*ratio)));
+    c._dominationHpBaseMax=0;
+  }
+
   function clearBattleOnlyStates(c,{preservePoison=false}={}){
     if(!c) return;
+    clearDominationHpBoost(c);
     c.defending=false;
     c.atkBuff=1;c.atkBuffRounds=0;
     c.defBuff=1;c.defBuffRounds=0;
@@ -4198,6 +4230,7 @@
       const st=S(c);
       st.hp=st.hpMax;
       st.mp=st.mpMax;
+      c._hellhoundMountPending=false;
       clearBattleOnlyStates(c,{preservePoison:false});
     });
   }
@@ -4249,7 +4282,8 @@
         spdBuff:c.spdBuff,spdBuffRounds:c.spdBuffRounds,
         defending:!!c.defending,
         conditions:{...conditionsOf(c)},
-        desertDogPolishPending:!!c._desertDogPolishPending
+        desertDogPolishPending:!!c._desertDogPolishPending,
+        hellhoundMountPending:!!c._hellhoundMountPending
       }]))
     };
   }
@@ -4278,6 +4312,7 @@
       c.defending=s.defending;
       c.conditions={...conditionsOf(c),...(s.conditions||{})};
       c._desertDogPolishPending=!!s.desertDogPolishPending;
+      c._hellhoundMountPending=!!s.hellhoundMountPending;
     });
   }
 
@@ -4330,7 +4365,8 @@
         learnedSkills:[...(c.learnedSkills||[])],
         equipment:{...ensureEquipment(c)},
         conditions:{...conditionsOf(c)},
-        desertDogPolishPending:!!c._desertDogPolishPending
+        desertDogPolishPending:!!c._desertDogPolishPending,
+        hellhoundMountPending:!!c._hellhoundMountPending
       }])),
       equipmentOwnedCounts:{...equipmentOwnedCounts}
     };
@@ -4382,6 +4418,7 @@
       c.stats.mp=Math.max(0,Math.min(Number(c.stats.mpMax)||0,Number(c.stats.mp)||0));
       c.conditions={...conditionsOf(c),...(r.conditions||{})};
       c._desertDogPolishPending=!!r.desertDogPolishPending;
+      c._hellhoundMountPending=!!r.hellhoundMountPending;
       const needsVariationMigration=!!profileFor(c) && !r.finalVariation && (id==="hero" || state.ownedSpecies.has(id));
       if(needsVariationMigration){
         ensureCharacterFinalVariation(c);
@@ -5980,6 +6017,9 @@
     }else if(effect?.type==="nonDamageSkillMpMultiplier" && !skillDealsDamage(sk)){
       cost=Math.max(1,Math.ceil(cost*(Number(effect.multiplier)||1)));
     }
+    if(effect?.type==="reaperDeathMastery" && Array.isArray(effect.skillIds) && effect.skillIds.includes(sk.id)){
+      cost=Math.max(1,Math.ceil(cost*(Number(effect.costMultiplier)||2)));
+    }
     return cost;
   }
 
@@ -5987,6 +6027,10 @@
     let rate=Math.max(0,Number(baseRate)||0);
     const effect=traitOf(actor)?.effect;
     if(effect?.type==="shockMastery" && status==="shock") rate+=Math.max(0,Number(effect.statusRateBonus)||0);
+    if(status!=="death" && actor && S(actor).hp>0 && state.battleActive.includes(actor.id)){
+      const white=livingActiveSlots().find(({c})=>traitOf(c)?.effect?.type==="battleStartAutoSkillAndPartyStatusRate");
+      if(white) rate+=Math.max(0,Number(traitOf(white.c).effect.rateBonus)||0);
+    }
     return rate;
   }
 
@@ -5995,6 +6039,9 @@
     const effect=traitOf(actor)?.effect;
     if(effect?.type==="personalElementDamageBoost" && effect.element===element) multiplier*=1+(Number(effect.percent)||0)/100;
     if(effect?.type==="shockMastery" && conditionsOf(target).shock) multiplier*=1+Math.max(0,Number(effect.shockedDamageBonus)||0);
+    if(effect?.type==="battleStartPoisonAllyAndDamageBoost" && livingActiveSlots().some(({c})=>conditionsOf(c).poison)){
+      multiplier*=1+Math.max(0,Number(effect.percent)||0);
+    }
     return Math.max(0,multiplier);
   }
 
@@ -6405,9 +6452,51 @@
     return Math.max(0,1+bonus);
   }
 
+  function resolveBattleStartAutoSkill(actor,skillId){
+    const base=skills[skillId];
+    if(!actor || !base || S(actor).hp<=0) return null;
+    const gate=confirmedRules.autoSkillGate({conditions:conditionsOf(actor)});
+    if(!gate.allowed) return null;
+    const sk=effectiveSkillForActor(actor,base);
+    if(sk.kind==="magic"){
+      const targets=sk.target==="enemyAll"?[...livingEnemies()]:(livingEnemies()[0]?[livingEnemies()[0]]:[]);
+      if(!targets.length) return null;
+      let total=0,defeated=0;
+      targets.forEach(target=>{
+        let dmg=spellDamage(actor,target,sk);
+        dmg=silverBodyAdjustedDamage(target,dmg);
+        const legacy=enemyElementNullify(target,sk.element,dmg);
+        dmg=legacy.damage;
+        target.hp=Math.max(0,target.hp-dmg);
+        if(target.hp<=0){
+          if(!target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
+          defeated++;
+        }
+        total+=dmg;
+      });
+      return `${sk.icon||"✨"} ${actor.name}「${traitOf(actor)?.name||"固有特性"}」：${sk.name}（合計${total}ダメージ${defeated?` / ${defeated}体撃破`:""}）`;
+    }
+    if(sk.kind==="multiStatus"){
+      const targets=sk.target==="enemyAll"?[...livingEnemies()]:(livingEnemies()[0]?[livingEnemies()[0]]:[]);
+      if(!targets.length) return null;
+      let total=0;
+      targets.forEach(target=>(sk.statuses||[]).forEach(status=>{if(tryInflictStatus(target,status,Number(sk.baseRate)||0,{source:actor}).success) total++;}));
+      return `${sk.icon||"✨"} ${actor.name}「${traitOf(actor)?.name||"固有特性"}」：${sk.name}${total?`（状態異常${total}件）`:"（効果なし）"}`;
+    }
+    if(sk.kind==="status"){
+      const targets=sk.target==="enemyAll"?[...livingEnemies()]:(livingEnemies()[0]?[livingEnemies()[0]]:[]);
+      if(!targets.length) return null;
+      let success=0;
+      targets.forEach(target=>{if(tryInflictStatus(target,sk.status,Number(sk.baseRate)||0,{source:actor}).success){success++;if(sk.status==="death"&&!target.defeatOrder)target.defeatOrder=++state.battleDefeatCounter;}});
+      return `${sk.icon||"✨"} ${actor.name}「${traitOf(actor)?.name||"固有特性"}」：${sk.name}${success?`（${success}体に成功）`:"（効果なし）"}`;
+    }
+    return null;
+  }
+
   function applyBattleStartTraits(){
     const notices=[];
     travelPartyIds().forEach(id=>{const c=roster[id];if(c)c._foxTrickeryUsedThisBattle=false;});
+
     livingActiveSlots().forEach(({c})=>{
       const effect=traitOf(c)?.effect;
       if(effect?.type==="nextBattlePolishFromHealNode" && c._desertDogPolishPending){
@@ -6415,7 +6504,55 @@
         c._desertDogPolishPending=false;
         notices.push(result.applied?`🐕 砂漠のわんこ：${c.name} の攻撃力アップ`:`🐕 砂漠のわんこ：${c.name} にはより強い攻撃力アップがかかっている`);
       }
+      if(effect?.type==="nextBattleMountFromHealNode" && c._hellhoundMountPending){
+        conditionsOf(c).mount=true;
+        c._hellhoundMountPending=false;
+        notices.push(`🐕‍🔥 魔界のわんこ：${c.name} にマウント`);
+      }
     });
+
+    for(const {c} of livingActiveSlots()){
+      const effect=traitOf(c)?.effect;
+      if(effect?.type!=="highestOtherHpBoost") continue;
+      const candidates=livingActiveSlots().filter(x=>x.c.id!==c.id);
+      if(!candidates.length) continue;
+      const maxHp=Math.max(...candidates.map(x=>S(x.c).hpMax));
+      const target=choose(candidates.filter(x=>S(x.c).hpMax===maxHp));
+      if(!target) continue;
+      clearDominationHpBoost(target.c);
+      const st=S(target.c),oldMax=Math.max(1,Number(st.hpMax)||1),ratio=Math.max(0,Math.min(1,(Number(st.hp)||0)/oldMax));
+      target.c._dominationHpBaseMax=oldMax;
+      st.hpMax=Math.max(oldMax+1,Math.round(oldMax*(1+Math.max(0,Number(effect.percent)||0))));
+      st.hp=Math.max(1,Math.min(st.hpMax,Math.round(st.hpMax*ratio)));
+      notices.push(`👑 ドミネーション：${target.c.name} の最大HP+${Math.round((Number(effect.percent)||0)*100)}%`);
+    }
+
+    for(const {c} of livingActiveSlots()){
+      const effect=traitOf(c)?.effect;
+      if(effect?.type!=="battleStartPoisonAllyAndDamageBoost") continue;
+      const candidates=livingActiveSlots().filter(x=>x.c.id!==c.id && S(x.c).hp>0);
+      if(!candidates.length) continue;
+      const target=choose(candidates);
+      conditionsOf(target.c).poison=true;
+      notices.push(`☠ 禁忌の毒：${target.c.name} が毒状態になった`);
+    }
+
+    for(const {c} of [...livingActiveSlots()]){
+      if(!livingEnemies().length) break;
+      const trait=traitOf(c),effect=trait?.effect;
+      if(effect?.type==="battleStartAutoSkill" && Math.random()<Math.max(0,Number(trait.chance)||0)){
+        const notice=resolveBattleStartAutoSkill(c,effect.skillId);
+        if(notice) notices.push(notice);
+      }else if(effect?.type==="battleStartRandomAutoSkill" && Math.random()<Math.max(0,Number(trait.chance)||0)){
+        const skillId=choose(effect.skillIds||[]);
+        const notice=skillId?resolveBattleStartAutoSkill(c,skillId):null;
+        if(notice) notices.push(notice);
+      }else if(effect?.type==="battleStartAutoSkillAndPartyStatusRate" && Math.random()<Math.max(0,Number(trait.chance)||0)){
+        const notice=resolveBattleStartAutoSkill(c,effect.skillId);
+        if(notice) notices.push(notice);
+      }
+    }
+
     livingActiveSlots().forEach(({c})=>{
       const trait=traitOf(c);
       if(trait?.id!=="timeThread" || !traitRoll(trait)) return;
@@ -6427,6 +6564,8 @@
       target.c.spdBuffRounds=quick.duration;
       notices.push(`🕸️ 時繰りの糸：${target.c.name} にクイック`);
     });
+    renderBattleParty();
+    renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
     return notices;
   }
 
@@ -6727,10 +6866,19 @@
     if(target.stats){
       const profile=profileFor(target);
       const base=profile?.resist?.[key] || "C";
-      const delta=equipmentResistanceDelta(ensureEquipment(target))[key]||0;
+      let delta=equipmentResistanceDelta(ensureEquipment(target))[key]||0;
+      if((key==="blind" || key==="silence") && S(target).hp>0 && state.battleActive.includes(target.id)){
+        const titania=livingActiveSlots().find(({c})=>c.id!==target.id && traitOf(c)?.effect?.type==="partyStatusResistanceBonus" && (traitOf(c).effect.statuses||[]).includes(key));
+        if(titania) delta+=Number(traitOf(titania.c).effect.steps)||1;
+      }
       return shiftedResistanceRank(base,delta);
     }
-    return target.resist?.[key] || enemyData[target.id]?.resist?.[key] || "C";
+    let rank=target.resist?.[key] || enemyData[target.id]?.resist?.[key] || "C";
+    if(key==="death"){
+      const reaper=livingActiveSlots().find(({c})=>traitOf(c)?.effect?.type==="reaperDeathMastery");
+      if(reaper) rank=shiftedResistanceRank(rank,Number(traitOf(reaper.c).effect.deathResistanceSteps)||-1);
+    }
+    return rank;
   }
   function elementResistanceMultiplier(target,element){
     if(!element) return 1;
@@ -8586,58 +8734,73 @@
     }
 
     if(sk.kind==="status"){
-      let targets=[];
-      if(sk.target==="enemyAll") targets=[...livingEnemies()];
-      else{
-        let target=enemyByUid(action.targetUid);
-        if(!target || target.hp<=0) target=livingEnemies()[0]||null;
-        if(target) targets=[target];
-      }
-      if(!targets.length) return;
+      const traitEffect=traitOf(actor)?.effect;
+      const repeat=(traitEffect?.type==="reaperDeathMastery" && Array.isArray(traitEffect.skillIds) && traitEffect.skillIds.includes(sk.id))
+        ? Math.max(1,Math.floor(Number(traitEffect.casts)||2)) : 1;
+      const originalTargetUid=action.targetUid;
+      let resolvedAny=false;
 
       animateActor("cast");
-      setMessage(`${sk.icon||"✨"} ${actor.name} は ${sk.name} を唱えた！`);
+      setMessage(`${sk.icon||"✨"} ${actor.name} は ${sk.name} を唱えた！${repeat>1?" 死神の力で2連続発動！":""}`);
       await wait(BASE_TIME.actionLead);
-      const results=targets.map(target=>({target,result:tryInflictStatus(target,sk.status,sk.baseRate,{source:actor})}));
 
-      if(sk.status==="death"){
-        for(const r of results){
-          if(r.result.success){
-            if(!r.target.defeatOrder) r.target.defeatOrder=++state.battleDefeatCounter;
-            await animateEnemyDamage(r.target,true,"magicshot","☠");
-          }else{
-            const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${r.target.uid}"]`);
-            if(el) spawnFx("magicshot","☠",el);
+      for(let castIndex=0;castIndex<repeat;castIndex++){
+        let targets=[];
+        if(sk.target==="enemyAll") targets=[...livingEnemies()];
+        else{
+          const target=enemyByUid(originalTargetUid);
+          if(target && target.hp>0) targets=[target];
+        }
+        if(!targets.length) break;
+        resolvedAny=true;
+        if(castIndex>0){
+          setMessage(`☠ ${actor.name} の「死神」！ ${sk.name} がもう一度発動！`);
+          await wait(BASE_TIME.short);
+        }
+        const results=targets.map(target=>({target,result:tryInflictStatus(target,sk.status,sk.baseRate,{source:actor})}));
+
+        if(sk.status==="death"){
+          for(const r of results){
+            if(r.result.success){
+              if(!r.target.defeatOrder) r.target.defeatOrder=++state.battleDefeatCounter;
+              await animateEnemyDamage(r.target,true,"magicshot","☠");
+            }else{
+              const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${r.target.uid}"]`);
+              if(el) spawnFx("magicshot","☠",el);
+            }
           }
-        }
-      }else{
-        results.forEach(r=>{
-          const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${r.target.uid}"]`);
-          if(el) spawnFx("magicshot",statusIcon(sk.status),el);
-        });
-        await wait(BASE_TIME.hit);
-        renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
-      }
-
-      const success=results.filter(r=>r.result.success).length;
-      const already=results.filter(r=>r.result.reason==="already").length;
-      const immune=results.filter(r=>r.result.reason==="immune").length;
-      if(sk.target==="enemyAll"){
-        if(success===0){
-          const noneMsg=sk.status==="death" ? "しかし、誰も倒れなかった。" : `しかし、誰も${statusName(sk.status)}状態にはならなかった。`;
-          setMessage(`${sk.icon||"✨"} ${sk.name}！ ${noneMsg}${already?` ${already}体はすでに同状態。`:""}${immune?` ${immune}体は無効。`:""}`);
         }else{
-          setMessage(`${sk.icon||"✨"} ${sk.name}！ ${success}体に${statusName(sk.status)}が決まった。${already?` ${already}体はすでに同状態。`:""}${immune?` ${immune}体は無効。`:""}`);
+          results.forEach(r=>{
+            const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${r.target.uid}"]`);
+            if(el) spawnFx("magicshot",statusIcon(sk.status),el);
+          });
+          await wait(BASE_TIME.hit);
+          renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
         }
-      }else{
-        const r=results[0];
-        const msg=r.result.success
-          ? (sk.status==="death"?`${r.target.displayName} を即死させた！`:`${r.target.displayName} は${statusName(sk.status)}状態になった！`)
-          : r.result.reason==="already"?`${r.target.displayName} はすでに${statusName(sk.status)}状態。`
-          : r.result.reason==="immune"?`${r.target.displayName} には効かなかった。`
-          : `${r.target.displayName} は${statusName(sk.status)}を免れた。`;
-        setMessage(`${sk.icon||"✨"} ${sk.name}！ ${msg}`);
+
+        const success=results.filter(r=>r.result.success).length;
+        const already=results.filter(r=>r.result.reason==="already").length;
+        const immune=results.filter(r=>r.result.reason==="immune").length;
+        const castLabel=repeat>1?`（${castIndex+1}回目）`:"";
+        if(sk.target==="enemyAll"){
+          if(success===0){
+            const noneMsg=sk.status==="death" ? "しかし、誰も倒れなかった。" : `しかし、誰も${statusName(sk.status)}状態にはならなかった。`;
+            setMessage(`${sk.icon||"✨"} ${sk.name}${castLabel}！ ${noneMsg}${already?` ${already}体はすでに同状態。`:""}${immune?` ${immune}体は無効。`:""}`);
+          }else{
+            setMessage(`${sk.icon||"✨"} ${sk.name}${castLabel}！ ${success}体に${statusName(sk.status)}が決まった。${already?` ${already}体はすでに同状態。`:""}${immune?` ${immune}体は無効。`:""}`);
+          }
+        }else{
+          const r=results[0];
+          const msg=r.result.success
+            ? (sk.status==="death"?`${r.target.displayName} を即死させた！`:`${r.target.displayName} は${statusName(sk.status)}状態になった！`)
+            : r.result.reason==="already"?`${r.target.displayName} はすでに${statusName(sk.status)}状態。`
+            : r.result.reason==="immune"?`${r.target.displayName} には効かなかった。`
+            : `${r.target.displayName} は${statusName(sk.status)}を免れた。`;
+          setMessage(`${sk.icon||"✨"} ${sk.name}${castLabel}！ ${msg}`);
+        }
+        if(repeat>1 && castIndex<repeat-1) await wait(BASE_TIME.short);
       }
+      if(!resolvedAny) setMessage(`${sk.name} の対象がいなかった。`);
       return;
     }
 
@@ -8969,7 +9132,7 @@
     if(item.effect==="statusAll"){
       const targets=[...livingEnemies()];
       if(!targets.length) return;
-      const results=targets.map(target=>({target,result:tryInflictStatus(target,item.status,item.baseRate)}));
+      const results=targets.map(target=>({target,result:tryInflictStatus(target,item.status,item.baseRate,{source:actor})}));
       results.forEach(({target,result})=>{
         const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${target.uid}"]`);
         if(el) spawnFx("magicshot",statusIcon(item.status),el);
@@ -10731,6 +10894,11 @@
 
     renderFormation(area,state.battleFormationIndex,true);
     const startTraitNotices=applyBattleStartTraits();
+    if(livingEnemies().length===0){
+      if(startTraitNotices.length) toast(startTraitNotices.join(" / "));
+      winBattle();
+      return;
+    }
     let forestSilenceApplied=false;
     let ruinsCurseApplied=false;
     if(fromRun && state.run?.pendingForestSilence){
@@ -10929,6 +11097,11 @@
     renderFormation(e.target.value,0,true);
     travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:false}));
     const startTraitNotices=applyBattleStartTraits();
+    if(livingEnemies().length===0){
+      if(startTraitNotices.length) toast(startTraitNotices.join(" / "));
+      winBattle();
+      return;
+    }
     startCommandInput();
     if(startTraitNotices.length) toast(startTraitNotices.join(" / "));
   };
@@ -10948,6 +11121,11 @@
     renderFormation(state.battleFormationArea,state.battleFormationIndex-1,true);
     travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:false}));
     const startTraitNotices=applyBattleStartTraits();
+    if(livingEnemies().length===0){
+      if(startTraitNotices.length) toast(startTraitNotices.join(" / "));
+      winBattle();
+      return;
+    }
     startCommandInput();
     if(startTraitNotices.length) toast(startTraitNotices.join(" / "));
   };
@@ -10967,6 +11145,11 @@
     renderFormation(state.battleFormationArea,state.battleFormationIndex+1,true);
     travelPartyIds().forEach(id=>clearBattleOnlyStates(roster[id],{preservePoison:false}));
     const startTraitNotices=applyBattleStartTraits();
+    if(livingEnemies().length===0){
+      if(startTraitNotices.length) toast(startTraitNotices.join(" / "));
+      winBattle();
+      return;
+    }
     startCommandInput();
     if(startTraitNotices.length) toast(startTraitNotices.join(" / "));
   };
@@ -13452,6 +13635,12 @@
     c._desertDogPolishPending=true;
     return true;
   }
+  function markHellhoundRestMount(){
+    const slot=travelPartyIds().map(id=>roster[id]).find(c=>c && S(c).hp>0 && traitOf(c)?.effect?.type==="nextBattleMountFromHealNode");
+    if(!slot) return false;
+    slot._hellhoundMountPending=true;
+    return true;
+  }
 
   function tryDiggingReward(){
     if(!travelPartyIds().includes("dog")) return null;
@@ -14656,6 +14845,7 @@ ${grantChestReward()}` ,[["閉じる",()=>{closeModal();updateRunHud();}]]); bre
       case "mimicChest": modal("🪎 宝箱","宝箱はミミック娘だった！",[["戦う",()=>{closeModal();openRunBattle(runelRuins?"runelRuinsMimic":"runelCavern",runelRuins?{}:{formationIndex:5});}]]); break;
       case "heal": {
         markDesertDogRestPolish();
+        markHellhoundRestMount();
         const openRest=()=>modal("❤ 休息地点","ひと息つけそうな場所を見つけた。どうする？",[
           ["休息する（HP40%）",()=>{const r=recoverTravelParty(.40,0);closeModal();updateRunHud();modal("❤ 休息地点",`同行メンバー全員のHPを${Math.round(r.hpRate*1000)/10}%回復した。
 合計 HP +${r.hpGain}`,[["出発する",closeModal]]);}],
