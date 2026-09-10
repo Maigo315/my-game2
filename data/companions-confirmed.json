@@ -95,7 +95,7 @@
     "source": "未実装データ.txt:11",
     "source_end_line": 30,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_a544ac8baaf0",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "カーバンクル\n①HP:25 / MP:26 / 攻撃力:16 / 防御力:4 / 魔力:17 / 魔防:20 / 素早さ:17 /運命値:18\n②HP:440 / MP:520 / 攻撃力:320 / 防御力:130 / 魔力:360 / 魔防:370 / 素早さ:340 /運命値:18\n③普通\n④速い\n⑤B\n⑥炎:B / 氷:B / 光:A / 闇:E / 雷:B / 風:B / 地:B / 快:D / 毒:D / 暗:D / 封:D / 即:D\n⑦\n固有特性:遮断のルビー\n魔法回避率+10%。\n1.サンダー\n8.ウィンド\n17.天の光\n23.ブレイズII\n28.ギガヒール\n34.ギガクエイク\n47.ラストオーラ\n58.エンドコールド\n⑧拳、杖\n",
     "raw_fields": {
@@ -184,7 +184,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:4dc73605ea36",
@@ -277,7 +279,7 @@
     "source": "未実装データ.txt:31",
     "source_end_line": 49,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_4dc73605ea36",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "フェンリル\n①HP:40 / MP:13 / 攻撃力:15 / 防御力:11 / 魔力:10 / 魔防:5 / 素早さ:16 /運命値:12\n②HP:610 / MP:420 / 攻撃力:320 / 防御力:270 / 魔力:220 / 魔防:200 / 素早さ:320 /運命値:12\n③早熟\n④速い\n⑤D\n⑥炎:D / 氷:A / 光:C / 闇:C / 雷:D / 風:C / 地:C / 快:E / 毒:C / 暗:D / 封:C / 即:C\n⑦\n固有特性:雪原わんこ\n回復ノード選択時、回復量+10%。\n1.コールド\n15.フレッシュ\n19.フロスト\n27.コールドII\n36.ギガフロスト\n42.爆裂拳\n54.連続攻撃\n⑧拳\n",
     "raw_fields": {
@@ -360,7 +362,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:4e5d70e26c37",
@@ -451,7 +455,7 @@
     "source": "未実装データ.txt:50",
     "source_end_line": 67,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_4e5d70e26c37",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "メタルゴーレム\n①HP:56 / MP:17 / 攻撃力:17 / 防御力:21 / 魔力:12 / 魔防:1 / 素早さ:6 /運命値:6\n②HP:670 / MP:460 / 攻撃力:330 / 防御力:400 / 魔力:260 / 魔防:50 / 素早さ:160 /運命値:6\n③早熟\n④速い\n⑤B\n⑥炎:D / 氷:D / 光:D / 闇:D / 雷:E / 風:D / 地:A / 快:B / 毒:A / 暗:D / 封:D / 即:B\n⑦\n固有特性:金属の魔人\n物理被ダメージ-15%。感電効果のある攻撃を受けると必ず感電する。\n8.ハイヒール\n14.マウント\n25.オールガード\n36.レイズII\n47.カウンタースタンス\n66.キャンセラー\n⑧拳、斧、銃\n",
     "raw_fields": {
@@ -528,7 +532,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:c613ad3d43aa",
@@ -622,7 +628,7 @@
     "source": "未実装データ.txt:68",
     "source_end_line": 86,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_c613ad3d43aa",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ホワイトバニー\n①HP:38 / MP:22 / 攻撃力:11 / 防御力:6 / 魔力:16 / 魔防:10 / 素早さ:18 /運命値:17\n②HP:620 / MP:510 / 攻撃力:240 / 防御力:220 / 魔力:330 / 魔防:250 / 素早さ:330 /運命値:17\n③普通\n④速い\n⑤C\n⑥炎:D / 氷:A / 光:C / 闇:C / 雷:D / 風:C / 地:C / 快:E / 毒:C / 暗:C / 封:D / 即:C\n⑦\n固有特性:いじわるバニー\nターン終了時、30%の確率で敵のバフを全て解除する。(1戦闘に1度)\n1.プレジャー\n6.レイズ\n12.フロスト\n24.イレイザー\n35.プレジャー・ワン\n43.魔力障壁\n62.エンドコールド\n⑧杖、鞭\n",
     "raw_fields": {
@@ -705,7 +711,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:8511ac2b9b42",
@@ -795,7 +803,7 @@
     "source": "未実装データ.txt:87",
     "source_end_line": 104,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_8511ac2b9b42",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "アイアンオウル\n①HP:56 / MP:14 / 攻撃力:23 / 防御力:17 / 魔力:11 / 魔防:12 / 素早さ:11 /運命値:13\n②HP:690 / MP:320 / 攻撃力:350 / 防御力:290 / 魔力:200 / 魔防:220 / 素早さ:270 /運命値:13\n③普通\n④普通\n⑤B\n⑥炎:C / 氷:B / 光:C / 闇:C / 雷:E / 風:D / 地:A / 快:B / 毒:A / 暗:S / 封:D / 即:B\n⑦\n固有特性:鋼鉄のはばたき\n会心ダメージ倍率大幅アップ。感電効果のある攻撃を受けると必ず感電する。\n3.パワーチャージ\n10.ネオサイレンス\n21.オールクイック\n27.ギガヒール\n35.爆裂拳\n43.ギガイロード\n⑧拳、銃\n",
     "raw_fields": {
@@ -873,7 +881,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:afc08608c0e1",
@@ -963,7 +973,7 @@
     "source": "未実装データ.txt:105",
     "source_end_line": 122,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_afc08608c0e1",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "スノーラミア\n①HP:84 / MP:14 / 攻撃力:22 / 防御力:8 / 魔力:19 / 魔防:6 / 素早さ:10 /運命値:13\n②HP:1040 / MP:280 / 攻撃力:370 / 防御力:310 / 魔力:280 / 魔防:180 / 素早さ:230 /運命値:13\n③普通\n④普通\n⑤B\n⑥炎:E / 氷:S / 光:D / 闇:D / 雷:D / 風:C / 地:D / 快:D / 毒:B / 暗:C / 封:D / 即:D\n⑦\n固有特性:雪国の蛇妖\n氷属性ダメージを受けた時、素早さが大きく上がる。\n12.フロスト\n24.コールドII\n36.ギガフロスト\n45.テラクラッシュ\n54.ラストフロスト\n67.エンドコールド\n⑧斧、鞭\n",
     "raw_fields": {
@@ -1040,7 +1050,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:8f97db3b3749",
@@ -1130,7 +1142,7 @@
     "source": "未実装データ.txt:123",
     "source_end_line": 140,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_8f97db3b3749",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ヴィーラ\n①HP:47 / MP:21 / 攻撃力:19 / 防御力:14 / 魔力:17 / 魔防:16 / 素早さ:13 /運命値:13\n②HP:660 / MP:450 / 攻撃力:350 / 防御力:240 / 魔力:320 / 魔防:270 / 素早さ:270 /運命値:13\n③やや早熟\n④普通\n⑤C\n⑥炎:D / 氷:B / 光:B / 闇:D / 雷:D / 風:C / 地:C / 快:D / 毒:C / 暗:B / 封:B / 即:C\n⑦\n固有特性:神秘の一族\n快楽属性以外の魔法ダメージを受けた時、20%の確率でフェアリーヒールを発動する。（1戦闘に1度）\n1.キュア\n14.オールブロック\n26.ギガフロスト\n33.ラストヒール\n44.ギガレイズ\n52.スターダスト\n⑧弓、杖\n",
     "raw_fields": {
@@ -1207,7 +1219,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:b4d66b4e88ab",
@@ -1301,7 +1315,7 @@
     "source": "未実装データ.txt:141",
     "source_end_line": 160,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_b4d66b4e88ab",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "メイドスキュラ\n①HP:59 / MP:20 / 攻撃力:12 / 防御力:8 / 魔力:16 / 魔防:10 / 素早さ:16 /運命値:14\n②HP:720 / MP:500 / 攻撃力:300 / 防御力:230 / 魔力:330 / 魔防:260 / 素早さ:290 /運命値:14\n③普通\n④普通\n⑤C\n⑥炎:D / 氷:C / 光:C / 闇:C / 雷:E / 風:C / 地:C / 快:C / 毒:C / 暗:B / 封:C / 即:D\n⑦\n固有特性:御奉仕乱舞\nこのキャラが戦闘不能になった時、「ランダムな味方一人のHPとMPを少し回復」を8回繰り返す。(1戦闘に1度)\n※HP10%、MP8\n1.タッチ\n8.リターン\n18.オールマジック\n25.ギガヒール\n34.ギガプレジャー\n42.ステルス\n52.戦神の覇気\n⑧鞭、銃\n",
     "raw_fields": {
@@ -1384,7 +1398,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:01a46e9084e4",
@@ -1481,7 +1497,7 @@
     "source": "未実装データ.txt:161",
     "source_end_line": 180,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_01a46e9084e4",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "シルキー\n①HP:37 / MP:26 / 攻撃力:10 / 防御力:12 / 魔力:17 / 魔防:19 / 素早さ:13 /運命値:18\n②HP:560 / MP:590 / 攻撃力:220 / 防御力:230 / 魔力:330 / 魔防:340 / 素早さ:290 /運命値:18\n③普通\n④普通\n⑤C\n⑥炎:D / 氷:C / 光:B / 闇:D / 雷:B / 風:C / 地:B / 快:C / 毒:E / 暗:D / 封:D / 即:C\n⑦\n固有特性:儚き命\nこのキャラのHPが半分以下の時、このキャラの消費MPは半分になる。\n1.サンダー\n11.ハイヒール\n16.ホーリー\n24.天の光\n35.フェアリーヒール\n40.ギガホーリー\n53.オールマウント\n68.天の轟雷\n⑧杖\n",
     "raw_fields": {
@@ -1570,7 +1586,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:278c2de5ec0e",
@@ -1659,7 +1677,7 @@
     "source": "未実装データ.txt:181",
     "source_end_line": 199,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_278c2de5ec0e",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "デュラハン\n①HP:57 / MP:14 / 攻撃力:21 / 防御力:17 / 魔力:11 / 魔防:13 / 素早さ:10 /運命値:6\n②HP:750 / MP:360 / 攻撃力:340 / 防御力:290 / 魔力:230 / 魔防:240 / 素早さ:240 /運命値:6\n③やや晩成\n④普通\n⑤B\n⑥炎:C / 氷:C / 光:D / 闇:B / 雷:C / 風:B / 地:D / 快:D / 毒:C / 暗:C / 封:C / 即:A\n⑦\n固有特性:デュラハン・ロンド\n行動後、10%の確率で、弱い通常攻撃を行う。\n※与ダメージ50%\n1.レイズ\n14.ウィンド\n28.カウンタースタンス\n36.ギガホーリー\n43.ギガウィンド\n51.連続攻撃\n⑧剣\n",
     "raw_fields": {
@@ -1736,7 +1754,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:4501761a3cfa",
@@ -1822,7 +1842,7 @@
     "source": "未実装データ.txt:200",
     "source_end_line": 216,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_4501761a3cfa",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ノーブルローズ\n①HP:31 / MP:16 / 攻撃力:16 / 防御力:14 / 魔力:13 / 魔防:11 / 素早さ:6 /運命値:16\n②HP:620 / MP:410 / 攻撃力:300 / 防御力:260 / 魔力:240 / 魔防:240 / 素早さ:230 /運命値:16\n③超早熟\n④普通\n⑤C\n⑥炎:E / 氷:C / 光:B / 闇:D / 雷:C / 風:C / 地:C / 快:C / 毒:E / 暗:C / 封:C / 即:C\n⑦\n固有特性:高貴なる薔薇\n剣の舞の性能アップ。\n1.剣の舞\n12.ポリッシュ\n25.ネオブラインド\n33.カウンタースタンス\n47.戦神の覇気\n⑧剣、鞭\n",
     "raw_fields": {
@@ -1894,7 +1914,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:6b7dd888c932",
@@ -1987,7 +2009,7 @@
     "source": "未実装データ.txt:217",
     "source_end_line": 235,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_6b7dd888c932",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "キラールビー\n①HP:22 / MP:22 / 攻撃力:23 / 防御力:4 / 魔力:15 / 魔防:20 / 素早さ:17 /運命値:8\n②HP:410 / MP:460 / 攻撃力:360 / 防御力:140 / 魔力:300 / 魔防:300 / 素早さ:330 /運命値:8\n③普通\n④速い\n⑤B\n⑥炎:C / 氷:C / 光:A / 闇:E / 雷:C / 風:C / 地:C / 快:C / 毒:D / 暗:D / 封:D / 即:D\n⑦\n固有特性:危険な霊獣\nHPが100%の時、会心率+15.0%。\n6.デス\n12.フレア\n23.コールドII\n30.爆裂拳\n39.ギガサンダー\n46.バーサーク\n64.連続攻撃\n⑧拳\n",
     "raw_fields": {
@@ -2071,7 +2093,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:980d175d34e0",
@@ -2152,7 +2176,7 @@
     "source": "未実装データ.txt:236",
     "source_end_line": 251,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_980d175d34e0",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "オーパーツ\n①HP:32 / MP:13 / 攻撃力:22 / 防御力:16 / 魔力:17 / 魔防:5 / 素早さ:7 /運命値:9\n②HP:480 / MP:240 / 攻撃力:360 / 防御力:290 / 魔力:270 / 魔防:90 / 素早さ:160 /運命値:9\n③普通\n④普通\n⑤C\n⑥炎:B / 氷:B / 光:B / 闇:B / 雷:E / 風:D / 地:D / 快:A / 毒:A / 暗:C / 封:C / 即:B\n⑦\n固有特性:オーパーツ\nラウンド終了時、このキャラが戦闘不能の場合、50%の確率でそれを解除してHP1で復活する。\n1.ホーリー\n11.ダーク\n40.ネフィリムレーザー\n50.不屈の心\n⑧銃\n",
     "raw_fields": {
@@ -2218,7 +2242,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:aa8751cca516",
@@ -2303,7 +2329,7 @@
     "source": "未実装データ.txt:252",
     "source_end_line": 268,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_aa8751cca516",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "テンタクル\n①HP:67 / MP:22 / 攻撃力:15 / 防御力:8 / 魔力:17 / 魔防:8 / 素早さ:7 /運命値:16\n②HP:810 / MP:510 / 攻撃力:300 / 防御力:210 / 魔力:320 / 魔防:200 / 素早さ:190 /運命値:16\n③やや早熟\n④速い\n⑤C\n⑥炎:D / 氷:C / 光:D / 闇:C / 雷:E / 風:C / 地:C / 快:C / 毒:S / 暗:B / 封:C / 即:D\n⑦\n固有特性:毒の進撃\nネオポイズンを素早く発動する。毒状態の敵への与ダメージ+20%。\n1.ネオポイズン\n15.厄災の叫び\n24.ギガプレジャー\n38.ラストヒール\n45.ギガフロスト\n⑧鞭\n",
     "raw_fields": {
@@ -2374,7 +2400,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:d5f50224f72e",
@@ -2456,7 +2484,7 @@
     "source": "未実装データ.txt:269",
     "source_end_line": 286,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_d5f50224f72e",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "フレイルナイト\n①HP:80 / MP:10 / 攻撃力:23 / 防御力:15 / 魔力:1 / 魔防:10 / 素早さ:4 /運命値:7\n②HP:820 / MP:100 / 攻撃力:420 / 防御力:270 / 魔力:30 / 魔防:210 / 素早さ:140 /運命値:7\n③普通\n④遅い\n⑤B\n⑥炎:C / 氷:C / 光:D / 闇:B / 雷:C / 風:C / 地:C / 快:E / 毒:C / 暗:C / 封:C / 即:A\n⑦\n固有特性:鉄球の騎士\n通常攻撃が全体攻撃の武器装備時、会心率+8.0%。会心ダメージ倍率+20%。\n1.パワーチャージ\n24.厄災の叫び\n36.カウンタースタンス\n50.テラクラッシュ\n⑧斧、鞭\n\n↓四神殿～魔界到着まで\n",
     "raw_fields": {
@@ -2521,7 +2549,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:50598d19f681",
@@ -2614,7 +2644,7 @@
     "source": "未実装データ.txt:287",
     "source_end_line": 305,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_50598d19f681",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ティターニア\n①HP:25 / MP:24 / 攻撃力:11 / 防御力:16 / 魔力:17 / 魔防:22 / 素早さ:12 /運命値:22\n②HP:480 / MP:470 / 攻撃力:230 / 防御力:280 / 魔力:320 / 魔防:350 / 素早さ:280 /運命値:22\n③早熟\n④普通\n⑤A\n⑥炎:D / 氷:A / 光:A / 闇:D / 雷:A / 風:A / 地:D / 快:C / 毒:E / 暗:D / 封:D / 即:C\n⑦\n固有特性:神秘の妖精蛾\nこのキャラが戦闘不能でない時、他の味方の暗闇・封印耐性+1。\n1.オルヒール\n10.ハイヒール\n16.マウント\n29.フェアリーヒール\n38.オールフレッシュ\n46.ギガレイズ\n62.殲滅の風刃\n⑧杖\n",
     "raw_fields": {
@@ -2698,7 +2728,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:5528ec88493f",
@@ -2793,7 +2825,7 @@
     "source": "未実装データ.txt:306",
     "source_end_line": 324,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_5528ec88493f",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ゴールドスライム\n①HP:10 / MP:20 / 攻撃力:12 / 防御力:44 / 魔力:18 / 魔防:42 / 素早さ:41 /運命値:30\n②HP:210 / MP:450 / 攻撃力:250 / 防御力:560 / 魔力:350 / 魔防:520 / 素早さ:580 /運命値:30\n③晩成\n④超遅い\n⑤B\n⑥炎:A / 氷:A / 光:A / 闇:A / 雷:S / 風:S / 地:S / 快:S / 毒:S / 暗:S / 封:S / 即:S\n⑦\n固有特性:ゴールドボディ\nこのキャラは状態異常を受けない。獲得ゴールドが20%増える。\n1.フロスト\n14.オールクイック\n24.ギガヒール\n33.ギガクエイク\n41.ギガダーク\n48.ギガレイズ\n63.ラストオーラ\n⑧拳、弓、鞭\n",
     "raw_fields": {
@@ -2877,7 +2909,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:23a05ae5fff9",
@@ -2974,7 +3008,7 @@
     "source": "未実装データ.txt:325",
     "source_end_line": 344,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_23a05ae5fff9",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "シーアイドル\n①HP:42 / MP:24 / 攻撃力:6 / 防御力:8 / 魔力:18 / 魔防:14 / 素早さ:17 /運命値:19\n②HP:630 / MP:520 / 攻撃力:210 / 防御力:200 / 魔力:320 / 魔防:260 / 素早さ:320 /運命値:19\n③やや早熟\n④速い\n⑤B\n⑥炎:D / 氷:B / 光:B / 闇:C / 雷:E / 風:C / 地:D / 快:B / 毒:C / 暗:C / 封:D / 即:C\n⑦\n固有特性:アイドルパワー\nこのキャラの魔法によるバフ効果ターンは+1される。\n1.オールマジック\n9.レイズ\n16.オールガード\n23.天の光\n31.ギガフロスト\n39.フェアリーヒール\n45.精霊王の祝福\n57.裁きの聖槍\n⑧杖\n",
     "raw_fields": {
@@ -3063,7 +3097,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:fa15cb09f0eb",
@@ -3157,7 +3193,7 @@
     "source": "未実装データ.txt:345",
     "source_end_line": 363,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_fa15cb09f0eb",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "パイレーツ\n①HP:34 / MP:16 / 攻撃力:15 / 防御力:7 / 魔力:8 / 魔防:7 / 素早さ:18 /運命値:15\n②HP:550 / MP:370 / 攻撃力:340 / 防御力:270 / 魔力:210 / 魔防:200 / 素早さ:320 /運命値:15\n③普通\n④速い\n⑤C\n⑥炎:C / 氷:C / 光:C / 闇:C / 雷:D / 風:B / 地:C / 快:C / 毒:B / 暗:C / 封:C / 即:C\n⑦\n固有特性:強奪する者\n通常攻撃時、20%の確率で、与えたダメージの20%分のHPを回復する。\n3.デス\n11.ネオサイレンス\n23.イレイザー\n35.エスケープ\n44.ステルス\n51.ラストオーラ\n60.連続攻撃\n⑧剣、銃\n",
     "raw_fields": {
@@ -3240,7 +3276,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:67f9ba6d3b08",
@@ -3337,7 +3375,7 @@
     "source": "未実装データ.txt:364",
     "source_end_line": 383,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_67f9ba6d3b08",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "マリンゴースト\n①HP:32 / MP:25 / 攻撃力:6 / 防御力:22 / 魔力:16 / 魔防:15 / 素早さ:16 /運命値:9\n②HP:520 / MP:530 / 攻撃力:80 / 防御力:320 / 魔力:310 / 魔防:260 / 素早さ:280 /運命値:9\n③早熟\n④速い\n⑤C\n⑥炎:B / 氷:A / 光:E / 闇:A / 雷:D / 風:B / 地:C / 快:A / 毒:B / 暗:B / 封:B / 即:S\n⑦\n固有特性:海の手招き\n味方が炎属性ダメージを受けたラウンド終了時、HP最小のランダムな味方一人にギガヒールを発動。(1戦闘に1度)\n1.ソニック\n10.オールブロック\n16.ギガヒール\n21.獄の闇\n32.ギガウィンド\n39.ギガダーク\n46.フェアリーヒール\n50.魔力障壁\n⑧杖\n",
     "raw_fields": {
@@ -3426,7 +3464,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:56fc1f5a71ec",
@@ -3517,7 +3557,7 @@
     "source": "未実装データ.txt:384",
     "source_end_line": 401,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_56fc1f5a71ec",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "黒土偶\n①HP:55 / MP:24 / 攻撃力:19 / 防御力:17 / 魔力:8 / 魔防:4 / 素早さ:8 /運命値:5\n②HP:700 / MP:570 / 攻撃力:350 / 防御力:300 / 魔力:180 / 魔防:100 / 素早さ:180 /運命値:5\n③やや早熟\n④普通\n⑤B\n⑥炎:D / 氷:D / 光:E / 闇:A / 雷:A / 風:D / 地:D / 快:S / 毒:A / 暗:C / 封:C / 即:A\n⑦\n固有特性:黒の呪い\n戦闘開始時、30%の確率でネオサイレンスを発動。\n10.ネオサイレンス\n16.ダーク\n27.カウンタースタンス\n36.ギガダーク\n44.精霊王の祝福\n56.終焉の闇槌\n⑧剣、弓、銃\n",
     "raw_fields": {
@@ -3594,7 +3634,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:9e44437ce6cc",
@@ -3688,7 +3730,7 @@
     "source": "未実装データ.txt:402",
     "source_end_line": 421,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_9e44437ce6cc",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "大和蜘蛛\n①HP:43 / MP:27 / 攻撃力:13 / 防御力:12 / 魔力:21 / 魔防:16 / 素早さ:16 /運命値:13\n②HP:580 / MP:540 / 攻撃力:240 / 防御力:230 / 魔力:340 / 魔防:270 / 素早さ:270 /運命値:13\n③普通\n④普通\n⑤A\n⑥炎:D / 氷:D / 光:E / 闇:A / 雷:A / 風:D / 地:D / 快:S / 毒:A / 暗:C / 封:C / 即:A\n⑦\n固有特性:蜘蛛ノ神\nラウンド終了時、状態異常にかかっている味方がいるなら、その中からランダムな一人の状態異常を全て解除して、素早さを上げる。\n※クイックと同じ効果。\n8.オールクイック\n13.フレッシュ\n26.ギガクエイク\n33.ラストヒール\n41.ギガイロード\n54.ラストオーラ\n60.大地の怒り\n⑧杖、鞭\n",
     "raw_fields": {
@@ -3771,7 +3813,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:5a5b4f3b623d",
@@ -3864,7 +3908,7 @@
     "source": "未実装データ.txt:422",
     "source_end_line": 441,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_5a5b4f3b623d",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "レッドドラゴン\n①HP:71 / MP:13 / 攻撃力:21 / 防御力:11 / 魔力:10 / 魔防:9 / 素早さ:15 /運命値:13\n②HP:880 / MP:380 / 攻撃力:420 / 防御力:260 / 魔力:230 / 魔防:210 / 素早さ:290 /運命値:13\n③普通\n④遅い\n⑤A\n⑥炎:S / 氷:E / 光:C / 闇:C / 雷:C / 風:C / 地:C / 快:D / 毒:B / 暗:B / 封:B / 即:D\n⑦\n固有特性:紅龍の気迫\n素早さがアップした時、攻撃力もアップする。\n※ポリッシュと同じ効果。\n1.フレア\n13.オーラ\n24.ブレイズII\n33.爆裂拳\n47.連続攻撃\n53.精霊王の祝福\n64.エンドブレイズ\n⑧拳\n",
     "raw_fields": {
@@ -3947,7 +3991,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:193cbbaa3b65",
@@ -4045,7 +4091,7 @@
     "source": "未実装データ.txt:442",
     "source_end_line": 461,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_193cbbaa3b65",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ソーサラー\n①HP:46 / MP:19 / 攻撃力:16 / 防御力:9 / 魔力:18 / 魔防:7 / 素早さ:14 /運命値:19\n②HP:740 / MP:520 / 攻撃力:290 / 防御力:230 / 魔力:320 / 魔防:220 / 素早さ:240 /運命値:19\n③やや早熟\n④普通\n⑤B\n⑥炎:A / 氷:D / 光:C / 闇:C / 雷:C / 風:C / 地:C / 快:B / 毒:C / 暗:B / 封:D / 即:C\n⑦\n固有特性:フレイムウィッチ\nこのキャラの行動時、敵が炎耐性B以上の場合、その耐性をCとして計算する。\n1.フレア\n13.魔力集中\n18.ダーク\n24.ブレイズII\n32.ギガフレア\n41.魔祖の霊流\n54.ラストフレア\n62.エンドブレイズ\n⑧剣、杖\n",
     "raw_fields": {
@@ -4135,7 +4181,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:3adadc389355",
@@ -4233,7 +4281,7 @@
     "source": "未実装データ.txt:462",
     "source_end_line": 481,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_3adadc389355",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ファイアフォックス\n①HP:37 / MP:24 / 攻撃力:18 / 防御力:7 / 魔力:17 / 魔防:11 / 素早さ:25 /運命値:16\n②HP:520 / MP:550 / 攻撃力:340 / 防御力:200 / 魔力:310 / 魔防:220 / 素早さ:380 /運命値:16\n③普通\n④速い\n⑤B\n⑥炎:S / 氷:E / 光:A / 闇:E / 雷:B / 風:C / 地:C / 快:D / 毒:C / 暗:C / 封:C / 即:C\n⑦\n固有特性:炎の霊獣\n魔法攻撃を受けて戦闘不能にならなかった場合、30%の確率でフレアまたはギガフレアで反撃。\n1.魔力集中\n8.レイズ\n15.フレア\n22.ブレイズII\n30.爆裂拳\n38.ギガフレア\n53.ラストオーラ\n65.エンドブレイズ\n⑧拳、杖\n",
     "raw_fields": {
@@ -4322,7 +4370,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:6b3154180b66",
@@ -4404,7 +4454,7 @@
     "source": "未実装データ.txt:482",
     "source_end_line": 497,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_6b3154180b66",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "イーター\n①HP:51 / MP:12 / 攻撃力:23 / 防御力:12 / 魔力:7 / 魔防:11 / 素早さ:13 /運命値:11\n②HP:730 / MP:320 / 攻撃力:390 / 防御力:250 / 魔力:160 / 魔防:210 / 素早さ:260 /運命値:11\n③普通\n④遅い\n⑤B\n⑥炎:D / 氷:C / 光:D / 闇:A / 雷:C / 風:B / 地:D / 快:C / 毒:B / 暗:B / 封:D / 即:S\n⑦\n固有特性:不機嫌な捕食者\nこのキャラの残りHPの割合に応じて、会心率アップ(最大+50.0%)。\n1.ガード\n28.カウンタースタンス\n40.ギガダーク\n49.不屈の心\n⑧鞭、銃\n",
     "raw_fields": {
@@ -4469,7 +4519,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:f8b73827028b",
@@ -4546,7 +4598,7 @@
     "source": "未実装データ.txt:498",
     "source_end_line": 512,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_f8b73827028b",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "スイーパー\n①HP:103 / MP:8 / 攻撃力:21 / 防御力:18 / 魔力:3 / 魔防:3 / 素早さ:12 /運命値:12\n②HP:1280 / MP:220 / 攻撃力:380 / 防御力:290 / 魔力:270 / 魔防:90 / 素早さ:240 /運命値:12\n③普通\n④遅い\n⑤C\n⑥炎:A / 氷:C / 光:C / 闇:C / 雷:E / 風:B / 地:D / 快:A / 毒:A / 暗:C / 封:C / 即:B\n⑦\n固有特性:古代の戦闘兵器\nラウンド終了時、このキャラのHPが50%以下なら、このキャラのHPを50%回復。(1戦闘に1度)\n1.レイズ\n25.カウンタースタンス\n45.ネフィリムレーザー\n⑧銃\n",
     "raw_fields": {
@@ -4605,7 +4657,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:b07724a06034",
@@ -4695,7 +4749,7 @@
     "source": "未実装データ.txt:513",
     "source_end_line": 530,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_b07724a06034",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "レサト\n①HP:23 / MP:36 / 攻撃力:15 / 防御力:7 / 魔力:8 / 魔防:7 / 素早さ:18 /運命値:19\n②HP:430 / MP:660 / 攻撃力:420 / 防御力:170 / 魔力:280 / 魔防:290 / 素早さ:390 /運命値:19\n③やや早熟\n④普通\n⑤A\n⑥炎:B / 氷:D / 光:D / 闇:D / 雷:D / 風:B / 地:D / 快:D / 毒:B / 暗:D / 封:D / 即:C\n⑦\n固有特性:舞い踊る刃\n被ダメージ+10%。この戦闘中に一度もダメージを受けておらず、HPが最大の場合、与ダメージ+20%。\n1.剣の舞\n13.オールガード\n20.イレイザー\n32.エスケープ\n43.ギガウィンド\n60.連続攻撃\n⑧拳、剣\n",
     "raw_fields": {
@@ -4772,7 +4826,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:7a460c2e1f45",
@@ -4869,7 +4925,7 @@
     "source": "未実装データ.txt:531",
     "source_end_line": 550,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_7a460c2e1f45",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ローレライ\n①HP:43 / MP:25 / 攻撃力:7 / 防御力:13 / 魔力:18 / 魔防:19 / 素早さ:11 /運命値:21\n②HP:590 / MP:540 / 攻撃力:210 / 防御力:250 / 魔力:330 / 魔防:300 / 素早さ:250 /運命値:21\n③やや早熟\n④普通\n⑤B\n⑥炎:D / 氷:B / 光:B / 闇:C / 雷:E / 風:C / 地:D / 快:B / 毒:C / 暗:C / 封:D / 即:C\n⑦\n固有特性:破壊の歌声\nスキルを使用したラウンド終了時、15%の確率でギガクエイクが発動する。\n1.ホーリー\n9.オーラ\n18.オルヒールII\n24.魔力集中\n32.ギガホーリー\n38.ギガクエイク\n46.ギガレイズ\n57.大地の怒り\n⑧杖\n",
     "raw_fields": {
@@ -4958,7 +5014,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:7c18bb80afc0",
@@ -5049,7 +5107,7 @@
     "source": "未実装データ.txt:551",
     "source_end_line": 569,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_7c18bb80afc0",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "中級妖狐\n①HP:43 / MP:30 / 攻撃力:13 / 防御力:9 / 魔力:16 / 魔防:15 / 素早さ:15 /運命値:18\n②HP:640 / MP:550 / 攻撃力:280 / 防御力:220 / 魔力:330 / 魔防:280 / 素早さ:290 /運命値:18\n③早熟\n④速い\n⑤B\n⑥炎:B / 氷:C / 光:C / 闇:A / 雷:B / 風:D / 地:B / 快:C / 毒:C / 暗:C / 封:E / 即:C\n⑦\n固有特性:ウツシの妖術\nラウンド終了時、敵にバフがかかっているなら、全てこのキャラにコピーする。(1戦闘に1度)\n※マウント、オーラなども対象。\n1.クエイク\n11.ダーク\n23.魔力障壁\n35.ギガダーク\n41.ギガクエイク\n54.終焉の闇槌\n⑧剣、杖、鞭\n",
     "raw_fields": {
@@ -5126,7 +5184,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:8e548add9178",
@@ -5220,7 +5280,7 @@
     "source": "未実装データ.txt:570",
     "source_end_line": 589,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_8e548add9178",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "レイヴン\n①HP:38 / MP:28 / 攻撃力:16 / 防御力:5 / 魔力:19 / 魔防:17 / 素早さ:25 /運命値:9\n②HP:570 / MP:530 / 攻撃力:300 / 防御力:180 / 魔力:320 / 魔防:290 / 素早さ:340 /運命値:9\n③普通\n④速い\n⑤B\n⑥炎:C / 氷:C / 光:E / 闇:A / 雷:E / 風:A / 地:A / 快:C / 毒:A / 暗:A / 封:B / 即:C\n⑦\n固有特性:闇夜の鳥妖\n一部の闇属性魔法の威力をアップする。\n※威力B以下の闇属性魔法の威力を1段階アップ。\n1.ダーク\n14.レイズ\n20.獄の闇\n29.オールマジック\n37.ギガダーク\n46.スターダスト\n55.終焉の闇槌\n⑧拳、弓\n",
     "raw_fields": {
@@ -5303,7 +5363,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:62a8eff50ce4",
@@ -5388,7 +5450,7 @@
     "source": "未実装データ.txt:590",
     "source_end_line": 606,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_62a8eff50ce4",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "エビルアルラウネ\n①HP:34 / MP:13 / 攻撃力:19 / 防御力:14 / 魔力:8 / 魔防:15 / 素早さ:8 /運命値:8\n②HP:540 / MP:370 / 攻撃力:330 / 防御力:260 / 魔力:240 / 魔防:270 / 素早さ:240 /運命値:8\n③早熟\n④速い\n⑤C\n⑥炎:E / 氷:C / 光:B / 闇:C / 雷:C / 風:C / 地:B / 快:C / 毒:E / 暗:C / 封:C / 即:A\n⑦\n固有特性:捕食植物\nこのキャラの会心率+6.0%。このキャラの攻撃でクリティカルが発生するたびに、戦闘終了まで与ダメージ+5%\n5.デス\n16.パワーチャージ\n29.ラストヒール\n37.龍螺旋\n45.ギガクエイク\n⑧鞭\n",
     "raw_fields": {
@@ -5459,7 +5521,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:ad6f311edfe5",
@@ -5549,7 +5613,7 @@
     "source": "未実装データ.txt:607",
     "source_end_line": 624,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_ad6f311edfe5",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ピンクスライム\n①HP:52 / MP:26 / 攻撃力:9 / 防御力:12 / 魔力:16 / 魔防:12 / 素早さ:8 /運命値:16\n②HP:580 / MP:550 / 攻撃力:230 / 防御力:270 / 魔力:300 / 魔防:270 / 素早さ:210 /運命値:16\n③早熟\n④速い\n⑤C\n⑥炎:D / 氷:D / 光:C / 闇:C / 雷:D / 風:C / 地:C / 快:S / 毒:E / 暗:C / 封:C / 即:C\n⑦\n固有特性:ピンクジェルハート\nこのキャラの快楽属性与ダメージ+15%。\n1.プレジャー\n7.ブロック\n18.ギガヒール\n27.ギガプレジャー\n36.プレジャー・ワン\n44.守護神の加護\n⑧拳、鞭\n",
     "raw_fields": {
@@ -5626,7 +5690,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:3308b4a91f65",
@@ -5720,7 +5786,7 @@
     "source": "未実装データ.txt:625",
     "source_end_line": 643,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_3308b4a91f65",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ミネルヴァ\n①HP:51 / MP:32 / 攻撃力:12 / 防御力:11 / 魔力:22 / 魔防:15 / 素早さ:14 /運命値:21\n②HP:650 / MP:630 / 攻撃力:250 / 防御力:240 / 魔力:350 / 魔防:270 / 素早さ:300 /運命値:21\n③普通\n④遅い\n⑤B\n⑥炎:D / 氷:D / 光:A / 闇:A / 雷:D / 風:B / 地:A / 快:B / 毒:C / 暗:S / 封:D / 即:D\n⑦\n固有特性:叡智の梟\nこのキャラの魔法攻撃時、消費MPが30%増える代わりに、敵の耐性を-1段階して計算する。(1戦闘に1度)\n1.ソニック\n8.ホーリー\n17.オールクイック\n30.ギガウィンド\n37.フェアリーヒール\n46.魔祖の霊流\n55.裁きの聖槍\n⑧拳、杖\n",
     "raw_fields": {
@@ -5804,7 +5870,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:2ab040394633",
@@ -5893,7 +5961,7 @@
     "source": "未実装データ.txt:644",
     "source_end_line": 661,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_2ab040394633",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "アーティファクト\n①HP:57 / MP:34 / 攻撃力:18 / 防御力:18 / 魔力:14 / 魔防:14 / 素早さ:7 /運命値:9\n②HP:570 / MP:600 / 攻撃力:360 / 防御力:300 / 魔力:220 / 魔防:220 / 素早さ:180 /運命値:9\n③早熟\n④遅い\n⑤B\n⑥炎:B / 氷:B / 光:C / 闇:C / 雷:E / 風:B / 地:D / 快:S / 毒:S / 暗:C / 封:C / 即:B\n⑦\n固有特性:無機質なる古代兵装\n快楽属性ダメージを0にする。\n5.フレッシュ\n18.デス\n25.ギガヒール\n40.サプライ\n48.ネフィリムレーザー\n62.エンドブレイズ\n⑧銃\n",
     "raw_fields": {
@@ -5970,7 +6038,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:e3675a927a55",
@@ -6064,7 +6134,7 @@
     "source": "未実装データ.txt:662",
     "source_end_line": 680,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_e3675a927a55",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ドラゴンメイド\n①HP:64 / MP:18 / 攻撃力:16 / 防御力:15 / 魔力:15 / 魔防:7 / 素早さ:16 /運命値:10\n②HP:840 / MP:470 / 攻撃力:330 / 防御力:280 / 魔力:280 / 魔防:180 / 素早さ:290 /運命値:10\n③普通\n④遅い\n⑤B\n⑥炎:A / 氷:D / 光:C / 闇:C / 雷:B / 風:C / 地:C / 快:E / 毒:B / 暗:B / 封:B / 即:E\n⑦\n固有特性:メイドの護り火\nこのキャラが戦闘不能になった時、他の味方全員にオーラを付与。(1戦闘に1度)\n1.ポリッシュ\n7.レイズ\n16.フレア\n22.カウンタースタンス\n30.ブレイズII\n39.守護神の加護\n51.ラストフレア\n⑧拳、銃\n",
     "raw_fields": {
@@ -6147,7 +6217,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:8b4643336d1b",
@@ -6240,7 +6312,7 @@
     "source": "未実装データ.txt:681",
     "source_end_line": 701,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_8b4643336d1b",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "怨霊娘\n①HP:33 / MP:27 / 攻撃力:9 / 防御力:7 / 魔力:23 / 魔防:21 / 素早さ:17 /運命値:3\n②HP:480 / MP:590 / 攻撃力:110 / 防御力:150 / 魔力:400 / 魔防:320 / 素早さ:310 /運命値:3\n③普通\n④普通\n⑤C\n⑥炎:B / 氷:B / 光:E / 闇:A / 雷:D / 風:D / 地:C / 快:A / 毒:B / 暗:B / 封:B / 即:S\n⑦\n固有特性:怨霊の呪い\n戦闘開始時、30%の確率でパンデムまたは獄の闇を発動。\n1.デス\n9.フロスト\n17.ネオブラインド\n30.ギガプレジャー\n38.ギガフロスト\n45.パンデム\n52.終焉の闇槌\n⑧杖\n\n↓魔界～表エンディングまで\n",
     "raw_fields": {
@@ -6324,7 +6396,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:a343329b7f81",
@@ -6422,7 +6496,7 @@
     "source": "未実装データ.txt:702",
     "source_end_line": 721,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_a343329b7f81",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ヘルハウンド\n①HP:46 / MP:18 / 攻撃力:19 / 防御力:15 / 魔力:16 / 魔防:4 / 素早さ:18 /運命値:14\n②HP:590 / MP:440 / 攻撃力:360 / 防御力:270 / 魔力:310 / 魔防:220 / 素早さ:330 /運命値:14\n③早熟\n④速い\n⑤B\n⑥炎:C / 氷:B / 光:D / 闇:A / 雷:C / 風:C / 地:C / 快:E / 毒:D / 暗:D / 封:B / 即:B\n⑦\n固有特性:魔界のわんこ\n回復ノード選択時、次の戦闘時にこのキャラにマウントを付与。拠点帰還時に解除。\n1.コールド\n8.ネオサイレンス\n15.ダーク\n22.厄災の叫び\n29.獄の闇\n37.剣の舞\n46.連続攻撃\n59.エンドコールド\n⑧拳、剣\n",
     "raw_fields": {
@@ -6512,7 +6586,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:2760b63578dd",
@@ -6606,7 +6682,7 @@
     "source": "未実装データ.txt:722",
     "source_end_line": 740,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_2760b63578dd",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ヴリトラ\n①HP:82 / MP:13 / 攻撃力:24 / 防御力:12 / 魔力:9 / 魔防:7 / 素早さ:9 /運命値:5\n②HP:950 / MP:310 / 攻撃力:410 / 防御力:240 / 魔力:220 / 魔防:200 / 素早さ:260 /運命値:5\n③普通\n④遅い\n⑤A\n⑥炎:C / 氷:E / 光:D / 闇:A / 雷:D / 風:C / 地:C / 快:D / 毒:S / 暗:A / 封:E / 即:A\n⑦\n固有特性:黒蛇の裁き\n敵から闇属性ダメージを受けた時、75%の確率で通常攻撃で反撃する(対象は単体)。\n1.ダーク\n2.クエイク\n18.イレイザー\n32.カウンタースタンス\n39.龍螺旋\n47.ギガクエイク\n59.キャンセラー\n⑧斧、鞭\n",
     "raw_fields": {
@@ -6689,7 +6765,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:e93488a0ee10",
@@ -6787,7 +6865,7 @@
     "source": "未実装データ.txt:741",
     "source_end_line": 760,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_e93488a0ee10",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "セイレーン\n①HP:42 / MP:32 / 攻撃力:17 / 防御力:13 / 魔力:20 / 魔防:22 / 素早さ:20 /運命値:20\n②HP:600 / MP:580 / 攻撃力:310 / 防御力:200 / 魔力:340 / 魔防:320 / 素早さ:320 /運命値:20\n③普通\n④速い\n⑤B\n⑥炎:B / 氷:A / 光:C / 闇:C / 雷:E / 風:A / 地:A / 快:C / 毒:C / 暗:D / 封:D / 即:D\n⑦\n固有特性:永遠の歌声\nラウンド終了時、このキャラのHPが10%以下の場合、エターナルを発動。(1戦闘に1度)\n1.ハイヒール\n8.フロスト\n16.オールブロック\n23.レイズ\n30.天の光\n39.ギガフロスト\n45.戦神の覇気\n76.エターナル\n⑧拳、杖\n",
     "raw_fields": {
@@ -6877,7 +6955,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:95538a423562",
@@ -6966,7 +7046,7 @@
     "source": "未実装データ.txt:761",
     "source_end_line": 778,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_95538a423562",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "排除機構\n①HP:42 / MP:30 / 攻撃力:15 / 防御力:15 / 魔力:18 / 魔防:14 / 素早さ:8 /運命値:15\n②HP:460 / MP:550 / 攻撃力:290 / 防御力:280 / 魔力:330 / 魔防:250 / 素早さ:220 /運命値:15\n③早熟\n④普通\n⑤B\n⑥炎:A / 氷:A / 光:B / 闇:B / 雷:C / 風:D / 地:D / 快:S / 毒:S / 暗:C / 封:C / 即:A\n⑦\n固有特性:古代の遺志\n感電成功率が+10%。感電状態の敵に対する与ダメージ+20%。\n1.サンダー\n12.ネオサイレンス\n18.ホーリー\n29.ギガサンダー\n43.ネフィリムレーザー\n54.裁きの聖槍\n⑧銃\n",
     "raw_fields": {
@@ -7043,7 +7123,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:10d7eaab63b0",
@@ -7128,7 +7210,7 @@
     "source": "未実装データ.txt:779",
     "source_end_line": 795,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_10d7eaab63b0",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "アシュラ\n①HP:88 / MP:13 / 攻撃力:26 / 防御力:14 / 魔力:2 / 魔防:10 / 素早さ:13 /運命値:14\n②HP:940 / MP:360 / 攻撃力:420 / 防御力:270 / 魔力:130 / 魔防:220 / 素早さ:250 /運命値:14\n③普通\n④遅い\n⑤B\n⑥炎:D / 氷:D / 光:C / 闇:C / 雷:C / 風:B / 地:B / 快:D / 毒:D / 暗:C / 封:C / 即:C\n⑦\n固有特性:六腕の神格\nクリティカル発生時、HP10%回復。\n5.爆裂拳\n15.オールポリッシュ\n25.カウンタースタンス\n40.ラストヒール\n50.守護神の加護\n⑧拳\n",
     "raw_fields": {
@@ -7199,7 +7281,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:576ae17456ac",
@@ -7298,7 +7382,7 @@
     "source": "未実装データ.txt:796",
     "source_end_line": 815,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_576ae17456ac",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "パンドラ\n①HP:76 / MP:68 / 攻撃力:17 / 防御力:5 / 魔力:28 / 魔防:10 / 素早さ:8 /運命値:18\n②HP:1060 / MP:820 / 攻撃力:350 / 防御力:160 / 魔力:400 / 魔防:250 / 素早さ:220 /運命値:18\n③やや晩成\n④遅い\n⑤A\n⑥炎:D / 氷:A / 光:D / 闇:A / 雷:B / 風:B / 地:D / 快:C / 毒:B / 暗:C / 封:B / 即:S\n⑦\n固有特性:禁忌の匣\nダメージを受けたラウンド終了時、パンデムを発動。(1戦闘に1度)\n1.パンデム\n11.オールデス\n18.カウンタースタンス\n28.ギガフレア\n36.ギガプレジャー\n42.ギガイロード\n49.守護神の加護\n64.破滅の侵蝕\n⑧杖、鞭、銃\n",
     "raw_fields": {
@@ -7387,7 +7471,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:1be44e362adb",
@@ -7484,7 +7570,7 @@
     "source": "未実装データ.txt:816",
     "source_end_line": 835,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_1be44e362adb",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "マリアンヌ\n①HP:31 / MP:25 / 攻撃力:16 / 防御力:13 / 魔力:20 / 魔防:19 / 素早さ:8 /運命値:24\n②HP:570 / MP:630 / 攻撃力:310 / 防御力:240 / 魔力:320 / 魔防:300 / 素早さ:250 /運命値:24\n③早熟\n④速い\n⑤B\n⑥炎:E / 氷:C / 光:S / 闇:D / 雷:C / 風:C / 地:A / 快:C / 毒:E / 暗:D / 封:B / 即:C\n⑦\n固有特性:魔界の華\n光または闇属性ダメージを受けた時、このキャラにオーラを付与。(1戦闘に1度)。\n1.ギガヒール\n11.ホーリー\n18.オーラ\n25.オールガード\n33.フェアリーヒール\n41.ギガホーリー\n48.フォーチュン\n56.ラストオーラ\n⑧鞭\n",
     "raw_fields": {
@@ -7573,7 +7659,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:cd64ef56afae",
@@ -7632,7 +7720,7 @@
     },
     "trait": {
       "name": "霧の魔竜",
-      "desc": "HPが低いほど回避率が上がる(最大20%)。"
+      "desc": "HP75%未満から回避率が直線的に上昇し、HP50%で+10%、HP25%以下で最大+20%。"
     },
     "learned_skills": [
       {
@@ -7671,7 +7759,7 @@
     "source": "未実装データ.txt:836",
     "source_end_line": 855,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_cd64ef56afae",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ミストドラゴン\n①HP:47 / MP:23 / 攻撃力:17 / 防御力:11 / 魔力:24 / 魔防:16 / 素早さ:13 /運命値:16\n②HP:680 / MP:610 / 攻撃力:320 / 防御力:220 / 魔力:370 / 魔防:330 / 素早さ:280 /運命値:16\n③普通\n④遅い\n⑤A\n⑥炎:A / 氷:D / 光:D / 闇:C / 雷:B / 風:B / 地:D / 快:D / 毒:B / 暗:B / 封:B / 即:B\n⑦\n固有特性:霧の魔竜\nHPが低いほど回避率が上がる(最大20%)。\n1.ウィンド\n8.ステルス\n17.フレア\n24.ネオサイレンス\n31.ギガウィンド\n40.魔祖の霊流\n52.ラストフレア\n60.殲滅の風刃\n⑧拳、杖\n",
     "raw_fields": {
@@ -7735,33 +7823,34 @@
       }
     ],
     "issue_ids": [
-      "U47",
-      "U61"
+      "U47"
     ],
     "trait_spec": {
       "refs": "未実装データ.txt:836",
       "fields": {
-        "発動条件": "HPが低いほど回避率が上がる(最大20%)。",
-        "発動タイミング": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
-        "対象": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
-        "数値": "原文に明記された値のみ。下記原文をそのまま保存。",
-        "上限": "原文明記：最大20%。これ以外の上限を追加しない。",
-        "効果時間": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
-        "重複可否": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
+        "発動条件": "HPが最大HPの75%未満になった時から発動。HP25%以下で最大。",
+        "発動タイミング": "被攻撃時の回避率算出時に、現在HP割合を参照して常時適用する。",
+        "対象": "本人。",
+        "数値": "HP75%で+0%、HP50%で+10%、HP25%で+20%。75%～25%の間は線形補間（HPが1%減るごとに回避率+0.4ポイント）。HP25%以下は+20%固定。",
+        "上限": "固有特性による追加回避率は+20%。",
+        "効果時間": "現在HP割合に応じて常時再計算。",
+        "重複可否": "装備など他の回避率補正に加算する。最終回避率は既存の回避率上限処理に従う。",
         "戦闘不能時": "C01/C04。死亡時明記は例外。",
         "控え時": "C01。控え明記は例外。探索/報酬は未確定。",
         "封印・感電": "C02：指定スキル自動発動のみ停止。常時特性は停止しない。死亡時自動は止めない。",
         "MP消費": "指定スキル自動発動は無料C02。直接補正にはスキル消費を追加しない。",
         "未習得自動発動": "C02。ただし原文明記の習得済み抽選制限は維持。",
         "武器条件": "自動スキル不要C02。手動技は既存条件。",
-        "相互作用": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
-        "安全に実装できる範囲": "原文どおりのデータ・習得関係・型定義の登録。明記された単独計算器は隔離して実装可。",
-        "保留する範囲": "個別論点の未定フィールドに依存する発動・加入解放。原文だけで全処理が決まったとみなさない。"
+        "相互作用": "既存の回避率に加算。HP75%以上では追加補正なし。",
+        "安全に実装できる範囲": "上記の線形回避率補正を本編の物理回避率計算へ接続済み。",
+        "保留する範囲": "加入Lv/場所/条件など、固有特性以外の未確定事項。"
       }
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:6d5931e90805",
@@ -7854,7 +7943,7 @@
     "source": "未実装データ.txt:856",
     "source_end_line": 874,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_6d5931e90805",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "プレジャーウィッチ\n①HP:25 / MP:63 / 攻撃力:4 / 防御力:6 / 魔力:27 / 魔防:26 / 素早さ:10 /運命値:6\n②HP:440 / MP:920 / 攻撃力:140 / 防御力:200 / 魔力:390 / 魔防:320 / 素早さ:240 /運命値:6\n③普通\n④普通\n⑤A\n⑥炎:B / 氷:C / 光:E / 闇:A / 雷:A / 風:C / 地:C / 快:S / 毒:C / 暗:C / 封:C / 即:B\n⑦\n固有特性:悦楽の魔術師\n快楽ダメージを受けた時、MPが8回復する。\n1.プレジャー\n12.魔力集中\n23.サプライ\n30.ギガプレジャー\n37.プレジャー・ワン\n46.ギガフレア\n65.メギドプレジャー\n⑧杖\n",
     "raw_fields": {
@@ -7937,7 +8026,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:7d3f0b369d84",
@@ -8036,7 +8127,7 @@
     "source": "未実装データ.txt:875",
     "source_end_line": 894,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_7d3f0b369d84",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "上級妖狐\n①HP:48 / MP:32 / 攻撃力:14 / 防御力:9 / 魔力:19 / 魔防:16 / 素早さ:15 /運命値:19\n②HP:660 / MP:570 / 攻撃力:290 / 防御力:220 / 魔力:340 / 魔防:300 / 素早さ:290 /運命値:19\n③やや早熟\n④速い\n⑤B\n⑥炎:B / 氷:B / 光:C / 闇:A / 雷:B / 風:D / 地:B / 快:C / 毒:C / 暗:C / 封:E / 即:C\n⑦\n固有特性:カエシの妖術\nラウンド終了時、このキャラが状態異常なら、それを全て解除し、ランダムな敵に全て移す(無効以外耐性貫通)。(1戦闘に1度)\n1.クエイク\n7.ハイヒール\n13.フレア\n24.厄災の叫び\n30.ギガフレア\n38.ギガクエイク\n45.ギガレイズ\n58.大地の怒り\n⑧剣、杖、鞭\n",
     "raw_fields": {
@@ -8125,7 +8216,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:f624c08ec691",
@@ -8218,7 +8311,7 @@
     "source": "未実装データ.txt:895",
     "source_end_line": 913,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_f624c08ec691",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "デックアールヴ\n①HP:40 / MP:28 / 攻撃力:19 / 防御力:12 / 魔力:18 / 魔防:13 / 素早さ:13 /運命値:13\n②HP:580 / MP:520 / 攻撃力:360 / 防御力:250 / 魔力:320 / 魔防:280 / 素早さ:280 /運命値:13\n③早熟\n④速い\n⑤B\n⑥炎:C / 氷:C / 光:E / 闇:S / 雷:C / 風:C / 地:D / 快:B / 毒:B / 暗:D / 封:D / 即:A\n⑦\n固有特性:堕ちしエルフ\n光属性以外の魔法ダメージを受けた時、20%の確率で通常攻撃で反撃する。\n3.コールド\n7.ブラインド\n16.オールデス\n25.コールドII\n35.ギガダーク\n42.イレイザー\n58.終焉の闇槌\n⑧弓\n",
     "raw_fields": {
@@ -8301,7 +8394,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:9b5c56326255",
@@ -8399,7 +8494,7 @@
     "source": "未実装データ.txt:914",
     "source_end_line": 933,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_9b5c56326255",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ヴァルキリー\n①HP:69 / MP:22 / 攻撃力:24 / 防御力:16 / 魔力:17 / 魔防:13 / 素早さ:17 /運命値:21\n②HP:820 / MP:480 / 攻撃力:470 / 防御力:270 / 魔力:300 / 魔防:230 / 素早さ:310 /運命値:21\n③普通\n④普通\n⑤S\n⑥炎:C / 氷:C / 光:A / 闇:D / 雷:B / 風:C / 地:D / 快:D / 毒:D / 暗:C / 封:B / 即:C\n⑦\n固有特性:戦場の聖女\nラウンド終了時、このキャラのHPが25%以下の場合、戦神の覇気を発動。(1戦闘に1度)\n4.フレッシュ\n15.カウンタースタンス\n21.ネオサイレンス\n28.剣の舞\n36.ギガホーリー\n43.フェアリーヒール\n51.戦神の覇気\n64.殲滅の風刃\n⑧剣、弓\n",
     "raw_fields": {
@@ -8488,7 +8583,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:a52c69357314",
@@ -8586,7 +8683,7 @@
     "source": "未実装データ.txt:934",
     "source_end_line": 953,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_a52c69357314",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ドミネーター\n①HP:41 / MP:20 / 攻撃力:19 / 防御力:11 / 魔力:18 / 魔防:9 / 素早さ:19 /運命値:15\n②HP:620 / MP:440 / 攻撃力:330 / 防御力:270 / 魔力:310 / 魔防:230 / 素早さ:320 /運命値:15\n③早熟\n④速い\n⑤B\n⑥炎:B / 氷:C / 光:D / 闇:A / 雷:A / 風:D / 地:C / 快:A / 毒:D / 暗:C / 封:C / 即:A\n⑦\n固有特性:ドミネーション\n戦闘時、最大HPが最も高いの他の味方一人のHPを15%アップ。\n1.ポリッシュ\n8.サンダー\n14.フレア\n23.フレッシュ\n32.ギガサンダー\n39.龍螺旋\n44.ギガフレア\n53.ラストヒール\n⑧剣、鞭\n",
     "raw_fields": {
@@ -8675,7 +8772,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:61c4bd762138",
@@ -8765,7 +8864,7 @@
     "source": "未実装データ.txt:954",
     "source_end_line": 971,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_61c4bd762138",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ダークナイト\n①HP:66 / MP:6 / 攻撃力:24 / 防御力:8 / 魔力:7 / 魔防:8 / 素早さ:9 /運命値:1\n②HP:900 / MP:240 / 攻撃力:410 / 防御力:220 / 魔力:210 / 魔防:220 / 素早さ:230 /運命値:1\n③普通\n④普通\n⑤B\n⑥炎:C / 氷:C / 光:D / 闇:A / 雷:C / 風:B / 地:D / 快:E / 毒:C / 暗:C / 封:C / 即:S\n⑦\n固有特性:冥府の騎士\n即死無効。通常攻撃で即死付与+8.0%。\n6.デス\n14.オールガード\n21.カウンタースタンス\n27.獄の闇\n40.イレイザー\n47.ギガダーク\n⑧剣、斧\n",
     "raw_fields": {
@@ -8843,7 +8942,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:61f55e3d1a5e",
@@ -8937,7 +9038,7 @@
     "source": "未実装データ.txt:972",
     "source_end_line": 990,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_61f55e3d1a5e",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ユメミクラゲ\n①HP:42 / MP:23 / 攻撃力:18 / 防御力:15 / 魔力:19 / 魔防:15 / 素早さ:20 /運命値:33\n②HP:630 / MP:540 / 攻撃力:310 / 防御力:280 / 魔力:340 / 魔防:270 / 素早さ:310 /運命値:33\n③やや晩成\n④普通\n⑤B\n⑥炎:B / 氷:B / 光:A / 闇:D / 雷:D / 風:D / 地:D / 快:C / 毒:D / 暗:D / 封:D / 即:D\n⑦\n固有特性:夢見る眷属\nバトルメンバーにシープがいるなら、消費MP-4。\n1.レイズII\n13.天の光\n24.オールマジック\n30.ギガプレジャー\n38.ギガホーリー\n46.エスケープ\n55.裁きの聖槍\n⑧拳、杖\n",
     "raw_fields": {
@@ -9020,7 +9121,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:5d9cad1579c7",
@@ -9118,7 +9221,7 @@
     "source": "未実装データ.txt:991",
     "source_end_line": 1010,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_5d9cad1579c7",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "シープ\n①HP:57 / MP:33 / 攻撃力:27 / 防御力:18 / 魔力:25 / 魔防:26 / 素早さ:18 /運命値:25\n②HP:750 / MP:610 / 攻撃力:400 / 防御力:300 / 魔力:370 / 魔防:340 / 素早さ:300 /運命値:25\n③普通\n④遅い\n⑤S\n⑥炎:D / 氷:B / 光:A / 闇:D / 雷:B / 風:C / 地:C / 快:C / 毒:C / 暗:B / 封:B / 即:C\n⑦\n固有特性:羊の神魔\nバトルメンバーの運命値の合計が高いほど、このキャラの会心率アップ(最大+15.0%)\n1.オールブロック\n10.天の光\n22.魔力障壁\n28.剣の舞\n36.ラストヒール\n45.フォーチュン\n53.ラストオーラ\n58.天の轟雷\n⑧剣、杖\n",
     "raw_fields": {
@@ -9207,7 +9310,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:39874e63298f",
@@ -9305,7 +9410,7 @@
     "source": "未実装データ.txt:1011",
     "source_end_line": 1030,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_39874e63298f",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ナイトメア\n①HP:34 / MP:20 / 攻撃力:6 / 防御力:5 / 魔力:16 / 魔防:12 / 素早さ:17 /運命値:10\n②HP:410 / MP:690 / 攻撃力:100 / 防御力:130 / 魔力:500 / 魔防:390 / 素早さ:290 /運命値:10\n③普通\n④速い\n⑤A\n⑥炎:B / 氷:B / 光:E / 闇:S / 雷:D / 風:B / 地:A / 快:D / 毒:B / 暗:A / 封:C / 即:A\n⑦\n固有特性:悪夢の妖精\n味方全員の闇・快楽属性被ダメージ-10%、光属性被ダメージ+10%。\n1.ダーク\n12.ネオサイレンス\n21.獄の闇\n29.ギガダーク\n35.ギガプレジャー\n44.ギガイロード\n51.ネオサプライ\n62.アポカリプス\n⑧杖、鞭\n",
     "raw_fields": {
@@ -9394,7 +9499,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:17e5e89f796e",
@@ -9469,7 +9576,7 @@
     "source": "未実装データ.txt:1031",
     "source_end_line": 1046,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_17e5e89f796e",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "カーリー\n①HP:92 / MP:0 / 攻撃力:29 / 防御力:20 / 魔力:1 / 魔防:3 / 素早さ:16 /運命値:16\n②HP:1100 / MP:0 / 攻撃力:500 / 防御力:310 / 魔力:90 / 魔防:140 / 素早さ:270 /運命値:16\n③普通\n④遅い\n⑤A\n⑥炎:B / 氷:B / 光:C / 闇:B / 雷:C / 風:B / 地:D / 快:E / 毒:C / 暗:C / 封:C / 即:B\n⑦\n固有特性:破壊の神\nカウンタースタンスの発動率+20%。反撃を行うたびに、戦闘終了まで会心率+5.0%。\n1.カウンタースタンス\n65.連続攻撃\n⑧拳、剣、斧\n\n↓エンディング後\n",
     "raw_fields": {
@@ -9522,7 +9629,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:3242ce013acf",
@@ -9615,7 +9724,7 @@
     "source": "未実装データ.txt:1047",
     "source_end_line": 1065,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_3242ce013acf",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "エンシェント\n①HP:42 / MP:30 / 攻撃力:15 / 防御力:15 / 魔力:18 / 魔防:14 / 素早さ:8 /運命値:9\n②HP:230 / MP:950 / 攻撃力:60 / 防御力:490 / 魔力:410 / 魔防:200 / 素早さ:380 /運命値:9\n③超早熟\n④遅い\n⑤A\n⑥炎:E / 氷:E / 光:A / 闇:E / 雷:S / 風:E / 地:E / 快:S / 毒:S / 暗:A / 封:A / 即:S\n⑦\n固有特性:古代王家の遺産\nネフィリムレーザーが攻撃力ではなく魔力依存になる。\n⑧銃\n1.ブレイズII\n10.コールドII\n20.サプライ\n30.イレイザー\n40.ネフィリムレーザー\n55.ラストオーラ\n70.ラストイロード\n",
     "raw_fields": {
@@ -9699,7 +9808,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:205e56a281d1",
@@ -9794,7 +9905,7 @@
     "source": "未実装データ.txt:1066",
     "source_end_line": 1084,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_205e56a281d1",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "アンタレス\n①HP:43 / MP:25 / 攻撃力:24 / 防御力:9 / 魔力:9 / 魔防:12 / 素早さ:27 /運命値:10\n②HP:680 / MP:550 / 攻撃力:400 / 防御力:240 / 魔力:330 / 魔防:260 / 素早さ:340 /運命値:10\n③やや早熟\n④普通\n⑤B\n⑥炎:A / 氷:E / 光:C / 闇:C / 雷:A / 風:E / 地:B / 快:C / 毒:S / 暗:C / 封:C / 即:B\n⑦\n固有特性:砂漠の閃光\nそのラウンド中、未行動の敵に対して与ダメージ+25%。\n1.ネオブラインド\n15.イレイザー\n25.オールデス\n37.爆裂拳\n46.ギガサンダー\n54.連続攻撃\n66.ビッグバン\n⑧拳、剣、銃\n",
     "raw_fields": {
@@ -9877,7 +9988,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:ca3d53ad8f36",
@@ -9967,7 +10080,7 @@
     "source": "未実装データ.txt:1085",
     "source_end_line": 1102,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_ca3d53ad8f36",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "クラッシャー\n①HP:126 / MP:10 / 攻撃力:34 / 防御力:26 / 魔力:1 / 魔防:2 / 素早さ:3 /運命値:15\n②HP:1470 / MP:10 / 攻撃力:540 / 防御力:360 / 魔力:30 / 魔防:80 / 素早さ:110 /運命値:15\n③普通\n④遅い\n⑤A\n⑥炎:C / 氷:D / 光:C / 闇:C / 雷:C / 風:E / 地:A / 快:D / 毒:C / 暗:D / 封:D / 即:A\n⑦\n固有特性:クラッシャー\n会心ダメージ倍率+50%。敵が防御力アップ状態なら、必ずクリティカルを出してそれを解除する。\n1.パワーチャージ\n20.カウンタースタンス\n30.厄災の叫び\n40.キャンセラー\n50.オートフレッシュ\n60.不屈の心\n⑧拳、斧\n",
     "raw_fields": {
@@ -10044,7 +10157,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:593431f3b50b",
@@ -10141,7 +10256,7 @@
     "source": "未実装データ.txt:1103",
     "source_end_line": 1122,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_593431f3b50b",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "コスモス\n①HP:33 / MP:47 / 攻撃力:10 / 防御力:12 / 魔力:21 / 魔防:38 / 素早さ:9 /運命値:18\n②HP:530 / MP:740 / 攻撃力:230 / 防御力:220 / 魔力:350 / 魔防:430 / 素早さ:260 /運命値:18\n③早熟\n④普通\n⑤B\n⑥炎:D / 氷:C / 光:A / 闇:A / 雷:S / 風:D / 地:S / 快:C / 毒:E / 暗:D / 封:D / 即:C\n⑦\n固有特性:煉獄の鱗粉\n味方全員は、MPを消費するたびに、戦闘終了まで与ダメージ+3%(最大15%)\n1.ネオサイレンス\n14.魔力障壁\n26.サプライ\n32ギガクエイク\n38.ギガレイズ\n44.ギガホーリー\n52.ネオサプライ\n67.アポカリプス\n⑧杖\n",
     "raw_fields": {
@@ -10230,7 +10345,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:6628497d6836",
@@ -10325,7 +10442,7 @@
     "source": "未実装データ.txt:1123",
     "source_end_line": 1141,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_6628497d6836",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ドゥルガー\n①HP:72 / MP:18 / 攻撃力:26 / 防御力:23 / 魔力:22 / 魔防:20 / 素早さ:16 /運命値:14\n②HP:810 / MP:430 / 攻撃力:370 / 防御力:330 / 魔力:340 / 魔防:330 / 素早さ:300 /運命値:14\n③やや早熟\n④遅い\n⑤B\n⑥炎:A / 氷:A / 光:B / 闇:B / 雷:C / 風:D / 地:D / 快:C / 毒:S / 暗:C / 封:C / 即:A\n⑦\n固有特性:悪滅の守護神\n守護神の加護が必ずラウンドの最初に発動。効果量+10%。消費MP+5。\n10.守護神の加護\n21.ギガヒール\n30.ギガフレア\n35.剣の舞\n41.ギガウィンド\n52.ラストフロスト\n68.連続攻撃\n⑧剣、杖、鞭\n",
     "raw_fields": {
@@ -10409,7 +10526,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:43739f995bec",
@@ -10507,7 +10626,7 @@
     "source": "未実装データ.txt:1142",
     "source_end_line": 1161,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_43739f995bec",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "アフォガート\n①HP:35 / MP:34 / 攻撃力:21 / 防御力:15 / 魔力:21 / 魔防:20 / 素早さ:22 /運命値:24\n②HP:520 / MP:600 / 攻撃力:340 / 防御力:280 / 魔力:350 / 魔防:340 / 素早さ:330 /運命値:24\n③やや早熟\n④普通\n⑤B\n⑥炎:A / 氷:A / 光:D / 闇:C / 雷:D / 風:C / 地:C / 快:A / 毒:D / 暗:D / 封:D / 即:D\n⑦\n固有特性:溺れる現実\n1ラウンドに1度、敵が快楽属性ダメージを受けた時、このキャラのHPを10%回復。\n3.ネオポイズン\n14.オールデス\n25.フェアリーヒール\n31.プレジャー・ワン\n37.ギガプレジャー\n48.ギガイロード\n55.パンデム\n64.破滅の侵蝕\n⑧拳、杖\n",
     "raw_fields": {
@@ -10596,7 +10715,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:46643d181378",
@@ -10694,7 +10815,7 @@
     "source": "未実装データ.txt:1162",
     "source_end_line": 1181,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_46643d181378",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "サキュバス\n①HP:63 / MP:29 / 攻撃力:32 / 防御力:14 / 魔力:30 / 魔防:12 / 素早さ:20 /運命値:20\n②HP:880 / MP:570 / 攻撃力:440 / 防御力:260 / 魔力:380 / 魔防:240 / 素早さ:300 /運命値:20\n③普通\n④普通\n⑤S\n⑥炎:C / 氷:B / 光:D / 闇:S / 雷:C / 風:D / 地:C / 快:S / 毒:C / 暗:S / 封:D / 即:B\n⑦\n固有特性:甘美なる破滅\n通常攻撃・物理攻撃が全て快楽属性になる。敵に快楽ダメージを与えるたび、このキャラの快楽与ダメージ+2%(最大+20%)\n1.ギガプレジャー\n10.プレジャー・ワン\n24.カウンタースタンス\n34.魔力障壁\n35.龍螺旋\n46.パンデム\n52. 精霊王の祝福\n69.メギドプレジャー\n⑧杖、鞭\n",
     "raw_fields": {
@@ -10784,7 +10905,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:79f4398c5ab4",
@@ -10883,7 +11006,7 @@
     "source": "未実装データ.txt:1182",
     "source_end_line": 1201,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_79f4398c5ab4",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "クリスタルスライム\n①HP:8 / MP:84 / 攻撃力:35 / 防御力:50 / 魔力:30 / 魔防:50 / 素早さ:20 /運命値:27\n②HP:180 / MP:1160 / 攻撃力:470 / 防御力:680 / 魔力:420 / 魔防:680 / 素早さ:300 /運命値:27\n③晩成\n④超遅い\n⑤A\n⑥炎:A / 氷:A / 光:A / 闇:A / 雷:S / 風:S / 地:S / 快:S / 毒:S / 暗:S / 封:S / 即:S\n⑦\n固有特性:クリスタルボディ\nこのキャラは状態異常を受けない。このキャラが戦闘不能になった時、習得済みのスキルがランダムに一つ発動する(奇跡の祝祭を除く)。\n1.フェアリーヒール\n11.英雄の追風\n21.守護神の加護\n31.サプライ\n41.ネフィリムレーザー\n51.ラストフレア\n61.エンドコールド\n98.奇跡の祝祭\n⑧拳、弓、銃\n",
     "raw_fields": {
@@ -10975,7 +11098,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:500c1575da3a",
@@ -11058,7 +11183,7 @@
     "source": "未実装データ.txt:1202",
     "source_end_line": 1217,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_500c1575da3a",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "アルカナデビル\n①HP:19 / MP:160 / 攻撃力:6 / 防御力:8 / 魔力:34 / 魔防:6 / 素早さ:5 /運命値:24\n②HP:370 / MP:2010 / 攻撃力:150 / 防御力:190 / 魔力:460 / 魔防:150 / 素早さ:120 /運命値:24\n③晩成\n④遅い\n⑤B\n⑥炎:C / 氷:C / 光:D / 闇:B / 雷:D / 風:C / 地:C / 快:B / 毒:C / 暗:C / 封:B / 即:C\n⑦\n固有特性:極限の神秘\nこのキャラが戦闘不能になった時、他に戦闘不能でないキャラがいるなら、ランダムな戦闘不能の味方一人をHP最大で復活させる(控え含む)。(1戦闘に1度)\n10.フォーチュン\n50.サプライ\n60.ネオサプライ\n80.不屈の心\n⑧拳、鞭、銃\n",
     "raw_fields": {
@@ -11124,7 +11249,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:3e68104fd0d6",
@@ -11223,7 +11350,7 @@
     "source": "未実装データ.txt:1218",
     "source_end_line": 1237,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_3e68104fd0d6",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "フィナーレ\n①HP:66 / MP:36 / 攻撃力:24 / 防御力:23 / 魔力:28 / 魔防:22 / 素早さ:5 /運命値:2\n②HP:820 / MP:650 / 攻撃力:420 / 防御力:360 / 魔力:440 / 魔防:320 / 素早さ:190 /運命値:2\n③晩成\n④遅い\n⑤A\n⑥炎:D / 氷:A / 光:D / 闇:S / 雷:C / 風:C / 地:E / 快:C / 毒:B / 暗:A / 封:A / 即:S\n⑦\n固有特性:終わりの脈動\nダメージを受けるたび、戦闘終了まで与ダメージ+2%(最大+20%)。\n1.ラストヒール\n15.パンデム\n33.カウンタースタンス\n45.ネフィリムレーザー\n58.ラストオーラ\n62.終焉の闇槌\n64.破滅の侵蝕\n72.ラストイロード\n⑧杖、鞭、銃\n",
     "raw_fields": {
@@ -11312,7 +11439,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:b06092bf0f78",
@@ -11403,7 +11532,7 @@
     "source": "未実装データ.txt:1238",
     "source_end_line": 1255,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_b06092bf0f78",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ウミウシヒメ\n①HP:44 / MP:12 / 攻撃力:12 / 防御力:14 / 魔力:4 / 魔防:3 / 素早さ:1 /運命値:13\n②HP:1410 / MP:270 / 攻撃力:360 / 防御力:410 / 魔力:120 / 魔防:300 / 素早さ:100 /運命値:13\n③早熟\n④速い\n⑤B\n⑥炎:E / 氷:A / 光:B / 闇:B / 雷:E / 風:B / 地:B / 快:C / 毒:E / 暗:C / 封:C / 即:C\n⑦\n固有特性:海の華\n炎・雷被ダメージ+50%。現在HP以上の炎・雷ダメージを受けた時、HP1で耐える。(1戦闘に1度)\n1.レイズ\n15.フレッシュ\n26.ネオサイレンス\n38.カウンタースタンス\n50.ステルス\n61.不屈の心\n⑧拳、斧、杖\n",
     "raw_fields": {
@@ -11480,7 +11609,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:5e039c78e9d6",
@@ -11575,7 +11706,7 @@
     "source": "未実装データ.txt:1256",
     "source_end_line": 1274,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_5e039c78e9d6",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ヘルディーラー\n①HP:37 / MP:23 / 攻撃力:20 / 防御力:9 / 魔力:23 / 魔防:11 / 素早さ:22 /運命値:21\n②HP:520 / MP:640 / 攻撃力:350 / 防御力:220 / 魔力:360 / 魔防:260 / 素早さ:350 /運命値:21\n③早熟\n④速い\n⑤B\n⑥炎:C / 氷:C / 光:E / 闇:S / 雷:S / 風:D / 地:C / 快:A / 毒:D / 暗:C / 封:C / 即:S\n⑦\n固有特性:魂のディール\n味方全員のイロード系魔法の消費MPが3倍になり、2回連続で発動する。\n1.デス\n17.オールデス\n37.ギガイロード\n46.ラストヒール\n53.エスケープ\n60.破滅の侵蝕\n77.ラストイロード\n⑧剣、杖、鞭\n",
     "raw_fields": {
@@ -11659,7 +11790,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:24a410c41cbf",
@@ -11758,7 +11891,7 @@
     "source": "未実装データ.txt:1275",
     "source_end_line": 1294,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_24a410c41cbf",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "白ノ不浄\n①HP:61 / MP:37 / 攻撃力:24 / 防御力:21 / 魔力:24 / 魔防:17 / 素早さ:13 /運命値:2\n②HP:770 / MP:660 / 攻撃力:360 / 防御力:320 / 魔力:360 / 魔防:290 / 素早さ:250 /運命値:2\n③やや晩成\n④遅い\n⑤A\n⑥炎:D / 氷:C / 光:A / 闇:A / 雷:A / 風:D / 地:D / 快:A / 毒:A / 暗:A / 封:D / 即:S\n⑦\n固有特性:不浄の白蜘蛛\n戦闘開始時、30%の確率でパンデムを発動する。バトルメンバー全員の状態異常付与確率+10%(即死除く)。\n1.パンデム\n5.厄災の叫び\n18.ギガヒール\n25.イレイザー\n36.ギガサンダー\n42.ギガレイズ\n49.英雄の追風\n61.裁きの聖槍\n⑧弓、杖、鞭\n",
     "raw_fields": {
@@ -11847,7 +11980,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:b2fe48dc0bd5",
@@ -11944,7 +12079,7 @@
     "source": "未実装データ.txt:1295",
     "source_end_line": 1315,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_b2fe48dc0bd5",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "泡沫姫\n①HP:46 / MP:42 / 攻撃力:4 / 防御力:12 / 魔力:29 / 魔防:20 / 素早さ:21 /運命値:17\n②HP:640 / MP:830 / 攻撃力:180 / 防御力:230 / 魔力:370 / 魔防:310 / 素早さ:330 /運命値:17\n③やや早熟\n④普通\n⑤B\n⑥炎:D / 氷:A / 光:A / 闇:D / 雷:E / 風:C / 地:D / 快:B / 毒:C / 暗:C / 封:D / 即:D\n⑦\n固有特性:儚き願い\nラウンド終了時、戦闘不能の他の味方が二人以上存在する(控え含む)場合、全員を瀕死で復活させる。その後、このキャラのHPを1にする。(1戦闘に1度)\n※レイズと同じ回復量。\n1.レイズ\n1.フレッシュ\n14.ギガヒール\n22.コールドII\n30.オーラ\n39.フェアリーヒール\n46.ギガレイズ\n56.ラストフロスト\n⑧杖\n",
     "raw_fields": {
@@ -12035,7 +12170,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:24c702a4e00f",
@@ -12133,7 +12270,7 @@
     "source": "未実装データ.txt:1316",
     "source_end_line": 1335,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_24c702a4e00f",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "スキュライト\n①HP:57 / MP:25 / 攻撃力:16 / 防御力:10 / 魔力:22 / 魔防:15 / 素早さ:13 /運命値:21\n②HP:630 / MP:710 / 攻撃力:300 / 防御力:220 / 魔力:360 / 魔防:270 / 素早さ:300 /運命値:21\n③普通\n④速い\n⑤B\n⑥炎:D / 氷:B / 光:S / 闇:E / 雷:S / 風:C / 地:C / 快:C / 毒:C / 暗:E / 封:C / 即:E\n⑦\n固有特性:光輝の触手\n通常攻撃・物理攻撃が光属性になる。味方全員の雷・光属性被ダメージ-10%。\n1.ホーリー\n5.フレッシュ\n24.ギガサンダー\n28.ステルス\n36.龍螺旋\n43.魔祖の霊流\n58.裁きの聖槍\n72.天の轟雷\n⑧杖、鞭\n",
     "raw_fields": {
@@ -12222,7 +12359,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:3f9da5bbf42a",
@@ -12308,7 +12447,7 @@
     "source": "未実装データ.txt:1336",
     "source_end_line": 1352,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_3f9da5bbf42a",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "クリムゾン\n①HP:73 / MP:22 / 攻撃力:26 / 防御力:10 / 魔力:14 / 魔防:8 / 素早さ:6 /運命値:17\n②HP:790 / MP:430 / 攻撃力:420 / 防御力:260 / 魔力:270 / 魔防:230 / 素早さ:200 /運命値:17\n③普通\n④普通\n⑤B\n⑥炎:A / 氷:E / 光:C / 闇:B / 雷:D / 風:C / 地:C / 快:D / 毒:S / 暗:A / 封:C / 即:C\n⑦\n固有特性:紅蓮の大蛇\nこのキャラの受ける攻撃力アップ効果は+50%される。\n1.ポリッシュ\n19.マウント\n34.カウンタースタンス\n45.テラクラッシュ\n58.オートフレッシュ\n⑧斧、鞭\n",
     "raw_fields": {
@@ -12379,7 +12518,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:9c36935cab82",
@@ -12477,7 +12618,7 @@
     "source": "未実装データ.txt:1353",
     "source_end_line": 1372,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_9c36935cab82",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "フェニックス\n①HP:60 / MP:22 / 攻撃力:25 / 防御力:8 / 魔力:18 / 魔防:15 / 素早さ:20 /運命値:19\n②HP:770 / MP:540 / 攻撃力:390 / 防御力:200 / 魔力:310 / 魔防:240 / 素早さ:350 /運命値:19\n③普通\n④普通\n⑤A\n⑥炎:S / 氷:E / 光:B / 闇:D / 雷:D / 風:B / 地:B / 快:C / 毒:B / 暗:S / 封:D / 即:D\n⑦\n固有特性:不死鳥の再臨\nラウンド終了時、このキャラが戦闘不能で控えにいる場合、HP1で復活する。\n1.不屈の心\n13.イレイザー\n27.ギガレイズ\n35.爆裂拳\n43.英雄の追風\n54.ラストフレア\n66.殲滅の風刃\n72.連続攻撃\n⑧拳、杖\n",
     "raw_fields": {
@@ -12568,7 +12709,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:f9b6392a5531",
@@ -12667,7 +12810,7 @@
     "source": "未実装データ.txt:1373",
     "source_end_line": 1392,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_f9b6392a5531",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "花仙妖狐\n①HP:54 / MP:35 / 攻撃力:17 / 防御力:9 / 魔力:22 / 魔防:18 / 素早さ:17 /運命値:20\n②HP:720 / MP:610 / 攻撃力:310 / 防御力:220 / 魔力:370 / 魔防:320 / 素早さ:310 /運命値:20\n③普通\n④速い\n⑤A\n⑥炎:B / 氷:B / 光:D / 闇:S / 雷:B / 風:D / 地:S / 快:C / 毒:C / 暗:C / 封:E / 即:B\n⑦\n固有特性:花仙妖術\n1戦闘に1度だけ、敵の魔法の発動を無効にする。これが発動した時、魔力集中が発動する。\n1.オールポリッシュ\n8.リターン\n26.ギガクエイク\n34.フェアリーヒール\n40.プレジャー・ワン\n49.魔祖の霊流\n55.破滅の侵蝕\n69.大地の怒り\n⑧剣、杖、鞭\n",
     "raw_fields": {
@@ -12756,7 +12899,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:b77243b1624a",
@@ -12849,7 +12994,7 @@
     "source": "未実装データ.txt:1393",
     "source_end_line": 1411,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_b77243b1624a",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "リンドヴルム\n①HP:72 / MP:17 / 攻撃力:22 / 防御力:16 / 魔力:6 / 魔防:8 / 素早さ:13 /運命値:23\n②HP:910 / MP:530 / 攻撃力:440 / 防御力:280 / 魔力:190 / 魔防:210 / 素早さ:300 /運命値:23\n③やや晩成\n④遅い\n⑤A\n⑥炎:B / 氷:D / 光:B / 闇:C / 雷:A / 風:C / 地:C / 快:D / 毒:C / 暗:C / 封:B / 即:D\n⑦\n固有特性:竜王の逆鱗\nこのキャラのHPが半分以下の時、会心率+10.0%・会心ダメージ倍率+20%。\n15.ギガヒール\n29.ギガフレア\n37.爆裂拳\n42.守護神の加護\n48.ギガイロード\n56.ラストオーラ\n68.エンドブレイズ\n⑧拳\n",
     "raw_fields": {
@@ -12933,7 +13078,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:a01513190a54",
@@ -13031,7 +13178,7 @@
     "source": "未実装データ.txt:1412",
     "source_end_line": 1431,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_a01513190a54",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "スプレマシージェム\n①HP:15 / MP:53 / 攻撃力:28 / 防御力:2 / 魔力:28 / 魔防:29 / 素早さ:30 /運命値:26\n②HP:360 / MP:990 / 攻撃力:410 / 防御力:90 / 魔力:400 / 魔防:410 / 素早さ:390 /運命値:26\n③普通\n④普通\n⑤A\n⑥炎:A / 氷:A / 光:A / 闇:E / 雷:A / 風:A / 地:A / 快:E / 毒:D / 暗:D / 封:D / 即:D\n⑦\n固有特性:究極のルビー\n魔法回避率+30%。このキャラが魔法を回避した時、20%の確率でフェアリーヒールを発動。\n1.ギガフロスト\n26.ギガレイズ\n40.連続攻撃\n47.精霊王の祝福\n58.裁きの聖槍\n62.ラストオーラ\n70.天の轟雷\n81.エターナル\n⑧拳、杖\n",
     "raw_fields": {
@@ -13120,7 +13267,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:db52c1302cae",
@@ -13218,7 +13367,7 @@
     "source": "未実装データ.txt:1432",
     "source_end_line": 1451,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_db52c1302cae",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ジェネラル\n①HP:59 / MP:13 / 攻撃力:28 / 防御力:18 / 魔力:5 / 魔防:16 / 素早さ:14 /運命値:13\n②HP:810 / MP:330 / 攻撃力:450 / 防御力:320 / 魔力:140 / 魔防:290 / 素早さ:260 /運命値:13\n③普通\n④普通\n⑤A\n⑥炎:C / 氷:C / 光:D / 闇:A / 雷:C / 風:B / 地:D / 快:E / 毒:C / 暗:C / 封:C / 即:S\n⑦\n固有特性:魔の大将軍\n戦闘不能の味方(控え含む)一人につき、攻撃力・防御力・魔力・魔防・素早さが10%アップ。\n1.パワーチャージ\n10.デス\n18.オーラ\n27.オールポリッシュ\n33.剣の舞\n34.テラクラッシュ\n46.ラストヒール\n73.キャンセラー\n⑧剣、斧\n",
     "raw_fields": {
@@ -13307,7 +13456,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:f9a7aa354218",
@@ -13410,7 +13561,7 @@
     "source": "未実装データ.txt:1452",
     "source_end_line": 1471,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_f9a7aa354218",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "インドラ\n①HP:84 / MP:30 / 攻撃力:31 / 防御力:15 / 魔力:1 / 魔防:8 / 素早さ:14 /運命値:16\n②HP:1140 / MP:510 / 攻撃力:440 / 防御力:270 / 魔力:50 / 魔防:170 / 素早さ:260 /運命値:16\n③普通\n④遅い\n⑤A\n⑥炎:B / 氷:B / 光:B / 闇:B / 雷:D / 風:B / 地:B / 快:D / 毒:D / 暗:C / 封:C / 即:C\n⑦\n固有特性:天下無双\n武器種固有スキルの性能がアップ。他のバトルメンバーの装備している武器種を装備している扱いになる。\n1.爆裂拳\n6.剣の舞\n11.テラクラッシュ\n16.スターダスト\n21.魔力障壁\n26.龍螺旋\n31.ネフィリムレーザー\n50.オートフレッシュ\n⑧拳、剣、斧、弓、杖、鞭、銃\n",
     "raw_fields": {
@@ -13501,7 +13652,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:875de0e34334",
@@ -13599,7 +13752,7 @@
     "source": "未実装データ.txt:1472",
     "source_end_line": 1491,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_875de0e34334",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "死神\n①HP:37 / MP:29 / 攻撃力:20 / 防御力:6 / 魔力:22 / 魔防:31 / 素早さ:25 /運命値:13\n②HP:530 / MP:700 / 攻撃力:350 / 防御力:140 / 魔力:360 / 魔防:400 / 素早さ:350 /運命値:13\n③普通\n④普通\n⑤C\n⑥炎:B / 氷:B / 光:E / 闇:S / 雷:C / 風:D / 地:C / 快:B / 毒:B / 暗:S / 封:B / 即:S\n⑦\n固有特性:死神\n敵の即死耐性を-1する。デス、オールデスが2連続で発動。消費MP2倍。\n1.デス\n1.オールデス\n16.レイズII\n33.ギガダーク\n42.テラクラッシュ\n43.魔力障壁\n49.サプライ\n69.アポカリプス\n⑧斧、杖\n",
     "raw_fields": {
@@ -13689,7 +13842,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:f2c1f06f7cef",
@@ -13787,7 +13942,7 @@
     "source": "未実装データ.txt:1492",
     "source_end_line": 1511,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_f2c1f06f7cef",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "エタニティ\n①HP:50 / MP:30 / 攻撃力:22 / 防御力:13 / 魔力:30 / 魔防:18 / 素早さ:21 /運命値:23\n②HP:740 / MP:710 / 攻撃力:310 / 防御力:250 / 魔力:390 / 魔防:320 / 素早さ:310 /運命値:23\n③晩成\n④遅い\n⑤S\n⑥炎:B / 氷:B / 光:A / 闇:D / 雷:C / 風:B / 地:B / 快:C / 毒:D / 暗:C / 封:C / 即:B\n⑦\n固有特性:永遠の精霊\nエターナル発動時、精霊王の祝福を発動する。(1戦闘に1度)\n1.キャンセラー\n15.ラストヒール\n34.ギガレイズ\n42.スターダスト\n43.魔力障壁\n55.裁きの聖槍\n69.天の轟雷\n75.エターナル\n⑧弓、杖\n",
     "raw_fields": {
@@ -13876,7 +14031,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:111143e9862b",
@@ -13975,7 +14132,7 @@
     "source": "未実装データ.txt:1512",
     "source_end_line": 1531,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_111143e9862b",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "セラフ\n①HP:107 / MP:30 / 攻撃力:35 / 防御力:17 / 魔力:28 / 魔防:16 / 素早さ:20 /運命値:21\n②HP:1480 / MP:750 / 攻撃力:460 / 防御力:300 / 魔力:370 / 魔防:290 / 素早さ:320 /運命値:21\n③晩成\n④遅い\n⑤S\n⑥炎:A / 氷:A / 光:S / 闇:E / 雷:A / 風:B / 地:B / 快:C / 毒:B / 暗:C / 封:C / 即:D\n⑦\n固有特性:天界の使徒\nこのキャラがスキルを使用するたび、戦闘終了まで与ダメージ+3%(最大+30%)\n1.守護神の加護\n30.イレイザー\n40.カウンタースタンス\n48.ラストオーラ\n57.ラストフロスト\n74.ビッグバン\n80.ラストイロード\n91.奇跡の祝祭\n⑧剣、弓、杖\n",
     "raw_fields": {
@@ -14065,7 +14222,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:bde32c1f1f14",
@@ -14145,7 +14304,7 @@
     "source": "未実装データ.txt:1532",
     "source_end_line": 1547,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_bde32c1f1f14",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "トパーズ\n①HP:16 / MP:0 / 攻撃力:32 / 防御力:31 / 魔力:1 / 魔防:29 / 素早さ:8 /運命値:17\n②HP:260 / MP:0 / 攻撃力:530 / 防御力:480 / 魔力:1 / 魔防:420 / 素早さ:240 /運命値:17\n③早熟\n④超速い\n⑤-\n⑥炎:A / 氷:A / 光:A / 闇:A / 雷:A / 風:A / 地:A / 快:A / 毒:A / 暗:A / 封:A / 即:A\n⑦\n固有特性:煌めくトパーズ\n通常攻撃で敵にダメージを与えた時、このキャラの攻撃力・防御力・魔法防御を大きくアップ。(1戦闘に1度)\n※戦神の覇気等と同じ効果量・ターン。\n1.カウンタースタンス\n30.オートフレッシュ\n50.不屈の心\n⑧拳、剣、斧、銃\n",
     "raw_fields": {
@@ -14204,7 +14363,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:91b6ea51c619",
@@ -14299,7 +14460,7 @@
     "source": "未実装データ.txt:1548",
     "source_end_line": 1566,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_91b6ea51c619",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "エメラルド\n①HP:126 / MP:21 / 攻撃力:29 / 防御力:6 / 魔力:23 / 魔防:6 / 素早さ:5 /運命値:16\n②HP:1820 / MP:600 / 攻撃力:420 / 防御力:120 / 魔力:340 / 魔防:130 / 素早さ:150 /運命値:16\n③やや早熟\n④速い\n⑤-\n⑥炎:D / 氷:D / 光:C / 闇:C / 雷:D / 風:C / 地:C / 快:C / 毒:S / 暗:B / 封:B / 即:B\n⑦\n固有特性:翠緑のエメラルド\n3ラウンド目終了時、最もダメージを受けているランダムな味方一人にラストヒールを発動。\n10.ラストヒール\n18.イレイザー\n24.パンデム\n36.レイズII\n44.ネフィリムレーザー\n52.オールマウント\n67.破滅の侵蝕\n⑧拳、斧、銃\n",
     "raw_fields": {
@@ -14382,7 +14543,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:4353fb2af8f7",
@@ -14481,7 +14644,7 @@
     "source": "未実装データ.txt:1567",
     "source_end_line": 1586,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_4353fb2af8f7",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "モルガナイト\n①HP:47 / MP:45 / 攻撃力:17 / 防御力:17 / 魔力:17 / 魔防:17 / 素早さ:17 /運命値:17\n②HP:530 / MP:1050 / 攻撃力:310 / 防御力:310 / 魔力:310 / 魔防:310 / 素早さ:310 /運命値:17\n③普通\n④普通\n⑤-\n⑥炎:D / 氷:D / 光:A / 闇:A / 雷:E / 風:D / 地:D / 快:S / 毒:B / 暗:B / 封:B / 即:B\n⑦\n固有特性:美麗なるモルガナイト\nこのキャラの、ダメージ与える効果のないスキルのMP消費量-20%。\n1.プレジャー・ワン\n10.エスケープ\n15.ステルス\n20.サプライ\n25.ネオサプライ\n30.イレイザー\n45.戦神の覇気\n65.メギドプレジャー\n⑧拳、鞭、銃\n",
     "raw_fields": {
@@ -14570,7 +14733,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:ef6697f34a76",
@@ -14669,7 +14834,7 @@
     "source": "未実装データ.txt:1587",
     "source_end_line": 1606,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_ef6697f34a76",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ウルズ\n①HP:40 / MP:16 / 攻撃力:14 / 防御力:10 / 魔力:16 / 魔防:12 / 素早さ:16 /運命値:35\n②HP:770 / MP:820 / 攻撃力:450 / 防御力:350 / 魔力:470 / 魔防:390 / 素早さ:360 /運命値:35\n③超晩成\n④超遅い\n⑤-\n⑥炎:B / 氷:B / 光:A / 闇:D / 雷:B / 風:B / 地:C / 快:C / 毒:B / 暗:B / 封:A / 即:D\n⑦\n固有特性:運命の女神\nバトルメンバー全滅時、このキャラをHP最大で復活させる(1戦闘に1度)。\n10.レイズII\n20.剣の舞\n27.スターダスト\n38.ラストヒール\n45.カウンタースタンス\n62.精霊王の祝福\n70.ラストフレア\n86.天の轟雷\n⑧剣、弓、杖\n",
     "raw_fields": {
@@ -14760,7 +14925,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:971bf20af90c",
@@ -14859,7 +15026,7 @@
     "source": "未実装データ.txt:1607",
     "source_end_line": 1626,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_971bf20af90c",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "アトラク=ナクア\n①HP:79 / MP:31 / 攻撃力:12 / 防御力:18 / 魔力:20 / 魔防:18 / 素早さ:5 /運命値:4\n②HP:980 / MP:600 / 攻撃力:280 / 防御力:300 / 魔力:340 / 魔防:330 / 素早さ:120 /運命値:4\n③やや晩成\n④遅い\n⑤-\n⑥炎:D / 氷:C / 光:E / 闇:S / 雷:C / 風:B / 地:B / 快:B / 毒:S / 暗:A / 封:D / 即:A\n⑦\n固有特性:時の大蜘蛛\n他の味方全員の素早さが1.5倍になる。他の味方全員は、行動後に10%の確率で通常攻撃を行う。\n1.イレイザー\n18.魔力障壁\n35.魔祖の霊流\n36.守護神の加護\n37.戦神の覇気\n38.英雄の追風\n45.ギガレイズ\n62.破滅の侵蝕\n⑧弓、杖、鞭\n",
     "raw_fields": {
@@ -14949,7 +15116,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:7caec5edb35b",
@@ -15046,7 +15215,7 @@
     "source": "未実装データ.txt:1627",
     "source_end_line": 1646,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_7caec5edb35b",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ハイドラ\n①HP:93 / MP:15 / 攻撃力:24 / 防御力:8 / 魔力:21 / 魔防:3 / 素早さ:9 /運命値:6\n②HP:1130 / MP:390 / 攻撃力:360 / 防御力:230 / 魔力:330 / 魔防:190 / 素早さ:240 /運命値:6\n③やや晩成\n④普通\n⑤-\n⑥炎:D / 氷:B / 光:D / 闇:A / 雷:E / 風:C / 地:C / 快:C / 毒:S / 暗:S / 封:S / 即:S\n⑦\n固有特性:禁忌の毒\n戦闘開始時、ランダムな他の味方一人を毒状態にする(耐性貫通)。毒状態のキャラがいる時、与ダメージ+30%。\n1.ネオポイズン\n12.厄災の叫び\n25.ギガプレジャー\n31.龍螺旋\n37.パンデム\n42.ギガフロスト\n58.終焉の闇槌\n63.キャンセラー\n⑧鞭\n",
     "raw_fields": {
@@ -15135,7 +15304,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:4821e7706d2e",
@@ -15220,7 +15391,7 @@
     "source": "未実装データ.txt:1647",
     "source_end_line": 1663,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_4821e7706d2e",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ジェノサイダー\n①HP:60 / MP:40 / 攻撃力:25 / 防御力:25 / 魔力:15 / 魔防:10 / 素早さ:20 /運命値:10\n②HP:800 / MP:550 / 攻撃力:400 / 防御力:350 / 魔力:250 / 魔防:200 / 素早さ:300 /運命値:10\n③早熟\n④遅い\n⑤-\n⑥炎:A / 氷:A / 光:C / 闇:C / 雷:E / 風:C / 地:D / 快:S / 毒:S / 暗:C / 封:C / 即:A\n⑦\n固有特性:最終殲滅兵器\nネフィリムレーザーをターンの最初に発動できる。ネフィリムレーザーの性能アップ。\n1.ラストヒール\n25.フェアリーヒール\n35.ネフィリムレーザー\n45.オールフレッシュ\n60キャンセラー\n⑧銃\n",
     "raw_fields": {
@@ -15294,7 +15465,9 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   },
   {
     "character_id": "draft:4b45d8f50f30",
@@ -15393,7 +15566,7 @@
     "source": "未実装データ.txt:1664",
     "source_end_line": 1682,
     "normalization": "NFKC / whitespace / unambiguous missing dot",
-    "runtime_id": null,
+    "runtime_id": "companion_4b45d8f50f30",
     "id_note": "character_idは分析専用の安定照合キー。ゲームIDではない。実装者は別の永続対応表を作り、既存IDを変えない。命名は技術的選択であり数値仕様を変えない。",
     "source_raw": "ケツァルコアトル\n①HP:113 / MP:26 / 攻撃力:24 / 防御力:7 / 魔力:23 / 魔防:5 / 素早さ:15 /運命値:20\n②HP:1270 / MP:850 / 攻撃力:400 / 防御力:210 / 魔力:360 / 魔防:180 / 素早さ:270 /運命値:20\n③普通\n④普通\n⑤-\n⑥炎:C / 氷:E / 光:C / 闇:C / 雷:E / 風:A / 地:A / 快:D / 毒:S / 暗:A / 封:C / 即:C\n⑦\n固有特性:慈悲の蛇神\nラウンド終了時、戦闘不能状態の味方がいるなら、その中からランダムな一人にギガレイズを発動する。(1戦闘に1度)\n10.オールフレッシュ\n20.ラストヒール\n30.イレイザー\n40.フェアリーヒール\n50.ギガレイズ\n60.魔力障壁\n70.ラストオーラ\n80.エターナル\n⑧斧、杖、鞭",
     "raw_fields": {
@@ -15483,6 +15656,8 @@
     },
     "safe_data_registration": true,
     "production_recruitment_enabled": false,
-    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。"
+    "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
+    "runtime_registered": true,
+    "trait_runtime_status": "pending_connection"
   }
 ]
