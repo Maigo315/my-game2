@@ -28,6 +28,12 @@
     newBattleState:()=>({used:{},damageBonus:0,counterCritBonus:0,cosmosBonus:0}),
     damageMultiplier:bonuses=>1+bonuses.reduce((a,b)=>a+b,0)/100,
     addRatePoints:(base,points)=>base+points,
+    mistDragonEvasionBonus(hpRatio){
+      const h=Math.max(0,Math.min(1,Number(hpRatio)||0));
+      if(h>=.75)return 0;
+      if(h<=.25)return 20;
+      return Math.round((.75-h)*400)/10;
+    },
     hellCost:(base,{otherMoth=false}={})=>base*3*(otherMoth?.8:1),
     hellHits:(resolve,rng)=>[resolve(rng()),resolve(rng())],
     criticalMultiplier:(personal,skill)=>personal*skill,
@@ -61,7 +67,7 @@
     registration(draftId){
       const data=root.RPGConfirmedData,record=data?.records.find(c=>c.character_id===draftId);
       if(!record)throw Error('Unknown draft ID: '+draftId);
-      return {record,runtimeId:data.idMap[draftId],image:'assets/characters/placeholder.svg',status:'data_registered_unconnected',recruitment:pending(['U57','U58','U62']),trait:pending(record.issue_ids),saveMigration:pending(['U01','U57'])};
+      return {record,runtimeId:data.idMap[draftId],image:'assets/characters/placeholder.svg',status:'runtime_registered_unrecruited',recruitment:pending(['U57','U58','U62']),trait:record.trait_runtime_status==='implemented'?{status:'implemented'}:pending(record.issue_ids),saveMigration:{status:'compatible',note:'未加入runtime登録のみ。既存セーブでは未加入のまま初期値を補完'}};
     },
     activateCompanion(draftId){const r=api.registration(draftId);throw Error(`${r.runtimeId}: 未接続 U57/U58/U62（加入・育成条件未確定）`);}
   };

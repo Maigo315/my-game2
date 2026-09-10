@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47g";
+  const DEV_VERSION = "v0.47h";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2413,7 +2413,7 @@
 
     const trait=profile?.trait;
     $("characterTrait").innerHTML=trait
-      ? `<div class="character-trait-card"><div class="character-trait-icon">${trait.icon||"✨"}</div><div class="character-trait-main"><div class="character-trait-name">${trait.name}</div><div class="character-trait-desc">${trait.desc}</div></div></div>`
+      ? `<div class="character-trait-card"><div class="character-trait-icon">${trait.icon||"✨"}</div><div class="character-trait-main"><div class="character-trait-name">${trait.name}${trait.implemented===false?' <small>（処理未接続）</small>':''}</div><div class="character-trait-desc">${trait.desc}</div></div></div>`
       : `<div class="character-trait-card character-trait-empty"><div class="character-trait-icon">◇</div><div class="character-trait-main"><div class="character-trait-name">固有特性 未設定</div><div class="character-trait-desc">このキャラクターの固有特性はまだ設定されていません。</div></div></div>`;
 
     if(profile?.resist){
@@ -2559,6 +2559,52 @@
     A:{damage:.50,status:.50},
     S:{damage:.25,status:.25}
   };
+
+  // v0.47h: author-confirmed future companions are registered in the runtime now.
+  // They remain unrecruited until their story/encounter routes are implemented.
+  const confirmedCompanionData=globalThis.RPGConfirmedData||{records:[],idMap:{}};
+  const confirmedCompanionRecords=Array.isArray(confirmedCompanionData.records)?confirmedCompanionData.records:[];
+  const confirmedRuntimeIdByName=Object.fromEntries(confirmedCompanionRecords.map(record=>[
+    record.character_name,
+    record.runtime_id||confirmedCompanionData.idMap?.[record.character_id]
+  ]).filter(([,id])=>!!id));
+  function confirmedRuntimeId(record){
+    return record?.runtime_id || confirmedCompanionData.idMap?.[record?.character_id] || null;
+  }
+  function confirmedPlannedSkills(record){
+    const table={};
+    (record?.learned_skills||[]).forEach(entry=>{
+      const level=Math.max(1,Number(entry?.learn_level)||1);
+      const skillId=entry?.skill_id;
+      if(!skillId) return;
+      if(!table[level]) table[level]=[];
+      if(!table[level].includes(skillId)) table[level].push(skillId);
+    });
+    return table;
+  }
+  function confirmedTraitForRecord(record){
+    if(!record?.trait) return null;
+    const name=record.character_name;
+    const base={name:record.trait.name,icon:"✨",desc:record.trait.desc,confirmedSource:true};
+    if(name==="カーバンクル") return {...base,id:"rubyInterception",implemented:true,effect:{type:"magicEvasionRate",bonus:10}};
+    if(name==="フェンリル") return {...base,id:"snowfieldDog",implemented:true,effect:{type:"healNodeRecoveryBonus",percent:10}};
+    if(name==="シルキー") return {...base,id:"fragileLife",implemented:true,effect:{type:"lowHpMpCostMultiplier",threshold:.50,multiplier:.50}};
+    if(name==="キラールビー") return {...base,id:"dangerousSpiritBeast",implemented:true,effect:{type:"fullHpCritBonus",bonus:15}};
+    if(name==="フレイルナイト") return {...base,id:"flailKnight",implemented:true,effect:{type:"allAttackWeaponCritBoost",critBonus:8,critMultiplierBonus:.20}};
+    if(name==="ゴールドスライム") return {...base,id:"goldBody",implemented:true,effect:{type:"statusImmunityAndGoldBoost",goldMultiplier:1.20}};
+    if(name==="シーアイドル") return {...base,id:"idolPower",implemented:true,effect:{type:"ownMagicBuffDurationBonus",rounds:1}};
+    if(name==="ピンクスライム") return {...base,id:"pinkGelHeart",implemented:true,effect:{type:"personalElementDamageBoost",element:"pleasure",percent:15}};
+    if(name==="アーティファクト") return {...base,id:"ancientArmament",implemented:true,effect:{type:"elementDamageImmunity",element:"pleasure"}};
+    if(name==="排除機構") return {...base,id:"ancientWill",implemented:true,effect:{type:"shockMastery",statusRateBonus:.10,shockedDamageBonus:.20}};
+    if(name==="ダークナイト") return {...base,id:"underworldKnight",implemented:true,effect:{type:"deathImmuneBasicDeathBonus",basicDeathRate:.08}};
+    if(name==="ユメミクラゲ") return {...base,id:"dreamingRetainer",implemented:true,effect:{type:"mpCostFlatReductionWithPartyMember",memberName:"シープ",amount:4}};
+    if(name==="ナイトメア") return {...base,id:"nightmareFairy",implemented:true,effect:{type:"partyElementDamageTakenModifiers",modifiers:{dark:-.10,pleasure:-.10,light:.10}}};
+    if(name==="スキュライト") return {...base,id:"radiantTentacle",implemented:true,effect:{type:"physicalElementAndPartyReduction",physicalElement:"light",reductions:{thunder:.10,light:.10}}};
+    if(name==="リンドヴルム") return {...base,id:"dragonKingWrath",implemented:true,effect:{type:"lowHpSelfCritBoost",threshold:.50,critBonus:10,critMultiplierBonus:.20}};
+    if(name==="モルガナイト") return {...base,id:"beautifulMorganite",implemented:true,effect:{type:"nonDamageSkillMpMultiplier",multiplier:.80}};
+    if(name==="ミストドラゴン") return {...base,id:"mistDragon",implemented:true,effect:{type:"lowHpEvasionLinear",startRatio:.75,maxRatio:.25,maxBonus:20}};
+    return {...base,id:`confirmedPending_${confirmedRuntimeId(record)||record.character_id}`,implemented:false};
+  }
 
   const characterProfiles = {
     hero:{
@@ -2882,6 +2928,23 @@
     }
   };
 
+  confirmedCompanionRecords.forEach(record=>{
+    const id=confirmedRuntimeId(record);
+    if(!id || characterProfiles[id]) return;
+    characterProfiles[id]={
+      id,role:null,isMonsterGirl:true,
+      growthType:record.growthType||"normal",expType:record.expType||"normal",recruitRank:record.recruitRank??null,
+      fate:Number(record.fate)||0,
+      base:{...(record.base||{})},final:{...(record.final||{})},resist:{...(record.resist||{})},
+      favoriteWeapons:[...(record.favoriteWeapons||[])],
+      trait:confirmedTraitForRecord(record),
+      plannedSkills:confirmedPlannedSkills(record),
+      confirmedDraftId:record.character_id,
+      runtimeRegistered:true,
+      productionRecruitmentEnabled:false
+    };
+  });
+
   const FINAL_STAT_VARIATION_RANGE=5;
   const FINAL_STAT_KEYS=["hpMax","mpMax","atk","def","magic","mdef","spd"];
   function rollFinalStatVariation(profile){
@@ -3195,7 +3258,7 @@
     const statusMap=equippedAccessory(actor)?.physicalStatus;
     if(!statusMap) return null;
     for(const [status,baseRate] of Object.entries(statusMap)){
-      const result=tryInflictStatus(target,status,Number(baseRate)||0);
+      const result=tryInflictStatus(target,status,Number(baseRate)||0,{source:actor});
       if(result.success) return {status,result};
     }
     return null;
@@ -3208,7 +3271,7 @@
   const BASE_CRITICAL_MULTIPLIER=1.50;
   function roundRate1(value){ return Math.round((Number(value)||0)*10)/10; }
   function clampRate(value){ return Math.max(0,Math.min(100,roundRate1(value))); }
-  function favoriteWeaponTypes(c){ return favoriteWeaponsByCharacter[c?.id]||[]; }
+  function favoriteWeaponTypes(c){ return favoriteWeaponsByCharacter[c?.id]||characterProfiles[c?.profileId]?.favoriteWeapons||[]; }
   function ensureEquipment(c){
     if(!c.equipment) c.equipment={weapon:"bare",shield:"no_shield",body:"no_body",accessory:"no_accessory"};
     return c.equipment;
@@ -3254,9 +3317,9 @@
       power:Number.isFinite(weapon.normalAttackPower)?weapon.normalAttackPower:1,
       defenseInfluence:Number.isFinite(weapon.defenseInfluence)?weapon.defenseInfluence:1,
       attackAll:!!weapon.attackAll,
-      canCrit:weapon.canCrit!==false,
+      canCrit:weapon.canCrit!==false || (traitOf(c)?.effect?.type==="allAttackWeaponCritBoost" && !!weapon.attackAll),
       bowInstantKillRate:clampRate(weapon.bowInstantKillRate||0),
-      basicDeathRate:Math.max(0,Number(weapon.basicDeathRate)||0),
+      basicDeathRate:Math.max(0,(Number(weapon.basicDeathRate)||0)+(traitOf(c)?.effect?.type==="deathImmuneBasicDeathBonus"?(Number(traitOf(c).effect.basicDeathRate)||0):0)),
       basicDispelRate:Math.max(0,Number(weapon.basicDispelRate)||0),
       fx:weapon.weaponType==="fist"?{kind:"punch",symbol:"💥"}:
          weapon.weaponType==="sword"?{kind:"slash",symbol:"✦"}:
@@ -3559,6 +3622,17 @@
       portrait:{scale:1.06,x:0,y:1},atkBuff:1,atkBuffRounds:0
     }
   };
+  confirmedCompanionRecords.forEach(record=>{
+    const id=confirmedRuntimeId(record),profile=characterProfiles[id];
+    if(!id || !profile || roster[id]) return;
+    roster[id]={
+      id,name:record.character_name,img:"assets/characters/placeholder.svg",fate:profile.fate,profileId:id,
+      stats:mutableStatsFromFormal(profile,1),
+      learnedSkills:plannedSkillIdsUpTo(profile,1),caption:`${record.character_name}の行動を選択`,
+      portrait:{scale:1.06,x:0,y:1},atkBuff:1,atkBuffRounds:0,
+      confirmedDraftId:record.character_id,runtimeRegistered:true,productionRecruitmentEnabled:false
+    };
+  });
   Object.values(roster).forEach(c=>ensureEquipment(c));
   roster.hero.finalVariation=rollFinalStatVariation(characterProfiles.hero);
   { const c=roster.eliza,mods=equipmentStatDelta(c); Object.entries(mods).forEach(([k,v])=>{if(k in c.stats)c.stats[k]+=v;}); c.stats.hp=c.stats.hpMax;c.stats.mp=c.stats.mpMax; }
@@ -3770,17 +3844,17 @@
     sylph:{1:["heal"],5:["wind"],10:["block"],17:["allHeal2"],26:["allPolish"],33:["gigaWind"],41:["heroicTailwind"],57:["annihilationWindBlade"]},
     owl:{4:["blind"],9:["polish"],16:["dark"],24:["neoBlind"],35:["explosiveFist"],43:["stealth"],55:["finalDarkHammer"]},
     moth:{3:["allHeal"],6:["silence"],12:["quake"],21:["fresh"],28:["allBlock"],36:["gigaQuake"],41:["supply"],54:["allMount"]},
-    forestMage:{3:["stone"],6:["highHeal"],15:["holy"],31:["fairyHeal"],34:["gigaQuake"],40:["gigaRaise"],48:["stardust"],60:["judgmentLance"]},
+    forestMage:{3:["stone"],6:["highHeal"],13:["holy"],20:["allHeal2"],32:["gigaQuake"],36:["fairyHeal"],40:["gigaRaise"],48:["stardust"],60:["judgmentLance"]},
     silverSlime:{1:["cold"],8:["return"],12:["wind"],21:["raise2"],34:["gigaWind"],39:["eraser"],45:["gigaFrost"],61:["unyieldingHeart"]},
     maidDevil:{3:["polish"],6:["guard"],9:["quick"],18:["allHeal2"],26:["hellDark"],39:["lastHeal"],47:["demonSpiritFlow"],54:["allMount"]},
     lamia:{3:["powerCharge"],8:["cure"],17:["allPolish"],30:["counterStance"],42:["terraCrash"]},
     poison:{1:["poison"],7:["blaze"],15:["neoPoison"],26:["neoBlind"],43:["allDeath"]},
     poisonArachne:{1:["poison"],10:["dark"],15:["neoPoison"],23:["cold2"],34:["pleasureOne"],42:["aura"],50:["pandem"]},
-    ghost:{1:["fire"],10:["pleasure"],17:["allHeal2"],25:["blaze2"],31:["allBlock"],43:["pleasureOne"],48:["demonSpiritFlow"]},
+    ghost:{1:["fire"],10:["pleasure"],17:["magicConcentration"],25:["blaze2"],31:["allBlock"],43:["pleasureOne"],48:["demonSpiritFlow"]},
     madGolem:{2:["stone"],9:["cure"],20:["allBlock"],29:["gigaQuake"],44:["doubleAttack"]},
     scylla:{1:["touch"],12:["pleasure"],20:["eraser"],31:["aura"],37:["gigaPleasure"],42:["dragonSpiral"]},
     mimic:{2:["cold"],8:["death"],15:["raise"],22:["erode"],29:["allMagic"],36:["pleasureOne"],45:["gigaErode"],51:["berserk"]},
-    podalge:{1:["wind"],6:["blind"],12:["flare"],17:["allHeal2"],29:["allMagic"],38:["gigaWind"],45:["allFresh"],56:["lastFlare"]},
+    podalge:{1:["wind"],6:["blind"],12:["flare"],20:["gigaHeal"],29:["allMagic"],38:["gigaWind"],45:["allFresh"],56:["lastFlare"]},
     mermaid:{3:["highHeal"],10:["wind"],14:["frost"],19:["allHeal2"],27:["mount"],34:["gigaFrost"],39:["gigaWind"],53:["fortune"]},
     kitsune:{1:["stone"],7:["allHeal"],13:["quake"],22:["eraser"],35:["gigaQuake"],41:["lastHeal"],47:["demonSpiritFlow"],59:["allMount"]},
     lloyd:{1:["highHeal"],10:["allHeal2"],35:["lastHeal"],50:["canceller"]},
@@ -3793,6 +3867,12 @@
     dragon:{8:["wind"],15:["flare"],24:["allHeal2"],35:["gigaWind"],43:["lastHeal"],56:["lastFlare"]},
     karen:{1:["powerCharge","quake"],17:["allBlock"],20:["return"],27:["mount"],32:["counterStance"],40:["fortune"],45:["gigaQuake"],51:["berserk"],63:["earthWrath"]}
   };
+
+  confirmedCompanionRecords.forEach(record=>{
+    const id=confirmedRuntimeId(record);
+    if(!id || levelSkillTable[id]) return;
+    levelSkillTable[id]=characterProfiles[id]?.plannedSkills||{};
+  });
 
   function skillsLearnedAtLevel(c,level){
     return levelSkillTable[c.id]?.[level] || [];
@@ -4132,6 +4212,9 @@
   }
 
   function recoverTravelParty(hpRate=.50,mpRate=.40){
+    const recoveryBonus=travelPartyIds().some(id=>{const c=roster[id],effect=traitOf(c)?.effect;return c&&S(c).hp>0&&effect?.type==="healNodeRecoveryBonus";})
+      ? Math.max(0,...travelPartyIds().map(id=>{const c=roster[id],effect=traitOf(c)?.effect;return c&&S(c).hp>0&&effect?.type==="healNodeRecoveryBonus"?(Number(effect.percent)||0)/100:0;})) : 0;
+    hpRate*=1+recoveryBonus; mpRate*=1+recoveryBonus;
     let hpGain=0,mpGain=0;
     travelPartyIds().forEach(id=>{
       const c=roster[id],st=S(c);
@@ -4142,7 +4225,7 @@
       hpGain+=st.hp-oldHp;
       mpGain+=st.mp-oldMp;
     });
-    return {hpGain,mpGain};
+    return {hpGain,mpGain,hpRate,mpRate,recoveryBonus};
   }
 
   function snapshotPartyState(){
@@ -5872,6 +5955,9 @@
   function traitRoll(trait){ return !!trait && Number(trait.chance)>0 && Math.random()<Number(trait.chance); }
 
 
+  function skillDealsDamage(sk){
+    return ["magic","physical","multiPhysical","physicalSpecial","physicalAll"].includes(sk?.kind);
+  }
   function battleSkillCost(actor,sk){
     const base=Math.max(0,Number(sk?.cost)||0);
     if(base<=0) return 0;
@@ -5883,7 +5969,33 @@
       if(effect?.type==="partyMpCostReduction") reduction+=Math.max(0,Number(effect.percent)||0)/100;
     });
     reduction=Math.min(.90,reduction);
-    return Math.max(1,Math.ceil(base*(1-reduction)));
+    let cost=Math.max(1,Math.ceil(base*(1-reduction)));
+    const effect=traitOf(actor)?.effect;
+    if(effect?.type==="lowHpMpCostMultiplier" && S(actor).hp>0 && S(actor).hp<=S(actor).hpMax*(Number(effect.threshold)||.50)){
+      cost=Math.max(1,Math.ceil(cost*(Number(effect.multiplier)||.50)));
+    }else if(effect?.type==="mpCostFlatReductionWithPartyMember"){
+      const memberName=String(effect.memberName||"");
+      const present=state.battleActive.some(id=>{const c=roster[id];return c && c.id!==actor?.id && c.name===memberName;});
+      if(present) cost=Math.max(0,cost-Math.max(0,Number(effect.amount)||0));
+    }else if(effect?.type==="nonDamageSkillMpMultiplier" && !skillDealsDamage(sk)){
+      cost=Math.max(1,Math.ceil(cost*(Number(effect.multiplier)||1)));
+    }
+    return cost;
+  }
+
+  function statusBaseRateForActor(actor,status,baseRate){
+    let rate=Math.max(0,Number(baseRate)||0);
+    const effect=traitOf(actor)?.effect;
+    if(effect?.type==="shockMastery" && status==="shock") rate+=Math.max(0,Number(effect.statusRateBonus)||0);
+    return rate;
+  }
+
+  function personalTargetDamageMultiplier(actor,target,element=null){
+    let multiplier=1;
+    const effect=traitOf(actor)?.effect;
+    if(effect?.type==="personalElementDamageBoost" && effect.element===element) multiplier*=1+(Number(effect.percent)||0)/100;
+    if(effect?.type==="shockMastery" && conditionsOf(target).shock) multiplier*=1+Math.max(0,Number(effect.shockedDamageBonus)||0);
+    return Math.max(0,multiplier);
   }
 
   function criticalRateForAttack(actor,target){
@@ -5892,17 +6004,22 @@
     if(effect?.type==="lowHpCritBonus" && target && Number(target.hpMax)>0 && Number(target.hp)/Number(target.hpMax)<=Number(effect.threshold||.50)){
       rate+=Number(effect.bonus)||0;
     }
+    if(effect?.type==="fullHpCritBonus" && S(actor).hp>0 && S(actor).hp>=S(actor).hpMax) rate+=Number(effect.bonus)||0;
+    if(effect?.type==="allAttackWeaponCritBoost" && equippedWeapon(actor)?.attackAll) rate+=Number(effect.critBonus)||0;
+    if(effect?.type==="lowHpSelfCritBoost" && S(actor).hp>0 && S(actor).hp<=S(actor).hpMax*(Number(effect.threshold)||.50)) rate+=Number(effect.critBonus)||0;
     return clampRate(rate);
   }
 
   function partyElementDamageTakenMultiplier(element){
     if(!element) return 1;
-    let reduction=0;
+    let modifier=0;
     livingActiveSlots().forEach(({c})=>{
       const effect=traitOf(c)?.effect;
-      if(effect?.type==="partyElementDamageReduction" && effect.element===element) reduction+=(Number(effect.percent)||0)/100;
+      if(effect?.type==="partyElementDamageReduction" && effect.element===element) modifier-=(Number(effect.percent)||0)/100;
+      if(effect?.type==="partyElementDamageTakenModifiers") modifier+=Number(effect.modifiers?.[element])||0;
+      if(effect?.type==="physicalElementAndPartyReduction") modifier-=Number(effect.reductions?.[element])||0;
     });
-    return Math.max(0,1-reduction);
+    return Math.max(0,1+modifier);
   }
 
   function elementDamageNullifiedByTrait(target,element){
@@ -5925,6 +6042,9 @@
     if(effect.type==="fireImmuneAndNeutralPhysicalElement" && effect.immuneElement===element){
       return {damage:0,reason:"immune",heal:0,trait};
     }
+    if(effect.type==="elementDamageImmunity" && effect.element===element){
+      return {damage:0,reason:"traitImmune",heal:0,trait};
+    }
     if(effect.type==="elementDamageNullifyChance" && Array.isArray(effect.elements) && effect.elements.includes(element)){
       const chance=Math.max(0,Math.min(1,Number(effect.chance)||Number(trait?.chance)||0));
       if(chance>0 && Math.random()<chance) return {damage:0,reason:"legacy",heal:0,trait};
@@ -5943,15 +6063,18 @@
   }
 
   function physicalAttackElementForActor(actor,skillElement=null){
-    if(skillElement) return skillElement;
     const effect=traitOf(actor)?.effect;
-    return effect?.type==="fireImmuneAndNeutralPhysicalElement" ? (effect.physicalElement||null) : null;
+    if(effect?.type==="physicalElementAndPartyReduction") return effect.physicalElement||"light";
+    if(skillElement) return skillElement;
+    if(effect?.type==="fireImmuneAndNeutralPhysicalElement") return effect.physicalElement||null;
+    return null;
   }
 
   function physicalElementDamageMultiplierForActor(actor,target,skillElement=null){
     const element=physicalAttackElementForActor(actor,skillElement);
-    if(!element) return 1;
-    return elementResistanceMultiplier(target,element)*partyElementDamageMultiplier(element);
+    const personal=personalTargetDamageMultiplier(actor,target,element);
+    if(!element) return personal;
+    return elementResistanceMultiplier(target,element)*partyElementDamageMultiplier(element)*personal;
   }
 
   function triggerElementDamageBuffTrait(target,element,damage){
@@ -6105,6 +6228,9 @@
     if(traitEffect?.type==="firstRoundEnemyMagicDodge" && Number(state.battleRound)===Number(traitEffect.round||1) && !target._foxTrickeryUsedThisBattle){
       target._foxTrickeryUsedThisBattle=true;
       return {blocked:true,reason:"foxTrickery",damageMultiplier:0};
+    }
+    if(traitEffect?.type==="magicEvasionRate" && Math.random()*100<Math.max(0,Number(traitEffect.bonus)||0)){
+      return {blocked:true,reason:"magicEvasion",damageMultiplier:0};
     }
     if(cond.aura){
       cond.aura=false;
@@ -6627,10 +6753,11 @@
     const defense=defenseDamageFactor(magic,mdef,1);
     const resist=elementResistanceMultiplier(target,sk.element);
     const partyBoost=partyElementDamageMultiplier(sk.element);
+    const personalBoost=personalTargetDamageMultiplier(actor,target,sk.element);
     const variance=Array.isArray(sk.gambleRange)
       ? sk.gambleRange[0]+Math.random()*(sk.gambleRange[1]-sk.gambleRange[0])
       : damageVariance();
-    return Math.max(1,Math.round(raw*defense*resist*partyBoost*variance));
+    return Math.max(1,Math.round(raw*defense*resist*partyBoost*personalBoost*variance));
   }
   function silverBodyAdjustedDamage(target,damage,{critical=false}={}){
     const raw=Math.max(0,Math.round(Number(damage)||0));
@@ -6653,11 +6780,13 @@
   function statusChancePercent(target,status,baseRate){
     return clampRate((Number(baseRate)||0)*statusResistanceMultiplier(target,status)*100);
   }
-  function tryInflictStatus(target,status,baseRate){
+  function tryInflictStatus(target,status,baseRate,{source=null}={}){
     if(!target) return {success:false,reason:"invalid",rate:0};
+    baseRate=source?statusBaseRateForActor(source,status,baseRate):baseRate;
     const cond=conditionsOf(target);
     const traitEffect=traitOf(target)?.effect;
-    if(target.statusImmuneAll || traitEffect?.type==="statusAndDeathImmunity") return {success:false,reason:"immune",rate:0};
+    if(target.statusImmuneAll || traitEffect?.type==="statusAndDeathImmunity" || (traitEffect?.type==="statusImmunityAndGoldBoost" && status!=="death")) return {success:false,reason:"immune",rate:0};
+    if(status==="death" && traitEffect?.type==="deathImmuneBasicDeathBonus") return {success:false,reason:"immune",rate:0};
     if(Array.isArray(target.statusImmune) && target.statusImmune.includes(status)) return {success:false,reason:"immune",rate:0};
     if(traitEffect?.type==="poisonImmuneShockCertain" && status==="poison") return {success:false,reason:"immune",rate:0};
     if(status==="death" && target.statusDeathImmune) return {success:false,reason:"immune",rate:0};
@@ -6694,7 +6823,18 @@
     return !!conditionsOf(actor).blind && Math.random()<.70;
   }
   function physicalEvasionRate(target){
-    if(target?.stats) return equipmentExtras(target).evasion;
+    if(target?.stats){
+      let rate=equipmentExtras(target).evasion;
+      const effect=traitOf(target)?.effect;
+      if(effect?.type==="lowHpEvasionLinear" && S(target).hp>0){
+        const hpRatio=S(target).hp/Math.max(1,S(target).hpMax);
+        const bonus=confirmedRules?.mistDragonEvasionBonus
+          ? confirmedRules.mistDragonEvasionBonus(hpRatio)
+          : hpRatio>=.75?0:hpRatio<=.25?20:(.75-hpRatio)*40;
+        rate+=bonus;
+      }
+      return clampRate(rate);
+    }
     return clampRate(target?.evasionRate||0);
   }
   function physicalAttackMisses(target){
@@ -6702,7 +6842,13 @@
     return rate>0 && Math.random()*100<rate;
   }
   function criticalRateForActor(actor){ return equipmentExtras(actor).crit; }
-  function criticalMultiplierForActor(actor){ return equipmentExtras(actor).critMultiplier; }
+  function criticalMultiplierForActor(actor){
+    let multiplier=equipmentExtras(actor).critMultiplier;
+    const effect=traitOf(actor)?.effect;
+    if(effect?.type==="allAttackWeaponCritBoost" && equippedWeapon(actor)?.attackAll) multiplier+=Number(effect.critMultiplierBonus)||0;
+    if(effect?.type==="lowHpSelfCritBoost" && S(actor).hp>0 && S(actor).hp<=S(actor).hpMax*(Number(effect.threshold)||.50)) multiplier+=Number(effect.critMultiplierBonus)||0;
+    return Math.max(1,Math.round(multiplier*100)/100);
+  }
   function rollCritical(rate){
     const r=clampRate(rate);
     return r>0 && Math.random()*100<r;
@@ -8097,7 +8243,7 @@
 
     // Some swords carry a normal death-status proc. Unlike bow "射抜", this uses the ordinary death-resistance system.
     if(isBasic && profile.basicDeathRate>0){
-      const death=tryInflictStatus(target,"death",profile.basicDeathRate);
+      const death=tryInflictStatus(target,"death",profile.basicDeathRate,{source:actor});
       if(death.success){
         if(!target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
         setMessage(`☠️ ${actor.name} の一撃が急所を断った！ ${target.displayName} を即死させた！`);
@@ -8189,6 +8335,18 @@
           setMessage(`➰ ${target.displayName} は鞭撃をかわした！`);
           await wait(BASE_TIME.short);
           continue;
+        }
+        // Normal-attack instant-death effects (weapon + Dark Knight trait) roll independently for each target.
+        if(profile.basicDeathRate>0){
+          const death=tryInflictStatus(target,"death",profile.basicDeathRate,{source:actor});
+          if(death.success){
+            if(!target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
+            defeated++;
+            setMessage(`☠️ ${actor.name} の一撃が急所を断った！ ${target.displayName} を即死させた！`);
+            await animateEnemyDamage(target,true,"slash","☠",false,target.hpMax);
+            await maybeTriggerOrangeGel(actor,target,traitContext);
+            continue;
+          }
         }
         let dmg=physicalDamage(effectiveAtk(actor),enemyDefenseForAttacker(actor,target),profile.power,1,profile.defenseInfluence);
         dmg=Math.max(1,Math.round(dmg*physicalElementDamageMultiplierForActor(actor,target,null)));
@@ -8308,7 +8466,7 @@
       const killed=target.hp<=0;
       if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
       let shock=null;
-      if(!killed && Number(sk.shockRate)>0) shock=tryInflictStatus(target,"shock",sk.shockRate);
+      if(!killed && Number(sk.shockRate)>0) shock=tryInflictStatus(target,"shock",sk.shockRate,{source:actor});
       if(shock?.success) shocked++;
       total+=dmg; if(killed) defeated++;
       await animateEnemyDamage(target,killed,sk.animation||"impact",sk.fxSymbol||sk.icon||"✦",critical,dmg);
@@ -8376,7 +8534,7 @@
         const killed=target.hp<=0;
         if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
         let shock=null;
-        if(!killed && Number(sk.shockRate)>0) shock=tryInflictStatus(target,"shock",sk.shockRate);
+        if(!killed && Number(sk.shockRate)>0) shock=tryInflictStatus(target,"shock",sk.shockRate,{source:actor});
         results.push({target,dmg,killed,shock,legacyNullified:legacy.nullified,legacyName:legacy.name,legacyIcon:legacy.icon});
       }
 
@@ -8412,7 +8570,7 @@
       let totalSuccess=0;
       targets.forEach(target=>{
         statuses.forEach(status=>{
-          const result=tryInflictStatus(target,status,Number(sk.baseRate)||0);
+          const result=tryInflictStatus(target,status,Number(sk.baseRate)||0,{source:actor});
           if(result.success){ successCounts[status]++; totalSuccess++; }
         });
         const el=$("enemyStage").querySelector(`.enemy[data-enemy-uid="${target.uid}"]`);
@@ -8440,7 +8598,7 @@
       animateActor("cast");
       setMessage(`${sk.icon||"✨"} ${actor.name} は ${sk.name} を唱えた！`);
       await wait(BASE_TIME.actionLead);
-      const results=targets.map(target=>({target,result:tryInflictStatus(target,sk.status,sk.baseRate)}));
+      const results=targets.map(target=>({target,result:tryInflictStatus(target,sk.status,sk.baseRate,{source:actor})}));
 
       if(sk.status==="death"){
         for(const r of results){
@@ -8551,7 +8709,7 @@
       if(sk.statusRates && !result?.missed && !result?.killed && target.hp>0){
         const applied=[];
         Object.entries(sk.statusRates).forEach(([status,baseRate])=>{
-          const statusResult=tryInflictStatus(target,status,Number(baseRate)||0);
+          const statusResult=tryInflictStatus(target,status,Number(baseRate)||0,{source:actor});
           if(statusResult.success) applied.push(status);
         });
         if(applied.length){
@@ -8634,8 +8792,10 @@
       setMessage(`✨ ${actor.name} は ${sk.name} を使った！`);
       await wait(BASE_TIME.actionLead);
       let applied=0,stronger=0;
+      const ownBuffBonus=traitOf(actor)?.effect?.type==="ownMagicBuffDurationBonus"?Math.max(0,Number(traitOf(actor).effect.rounds)||0):0;
+      const appliedSkill=ownBuffBonus?{...sk,duration:(Number(sk.duration)||0)+ownBuffBonus}:sk;
       targets.forEach(({i,c})=>{
-        const result=applyStatBuff(c,sk);
+        const result=applyStatBuff(c,appliedSkill);
         if(result.applied){
           applied++;
           flashPartyValue(i,"","buff",result.info.label);
@@ -8645,7 +8805,7 @@
       });
       renderBattleParty();
       const info=BUFF_INFO[sk.buff];
-      setMessage(`${sk.icon||"✨"} ${info?.name||"能力"}アップ！ ${applied}人に×${sk.multiplier.toFixed(2)}（${sk.duration}ラウンド）。${stronger?` ${stronger}人はより強い効果を維持。`:""}`);
+      setMessage(`${sk.icon||"✨"} ${info?.name||"能力"}アップ！ ${applied}人に×${sk.multiplier.toFixed(2)}（${appliedSkill.duration}ラウンド）。${stronger?` ${stronger}人はより強い効果を維持。`:""}`);
       await wait(BASE_TIME.buff);
       return;
     }
@@ -9335,7 +9495,7 @@
     setMessage(`${sk.icon||"✨"} ${enemy.displayName} は ${sk.name} を唱えた！`);
     await wait(BASE_TIME.actionLead);
 
-    let total=0,blocked=0,hitCount=0,shocked=0,foxDodged=0,legacyNullified=0,absorbed=0,elementImmune=0,dragonSoulTriggered=0;
+    let total=0,blocked=0,hitCount=0,shocked=0,foxDodged=0,magicDodged=0,legacyNullified=0,absorbed=0,elementImmune=0,traitImmune=0,dragonSoulTriggered=0;
     const traitContext=makeTraitActionContext();
     const magicCounterCandidates=[];
     const results=[];
@@ -9348,6 +9508,7 @@
       if(defense.blocked){
         blocked++;
         if(defense.reason==="foxTrickery") foxDodged++;
+        if(defense.reason==="magicEvasion") magicDodged++;
         results.push({target,slot,blocked:true,blockReason:defense.reason,barrierWasActive,defendWasActive,dmg:0,shock:null,elementTrait:null,dragonSoul:null});
         continue;
       }
@@ -9358,6 +9519,7 @@
       if(elementTrait.reason==="legacy") legacyNullified++;
       if(elementTrait.reason==="absorb") absorbed++;
       if(elementTrait.reason==="immune") elementImmune++;
+      if(elementTrait.reason==="traitImmune") traitImmune++;
       if(dmg>0) S(target).hp=Math.max(0,S(target).hp-dmg);
       const dragonSoul=dmg>0?triggerElementDamageBuffTrait(target,sk.element,dmg):null;
       if(dragonSoul) dragonSoulTriggered++;
@@ -9377,12 +9539,14 @@
     for(const result of results){
       const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${result.slot}"]`);
       if(result.blocked){
-        if(card) spawnFx("magicshot",result.blockReason==="aura"?"🔮":result.blockReason==="foxTrickery"?"🦊":"🚫",card);
+        if(card) spawnFx("magicshot",result.blockReason==="aura"?"🔮":result.blockReason==="foxTrickery"?"🦊":result.blockReason==="magicEvasion"?"💎":"🚫",card);
         continue;
       }
       if(result.elementTrait?.reason==="absorb"){
         if(result.elementTrait.heal>0) flashPartyValue(result.slot,result.elementTrait.heal,"heal");
         if(card) spawnFx("heal","🔥",card);
+      }else if(result.elementTrait?.reason==="traitImmune"){
+        if(card) spawnFx("buff","⚙️",card);
       }else if(result.elementTrait?.reason==="immune"){
         if(card) spawnFx("buff","🌋",card);
       }else if(result.elementTrait?.reason==="legacy"){
@@ -9395,7 +9559,7 @@
     }
 
     if(sk.target==="enemyAll"){
-      setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ バトルメンバーに合計 ${total} ダメージ。${shocked?` ⚡ ${shocked}人が感電した！`:""}${absorbed?` 🔥 「炎の妖精」が炎を吸収した。`:""}${elementImmune?` 🌋 「燃え盛るナメクジ」が炎を無効化した。`:""}${legacyNullified?` 🏺 ${legacyNullified}人は「古代の遺産」でダメージを無効化した。`:""}${dragonSoulTriggered?` 🐉 「ドラゴンソウル」で攻撃力が上がった。`:""}${foxDodged?` 🦊 ${foxDodged}人は「化かし妖術」で魔法をかわした。`:""}${blocked-foxDodged>0?` ${blocked-foxDodged}人は魔法を無効化した。`:""}`);
+      setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ バトルメンバーに合計 ${total} ダメージ。${shocked?` ⚡ ${shocked}人が感電した！`:""}${absorbed?` 🔥 「炎の妖精」が炎を吸収した。`:""}${elementImmune?` 🌋 「燃え盛るナメクジ」が炎を無効化した。`:""}${traitImmune?` ⚙️ ${traitImmune}人は固有特性で属性ダメージを無効化した。`:""}${legacyNullified?` 🏺 ${legacyNullified}人は「古代の遺産」でダメージを無効化した。`:""}${dragonSoulTriggered?` 🐉 「ドラゴンソウル」で攻撃力が上がった。`:""}${foxDodged?` 🦊 ${foxDodged}人は「化かし妖術」で魔法をかわした。`:""}${magicDodged?` 💎 ${magicDodged}人は「遮断のルビー」で魔法をかわした。`:""}${blocked-foxDodged-magicDodged>0?` ${blocked-foxDodged-magicDodged}人は魔法を無効化した。`:""}`);
     }else{
       const result=results[0];
       if(result && !result.blocked){
@@ -9405,6 +9569,8 @@
         const suffix=`${result.shock?.success?" ⚡ 感電した！":""}${result.dragonSoul?" 🐉 ドラゴンソウルで攻撃力が上がった！":""}`;
         if(result.elementTrait?.reason==="absorb"){
           setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ 🔥 ${result.target.name} は「炎の妖精」で炎を吸収した！${result.elementTrait.heal>0?` HPが ${result.elementTrait.heal} 回復した。`:""}${suffix}`);
+        }else if(result.elementTrait?.reason==="traitImmune"){
+          setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ ⚙️ ${result.target.name} は「${result.elementTrait.trait?.name||"固有特性"}」で${sk.element==="pleasure"?"快楽":"属性"}ダメージを無効化した！${suffix}`);
         }else if(result.elementTrait?.reason==="immune"){
           setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ 🌋 ${result.target.name} は「燃え盛るナメクジ」で炎ダメージを無効化した！${suffix}`);
         }else if(result.elementTrait?.reason==="legacy"){
@@ -9415,7 +9581,9 @@
       }else if(result && result.blocked){
         setMessage(result.blockReason==="foxTrickery"
           ? `${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ 🦊 ${result.target.name} は「化かし妖術」で魔法をかわした！`
-          : `${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ ${result.target.name} は魔法を無効化した！`);
+          : result.blockReason==="magicEvasion"
+            ? `${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ 💎 ${result.target.name} は「遮断のルビー」で魔法をかわした！`
+            : `${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ ${result.target.name} は魔法を無効化した！`);
       }
     }
     await wait(BASE_TIME.enemyAfter);
@@ -9450,7 +9618,7 @@
     await wait(BASE_TIME.actionLead);
 
     const results=[];
-    let foxDodged=0;
+    let foxDodged=0,magicDodged=0;
     for(const entry of targets){
       const target=entry.c,slot=entry.i;
       if(!target || S(target).hp<=0) continue;
@@ -9458,13 +9626,14 @@
       let result;
       if(defense.blocked){
         if(defense.reason==="foxTrickery") foxDodged++;
+        if(defense.reason==="magicEvasion") magicDodged++;
         result={success:false,reason:defense.reason||"immune",rate:0};
       }else{
         result=tryInflictStatus(target,sk.status,sk.baseRate);
       }
       results.push({target,slot,result});
       const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
-      if(card) spawnFx("magicshot",result.reason==="foxTrickery"?"🦊":statusIcon(sk.status),card);
+      if(card) spawnFx("magicshot",result.reason==="foxTrickery"?"🦊":result.reason==="magicEvasion"?"💎":statusIcon(sk.status),card);
       if(sk.status==="death" && result.success) await handleAllyKoFromEnemy(target,slot);
     }
     renderBattleParty();
@@ -9472,9 +9641,9 @@
     if(sk.target==="enemyAll"){
       if(success===0){
         const noneMsg=sk.status==="death" ? "しかし、誰も倒れなかった。" : `しかし、誰も${statusName(sk.status)}状態にはならなかった。`;
-        setMessage(`${sk.icon||"✨"} ${sk.name}！ ${noneMsg}${foxDodged?` 🦊 ${foxDodged}人は「化かし妖術」で魔法をかわした。`:""}`);
+        setMessage(`${sk.icon||"✨"} ${sk.name}！ ${noneMsg}${foxDodged?` 🦊 ${foxDodged}人は「化かし妖術」で魔法をかわした。`:""}${magicDodged?` 💎 ${magicDodged}人は「遮断のルビー」で魔法をかわした。`:""}`);
       }else{
-        setMessage(`${sk.icon||"✨"} ${sk.name}！ ${success}人が${statusName(sk.status)}状態になった。${foxDodged?` 🦊 ${foxDodged}人は「化かし妖術」で魔法をかわした。`:""}`);
+        setMessage(`${sk.icon||"✨"} ${sk.name}！ ${success}人が${statusName(sk.status)}状態になった。${foxDodged?` 🦊 ${foxDodged}人は「化かし妖術」で魔法をかわした。`:""}${magicDodged?` 💎 ${magicDodged}人は「遮断のルビー」で魔法をかわした。`:""}`);
       }
     }else if(results[0]){
       const {target,result}=results[0];
@@ -9484,6 +9653,7 @@
         : result.reason==="mount"?`${target.name} はマウントで${statusName(sk.status)}を防いだ！`
         : result.reason==="aura"?`${target.name} はオーラで魔法を無効化した！`
         : result.reason==="foxTrickery"?`🦊 ${target.name} は「化かし妖術」で魔法をかわした！`
+        : result.reason==="magicEvasion"?`💎 ${target.name} は「遮断のルビー」で魔法をかわした！`
         : `${target.name} は${statusName(sk.status)}を免れた。`;
       setMessage(`${sk.icon||"✨"} ${sk.name}！ ${msg}`);
     }
@@ -10095,6 +10265,15 @@
 
   $("levelUpNextBtn").onclick=advanceLevelUpResults;
 
+  function battleGoldRewardMultiplier(){
+    let multiplier=1;
+    livingActiveSlots().forEach(({c})=>{
+      const effect=traitOf(c)?.effect;
+      if(effect?.type==="statusImmunityAndGoldBoost") multiplier*=Math.max(1,Number(effect.goldMultiplier)||1);
+    });
+    return multiplier;
+  }
+
   function winBattle(){
     if(state.battleEnded) return;
     state.battleEnded=true;
@@ -10116,7 +10295,7 @@
 
     if(state.battleFromRun){
       const rewardEnemies=state.battleEnemies.filter(e=>e && e.hp<=0 && !e.escaped && !e.noReward);
-      const gain=rewardEnemies.reduce((sum,e)=>sum+(e.gold||0),0);
+      const gain=Math.max(0,Math.round(rewardEnemies.reduce((sum,e)=>sum+(e.gold||0),0)*battleGoldRewardMultiplier()));
       const baseExpGain=rewardEnemies.reduce((sum,e)=>sum+(e.exp||0),0);
       const expTrait=baseExpGain>0?rollVictoryExpTrait():{multiplier:1,note:""};
       if(expTrait.note) victoryTraitNotes.push(expTrait.note);
@@ -14478,11 +14657,11 @@ ${grantChestReward()}` ,[["閉じる",()=>{closeModal();updateRunHud();}]]); bre
       case "heal": {
         markDesertDogRestPolish();
         const openRest=()=>modal("❤ 休息地点","ひと息つけそうな場所を見つけた。どうする？",[
-          ["休息する（HP40%）",()=>{const r=recoverTravelParty(.40,0);closeModal();updateRunHud();modal("❤ 休息地点",`同行メンバー全員のHPを40%回復した。
+          ["休息する（HP40%）",()=>{const r=recoverTravelParty(.40,0);closeModal();updateRunHud();modal("❤ 休息地点",`同行メンバー全員のHPを${Math.round(r.hpRate*1000)/10}%回復した。
 合計 HP +${r.hpGain}`,[["出発する",closeModal]]);}],
-          ["瞑想する（MP12%）",()=>{const r=recoverTravelParty(0,.12);closeModal();updateRunHud();modal("❤ 休息地点",`同行メンバー全員のMPを12%回復した。
+          ["瞑想する（MP12%）",()=>{const r=recoverTravelParty(0,.12);closeModal();updateRunHud();modal("❤ 休息地点",`同行メンバー全員のMPを${Math.round(r.mpRate*1000)/10}%回復した。
 合計 MP +${r.mpGain}`,[["出発する",closeModal]]);}],
-          ["身を整える（HP20% / MP6%）",()=>{const r=recoverTravelParty(.20,.06);closeModal();updateRunHud();modal("❤ 休息地点",`同行メンバー全員のHPを20%、MPを6%回復した。
+          ["身を整える（HP20% / MP6%）",()=>{const r=recoverTravelParty(.20,.06);closeModal();updateRunHud();modal("❤ 休息地点",`同行メンバー全員のHPを${Math.round(r.hpRate*1000)/10}%、MPを${Math.round(r.mpRate*1000)/10}%回復した。
 合計 HP +${r.hpGain} / MP +${r.mpGain}`,[["出発する",closeModal]]);}]
         ]);
         const diggingReward=tryDiggingReward();
