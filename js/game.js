@@ -3134,11 +3134,11 @@
     holy_beast_clock:{id:"holy_beast_clock",slot:"accessory",name:"聖獣の時計",icon:"⌚",mods:{},preventWipe:true,price:10000,desc:"全滅時、前列の味方全員をHP全回復で復活し、消滅する神秘の懐中時計。"},
     martial_gauntlet:{id:"martial_gauntlet",slot:"accessory",name:"武神の手甲",icon:"🥊",mods:{},skillBoost:{skillId:"explosiveFist",kind:"hits",amount:1},price:5000,desc:"爆裂拳を強化する手甲。爆裂拳の攻撃回数+1。"},
     sword_god_hair:{id:"sword_god_hair",slot:"accessory",name:"剣神の遺髪",icon:"🗡️",mods:{},skillBoost:{skillId:"swordDance",kind:"hits",amount:1},price:5000,desc:"剣の舞を強化する遺髪。剣の舞の攻撃回数+1。"},
-    beast_god_belt:{id:"beast_god_belt",slot:"accessory",name:"獣神のベルト",icon:"🪓",mods:{},skillBoost:{skillId:"terraCrash",kind:"critDamage",multiplier:1.20},price:5000,desc:"テラクラッシュを強化するベルト。テラクラッシュの会心ダメージ倍率をさらに1.2倍。"},
-    stardust_monocle:{id:"stardust_monocle",slot:"accessory",name:"星屑のモノクル",icon:"🧐",mods:{},skillBoost:{skillId:"stardust",kind:"power",value:2.70},price:5000,desc:"スターダストを強化するモノクル。スターダストの威力を220%から270%へ強化。"},
-    mana_amplifier:{id:"mana_amplifier",slot:"accessory",name:"魔流増幅器",icon:"🪄",mods:{},skillBoost:{skillId:"magicBarrier",kind:"barrier",value:.70},price:5000,desc:"魔力障壁を強化する増幅器。魔法ダメージ軽減率を60%から70%へ強化。"},
+    beast_god_belt:{id:"beast_god_belt",slot:"accessory",name:"獣神のベルト",icon:"🪓",mods:{},skillBoost:{skillId:"terraCrash",kind:"critDamage",amount:.20},price:5000,desc:"テラクラッシュを強化するベルト。テラクラッシュの技専用会心係数に+0.20。"},
+    stardust_monocle:{id:"stardust_monocle",slot:"accessory",name:"星屑のモノクル",icon:"🧐",mods:{},skillBoost:{skillId:"stardust",kind:"power",amount:.50},price:5000,desc:"スターダストを強化するモノクル。スターダストの威力を220%から270%へ強化。"},
+    mana_amplifier:{id:"mana_amplifier",slot:"accessory",name:"魔流増幅器",icon:"🪄",mods:{},skillBoost:{skillId:"magicBarrier",kind:"barrier",amount:.10},price:5000,desc:"魔力障壁を強化する増幅器。魔法ダメージ軽減率を60%から70%へ強化。"},
     dragon_god_tattoo:{id:"dragon_god_tattoo",slot:"accessory",name:"龍神のタトゥー",icon:"🐉",mods:{},skillBoost:{skillId:"dragonSpiral",kind:"hits",amount:1},price:5000,desc:"龍螺旋を強化するタトゥー。龍螺旋の攻撃回数+1。"},
-    ancient_patch:{id:"ancient_patch",slot:"accessory",name:"古代のパッチ",icon:"🔧",mods:{},skillBoost:{skillId:"nephilimLaser",kind:"laser",power:2.50,shockRate:.50},price:5000,desc:"ネフィリムレーザーを強化する謎のパッチ。威力220%→250%、感電35%→50%。"}
+    ancient_patch:{id:"ancient_patch",slot:"accessory",name:"古代のパッチ",icon:"🔧",mods:{},skillBoost:{skillId:"nephilimLaser",kind:"laser",powerDelta:.30,shockRateDelta:.15},price:5000,desc:"ネフィリムレーザーを強化する謎のパッチ。威力220%→250%、感電35%→50%。"}
 
   };
 
@@ -3183,21 +3183,13 @@
   function equipmentHasFlag(c,key){ return equippedItemList(c).some(item=>!!item?.[key]); }
   function equipmentNumberSum(c,key){ return equippedItemList(c).reduce((sum,item)=>sum+(Number(item?.[key])||0),0); }
   function equippedAccessory(c){ return equipmentCatalog[ensureEquipment(c).accessory]||equipmentCatalog.no_accessory; }
+  const confirmedRules=globalThis.RPGConfirmedRules;
   function effectiveSkillForActor(actor,baseSkill){
     if(!actor || !baseSkill) return baseSkill;
     const boost=equippedAccessory(actor)?.skillBoost;
-    if(!boost || boost.skillId!==baseSkill.id) return baseSkill;
-    const sk={...baseSkill};
-    if(boost.kind==="hits") sk.hits=Math.max(1,(Number(sk.hits)||1)+(Number(boost.amount)||0));
-    else if(boost.kind==="critDamage") sk.critDamageMultiplier=Math.max(1,Number(boost.multiplier)||1);
-    else if(boost.kind==="power") sk.power=Math.max(0,Number(boost.value)||Number(sk.power)||1);
-    else if(boost.kind==="barrier") sk.reduction=Math.max(0,Math.min(.95,Number(boost.value)||Number(sk.reduction)||0));
-    else if(boost.kind==="laser"){
-      sk.power=Math.max(0,Number(boost.power)||Number(sk.power)||1);
-      sk.shockRate=Math.max(0,Math.min(1,Number(boost.shockRate)||Number(sk.shockRate)||0));
-    }
-    return sk;
+    return confirmedRules.weaponSkill(baseSkill, {accessory:boost?.skillId===baseSkill.id});
   }
+
   function applyEquipmentPhysicalStatus(actor,target){
     if(!actor || !target || target.hp<=0) return null;
     const statusMap=equippedAccessory(actor)?.physicalStatus;
@@ -3924,6 +3916,7 @@
     c.magicBarrierRounds=0;
     c.magicBarrierReduction=0;
     c._usedHealingMagicThisRound=false;
+    c._confirmedBattle=confirmedRules.newBattleState();
     c._maidGiftTriggeredThisBattle=false;
     c._foxTrickeryUsedThisBattle=false;
     c.shockRecoverFails=0;
@@ -5882,6 +5875,7 @@
   function battleSkillCost(actor,sk){
     const base=Math.max(0,Number(sk?.cost)||0);
     if(base<=0) return 0;
+    if(!confirmedRules.mpReductionEligible(sk.id)) return base;
     let reduction=0;
     livingActiveSlots().forEach(({c})=>{
       if(!c || c.id===actor?.id) return;
@@ -6376,7 +6370,7 @@
         renderBattleParty();
         if(livingActiveSlots().length===0){
           loseBattle();
-          return true;
+          return state.battleEnded;
         }
       }
     }
@@ -6449,6 +6443,7 @@
       const damaged=livingActiveSlots().filter(x=>S(x.c).hp<S(x.c).hpMax);
       if(!damaged.length || !traitRoll(trait)) continue;
       const target=choose(damaged);
+      if(!confirmedRules.autoSkillGate({conditions:conditionsOf(c)}).allowed) continue;
       const heal=skills.heal;
       const healPower=healAmountForSkill(c,heal);
       const amount=Math.min(S(target.c).hpMax-S(target.c).hp,healPower);
@@ -8691,7 +8686,7 @@
 
     if(sk.kind==="revive"){
       const targets=sk.target==="allyAll"
-        ? battleAllies(true).filter(x=>S(x.c).hp<=0)
+        ? battleAllies(false).filter(x=>S(x.c).hp<=0)
         : (()=>{ const c=roster[action.targetId]; return c&&S(c).hp<=0?[{i:state.battleActive.indexOf(c.id),c}]:[]; })();
       const healEveryone=!!sk.fullPartyHeal;
       if(!targets.length && !healEveryone){ setMessage(`${sk.name} の対象になる戦闘不能者がいなかった。`); return; }
@@ -8705,7 +8700,7 @@
         const hp=Math.max(1,Math.round(S(c).hpMax*(Number(sk.revivePercent)||.20)));
         S(c).hp=Math.min(S(c).hpMax,hp); revived++; revivedCharacters.push(c);
       });
-      if(healEveryone){ battleAllies(true).forEach(({c})=>{ S(c).hp=S(c).hpMax; }); }
+      if(healEveryone){ battleAllies(false).forEach(({c})=>{ S(c).hp=S(c).hpMax; }); }
       renderBattleParty();
       setMessage(sk.fullPartyHeal?`🌟 奇跡が起きた！ ${revived}人を復活させ、味方全員のHPが全回復！`:`🕊️ ${sk.name}！ ${revived}人が復活した！`);
       await wait(BASE_TIME.heal);
@@ -9777,8 +9772,9 @@
 
   async function executeEnemyTurn(enemy){
     if(state.battleEnded || !enemy || enemy.hp<=0) return;
+    const rescueSerial=state._rescueSerial||0;
     await executeEnemyAction(enemy);
-    if(state.battleEnded || enemy.hp<=0) return;
+    if(state.battleEnded || enemy.hp<=0 || (state._rescueSerial||0)!==rescueSerial) return;
     const hpRatio=Math.max(0,Number(enemy.hp)||0)/Math.max(1,Number(enemy.hpMax)||1);
     if(enemy.ai==="mimicSpecial" && state.battleRound%2===0){
       // Mimic Girl is a special encounter: every even-numbered round has two actions.
@@ -10436,7 +10432,9 @@
 
   function loseBattle(){
     if(state.battleEnded) return;
-    if(tryUseHolyBeastClock()) return;
+    // U32: candidate selection remains disconnected; only an explicitly eligible candidate may enter the resolver.
+    const rescue=confirmedRules.resolveWipe({eligibleUrd:null,front:state.battleActive.map(id=>roster[id]).filter(Boolean),stats:S,clock:tryUseHolyBeastClock});
+    if(rescue.rescued){ state._rescueSerial=(state._rescueSerial||0)+1; return; }
     state.battleEnded=true;
     state.battleAutoMode=null;
     cancelScheduledTurnStart();
@@ -12226,7 +12224,7 @@
         return targets.some(c=>S(c).hp>0 && S(c).hp<S(c).hpMax);
       }
       case "allyKO": return party.some(c=>S(c).hp<=0);
-      case "allyAllKO": return party.some(c=>S(c).hp<=0);
+      case "allyAllKO": return (sk.id==="raise2" ? state.battleActive.map(id=>roster[id]).filter(Boolean) : party).some(c=>S(c).hp<=0);
       case "miracle": return party.some(c=>S(c).hp<=0 || S(c).hp<S(c).hpMax);
       case "allyCleanse": return party.some(c=>S(c).hp>0 && ["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]));
       case "allyAllCleanse": return party.some(c=>S(c).hp>0 && ["poison","blind","silence","shock"].some(k=>conditionsOf(c)[k]));
@@ -12387,7 +12385,7 @@
     const before=captureExploreSkillPartyState();
     const travelParty=travelPartyIds().map(id=>roster[id]).filter(Boolean);
     const battleParty=state.battleActive.map(id=>roster[id]).filter(Boolean);
-    const party=(sk.kind==="heal") ? battleParty : travelParty;
+    const party=(sk.kind==="heal" || sk.id==="raise2") ? battleParty : travelParty;
     ast.mp-=sk.cost;
     let count=0,total=0;
     const changes=[];
@@ -12413,7 +12411,7 @@
       battleParty.filter(c=>S(c).hp>0).forEach(c=>{const amount=Math.min(S(c).mpMax-S(c).mp,sk.restoreMp);if(amount>0){S(c).mp+=amount;total+=amount;count++;changes.push({id:c.id,kind:"mp",amount});}});
     }
     const text=sk.kind==="heal"?`${count}人・合計HP ${total} 回復`:sk.kind==="revive"?`${count}人を復活${sk.fullPartyHeal?"＋全員全回復":""}`:sk.kind==="cleanse"?`${total}個の状態異常を解除`:`合計MP ${total} 回復`;
-    showExploreSkillEffect(actor,sk,before,changes,text,{battleOnly:sk.kind==="heal"||sk.kind==="mpTransfer"});
+    showExploreSkillEffect(actor,sk,before,changes,text,{battleOnly:sk.kind==="heal"||sk.kind==="mpTransfer"||sk.id==="raise2"});
     toast(`${actor.name} の${sk.name}：${text}`);
   }
 
