@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47i";
+  const DEV_VERSION = "v0.47j";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2614,6 +2614,20 @@
     if(name==="ドミネーター") return {...base,id:"domination",implemented:true,effect:{type:"highestOtherHpBoost",percent:.15}};
     if(name==="白ノ不浄") return {...base,id:"impureWhiteSpider",implemented:true,chance:.30,effect:{type:"battleStartAutoSkillAndPartyStatusRate",skillId:"pandem",rateBonus:.10,excludeStatus:"death"}};
     if(name==="ハイドラ") return {...base,id:"forbiddenPoison",implemented:true,effect:{type:"battleStartPoisonAllyAndDamageBoost",percent:.30}};
+    if(name==="デュラハン") return {...base,id:"dullahanRondo",implemented:true,chance:.10,effect:{type:"postActionWeakBasicFollowup",power:.50}};
+    if(name==="テンタクル") return {...base,id:"poisonAdvance",implemented:true,effect:{type:"fastNeoPoisonAndPoisonedEnemyDamage",skillId:"neoPoison",percent:20}};
+    if(name==="パイレーツ") return {...base,id:"plunderer",implemented:true,chance:.20,effect:{type:"basicAttackLifeSteal",healRate:.20}};
+    if(name==="レッドドラゴン") return {...base,id:"redDragonSpirit",implemented:true,effect:{type:"speedBuffAlsoAttackBuff",multiplier:1.30,duration:5}};
+    if(name==="ソーサラー") return {...base,id:"flameWitch",implemented:true,effect:{type:"fireResistanceCap",capRank:"C"}};
+    if(name==="アシュラ") return {...base,id:"sixArmedDivinity",implemented:true,effect:{type:"healOnCritical",healRate:.10}};
+    if(name==="アンタレス") return {...base,id:"desertFlash",implemented:true,effect:{type:"damageVsUnactedEnemy",percent:25}};
+    if(name==="クラッシャー") return {...base,id:"crusher",implemented:true,effect:{type:"crusherCritical",critMultiplierBonus:.50,forceAgainstDefBuff:true,removeDefBuff:true}};
+    if(name==="ドゥルガー") return {...base,id:"evilSlayerGuardian",implemented:true,effect:{type:"guardianBlessingMastery",skillId:"guardianBlessing",multiplierAdd:.10,costAdd:5,alwaysFirst:true}};
+    if(name==="アフォガート") return {...base,id:"drowningReality",implemented:true,effect:{type:"healOnEnemyPleasureDamageOncePerRound",healRate:.10}};
+    if(name==="サキュバス") return {...base,id:"sweetRuin",implemented:true,effect:{type:"physicalToPleasureAndStack",step:2,max:20}};
+    if(name==="エタニティ") return {...base,id:"eternalSpirit",implemented:true,effect:{type:"eternalAlsoSpiritBlessing",skillId:"eternal",extraSkillId:"spiritKingBlessing",once:true}};
+    if(name==="セラフ") return {...base,id:"heavenlyApostle",implemented:true,effect:{type:"skillUseDamageStack",step:3,max:30}};
+    if(name==="トパーズ") return {...base,id:"shiningTopaz",implemented:true,effect:{type:"basicHitSelfTripleBuffOnce",multiplier:1.50,duration:4,buffs:["atk","def","mdef"]}};
     return {...base,id:`confirmedPending_${confirmedRuntimeId(record)||record.character_id}`,implemented:false};
   }
 
@@ -3272,6 +3286,9 @@
         const rank=order[next];
         result={...result,rank,rankMultiplier:MAGIC_RANK_MULTIPLIERS[rank]||result.rankMultiplier};
       }
+    }
+    if(effect?.type==="guardianBlessingMastery" && result.id===effect.skillId){
+      result={...result,multiplier:(Number(result.multiplier)||1)+(Number(effect.multiplierAdd)||0)};
     }
     return result;
   }
@@ -5996,7 +6013,11 @@
     return ["magic","physical","multiPhysical","physicalSpecial","physicalAll"].includes(sk?.kind);
   }
   function battleSkillCost(actor,sk){
-    const base=Math.max(0,Number(sk?.cost)||0);
+    let base=Math.max(0,Number(sk?.cost)||0);
+    const actorEffect=traitOf(actor)?.effect;
+    if(actorEffect?.type==="guardianBlessingMastery" && sk?.id===actorEffect.skillId){
+      base+=Math.max(0,Number(actorEffect.costAdd)||0);
+    }
     if(base<=0) return 0;
     if(!confirmedRules.mpReductionEligible(sk.id)) return base;
     let reduction=0;
@@ -6035,14 +6056,18 @@
   }
 
   function personalTargetDamageMultiplier(actor,target,element=null){
-    let multiplier=1;
+    let bonus=0;
     const effect=traitOf(actor)?.effect;
-    if(effect?.type==="personalElementDamageBoost" && effect.element===element) multiplier*=1+(Number(effect.percent)||0)/100;
-    if(effect?.type==="shockMastery" && conditionsOf(target).shock) multiplier*=1+Math.max(0,Number(effect.shockedDamageBonus)||0);
-    if(effect?.type==="battleStartPoisonAllyAndDamageBoost" && livingActiveSlots().some(({c})=>conditionsOf(c).poison)){
-      multiplier*=1+Math.max(0,Number(effect.percent)||0);
+    if(effect?.type==="personalElementDamageBoost" && effect.element===element) bonus+=Number(effect.percent)||0;
+    if(effect?.type==="shockMastery" && conditionsOf(target).shock) bonus+=Math.max(0,(Number(effect.shockedDamageBonus)||0)*100);
+    if(effect?.type==="battleStartPoisonAllyAndDamageBoost" && (livingActiveSlots().some(({c})=>conditionsOf(c).poison) || livingEnemies().some(e=>conditionsOf(e).poison))){
+      bonus+=Math.max(0,(Number(effect.percent)||0)*100);
     }
-    return Math.max(0,multiplier);
+    if(effect?.type==="fastNeoPoisonAndPoisonedEnemyDamage" && target && conditionsOf(target).poison) bonus+=Math.max(0,Number(effect.percent)||0);
+    if(effect?.type==="damageVsUnactedEnemy" && target && target._actedRound!==state.battleRound) bonus+=Math.max(0,Number(effect.percent)||0);
+    if(effect?.type==="physicalToPleasureAndStack" && element==="pleasure") bonus+=Math.max(0,Number(actor?._confirmedBattle?.pleasureBonus)||0);
+    if(effect?.type==="skillUseDamageStack") bonus+=Math.max(0,Number(actor?._confirmedBattle?.seraphBonus)||0);
+    return Math.max(0,1+bonus/100);
   }
 
   function criticalRateForAttack(actor,target){
@@ -6054,6 +6079,7 @@
     if(effect?.type==="fullHpCritBonus" && S(actor).hp>0 && S(actor).hp>=S(actor).hpMax) rate+=Number(effect.bonus)||0;
     if(effect?.type==="allAttackWeaponCritBoost" && equippedWeapon(actor)?.attackAll) rate+=Number(effect.critBonus)||0;
     if(effect?.type==="lowHpSelfCritBoost" && S(actor).hp>0 && S(actor).hp<=S(actor).hpMax*(Number(effect.threshold)||.50)) rate+=Number(effect.critBonus)||0;
+    if(effect?.type==="crusherCritical" && effect.forceAgainstDefBuff && target && Number(target.defBuff)>1) rate=100;
     return clampRate(rate);
   }
 
@@ -6111,17 +6137,32 @@
 
   function physicalAttackElementForActor(actor,skillElement=null){
     const effect=traitOf(actor)?.effect;
+    if(effect?.type==="physicalToPleasureAndStack") return "pleasure";
     if(effect?.type==="physicalElementAndPartyReduction") return effect.physicalElement||"light";
     if(skillElement) return skillElement;
     if(effect?.type==="fireImmuneAndNeutralPhysicalElement") return effect.physicalElement||null;
     return null;
   }
 
+  function elementResistanceMultiplierForActor(actor,target,element){
+    if(!element) return 1;
+    const effect=traitOf(actor)?.effect;
+    if(effect?.type==="fireResistanceCap" && element==="fire"){
+      const order=["E","D","C","B","A","S"];
+      const rank=resistanceRankFor(target,element);
+      const cap=effect.capRank||"C";
+      const effectiveRank=order.indexOf(rank)>order.indexOf(cap)?cap:rank;
+      if(element==="pleasure") return PLEASURE_RESIST_DAMAGE[effectiveRank] ?? 1;
+      return RESISTANCE_RANKS[effectiveRank]?.damage ?? 1;
+    }
+    return elementResistanceMultiplier(target,element);
+  }
+
   function physicalElementDamageMultiplierForActor(actor,target,skillElement=null){
     const element=physicalAttackElementForActor(actor,skillElement);
     const personal=personalTargetDamageMultiplier(actor,target,element);
     if(!element) return personal;
-    return elementResistanceMultiplier(target,element)*partyElementDamageMultiplier(element)*personal;
+    return elementResistanceMultiplierForActor(actor,target,element)*partyElementDamageMultiplier(element)*personal;
   }
 
   function triggerElementDamageBuffTrait(target,element,damage){
@@ -6252,7 +6293,11 @@
     if(current>multiplier) return {applied:false,reason:"stronger",info};
     target[info.value]=multiplier;
     target[info.rounds]=Number(sk.duration)||0;
-    return {applied:true,reason:current===multiplier?"refresh":"applied",info,multiplier};
+    let linkedBuff=null;
+    if(sk.buff==="spd" && traitEffect?.type==="speedBuffAlsoAttackBuff"){
+      linkedBuff=applyStatBuff(target,{buff:"atk",multiplier:Number(traitEffect.multiplier)||1.30,duration:Number(traitEffect.duration)||5});
+    }
+    return {applied:true,reason:current===multiplier?"refresh":"applied",info,multiplier,linkedBuff};
   }
 
   function clearNegativeConditions(target,{poisonOnly=false}={}){
@@ -6899,7 +6944,7 @@
     const special=Number(sk.powerMultiplier)||1;
     const raw=(30+magic*1.20)*rank*targetMod*special;
     const defense=defenseDamageFactor(magic,mdef,1);
-    const resist=elementResistanceMultiplier(target,sk.element);
+    const resist=elementResistanceMultiplierForActor(actor,target,sk.element);
     const partyBoost=partyElementDamageMultiplier(sk.element);
     const personalBoost=personalTargetDamageMultiplier(actor,target,sk.element);
     const variance=Array.isArray(sk.gambleRange)
@@ -6995,6 +7040,7 @@
     const effect=traitOf(actor)?.effect;
     if(effect?.type==="allAttackWeaponCritBoost" && equippedWeapon(actor)?.attackAll) multiplier+=Number(effect.critMultiplierBonus)||0;
     if(effect?.type==="lowHpSelfCritBoost" && S(actor).hp>0 && S(actor).hp<=S(actor).hpMax*(Number(effect.threshold)||.50)) multiplier+=Number(effect.critMultiplierBonus)||0;
+    if(effect?.type==="crusherCritical") multiplier+=Number(effect.critMultiplierBonus)||0;
     return Math.max(1,Math.round(multiplier*100)/100);
   }
   function rollCritical(rate){
@@ -7010,7 +7056,12 @@
     const order=[];
     livingActiveSlots().forEach(({id,i,c})=>{
       const action=state.battleActions[i];
-      if(action) order.push({side:"ally",actorId:id,slot:i,action,initiative:rollInitiative(effectiveSpd(c)),tie:Math.random()});
+      if(action){
+        let initiative=rollInitiative(effectiveSpd(c));
+        const effect=traitOf(c)?.effect;
+        if(effect?.type==="fastNeoPoisonAndPoisonedEnemyDamage" && action.type==="skill" && action.skill===effect.skillId) initiative+=1000000;
+        order.push({side:"ally",actorId:id,slot:i,action,initiative,tie:Math.random()});
+      }
     });
     livingEnemies().forEach(enemy=>{
       order.push({side:"enemy",enemyUid:enemy.uid,initiative:rollInitiative(effectiveEnemyStat(enemy,"spd")),tie:Math.random()});
@@ -8376,6 +8427,113 @@
     },t(950));
   }
 
+  function healTraitOwner(actor,rate){
+    if(!actor || S(actor).hp<=0) return 0;
+    const missing=Math.max(0,S(actor).hpMax-S(actor).hp);
+    const amount=Math.min(missing,Math.max(1,Math.round(S(actor).hpMax*Math.max(0,Number(rate)||0))));
+    if(amount<=0) return 0;
+    S(actor).hp+=amount;
+    const slot=state.battleActive.indexOf(actor.id);
+    if(slot>=0) flashPartyValue(slot,amount,"heal");
+    return amount;
+  }
+
+  function clearEnemyDefenseBuff(enemy){
+    if(!enemy) return false;
+    let removed=false;
+    if(Number(enemy.defBuff)>1){ enemy.defBuff=1; removed=true; }
+    if(Number(enemy.defBuffRounds)>0){ enemy.defBuffRounds=0; removed=true; }
+    return removed;
+  }
+
+  async function afterOffensiveHitTraits(actor,target,{damage=0,critical=false,element=null}={}){
+    if(!actor || !target) return;
+    const trait=traitOf(actor),effect=trait?.effect;
+    const notes=[];
+
+    if(critical && effect?.type==="healOnCritical"){
+      const healed=healTraitOwner(actor,Number(effect.healRate)||.10);
+      if(healed>0) notes.push(`${trait.name}でHP${healed}回復`);
+    }
+    if(critical && effect?.type==="crusherCritical" && effect.removeDefBuff && clearEnemyDefenseBuff(target)){
+      notes.push(`${target.displayName}の防御力アップを解除`);
+    }
+
+    if(Number(damage)>0 && element==="pleasure"){
+      if(effect?.type==="physicalToPleasureAndStack"){
+        actor._confirmedBattle=actor._confirmedBattle||confirmedRules.newBattleState();
+        actor._confirmedBattle.pleasureBonus=Math.min(Number(effect.max)||20,(Number(actor._confirmedBattle.pleasureBonus)||0)+(Number(effect.step)||2));
+      }
+      for(const {c} of livingActiveSlots()){
+        const affTrait=traitOf(c),affEffect=affTrait?.effect;
+        if(affEffect?.type!=="healOnEnemyPleasureDamageOncePerRound") continue;
+        c._confirmedBattle=c._confirmedBattle||confirmedRules.newBattleState();
+        if(c._confirmedBattle.affogatoRound===state.battleRound) continue;
+        c._confirmedBattle.affogatoRound=state.battleRound;
+        const healed=healTraitOwner(c,Number(affEffect.healRate)||.10);
+        if(healed>0) notes.push(`${c.name}の「${affTrait.name}」でHP${healed}回復`);
+      }
+    }
+
+    if(notes.length){
+      renderBattleParty();
+      setMessage(`✨ ${notes.join(" / ")}`);
+      await wait(BASE_TIME.short);
+    }
+  }
+
+  async function afterBasicAttackTraits(actor,result){
+    if(!actor || S(actor).hp<=0) return;
+    const trait=traitOf(actor),effect=trait?.effect;
+    const dealt=Math.max(0,Number(result?.total ?? result?.result?.dmg)||0);
+    const instantKill=!!result?.result?.instantKill;
+    if(dealt<=0 || instantKill) return;
+
+    if(effect?.type==="basicAttackLifeSteal" && Math.random()<(Number(trait?.chance)||.20)){
+      const missing=Math.max(0,S(actor).hpMax-S(actor).hp);
+      const amount=Math.min(missing,Math.max(1,Math.round(dealt*(Number(effect.healRate)||.20))));
+      if(amount>0){
+        S(actor).hp+=amount;
+        const slot=state.battleActive.indexOf(actor.id);
+        if(slot>=0) flashPartyValue(slot,amount,"heal");
+        renderBattleParty();
+        setMessage(`🏴‍☠️ ${actor.name} の「${trait.name}」！ 与えたダメージを奪い、HPが ${amount} 回復した！`);
+        await wait(BASE_TIME.short);
+      }
+    }
+
+    if(effect?.type==="basicHitSelfTripleBuffOnce"){
+      actor._confirmedBattle=actor._confirmedBattle||confirmedRules.newBattleState();
+      const key="shiningTopaz";
+      if(!actor._confirmedBattle.used[key]){
+        actor._confirmedBattle.used[key]=true;
+        let applied=0;
+        (effect.buffs||["atk","def","mdef"]).forEach(buff=>{
+          if(applyStatBuff(actor,{buff,multiplier:Number(effect.multiplier)||1.50,duration:Number(effect.duration)||4}).applied) applied++;
+        });
+        renderBattleParty();
+        setMessage(`🔶 ${actor.name} の「${trait.name}」！ 攻撃力・防御力・魔法防御が大きく上昇した！`);
+        await wait(BASE_TIME.short);
+      }
+    }
+  }
+
+  async function maybeDullahanRondo(actor,actionType,{success=true,targetUid=null}={}){
+    if(!actor || S(actor).hp<=0 || state.battleEnded || livingEnemies().length===0) return false;
+    const trait=traitOf(actor),effect=trait?.effect;
+    if(effect?.type!=="postActionWeakBasicFollowup") return false;
+    const roll=confirmedRules.followup({action:actionType,success,additionalAttack:false,roll:Math.random()});
+    if(roll!==true) return false;
+    let target=enemyByUid(targetUid);
+    if(!target || target.hp<=0) target=choose(livingEnemies());
+    if(!target) return false;
+    setMessage(`💀 ${actor.name} の「${trait.name}」！ 弱い通常攻撃で追撃！`);
+    await wait(BASE_TIME.short);
+    const result=await resolveBasicAttack(actor,{type:"attack",targetUid:target.uid},{allowDoubleAttack:false,isFollowup:true,powerMultiplier:Number(effect.power)||.50});
+    if(result?.battleWon && !state.battleEnded) winBattle();
+    return true;
+  }
+
   async function resolveAttack(actor,target,skillName=null,mult=1,fxKind="slash",fxSymbol="✦",options={}){
     const isBasic=!!options.basic;
     const profile=isBasic?weaponAttackProfile(actor):null;
@@ -8434,6 +8592,7 @@
       : `${actor.name} の${skillName||"攻撃"}！${critText} ${target.displayName} に ${dmg} ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
     const hitFx=isBasic?profile.fx:{kind:fxKind,symbol:fxSymbol};
     await animateEnemyDamage(target,killed,hitFx.kind,hitFx.symbol,critical,dmg);
+    await afterOffensiveHitTraits(actor,target,{damage:dmg,critical,element:attackElement});
     if(!killed){
       const proc=applyEquipmentPhysicalStatus(actor,target);
       if(proc?.result?.success){
@@ -8467,7 +8626,7 @@
         target=livingEnemies()[0]||null;
       }
       if(!target) return {battleWon:true};
-      const hit=await resolveAttack(actor,target,null,1,"slash","⚔",{basic:true,traitContext});
+      const hit=await resolveAttack(actor,target,null,Number(options.powerMultiplier)||1,"slash","⚔",{basic:true,traitContext});
       result={battleWon:livingEnemies().length===0,result:hit};
     }else{
       const targets=[...livingEnemies()];
@@ -8496,7 +8655,7 @@
             continue;
           }
         }
-        let dmg=physicalDamage(effectiveAtk(actor),enemyDefenseForAttacker(actor,target),profile.power,1,profile.defenseInfluence);
+        let dmg=physicalDamage(effectiveAtk(actor),enemyDefenseForAttacker(actor,target),profile.power*(Number(options.powerMultiplier)||1),1,profile.defenseInfluence);
         dmg=Math.max(1,Math.round(dmg*physicalElementDamageMultiplierForActor(actor,target,null)));
         const critical=profile.canCrit && rollCritical(criticalRateForAttack(actor,target));
         if(critical){
@@ -8511,6 +8670,7 @@
         if(killed) defeated++;
         setMessage(`➰ ${target.displayName} に ${dmg} ダメージ。${critical?" 会心！":""}${killed?` ${target.displayName} を倒した！`:""}`);
         await animateEnemyDamage(target,killed,profile.fx.kind,profile.fx.symbol,critical,dmg);
+        await afterOffensiveHitTraits(actor,target,{damage:dmg,critical,element:physicalAttackElementForActor(actor,null)});
         if(!killed){
           const proc=applyEquipmentPhysicalStatus(actor,target);
           if(proc?.result?.success){
@@ -8574,6 +8734,7 @@
       total+=dmg; landed++; if(killed)defeated++;
       setMessage(`${sk.icon||"⚔️"} ${sk.name} ${hit}撃目！${critical?" 会心！":""} ${target.displayName} に ${dmg} ダメージ。${killed?`${target.displayName} を倒した！`:""}`);
       await animateEnemyDamage(target,killed,"impact",sk.fxSymbol||sk.icon||"✦",critical,dmg);
+      await afterOffensiveHitTraits(actor,target,{damage:dmg,critical,element:physicalAttackElementForActor(actor,sk.element||null)});
       if(!killed){
         const proc=applyEquipmentPhysicalStatus(actor,target);
         if(proc?.result?.success){
@@ -8618,6 +8779,7 @@
       if(shock?.success) shocked++;
       total+=dmg; if(killed) defeated++;
       await animateEnemyDamage(target,killed,sk.animation||"impact",sk.fxSymbol||sk.icon||"✦",critical,dmg);
+      await afterOffensiveHitTraits(actor,target,{damage:dmg,critical,element:physicalAttackElementForActor(actor,sk.element||null)});
       if(!killed){
         const proc=applyEquipmentPhysicalStatus(actor,target);
         if(proc?.result?.success){
@@ -8634,6 +8796,7 @@
   }
 
   async function resolveSkill(actor,action,slot){
+    actor._lastSkillResolved=false;
     const baseSkill=skills[action.skill];
     if(!baseSkill) return;
     const sk=effectiveSkillForActor(actor,baseSkill);
@@ -8655,6 +8818,12 @@
     }
 
     S(actor).mp-=actualCost;
+    actor._lastSkillResolved=true;
+    actor._confirmedBattle=actor._confirmedBattle||confirmedRules.newBattleState();
+    const useEffect=traitOf(actor)?.effect;
+    if(useEffect?.type==="skillUseDamageStack"){
+      actor._confirmedBattle.seraphBonus=Math.min(Number(useEffect.max)||30,(Number(actor._confirmedBattle.seraphBonus)||0)+(Number(useEffect.step)||3));
+    }
     if(sk.kind==="heal") actor._usedHealingMagicThisRound=true;
     renderBattleParty();
 
@@ -8683,6 +8852,7 @@
         if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
         let shock=null;
         if(!killed && Number(sk.shockRate)>0) shock=tryInflictStatus(target,"shock",sk.shockRate,{source:actor});
+        await afterOffensiveHitTraits(actor,target,{damage:dmg,critical:false,element:sk.element||null});
         results.push({target,dmg,killed,shock,legacyNullified:legacy.nullified,legacyName:legacy.name,legacyIcon:legacy.icon});
       }
 
@@ -9004,6 +9174,25 @@
       renderBattleParty();
       setMessage(`💚 ${sk.name}！ ${sk.target==="allyAll"?`味方全員を合計 ${total} 回復。`:`${targets[0].c.name} のHPが ${total} 回復した。`}`);
       await wait(BASE_TIME.heal);
+      const eternalEffect=traitOf(actor)?.effect;
+      if(eternalEffect?.type==="eternalAlsoSpiritBlessing" && sk.id===eternalEffect.skillId){
+        actor._confirmedBattle=actor._confirmedBattle||confirmedRules.newBattleState();
+        const key="eternalSpiritBlessing";
+        if(!actor._confirmedBattle.used[key]){
+          actor._confirmedBattle.used[key]=true;
+          const extra=skills[eternalEffect.extraSkillId||"spiritKingBlessing"];
+          if(extra){
+            let applied=0;
+            livingActiveSlots().forEach(({i,c})=>{
+              const r=applyStatBuff(c,extra);
+              if(r.applied){ applied++; flashPartyValue(i,"","buff",BUFF_INFO.mdef.label); }
+            });
+            renderBattleParty();
+            setMessage(`🔶 ${actor.name} の「${traitOf(actor).name}」！ 精霊王の祝福が発動した！`);
+            await wait(BASE_TIME.buff);
+          }
+        }
+      }
       return;
     }
 
@@ -9111,7 +9300,9 @@
     }
   }
   async function resolveBattleItem(actor,action,slot){
+    actor._lastItemResolved=false;
     const item=ITEMS[action.item]; if(!item) return;
+    actor._lastItemResolved=true;
     animateActor(item.effect==="buff" || item.effect==="barrier" || item.effect==="fortune" ? "buff" : "cast");
     setMessage(`${item.icon||"🧪"} ${actor.name} は ${item.name} を使った！`);
     await wait(BASE_TIME.actionLead);
@@ -10105,6 +10296,7 @@
 
   async function executeEnemyTurn(enemy){
     if(state.battleEnded || !enemy || enemy.hp<=0) return;
+    enemy._actedRound=state.battleRound;
     const rescueSerial=state._rescueSerial||0;
     await executeEnemyAction(enemy);
     if(state.battleEnded || enemy.hp<=0 || (state._rescueSerial||0)!==rescueSerial) return;
@@ -10251,10 +10443,33 @@
     setCommandsEnabled(false);
     updateExecuteButton();
 
+    // Durga's Guardian Blessing is author-confirmed to resolve before every other action in the round.
+    const absolutePriorityTurns=livingActiveSlots().map(({i,c})=>({i,c,action:state.battleActions[i]}))
+      .filter(x=>{
+        const effect=traitOf(x.c)?.effect;
+        return effect?.type==="guardianBlessingMastery" && effect.alwaysFirst && x.action?.type==="skill" && x.action.skill===effect.skillId;
+      })
+      .sort((a,b)=>effectiveSpd(b.c)-effectiveSpd(a.c));
+    const absolutePriorityKeys=new Set(absolutePriorityTurns.map(x=>`${x.c.id}:${x.i}`));
+    for(const {i,c:actor,action} of absolutePriorityTurns){
+      if(state.battleEnded || S(actor).hp<=0) continue;
+      state.battleActorSlot=i;
+      updateActorPortrait();
+      if(conditionsOf(actor).shock){
+        setMessage(`⚡ ${actor.name} は感電していて${skills[action.skill]?.name||"スキル"} を使えない！`);
+        await wait(BASE_TIME.message);
+        continue;
+      }
+      await resolveSkill(actor,action,i);
+      if(state.battleEnded) return;
+      await maybeDullahanRondo(actor,"skill",{success:!!actor._lastSkillResolved,targetUid:action.targetUid});
+      if(state.battleEnded) return;
+    }
+
     // Defend and defense-priority skills resolve before normal initiative.
     // Within this defensive phase, faster allies act first.
     const defensePriorityTurns=livingActiveSlots().map(({i,c})=>({i,c,action:state.battleActions[i]}))
-      .filter(x=>x.action?.type==="defend" || (x.action?.type==="skill" && skills[x.action.skill]?.priority==="defense"))
+      .filter(x=>!absolutePriorityKeys.has(`${x.c.id}:${x.i}`) && (x.action?.type==="defend" || (x.action?.type==="skill" && skills[x.action.skill]?.priority==="defense")))
       .sort((a,b)=>effectiveSpd(b.c)-effectiveSpd(a.c));
     for(const {i,c:actor,action} of defensePriorityTurns){
       if(state.battleEnded || S(actor).hp<=0) continue;
@@ -10276,10 +10491,12 @@
       }else{
         await resolveSkill(actor,action,i);
         if(state.battleEnded) return;
+        await maybeDullahanRondo(actor,"skill",{success:!!actor._lastSkillResolved,targetUid:action.targetUid});
+        if(state.battleEnded) return;
       }
     }
 
-    const turnOrder=buildTurnOrder().filter(turn=>!(turn.side==="ally" && (turn.action?.type==="defend" || (turn.action?.type==="skill" && skills[turn.action.skill]?.priority==="defense"))));
+    const turnOrder=buildTurnOrder().filter(turn=>!(turn.side==="ally" && (absolutePriorityKeys.has(`${turn.actorId}:${turn.slot}`) || turn.action?.type==="defend" || (turn.action?.type==="skill" && skills[turn.action.skill]?.priority==="defense"))));
 
     for(const turn of turnOrder){
       if(state.battleEnded) return;
@@ -10312,20 +10529,27 @@
 
       if(action.type==="attack"){
         const result=await resolveBasicAttack(actor,action);
+        await afterBasicAttackTraits(actor,result);
+        if(!result?.battleWon && livingEnemies().length>0) await maybeDullahanRondo(actor,"attack",{success:true,targetUid:action.targetUid});
         await wait(BASE_TIME.short);
+        if(state.battleEnded) return;
         if(result?.battleWon || livingEnemies().length===0){ winBattle(); return; }
         continue;
       }
 
       if(action.type==="item"){
         await resolveBattleItem(actor,action,slot);
+        if(!state.battleEnded) await maybeDullahanRondo(actor,"item",{success:!!actor._lastItemResolved,targetUid:action.targetUid});
         await wait(BASE_TIME.short);
+        if(state.battleEnded) return;
         continue;
       }
 
       if(action.type==="skill"){
         await resolveSkill(actor,action,slot);
+        if(!state.battleEnded && livingEnemies().length>0) await maybeDullahanRondo(actor,"skill",{success:!!actor._lastSkillResolved,targetUid:action.targetUid});
         await wait(BASE_TIME.short);
+        if(state.battleEnded) return;
         if(livingEnemies().length===0){ winBattle(); return; }
       }
     }
