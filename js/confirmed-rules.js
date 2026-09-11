@@ -49,10 +49,10 @@
     evilCriticalHit(battle,damage){const result=damage(api.damageMultiplier([battle.damageBonus]));battle.damageBonus=Math.min(30,battle.damageBonus+5);return result;},
     kaliCounterRate:base=>base+20,
     kaliCounterHit(battle,{hit}){if(hit)battle.counterCritBonus=Math.min(30,battle.counterCritBonus+5);return battle.counterCritBonus;},
-    snowIceHit(actor,{damage,hp}){if(damage<=0||hp<=0)return pending(['U28']);actor.spdBuff=1.5;actor.spdBuffRounds=4;return {status:'applied'};},
+    snowIceHit(actor,{damage,hp}){if(hp<=0)return {status:'not_applied',reason:'ko'};actor.spdBuff=1.5;actor.spdBuffRounds=4;return {status:'applied',damage:Math.max(0,Number(damage)||0)};},
     crimsonBuff:normal=>normal>1?normal+.5:normal,
     cosmosPaid(battle,paid){if(paid>0)battle.cosmosBonus=Math.min(15,battle.cosmosBonus+3);return battle.cosmosBonus;},
-    eaterCrit(h){if(h>=.5)return 0;if(h>=.2)return 10*((.5-h)/.3)**2;if(h>=.05)return 10+40*((.2-h)/.15)**1.5;return 50;},
+    eaterCrit(h){if(h>=.5)return 0;if(h>=.2)return Math.min(50,10*((.5-h)/.3)**2);if(h>=.05)return Math.min(50,10+40*((.2-h)/.15)**1.5);return 50;},
     sheepCrit:L=>Math.max(0,Math.min(15,(L-60)/4)),
     resolveWipe({eligibleUrd,front,stats=c=>c.stats,clock}){
       if(eligibleUrd&&!eligibleUrd.battle.used.urd){

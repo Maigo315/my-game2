@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47m";
+  const DEV_VERSION = "v0.47n";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2657,6 +2657,11 @@
     if(name==="アルカナデビル") return {...base,id:"arcanaMystery",implemented:true,effect:{type:"koReviveRandomFrontFullOnce",requireOtherLivingParty:true}};
     if(name==="泡沫姫") return {...base,id:"fleetingWish",implemented:true,effect:{type:"roundEndReviveAllKoWhenTwoOthersOnce",includeReserve:true,revivePercent:.20,selfHpAfter:1}};
     if(name==="ケツァルコアトル") return {...base,id:"mercifulSerpentGod",implemented:true,effect:{type:"roundEndGigaRaiseRandomFrontOnce"}};
+    if(name==="アイアンオウル") return {...base,id:"steelWingbeat",implemented:true,effect:{type:"critMultiplierAndCertainShock",critMultiplierBonus:.30}};
+    if(name==="スノーラミア") return {...base,id:"snowCountrySerpent",implemented:true,effect:{type:"iceHitSpeedBuff",element:"ice",multiplier:1.50,duration:4}};
+    if(name==="イーター") return {...base,id:"grumpyPredator",implemented:true,effect:{type:"hpBasedCritBonus",maxBonus:50}};
+    if(name==="エビルアルラウネ") return {...base,id:"predatoryPlant",implemented:true,effect:{type:"criticalDirectDamageStack",critBonus:6,step:5,max:30}};
+    if(name==="ミネルヴァ") return {...base,id:"owlOfWisdom",implemented:true,effect:{type:"firstMagicAttackResistanceBreak",costMultiplier:1.30,resistanceSteps:-1}};
     return {...base,id:`confirmedPending_${confirmedRuntimeId(record)||record.character_id}`,implemented:false};
   }
 
@@ -6070,6 +6075,12 @@
     if(effect?.type==="reaperDeathMastery" && Array.isArray(effect.skillIds) && effect.skillIds.includes(sk.id)){
       cost=Math.max(1,Math.ceil(cost*(Number(effect.costMultiplier)||2)));
     }
+    if(effect?.type==="firstMagicAttackResistanceBreak" && sk?.kind==="magic"){
+      const battle=actor?._confirmedBattle;
+      if(!battle?.used?.minervaWisdom){
+        cost=Math.max(1,Math.ceil(cost*(Number(effect.costMultiplier)||1.30)));
+      }
+    }
     return cost;
   }
 
@@ -6098,6 +6109,7 @@
     if(effect?.type==="skillUseDamageStack") bonus+=Math.max(0,Number(actor?._confirmedBattle?.seraphBonus)||0);
     if(effect?.type==="pristineDamageBoostAndIncomingPenalty" && !actor?._confirmedBattle?.tookDamage && S(actor).hp>0 && S(actor).hp>=S(actor).hpMax) bonus+=Math.max(0,Number(effect.damageBonus)||0);
     if(effect?.type==="damageTakenStack") bonus+=Math.max(0,Number(actor?._confirmedBattle?.damageTakenBonus)||0);
+    if(effect?.type==="criticalDirectDamageStack") bonus+=Math.max(0,Number(actor?._confirmedBattle?.damageBonus)||0);
     return Math.max(0,1+bonus/100);
   }
 
@@ -6110,6 +6122,11 @@
     if(effect?.type==="fullHpCritBonus" && S(actor).hp>0 && S(actor).hp>=S(actor).hpMax) rate+=Number(effect.bonus)||0;
     if(effect?.type==="allAttackWeaponCritBoost" && equippedWeapon(actor)?.attackAll) rate+=Number(effect.critBonus)||0;
     if(effect?.type==="lowHpSelfCritBoost" && S(actor).hp>0 && S(actor).hp<=S(actor).hpMax*(Number(effect.threshold)||.50)) rate+=Number(effect.critBonus)||0;
+    if(effect?.type==="hpBasedCritBonus" && S(actor).hp>0 && S(actor).hpMax>0){
+      const hpRatio=S(actor).hp/Math.max(1,S(actor).hpMax);
+      rate+=confirmedRules?.eaterCrit ? confirmedRules.eaterCrit(hpRatio) : 0;
+    }
+    if(effect?.type==="criticalDirectDamageStack") rate+=Math.max(0,Number(effect.critBonus)||6);
     if(effect?.type==="crusherCritical" && effect.forceAgainstDefBuff && target && Number(target.defBuff)>1) rate=100;
     return clampRate(rate);
   }
@@ -6175,18 +6192,18 @@
     return null;
   }
 
-  function elementResistanceMultiplierForActor(actor,target,element){
+  function elementResistanceMultiplierForActor(actor,target,element,resistanceSteps=0){
     if(!element) return 1;
     const effect=traitOf(actor)?.effect;
+    let rank=resistanceRankFor(target,element);
     if(effect?.type==="fireResistanceCap" && element==="fire"){
       const order=["E","D","C","B","A","S"];
-      const rank=resistanceRankFor(target,element);
       const cap=effect.capRank||"C";
-      const effectiveRank=order.indexOf(rank)>order.indexOf(cap)?cap:rank;
-      if(element==="pleasure") return PLEASURE_RESIST_DAMAGE[effectiveRank] ?? 1;
-      return RESISTANCE_RANKS[effectiveRank]?.damage ?? 1;
+      rank=order.indexOf(rank)>order.indexOf(cap)?cap:rank;
     }
-    return elementResistanceMultiplier(target,element);
+    if(Number(resistanceSteps)) rank=shiftedResistanceRank(rank,Number(resistanceSteps)||0);
+    if(element==="pleasure") return PLEASURE_RESIST_DAMAGE[rank] ?? 1;
+    return RESISTANCE_RANKS[rank]?.damage ?? 1;
   }
 
   function physicalElementDamageMultiplierForActor(actor,target,skillElement=null){
@@ -6276,15 +6293,24 @@
 
   function recordAllyDamageTaken(target,damage,{element=null}={}){
     const amount=Math.max(0,Number(damage)||0);
-    if(!target || amount<=0) return;
-    if(element==="fire") state._allyFireDamageRound=state.battleRound;
+    if(!target) return null;
     const effect=traitOf(target)?.effect;
+    let elementBuff=null;
+    // Snow Lamia reacts to a landed ice hit even when the resolved damage is 0,
+    // but never after a lethal hit. Repeated hits refresh the normal SPD buff to 4 rounds.
+    if(effect?.type==="iceHitSpeedBuff" && element===effect.element && S(target).hp>0){
+      const result=applyStatBuff(target,{buff:"spd",multiplier:Number(effect.multiplier)||1.50,duration:Number(effect.duration)||4});
+      elementBuff={trait:traitOf(target),effect,result};
+    }
+    if(amount<=0) return elementBuff;
+    if(element==="fire") state._allyFireDamageRound=state.battleRound;
     const battle=confirmedBattleStateFor(target);
     battle.damageRound=state.battleRound;
     if(effect?.type==="pristineDamageBoostAndIncomingPenalty") battle.tookDamage=true;
     if(effect?.type==="damageTakenStack"){
       battle.damageTakenBonus=Math.min(Math.max(0,Number(effect.max)||20),(Number(battle.damageTakenBonus)||0)+Math.max(0,Number(effect.step)||2));
     }
+    return elementBuff;
   }
 
   async function triggerFreeFairyHeal(actor,traitLabel){
@@ -7705,7 +7731,7 @@
     const rank=resistanceRankFor(target,key);
     return RESISTANCE_RANKS[rank]?.status ?? 1;
   }
-  function spellDamage(actor,target,sk){
+  function spellDamage(actor,target,sk,{resistanceSteps=0}={}){
     const magic=Math.max(1,effectiveMagic(actor)||1);
     const mdef=Math.max(0,effectiveEnemyStat(target,"mdef"));
     const rank=Number(sk.rankMultiplier)||1;
@@ -7713,7 +7739,7 @@
     const special=Number(sk.powerMultiplier)||1;
     const raw=(30+magic*1.20)*rank*targetMod*special;
     const defense=defenseDamageFactor(magic,mdef,1);
-    const resist=elementResistanceMultiplierForActor(actor,target,sk.element);
+    const resist=elementResistanceMultiplierForActor(actor,target,sk.element,resistanceSteps);
     const partyBoost=partyElementDamageMultiplier(sk.element);
     const personalBoost=personalTargetDamageMultiplier(actor,target,sk.element);
     const variance=Array.isArray(sk.gambleRange)
@@ -7753,7 +7779,7 @@
     if(traitEffect?.type==="poisonImmuneShockCertain" && status==="poison") return {success:false,reason:"immune",rate:0};
     if(status==="death" && target.statusDeathImmune) return {success:false,reason:"immune",rate:0};
     if(status!=="death" && cond[status]) return {success:false,reason:"already",rate:statusChancePercent(target,status,baseRate)};
-    const forcedShock=(traitEffect?.type==="poisonImmuneShockCertain" || traitEffect?.type==="physicalDamageReductionAndCertainShock") && status==="shock";
+    const forcedShock=(traitEffect?.type==="poisonImmuneShockCertain" || traitEffect?.type==="physicalDamageReductionAndCertainShock" || traitEffect?.type==="critMultiplierAndCertainShock") && status==="shock";
     const rate=forcedShock?100:statusChancePercent(target,status,baseRate);
     if(!forcedShock && Math.random()*100>=rate) return {success:false,reason:"resist",rate};
     // Mount is a separate one-use status barrier and still blocks Lloyd's guaranteed shock.
@@ -7810,6 +7836,7 @@
     if(effect?.type==="allAttackWeaponCritBoost" && equippedWeapon(actor)?.attackAll) multiplier+=Number(effect.critMultiplierBonus)||0;
     if(effect?.type==="lowHpSelfCritBoost" && S(actor).hp>0 && S(actor).hp<=S(actor).hpMax*(Number(effect.threshold)||.50)) multiplier+=Number(effect.critMultiplierBonus)||0;
     if(effect?.type==="crusherCritical") multiplier+=Number(effect.critMultiplierBonus)||0;
+    if(effect?.type==="critMultiplierAndCertainShock") multiplier+=Number(effect.critMultiplierBonus)||.30;
     return Math.max(1,Math.round(multiplier*100)/100);
   }
   function rollCritical(rate){
@@ -9227,6 +9254,12 @@
     if(critical && effect?.type==="crusherCritical" && effect.removeDefBuff && clearEnemyDefenseBuff(target)){
       notes.push(`${target.displayName}の防御力アップを解除`);
     }
+    if(critical && effect?.type==="criticalDirectDamageStack"){
+      const battle=confirmedBattleStateFor(actor);
+      const before=Math.max(0,Number(battle.damageBonus)||0);
+      battle.damageBonus=Math.min(Math.max(0,Number(effect.max)||30),before+Math.max(0,Number(effect.step)||5));
+      if(battle.damageBonus>before) notes.push(`${trait.name}で与ダメージ+${battle.damageBonus}%`);
+    }
 
     if(Number(damage)>0 && element==="pleasure"){
       if(effect?.type==="physicalToPleasureAndStack"){
@@ -9586,9 +9619,12 @@
       return;
     }
 
+    actor._confirmedBattle=actor._confirmedBattle||confirmedRules.newBattleState();
+    const preUseEffect=traitOf(actor)?.effect;
+    const minervaBreak=preUseEffect?.type==="firstMagicAttackResistanceBreak" && sk.kind==="magic" && !actor._confirmedBattle.used?.minervaWisdom;
+    if(minervaBreak) actor._confirmedBattle.used.minervaWisdom=true;
     S(actor).mp-=actualCost;
     actor._lastSkillResolved=true;
-    actor._confirmedBattle=actor._confirmedBattle||confirmedRules.newBattleState();
     actor._confirmedBattle.skillUsedRound=state.battleRound;
     const useEffect=traitOf(actor)?.effect;
     if(useEffect?.type==="skillUseDamageStack"){
@@ -9608,12 +9644,12 @@
       if(!targets.length) return;
 
       animateActor("cast");
-      setMessage(`${sk.icon||"✨"} ${actor.name} は ${sk.name} を唱えた！`);
+      setMessage(`${sk.icon||"✨"} ${actor.name} は ${sk.name} を唱えた！${minervaBreak?` 「${traitOf(actor)?.name||"叡智の梟"}」で敵の耐性を1段階低下！`:""}`);
       await wait(BASE_TIME.actionLead);
 
       const results=[];
       for(const target of targets){
-        let dmg=spellDamage(actor,target,sk);
+        let dmg=spellDamage(actor,target,sk,{resistanceSteps:minervaBreak?(Number(preUseEffect?.resistanceSteps)||-1):0});
         dmg=silverBodyAdjustedDamage(target,dmg);
         const legacy=enemyElementNullify(target,sk.element,dmg);
         dmg=legacy.damage;
