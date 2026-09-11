@@ -713,7 +713,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:8511ac2b9b42",
@@ -3466,7 +3466,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:56fc1f5a71ec",
@@ -3695,7 +3695,7 @@
     },
     "trait": {
       "name": "蜘蛛ノ神",
-      "desc": "ラウンド終了時、状態異常にかかっている味方がいるなら、その中からランダムな一人の状態異常を全て解除して、素早さを上げる。\n※クイックと同じ効果。"
+      "desc": "ラウンド終了時、状態異常にかかっている味方がいるなら、その中からランダムな一人の状態異常を全て解除して、素早さを上げる。※クイックと同じ効果。(1戦闘に1度)"
     },
     "learned_skills": [
       {
@@ -3797,7 +3797,7 @@
         "発動タイミング": "原文明記：ラウンド終了時。同時発動の処理順は別途未確定。",
         "対象": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
         "数値": "原文に明記された値のみ。下記原文をそのまま保存。",
-        "上限": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
+        "上限": "作者確定：1戦闘に1度。",
         "効果時間": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
         "重複可否": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
         "戦闘不能時": "C01/C04。死亡時明記は例外。",
@@ -3815,7 +3815,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:5a5b4f3b623d",
@@ -4659,7 +4659,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:b07724a06034",
@@ -5016,7 +5016,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:7c18bb80afc0",
@@ -5076,7 +5076,7 @@
     },
     "trait": {
       "name": "ウツシの妖術",
-      "desc": "ラウンド終了時、敵にバフがかかっているなら、全てこのキャラにコピーする。(1戦闘に1度)\n※マウント、オーラなども対象。"
+      "desc": "ラウンド終了時、敵にバフがかかっているなら、バフの種類が最も多い敵1体を選び、そのバフを全てこのキャラにコピーする。(1戦闘に1度) ※同数の場合は対象候補からランダム。マウント、オーラなども対象。"
     },
     "learned_skills": [
       {
@@ -5166,7 +5166,7 @@
       "fields": {
         "発動条件": "ラウンド終了時、敵にバフがかかっているなら、全てこのキャラにコピーする。(1戦闘に1度)\n※マウント、オーラなども対象。",
         "発動タイミング": "原文明記：ラウンド終了時。同時発動の処理順は別途未確定。",
-        "対象": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
+        "対象": "作者確定：バフの種類が最も多い生存敵1体。同数の場合はその中からランダム。",
         "数値": "原文に明記された値のみ。下記原文をそのまま保存。",
         "上限": "原文明記：1戦闘に1度。これ以外の上限を追加しない。",
         "効果時間": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
@@ -5177,7 +5177,7 @@
         "MP消費": "指定スキル自動発動は無料C02。直接補正にはスキル消費を追加しない。",
         "未習得自動発動": "C02。ただし原文明記の習得済み抽選制限は維持。",
         "武器条件": "自動スキル不要C02。手動技は既存条件。",
-        "相互作用": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
+        "相互作用": "作者確定：選ばれた敵1体にかかっているバフを全種類コピーする。マウント、オーラなども対象。",
         "安全に実装できる範囲": "原文どおりのデータ・習得関係・型定義の登録。明記された単独計算器は隔離して実装可。",
         "保留する範囲": "個別論点の未定フィールドに依存する発動・加入解放。原文だけで全処理が決まったとみなさない。"
       }
@@ -5186,7 +5186,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:8e548add9178",
@@ -6957,7 +6957,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:95538a423562",
@@ -7473,7 +7473,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:1be44e362adb",
@@ -8088,7 +8088,7 @@
     },
     "trait": {
       "name": "カエシの妖術",
-      "desc": "ラウンド終了時、このキャラが状態異常なら、それを全て解除し、ランダムな敵に全て移す(無効以外耐性貫通)。(1戦闘に1度)"
+      "desc": "ラウンド終了時、このキャラが状態異常なら、それを全て解除し、ランダムな敵1体に全て移す(無効以外耐性貫通)。(1戦闘に1度)"
     },
     "learned_skills": [
       {
@@ -8198,7 +8198,7 @@
       "fields": {
         "発動条件": "ラウンド終了時、このキャラが状態異常なら、それを全て解除し、ランダムな敵に全て移す(無効以外耐性貫通)。(1戦闘に1度)",
         "発動タイミング": "原文明記：ラウンド終了時。同時発動の処理順は別途未確定。",
-        "対象": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
+        "対象": "作者確定：生存敵からランダムな1体。複数の状態異常がある場合は全て同じ対象へ移す。",
         "数値": "原文に明記された値のみ。下記原文をそのまま保存。",
         "上限": "原文明記：1戦闘に1度。これ以外の上限を追加しない。",
         "効果時間": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
@@ -8209,7 +8209,7 @@
         "MP消費": "指定スキル自動発動は無料C02。直接補正にはスキル消費を追加しない。",
         "未習得自動発動": "C02。ただし原文明記の習得済み抽選制限は維持。",
         "武器条件": "自動スキル不要C02。手動技は既存条件。",
-        "相互作用": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
+        "相互作用": "作者確定：自身に複数の状態異常がある場合は全て解除し、全て移す。無効以外は耐性を貫通。",
         "安全に実装できる範囲": "原文どおりのデータ・習得関係・型定義の登録。明記された単独計算器は隔離して実装可。",
         "保留する範囲": "個別論点の未定フィールドに依存する発動・加入解放。原文だけで全処理が決まったとみなさない。"
       }
@@ -8218,7 +8218,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:f624c08ec691",
@@ -8585,7 +8585,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:a52c69357314",
@@ -14425,7 +14425,7 @@
     },
     "trait": {
       "name": "翠緑のエメラルド",
-      "desc": "3ラウンド目終了時、最もダメージを受けているランダムな味方一人にラストヒールを発動。"
+      "desc": "3ラウンド目終了時、減少しているHPの実数が最も大きい味方1人にラストヒールを発動。※同値の場合はその中からランダム。"
     },
     "learned_skills": [
       {
@@ -14525,7 +14525,7 @@
       "fields": {
         "発動条件": "3ラウンド目終了時、最もダメージを受けているランダムな味方一人にラストヒールを発動。",
         "発動タイミング": "原文明記：3ラウンド目終了時。同時発動の処理順は別途未確定。",
-        "対象": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
+        "対象": "作者確定：最大HP－現在HPの実数が最も大きい生存バトルメンバー1人。同値の場合はその中からランダム。",
         "数値": "原文に明記された値のみ。下記原文をそのまま保存。",
         "上限": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
         "効果時間": "未確定：以下の原文と個別U番号を参照。AIによる標準値を補完しない。",
@@ -14545,7 +14545,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:4353fb2af8f7",
