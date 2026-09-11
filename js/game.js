@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47k";
+  const DEV_VERSION = "v0.47l";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2640,6 +2640,17 @@
     if(name==="ウミウシヒメ") return {...base,id:"seaFlower",implemented:true,effect:{type:"elementIncomingMultiplierAndEndureOnce",elements:["fire","thunder"],multiplier:1.50}};
     if(name==="花仙妖狐") return {...base,id:"flowerFoxSorcery",implemented:true,effect:{type:"negateEnemyMagicOnceAndConcentrate"}};
     if(name==="スプレマシージェム") return {...base,id:"ultimateRuby",implemented:true,chance:.20,effect:{type:"magicEvasionAndAutoHeal",evasionBonus:30,skillId:"fairyHeal"}};
+    if(name==="ホワイトバニー") return {...base,id:"meanBunny",implemented:true,chance:.30,effect:{type:"roundEndClearEnemyBuffsOnce"}};
+    if(name==="マリンゴースト") return {...base,id:"seaInvitation",implemented:true,effect:{type:"roundEndHealAfterPartyFireDamageOnce",skillId:"gigaHeal"}};
+    if(name==="大和蜘蛛") return {...base,id:"spiderGod",implemented:true,effect:{type:"roundEndCleanseRandomAfflictedAndQuickOnce",multiplier:1.30,duration:5}};
+    if(name==="スイーパー") return {...base,id:"ancientBattleMachine",implemented:true,effect:{type:"roundEndSelfHealAtLowHpOnce",threshold:.50,healRate:.50}};
+    if(name==="ローレライ") return {...base,id:"destructiveSong",implemented:true,chance:.15,effect:{type:"roundEndAutoSkillAfterSkillUse",skillId:"gigaQuake"}};
+    if(name==="中級妖狐") return {...base,id:"utsushiSorcery",implemented:true,effect:{type:"roundEndCopyMostBuffedEnemyOnce"}};
+    if(name==="セイレーン") return {...base,id:"eternalSong",implemented:true,effect:{type:"roundEndAutoSkillAtLowHpOnce",threshold:.10,skillId:"eternal"}};
+    if(name==="パンドラ") return {...base,id:"forbiddenBox",implemented:true,effect:{type:"roundEndAutoSkillAfterDamageOnce",skillId:"pandem"}};
+    if(name==="上級妖狐") return {...base,id:"kaeshiSorcery",implemented:true,effect:{type:"roundEndTransferAllStatusesOnce",statuses:["poison","blind","silence","shock"]}};
+    if(name==="ヴァルキリー") return {...base,id:"battlefieldSaint",implemented:true,effect:{type:"roundEndAutoSkillAtLowHpOnce",threshold:.25,skillId:"warGodAura"}};
+    if(name==="エメラルド") return {...base,id:"emeraldGem",implemented:true,effect:{type:"thirdRoundLastHealMostMissing",skillId:"lastHeal"}};
     return {...base,id:`confirmedPending_${confirmedRuntimeId(record)||record.character_id}`,implemented:false};
   }
 
@@ -6257,11 +6268,13 @@
     return {damage:adjusted,endured,trait: endured?trait:null};
   }
 
-  function recordAllyDamageTaken(target,damage){
+  function recordAllyDamageTaken(target,damage,{element=null}={}){
     const amount=Math.max(0,Number(damage)||0);
     if(!target || amount<=0) return;
+    if(element==="fire") state._allyFireDamageRound=state.battleRound;
     const effect=traitOf(target)?.effect;
     const battle=confirmedBattleStateFor(target);
+    battle.damageRound=state.battleRound;
     if(effect?.type==="pristineDamageBoostAndIncomingPenalty") battle.tookDamage=true;
     if(effect?.type==="damageTakenStack"){
       battle.damageTakenBonus=Math.min(Math.max(0,Number(effect.max)||20),(Number(battle.damageTakenBonus)||0)+Math.max(0,Number(effect.step)||2));
@@ -6756,6 +6769,7 @@
 
   function applyBattleStartTraits(){
     const notices=[];
+    state._allyFireDamageRound=0;
     travelPartyIds().forEach(id=>{const c=roster[id];if(c)c._foxTrickeryUsedThisBattle=false;});
 
     livingActiveSlots().forEach(({c})=>{
@@ -6841,16 +6855,17 @@
         }
       });
       [["powerChargeMultiplier","powerChargeRounds"],["magicConcentrationMultiplier","magicConcentrationRounds"]].forEach(([valueKey,roundKey])=>{
+        if(skipRoundDecrement.has(`${c.id}:${roundKey}`)) return;
         if((c[roundKey]||0)>0){
           c[roundKey]--;
           if(c[roundKey]<=0){ c[roundKey]=0; c[valueKey]=1; }
         }
       });
-      if((c.magicBarrierRounds||0)>0){
+      if((c.magicBarrierRounds||0)>0 && !skipRoundDecrement.has(`${c.id}:magicBarrierRounds`)){
         c.magicBarrierRounds--;
         if(c.magicBarrierRounds<=0){ c.magicBarrierRounds=0; c.magicBarrierReduction=0; }
       }
-      if(conditionsOf(c).berserk && (c.berserkRounds||0)>0){
+      if(conditionsOf(c).berserk && (c.berserkRounds||0)>0 && !skipRoundDecrement.has(`${c.id}:berserkRounds`)){
         c.berserkRounds--;
         if(c.berserkRounds<=0){ c.berserkRounds=0; conditionsOf(c).berserk=false; }
       }
@@ -6960,6 +6975,184 @@
     }
   }
 
+  function roundEndEnemyBuffEntries(enemy){
+    if(!enemy) return [];
+    const entries=[];
+    for(const [stat,info] of Object.entries(BUFF_INFO)){
+      const value=Math.max(1,Number(enemy[info.value])||1);
+      const rounds=Math.max(0,Number(enemy[info.rounds])||0);
+      if(value>1 || rounds>0) entries.push({kind:"stat",stat,value,rounds});
+    }
+    if(Number(enemy.powerChargeRounds)>0) entries.push({kind:"charge",value:Number(enemy.powerChargeMultiplier)||2,rounds:Number(enemy.powerChargeRounds)||0});
+    if(Number(enemy.magicConcentrationRounds)>0) entries.push({kind:"focus",value:Number(enemy.magicConcentrationMultiplier)||2,rounds:Number(enemy.magicConcentrationRounds)||0});
+    if(Number(enemy.magicBarrierRounds)>0) entries.push({kind:"barrier",value:Number(enemy.magicBarrierReduction)||Number(skills.magicBarrier?.reduction)||.60,rounds:Number(enemy.magicBarrierRounds)||0});
+    const cond=conditionsOf(enemy);
+    if(cond.mount) entries.push({kind:"mount"});
+    if(cond.aura) entries.push({kind:"aura"});
+    if(cond.berserk) entries.push({kind:"berserk",rounds:Number(enemy.berserkRounds)||0});
+    if(enemy.buffs && typeof enemy.buffs==="object"){
+      Object.keys(enemy.buffs).forEach(key=>entries.push({kind:"generic",key,value:enemy.buffs[key]}));
+    }
+    return entries;
+  }
+
+  function copyRoundEndEnemyBuffs(enemy,actor,skipRoundDecrement){
+    const entries=roundEndEnemyBuffEntries(enemy);
+    let copied=0;
+    for(const entry of entries){
+      if(entry.kind==="stat"){
+        const result=applyStatBuff(actor,{buff:entry.stat,multiplier:entry.value,duration:entry.rounds});
+        if(result.applied){
+          copied++;
+          skipRoundDecrement.add(`${actor.id}:${BUFF_INFO[entry.stat].rounds}`);
+        }
+        continue;
+      }
+      if(entry.kind==="charge"){
+        actor.powerChargeMultiplier=Math.max(Number(actor.powerChargeMultiplier)||1,entry.value);
+        actor.powerChargeRounds=Math.max(Number(actor.powerChargeRounds)||0,entry.rounds);
+        skipRoundDecrement.add(`${actor.id}:powerChargeRounds`); copied++; continue;
+      }
+      if(entry.kind==="focus"){
+        actor.magicConcentrationMultiplier=Math.max(Number(actor.magicConcentrationMultiplier)||1,entry.value);
+        actor.magicConcentrationRounds=Math.max(Number(actor.magicConcentrationRounds)||0,entry.rounds);
+        skipRoundDecrement.add(`${actor.id}:magicConcentrationRounds`); copied++; continue;
+      }
+      if(entry.kind==="barrier"){
+        actor.magicBarrierReduction=Math.max(Number(actor.magicBarrierReduction)||0,entry.value);
+        actor.magicBarrierRounds=Math.max(Number(actor.magicBarrierRounds)||0,entry.rounds);
+        skipRoundDecrement.add(`${actor.id}:magicBarrierRounds`); copied++; continue;
+      }
+      if(entry.kind==="mount"){
+        conditionsOf(actor).mount=true; copied++; continue;
+      }
+      if(entry.kind==="aura"){
+        conditionsOf(actor).aura=true; copied++; continue;
+      }
+      if(entry.kind==="berserk"){
+        conditionsOf(actor).berserk=true;
+        actor.berserkRounds=Math.max(Number(actor.berserkRounds)||0,entry.rounds);
+        skipRoundDecrement.add(`${actor.id}:berserkRounds`); copied++; continue;
+      }
+      if(entry.kind==="generic"){
+        actor.buffs=actor.buffs&&typeof actor.buffs==="object"?actor.buffs:{};
+        actor.buffs[entry.key]=entry.value; copied++;
+      }
+    }
+    return copied;
+  }
+
+  function roundEndTransferStatus(target,status){
+    if(!target || target.hp<=0) return {success:false,reason:"invalid"};
+    if(target.statusImmuneAll || (Array.isArray(target.statusImmune) && target.statusImmune.includes(status))) return {success:false,reason:"immune"};
+    const cond=conditionsOf(target);
+    if(cond[status]) return {success:false,reason:"already"};
+    if(cond.mount){ cond.mount=false; return {success:false,reason:"mount"}; }
+    cond[status]=true;
+    if(status==="shock") target.shockRecoverFails=0;
+    return {success:true,reason:"applied"};
+  }
+
+  async function triggerFreeRoundEndTraitSkill(actor,skillId,traitLabel,skipRoundDecrement,{targetEntry=null}={}){
+    if(!actor || S(actor).hp<=0 || automaticTraitSkillBlocked(actor)) return false;
+    const base=skills[skillId];
+    if(!base) return false;
+    const sk=effectiveSkillForActor(actor,base);
+
+    if(sk.kind==="heal"){
+      if(sk.target==="allyAll"){
+        const targets=livingActiveSlots();
+        if(!targets.length) return false;
+        let total=0;
+        for(const {i,c} of targets){
+          const missing=Math.max(0,S(c).hpMax-S(c).hp);
+          const amount=Math.min(missing,sk.fullHeal?missing:healAmountForSkill(actor,sk));
+          if(amount<=0) continue;
+          S(c).hp+=amount; total+=amount;
+          flashPartyValue(i,amount,"heal");
+          const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`);
+          if(card) spawnFx("heal",sk.icon||"✨",card);
+        }
+        renderBattleParty();
+        setMessage(`${sk.icon||"✨"} ${actor.name} の「${traitLabel}」！ MP消費0で ${sk.name} が発動！${total?` 味方全体を合計 ${total} 回復。`:""}`);
+        await wait(BASE_TIME.heal);
+        return true;
+      }
+      const target=targetEntry?.c&&S(targetEntry.c).hp>0?targetEntry:null;
+      if(!target) return false;
+      const missing=Math.max(0,S(target.c).hpMax-S(target.c).hp);
+      const amount=Math.min(missing,sk.fullHeal?missing:healAmountForSkill(actor,sk));
+      if(amount>0){
+        S(target.c).hp+=amount;
+        renderBattleParty();
+        flashPartyValue(target.i,amount,"heal");
+        const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${target.i}"]`);
+        if(card) spawnFx("heal",sk.icon||"✨",card);
+      }
+      setMessage(`${sk.icon||"✨"} ${actor.name} の「${traitLabel}」！ MP消費0で ${target.c.name} に ${sk.name}！${amount?` HPが ${amount} 回復した。`:""}`);
+      await wait(BASE_TIME.heal);
+      return true;
+    }
+
+    if(sk.kind==="buff"){
+      const targets=sk.target==="allyAll"?livingActiveSlots():(targetEntry?[targetEntry]:[]);
+      if(!targets.length) return false;
+      let applied=0;
+      for(const {c} of targets){
+        const result=applyStatBuff(c,sk);
+        if(result.applied){
+          applied++;
+          const info=BUFF_INFO[sk.buff];
+          if(info) skipRoundDecrement.add(`${c.id}:${info.rounds}`);
+          if(result.linkedBuff?.applied) skipRoundDecrement.add(`${c.id}:atkBuffRounds`);
+        }
+      }
+      renderBattleParty();
+      setMessage(`${sk.icon||"✨"} ${actor.name} の「${traitLabel}」！ MP消費0で ${sk.name} が発動！${applied?" 味方の能力が上がった！":""}`);
+      await wait(BASE_TIME.buff);
+      return true;
+    }
+
+    if(sk.kind==="multiStatus"){
+      const targets=[...livingEnemies()];
+      if(!targets.length) return false;
+      let successes=0;
+      targets.forEach(target=>(sk.statuses||[]).forEach(status=>{
+        if(tryInflictStatus(target,status,Number(sk.baseRate)||0,{source:actor}).success) successes++;
+      }));
+      renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+      setMessage(`${sk.icon||"✨"} ${actor.name} の「${traitLabel}」！ MP消費0で ${sk.name} が発動！${successes?` 状態異常${successes}件を付与。`:" 効果はなかった。"}`);
+      await wait(BASE_TIME.short);
+      return true;
+    }
+
+    if(sk.kind==="magic"){
+      const targets=sk.target==="enemyAll"?[...livingEnemies()]:(livingEnemies()[0]?[livingEnemies()[0]]:[]);
+      if(!targets.length) return false;
+      let total=0,defeated=0;
+      for(const target of targets){
+        let dmg=spellDamage(actor,target,sk);
+        dmg=silverBodyAdjustedDamage(target,dmg);
+        const legacy=enemyElementNullify(target,sk.element,dmg);
+        dmg=legacy.damage;
+        target.hp=Math.max(0,target.hp-dmg);
+        if(target.hp<=0){
+          if(!target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
+          defeated++;
+        }
+        total+=dmg;
+        await afterOffensiveHitTraits(actor,target,{damage:dmg,critical:false,element:sk.element||null});
+        if(state.battleEnded) return true;
+      }
+      renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+      setMessage(`${sk.icon||"✨"} ${actor.name} の「${traitLabel}」！ MP消費0で ${sk.name} が発動！ 敵に合計 ${total} ダメージ。${defeated?` ${defeated}体を倒した！`:""}`);
+      await wait(BASE_TIME.short);
+      if(livingEnemies().length===0 && !state.battleEnded){ winBattle(); }
+      return true;
+    }
+    return false;
+  }
+
   async function processTurnEndTraits(){
     const active=[...livingActiveSlots()];
     // Buffs newly granted by an end-of-round trait begin at their full duration next round.
@@ -7017,6 +7210,7 @@
           const target=choose(candidates);
           const damage=Math.max(1,Math.ceil(S(target.c).hpMax*damagePercent));
           S(target.c).hp=Math.max(1,S(target.c).hp-damage);
+          recordAllyDamageTaken(target.c,damage);
           renderBattleParty();
           flashPartyValue(target.i,damage,"damage");
           const targetCard=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${target.i}"]`);
@@ -7055,6 +7249,152 @@
       }
       c._usedHealingMagicThisRound=false;
     }
+
+    // v0.47l: B2 confirmed companions — end-of-round traits.
+    for(const entry of active){
+      const c=entry.c,i=entry.i;
+      if(!c || S(c).hp<=0) continue;
+      const trait=traitOf(c),effect=trait?.effect;
+      if(!trait || !effect) continue;
+      const battle=confirmedBattleStateFor(c);
+
+      if(effect.type==="roundEndClearEnemyBuffsOnce" && !battle.used.meanBunny){
+        const buffed=livingEnemies().filter(enemy=>roundEndEnemyBuffEntries(enemy).length>0);
+        if(buffed.length && Math.random()<Math.max(0,Math.min(1,Number(trait.chance)||.30))){
+          battle.used.meanBunny=true;
+          let cleared=0;
+          buffed.forEach(enemy=>{ if(clearEnemyBuffs(enemy)) cleared++; });
+          renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+          setMessage(`🐇 ${c.name} の「${trait.name}」！ 敵の強化効果をすべて解除した！`);
+          await wait(BASE_TIME.short);
+        }
+      }
+
+      if(effect.type==="roundEndHealAfterPartyFireDamageOnce" && !battle.used.seaInvitation && Number(state._allyFireDamageRound)===Number(state.battleRound)){
+        const targets=livingActiveSlots();
+        if(targets.length && !automaticTraitSkillBlocked(c)){
+          const minHp=Math.min(...targets.map(x=>S(x.c).hp));
+          const target=choose(targets.filter(x=>S(x.c).hp===minHp));
+          if(target && await triggerFreeRoundEndTraitSkill(c,effect.skillId||"gigaHeal",trait.name,skipRoundDecrement,{targetEntry:target})){
+            battle.used.seaInvitation=true;
+            if(state.battleEnded) return skipRoundDecrement;
+          }
+        }
+      }
+
+      if(effect.type==="roundEndCleanseRandomAfflictedAndQuickOnce" && !battle.used.spiderGod){
+        const statuses=["poison","blind","silence","shock"];
+        const candidates=livingActiveSlots().filter(x=>statuses.some(status=>conditionsOf(x.c)[status]));
+        if(candidates.length){
+          const target=choose(candidates);
+          const removed=clearNegativeConditions(target.c);
+          const result=applyStatBuff(target.c,{buff:"spd",multiplier:Number(effect.multiplier)||Number(skills.quick?.multiplier)||1.30,duration:Number(effect.duration)||Number(skills.quick?.duration)||5});
+          if(result.applied) skipRoundDecrement.add(`${target.c.id}:spdBuffRounds`);
+          battle.used.spiderGod=true;
+          renderBattleParty();
+          const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${target.i}"]`);
+          if(card) spawnFx("buff","🕷️",card);
+          setMessage(`🕷️ ${c.name} の「${trait.name}」！ ${target.c.name} の状態異常を${removed}個解除し、素早さを上げた！`);
+          await wait(BASE_TIME.buff);
+        }
+      }
+
+      if(effect.type==="roundEndSelfHealAtLowHpOnce" && !battle.used.ancientBattleMachine){
+        const threshold=Math.max(0,Math.min(1,Number(effect.threshold)||.50));
+        if(S(c).hp>0 && S(c).hp<=S(c).hpMax*threshold){
+          const amount=Math.min(S(c).hpMax-S(c).hp,Math.max(1,Math.ceil(S(c).hpMax*(Number(effect.healRate)||.50))));
+          battle.used.ancientBattleMachine=true;
+          if(amount>0){
+            S(c).hp+=amount;
+            renderBattleParty();
+            flashPartyValue(i,amount,"heal");
+            const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`);
+            if(card) spawnFx("heal","⚙️",card);
+          }
+          setMessage(`⚙️ ${c.name} の「${trait.name}」！ HPが ${amount} 回復した！`);
+          await wait(BASE_TIME.heal);
+        }
+      }
+
+      if(effect.type==="roundEndAutoSkillAfterSkillUse" && Number(battle.skillUsedRound)===Number(state.battleRound)){
+        const chance=Math.max(0,Math.min(1,Number(trait.chance)||.15));
+        if(!automaticTraitSkillBlocked(c) && Math.random()<chance){
+          await triggerFreeRoundEndTraitSkill(c,effect.skillId||"gigaQuake",trait.name,skipRoundDecrement);
+          if(state.battleEnded) return skipRoundDecrement;
+        }
+      }
+
+      if(effect.type==="roundEndCopyMostBuffedEnemyOnce" && !battle.used.utsushiSorcery){
+        const enemies=livingEnemies().map(enemy=>({enemy,count:roundEndEnemyBuffEntries(enemy).length})).filter(x=>x.count>0);
+        if(enemies.length){
+          const maxCount=Math.max(...enemies.map(x=>x.count));
+          const picked=choose(enemies.filter(x=>x.count===maxCount));
+          if(picked){
+            const copied=copyRoundEndEnemyBuffs(picked.enemy,c,skipRoundDecrement);
+            battle.used.utsushiSorcery=true;
+            renderBattleParty();
+            const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`);
+            if(card) spawnFx("buff","🦊",card);
+            setMessage(`🦊 ${c.name} の「${trait.name}」！ ${picked.enemy.displayName} の強化効果${copied?`を${copied}種類`:""}コピーした！`);
+            await wait(BASE_TIME.buff);
+          }
+        }
+      }
+
+      if(effect.type==="roundEndAutoSkillAtLowHpOnce"){
+        const key=effect.skillId==="eternal"?"eternalSong":"battlefieldSaint";
+        if(!battle.used[key]){
+          const threshold=Math.max(0,Math.min(1,Number(effect.threshold)||0));
+          if(S(c).hp>0 && S(c).hp<=S(c).hpMax*threshold && !automaticTraitSkillBlocked(c)){
+            if(await triggerFreeRoundEndTraitSkill(c,effect.skillId,trait.name,skipRoundDecrement)){
+              battle.used[key]=true;
+              if(state.battleEnded) return skipRoundDecrement;
+            }
+          }
+        }
+      }
+
+      if(effect.type==="roundEndAutoSkillAfterDamageOnce" && !battle.used.forbiddenBox && Number(battle.damageRound)===Number(state.battleRound)){
+        if(!automaticTraitSkillBlocked(c) && await triggerFreeRoundEndTraitSkill(c,effect.skillId||"pandem",trait.name,skipRoundDecrement)){
+          battle.used.forbiddenBox=true;
+          if(state.battleEnded) return skipRoundDecrement;
+        }
+      }
+
+      if(effect.type==="roundEndTransferAllStatusesOnce" && !battle.used.kaeshiSorcery){
+        const statuses=Array.isArray(effect.statuses)?effect.statuses:["poison","blind","silence","shock"];
+        const owned=statuses.filter(status=>conditionsOf(c)[status]);
+        const enemies=livingEnemies();
+        if(owned.length && enemies.length){
+          const target=choose(enemies);
+          owned.forEach(status=>{ conditionsOf(c)[status]=false; });
+          if(!conditionsOf(c).shock) c.shockRecoverFails=0;
+          let moved=0,immune=0;
+          for(const status of owned){
+            const result=roundEndTransferStatus(target,status);
+            if(result.success) moved++;
+            else if(result.reason==="immune") immune++;
+          }
+          battle.used.kaeshiSorcery=true;
+          renderBattleParty();
+          renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+          setMessage(`🦊 ${c.name} の「${trait.name}」！ 状態異常をすべて解除し、${target.displayName} へ移した！${immune?`（${immune}種は無効）`:""}`);
+          await wait(BASE_TIME.short);
+        }
+      }
+
+      if(effect.type==="thirdRoundLastHealMostMissing" && Number(state.battleRound)===3 && !battle.used.emeraldRound3){
+        const targets=livingActiveSlots().map(x=>({...x,missing:Math.max(0,S(x.c).hpMax-S(x.c).hp)}));
+        const maxMissing=targets.length?Math.max(...targets.map(x=>x.missing)):0;
+        if(maxMissing>0 && !automaticTraitSkillBlocked(c)){
+          const target=choose(targets.filter(x=>x.missing===maxMissing));
+          if(target && await triggerFreeRoundEndTraitSkill(c,effect.skillId||"lastHeal",trait.name,skipRoundDecrement,{targetEntry:target})){
+            battle.used.emeraldRound3=true;
+          }
+        }
+      }
+    }
+
     state.battleActive.concat(state.battleReserve).forEach(id=>{ if(roster[id]) roster[id]._usedHealingMagicThisRound=false; });
     return skipRoundDecrement;
   }
@@ -9037,6 +9377,7 @@
     S(actor).mp-=actualCost;
     actor._lastSkillResolved=true;
     actor._confirmedBattle=actor._confirmedBattle||confirmedRules.newBattleState();
+    actor._confirmedBattle.skillUsedRound=state.battleRound;
     const useEffect=traitOf(actor)?.effect;
     if(useEffect?.type==="skillUseDamageStack"){
       actor._confirmedBattle.seraphBonus=Math.min(Number(useEffect.max)||30,(Number(actor._confirmedBattle.seraphBonus)||0)+(Number(useEffect.step)||3));
@@ -10092,7 +10433,7 @@
       if(elementTrait.reason==="immune") elementImmune++;
       if(elementTrait.reason==="traitImmune") traitImmune++;
       if(dmg>0) S(target).hp=Math.max(0,S(target).hp-dmg);
-      recordAllyDamageTaken(target,dmg);
+      recordAllyDamageTaken(target,dmg,{element:sk.element||null});
       const dragonSoul=dmg>0?triggerElementDamageBuffTrait(target,sk.element,dmg):null;
       if(dragonSoul) dragonSoulTriggered++;
       let shock=null;
@@ -10262,7 +10603,7 @@
       const incoming=adjustIncomingAllyDamage(target,target.defending?Math.ceil(raw/2):raw,{physical:true,element:sk.element||null});
       const dmg=incoming.damage;
       S(target).hp=Math.max(0,S(target).hp-dmg);
-      recordAllyDamageTaken(target,dmg);
+      recordAllyDamageTaken(target,dmg,{element:sk.element||null});
       if(enemyEl) spawnFx(sk.animation||"impact",sk.fxSymbol||sk.icon||"💥",enemyEl);
       renderBattleParty(); flashPartyValue(slot,dmg,"damage");
       setMessage(`${enemy.displayName} の体当たり！ ${target.name} に ${dmg} ダメージ。${target.defending?"（防御で軽減）":""}`);
@@ -10301,7 +10642,7 @@
     const incoming=adjustIncomingAllyDamage(target,target.defending?Math.ceil(raw/2):raw,{physical:true,element:sk.element||null});
     const dmg=incoming.damage;
     S(target).hp=Math.max(0,S(target).hp-dmg);
-    recordAllyDamageTaken(target,dmg);
+    recordAllyDamageTaken(target,dmg,{element:sk.element||null});
     const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
     if(card) spawnFx(sk.animation||"heavy",critical?"‼":(sk.fxSymbol||sk.icon||"💥"),card);
     renderBattleParty();
@@ -10349,7 +10690,7 @@
       const incoming=adjustIncomingAllyDamage(c,c.defending?Math.ceil(raw/2):raw,{physical:true,element:sk.element||null});
       const dmg=incoming.damage;
       S(c).hp=Math.max(0,S(c).hp-dmg);
-      recordAllyDamageTaken(c,dmg);
+      recordAllyDamageTaken(c,dmg,{element:sk.element||null});
       total+=dmg; landed++;
       const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
       if(card) spawnFx(sk.animation||"punch",sk.fxSymbol||sk.icon||"🥊",card);
