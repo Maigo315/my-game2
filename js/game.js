@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47j";
+  const DEV_VERSION = "v0.47k";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2628,6 +2628,18 @@
     if(name==="エタニティ") return {...base,id:"eternalSpirit",implemented:true,effect:{type:"eternalAlsoSpiritBlessing",skillId:"eternal",extraSkillId:"spiritKingBlessing",once:true}};
     if(name==="セラフ") return {...base,id:"heavenlyApostle",implemented:true,effect:{type:"skillUseDamageStack",step:3,max:30}};
     if(name==="トパーズ") return {...base,id:"shiningTopaz",implemented:true,effect:{type:"basicHitSelfTripleBuffOnce",multiplier:1.50,duration:4,buffs:["atk","def","mdef"]}};
+    if(name==="メタルゴーレム") return {...base,id:"metalDemon",implemented:true,effect:{type:"physicalDamageReductionAndCertainShock",physicalMultiplier:.85}};
+    if(name==="ヴィーラ") return {...base,id:"mysticClan",implemented:true,chance:.20,effect:{type:"magicDamageAutoHealOnce",excludeElement:"pleasure",skillId:"fairyHeal"}};
+    if(name==="ファイアフォックス") return {...base,id:"fireSpiritBeast",implemented:true,chance:.30,effect:{type:"magicDamageCounterSpell",skillIds:["flare","gigaFlare"],weights:[.50,.50],requireSurvive:true}};
+    if(name==="レサト") return {...base,id:"dancingBlade",implemented:true,effect:{type:"pristineDamageBoostAndIncomingPenalty",incomingMultiplier:1.10,damageBonus:20}};
+    if(name==="ヴリトラ") return {...base,id:"blackSerpentJudgment",implemented:true,chance:.75,effect:{type:"elementMagicBasicCounter",element:"dark"}};
+    if(name==="マリアンヌ") return {...base,id:"demonWorldFlower",implemented:true,effect:{type:"elementDamageAuraOnce",elements:["light","dark"]}};
+    if(name==="プレジャーウィッチ") return {...base,id:"pleasureMage",implemented:true,effect:{type:"mpOnElementDamage",element:"pleasure",amount:8}};
+    if(name==="デックアールヴ") return {...base,id:"fallenElf",implemented:true,chance:.20,effect:{type:"magicBasicCounter",excludeElement:"light"}};
+    if(name==="フィナーレ") return {...base,id:"endingPulse",implemented:true,effect:{type:"damageTakenStack",step:2,max:20}};
+    if(name==="ウミウシヒメ") return {...base,id:"seaFlower",implemented:true,effect:{type:"elementIncomingMultiplierAndEndureOnce",elements:["fire","thunder"],multiplier:1.50}};
+    if(name==="花仙妖狐") return {...base,id:"flowerFoxSorcery",implemented:true,effect:{type:"negateEnemyMagicOnceAndConcentrate"}};
+    if(name==="スプレマシージェム") return {...base,id:"ultimateRuby",implemented:true,chance:.20,effect:{type:"magicEvasionAndAutoHeal",evasionBonus:30,skillId:"fairyHeal"}};
     return {...base,id:`confirmedPending_${confirmedRuntimeId(record)||record.character_id}`,implemented:false};
   }
 
@@ -2748,7 +2760,7 @@
       base:{hpMax:43,mpMax:21,atk:15,def:12,magic:13,mdef:13,spd:13},
       final:{hpMax:620,mpMax:420,atk:290,def:250,magic:280,mdef:280,spd:280},
       resist:{fire:"C",ice:"C",light:"B",dark:"D",thunder:"C",wind:"B",earth:"D",pleasure:"E",poison:"D",blind:"B",silence:"B",death:"D"},
-      trait:{id:"pureHunter",name:"清純なる狩人",icon:"🏹",chance:.10,trigger:"onMagicDamage",desc:"快楽属性以外の魔法ダメージを受けた時、10%の確率で通常攻撃で反撃する。1回の敵行動につき最大1回。",effect:{type:"magicCounter",excludeElement:"pleasure"}},
+      trait:{id:"pureHunter",name:"清純なる狩人",icon:"🏹",chance:.10,trigger:"onMagicDamage",desc:"快楽属性以外の魔法ダメージを受けた時、1ヒットごとに10%の確率で通常攻撃で反撃する。",effect:{type:"magicCounter",excludeElement:"pleasure"}},
       plannedSkills:{2:["silence"],9:["highHeal"],16:["thunder"],21:["holy"],33:["raise2"],37:["gigaHoly"],45:["stardust"]}
     },
     sylph:{
@@ -6067,6 +6079,8 @@
     if(effect?.type==="damageVsUnactedEnemy" && target && target._actedRound!==state.battleRound) bonus+=Math.max(0,Number(effect.percent)||0);
     if(effect?.type==="physicalToPleasureAndStack" && element==="pleasure") bonus+=Math.max(0,Number(actor?._confirmedBattle?.pleasureBonus)||0);
     if(effect?.type==="skillUseDamageStack") bonus+=Math.max(0,Number(actor?._confirmedBattle?.seraphBonus)||0);
+    if(effect?.type==="pristineDamageBoostAndIncomingPenalty" && !actor?._confirmedBattle?.tookDamage && S(actor).hp>0 && S(actor).hp>=S(actor).hpMax) bonus+=Math.max(0,Number(effect.damageBonus)||0);
+    if(effect?.type==="damageTakenStack") bonus+=Math.max(0,Number(actor?._confirmedBattle?.damageTakenBonus)||0);
     return Math.max(0,1+bonus/100);
   }
 
@@ -6195,19 +6209,217 @@
     return effectiveEnemyStat(enemy,"def");
   }
 
-  async function maybeTriggerPureHunterCounter(defender,slot,attacker,sk,context){
+  async function maybeTriggerPureHunterCounter(defender,slot,attacker,sk){
     const trait=traitOf(defender),effect=trait?.effect;
     if(trait?.id!=="pureHunter" || effect?.type!=="magicCounter" || !attacker || attacker.hp<=0 || S(defender).hp<=0) return false;
-    if(sk?.element===effect.excludeElement) return false;
-    if(!context) context=makeTraitActionContext();
-    const key=`pureHunter:${defender.id}`;
-    if(context.triggeredTraits.has(key) || !traitRoll(trait)) return false;
-    context.triggeredTraits.add(key);
+    if(sk?.element===effect.excludeElement || !traitRoll(trait)) return false;
     setMessage(`🏹 ${defender.name} の「清純なる狩人」！ ${attacker.displayName} に反撃！`);
     await wait(BASE_TIME.short);
     const result=await resolveBasicAttack(defender,{type:"attack",targetUid:attacker.uid},{allowDoubleAttack:false,isCounter:true});
     if(result?.battleWon && !state.battleEnded){ winBattle(); return true; }
     return false;
+  }
+
+
+  function confirmedBattleStateFor(c){
+    if(!c) return null;
+    c._confirmedBattle=c._confirmedBattle||confirmedRules.newBattleState();
+    c._confirmedBattle.used=c._confirmedBattle.used||{};
+    return c._confirmedBattle;
+  }
+
+  function automaticTraitSkillBlocked(c){
+    const cond=conditionsOf(c);
+    return !!(cond.silence || cond.shock);
+  }
+
+  function adjustIncomingAllyDamage(target,damage,{physical=false,element=null}={}){
+    const raw=Math.max(0,Math.round(Number(damage)||0));
+    if(!target || raw<=0) return {damage:raw,endured:false,trait:null};
+    const trait=traitOf(target),effect=trait?.effect;
+    let multiplier=1;
+    if(effect?.type==="physicalDamageReductionAndCertainShock" && physical) multiplier*=Math.max(0,Number(effect.physicalMultiplier)||.85);
+    if(effect?.type==="pristineDamageBoostAndIncomingPenalty") multiplier*=Math.max(0,Number(effect.incomingMultiplier)||1.10);
+    if(effect?.type==="elementIncomingMultiplierAndEndureOnce" && Array.isArray(effect.elements) && effect.elements.includes(element)){
+      multiplier*=Math.max(0,Number(effect.multiplier)||1.50);
+    }
+    let adjusted=Math.max(1,Math.round(raw*multiplier));
+    let endured=false;
+    if(effect?.type==="elementIncomingMultiplierAndEndureOnce" && Array.isArray(effect.elements) && effect.elements.includes(element)){
+      const battle=confirmedBattleStateFor(target);
+      const hp=Math.max(0,Number(S(target).hp)||0);
+      if(hp>0 && !battle.used.seaFlowerEndure && adjusted>=hp){
+        battle.used.seaFlowerEndure=true;
+        adjusted=Math.max(0,hp-1);
+        endured=true;
+      }
+    }
+    return {damage:adjusted,endured,trait: endured?trait:null};
+  }
+
+  function recordAllyDamageTaken(target,damage){
+    const amount=Math.max(0,Number(damage)||0);
+    if(!target || amount<=0) return;
+    const effect=traitOf(target)?.effect;
+    const battle=confirmedBattleStateFor(target);
+    if(effect?.type==="pristineDamageBoostAndIncomingPenalty") battle.tookDamage=true;
+    if(effect?.type==="damageTakenStack"){
+      battle.damageTakenBonus=Math.min(Math.max(0,Number(effect.max)||20),(Number(battle.damageTakenBonus)||0)+Math.max(0,Number(effect.step)||2));
+    }
+  }
+
+  async function triggerFreeFairyHeal(actor,traitLabel){
+    if(!actor || S(actor).hp<=0 || automaticTraitSkillBlocked(actor)) return false;
+    const sk=skills.fairyHeal;
+    if(!sk) return false;
+    const targets=livingActiveSlots().filter(({c})=>S(c).hp>0 && S(c).hp<S(c).hpMax);
+    const baseAmount=healAmountForSkill(actor,sk);
+    let total=0;
+    targets.forEach(({i,c})=>{
+      const missing=S(c).hpMax-S(c).hp;
+      const amount=Math.min(missing,sk.fullHeal?missing:baseAmount);
+      if(amount<=0) return;
+      S(c).hp+=amount; total+=amount;
+      flashPartyValue(i,amount,"heal");
+      const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`);
+      if(card) spawnFx("heal","✨",card);
+    });
+    renderBattleParty();
+    setMessage(`🧚 ${actor.name} の「${traitLabel}」！ フェアリーヒールが発動！${total>0?` 味方全員を合計 ${total} 回復。`:""}`);
+    await wait(BASE_TIME.heal);
+    return true;
+  }
+
+  async function resolveFreeCounterMagic(actor,attacker,skillId,traitLabel){
+    if(!actor || S(actor).hp<=0 || !attacker || attacker.hp<=0 || automaticTraitSkillBlocked(actor)) return false;
+    const sk=skills[skillId];
+    if(!sk || sk.kind!=="magic") return false;
+    setMessage(`${sk.icon||"✨"} ${actor.name} の「${traitLabel}」！ ${sk.name} で反撃！`);
+    await wait(BASE_TIME.short);
+    let dmg=spellDamage(actor,attacker,sk);
+    dmg=silverBodyAdjustedDamage(attacker,dmg);
+    const legacy=enemyElementNullify(attacker,sk.element,dmg);
+    dmg=legacy.damage;
+    attacker.hp=Math.max(0,attacker.hp-dmg);
+    const killed=attacker.hp<=0;
+    if(killed && !attacker.defeatOrder) attacker.defeatOrder=++state.battleDefeatCounter;
+    await animateEnemyDamage(attacker,killed,sk.animation||"magicshot",sk.fxSymbol||sk.icon||"✦",false,dmg);
+    await afterOffensiveHitTraits(actor,attacker,{damage:dmg,critical:false,element:sk.element||null});
+    setMessage(legacy.nullified
+      ? `${legacy.icon||"🏺"} ${attacker.displayName} は「${legacy.name||"古代の遺産"}」で${sk.name}を無効化した！`
+      : `${sk.icon||"✨"} ${sk.name}！ ${attacker.displayName} に ${dmg} ダメージ。${killed?`${attacker.displayName} を倒した！`:""}`);
+    await wait(BASE_TIME.short);
+    if(killed && livingEnemies().length===0 && !state.battleEnded){ winBattle(); return true; }
+    return false;
+  }
+
+  async function maybeTriggerMagicEvasionAutoHeal(target,slot){
+    const trait=traitOf(target),effect=trait?.effect;
+    if(effect?.type!=="magicEvasionAndAutoHeal" || S(target).hp<=0) return false;
+    const chance=Math.max(0,Math.min(1,Number(trait?.chance)||.20));
+    if(Math.random()>=chance) return false;
+    return triggerFreeFairyHeal(target,trait.name);
+  }
+
+  async function maybeTriggerB3MagicDamageReaction(defender,slot,attacker,sk,damage){
+    if(!defender || !attacker || attacker.hp<=0 || Number(damage)<=0) return false;
+    const trait=traitOf(defender),effect=trait?.effect;
+    if(!trait || !effect) return false;
+
+    if(trait.id==="pureHunter") return maybeTriggerPureHunterCounter(defender,slot,attacker,sk);
+
+    if(effect.type==="magicDamageAutoHealOnce"){
+      if(S(defender).hp<=0 || sk?.element===effect.excludeElement) return false;
+      const battle=confirmedBattleStateFor(defender);
+      if(battle.used.mysticClan || automaticTraitSkillBlocked(defender)) return false;
+      const chance=Math.max(0,Math.min(1,Number(trait.chance)||.20));
+      if(Math.random()>=chance) return false;
+      battle.used.mysticClan=true;
+      return triggerFreeFairyHeal(defender,trait.name);
+    }
+    if(effect.type==="magicDamageCounterSpell"){
+      if(S(defender).hp<=0 && effect.requireSurvive!==false) return false;
+      if(automaticTraitSkillBlocked(defender)) return false;
+      const chance=Math.max(0,Math.min(1,Number(trait.chance)||.30));
+      if(Math.random()>=chance) return false;
+      const ids=Array.isArray(effect.skillIds)?effect.skillIds:[];
+      if(!ids.length) return false;
+      const pick=Math.random()<.50?ids[0]:ids[Math.min(1,ids.length-1)];
+      return resolveFreeCounterMagic(defender,attacker,pick,trait.name);
+    }
+    if(effect.type==="elementMagicBasicCounter"){
+      if(S(defender).hp<=0 || sk?.element!==effect.element) return false;
+      const chance=Math.max(0,Math.min(1,Number(trait.chance)||.75));
+      if(Math.random()>=chance) return false;
+      setMessage(`🐍 ${defender.name} の「${trait.name}」！ ${attacker.displayName} に反撃！`);
+      await wait(BASE_TIME.short);
+      const result=await resolveBasicAttack(defender,{type:"attack",targetUid:attacker.uid},{allowDoubleAttack:false,isCounter:true});
+      if(result?.battleWon && !state.battleEnded){ winBattle(); return true; }
+      return false;
+    }
+    if(effect.type==="elementDamageAuraOnce"){
+      if(S(defender).hp<=0 || !Array.isArray(effect.elements) || !effect.elements.includes(sk?.element)) return false;
+      const battle=confirmedBattleStateFor(defender);
+      if(battle.used.demonWorldFlower) return false;
+      battle.used.demonWorldFlower=true;
+      conditionsOf(defender).aura=true;
+      renderBattleParty();
+      setMessage(`🌹 ${defender.name} の「${trait.name}」！ オーラをまとった！`);
+      await wait(BASE_TIME.buff);
+      return false;
+    }
+    if(effect.type==="mpOnElementDamage"){
+      if(S(defender).hp<=0 || sk?.element!==effect.element) return false;
+      const amount=Math.min(S(defender).mpMax-S(defender).mp,Math.max(0,Number(effect.amount)||8));
+      if(amount<=0) return false;
+      S(defender).mp+=amount;
+      renderBattleParty();
+      const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
+      if(card) spawnFx("heal","💗",card);
+      setMessage(`💗 ${defender.name} の「${trait.name}」！ MPが ${amount} 回復した。`);
+      await wait(BASE_TIME.short);
+      return false;
+    }
+    if(effect.type==="magicBasicCounter"){
+      if(S(defender).hp<=0 || sk?.element===effect.excludeElement) return false;
+      const chance=Math.max(0,Math.min(1,Number(trait.chance)||.20));
+      if(Math.random()>=chance) return false;
+      setMessage(`🏹 ${defender.name} の「${trait.name}」！ ${attacker.displayName} に反撃！`);
+      await wait(BASE_TIME.short);
+      const result=await resolveBasicAttack(defender,{type:"attack",targetUid:attacker.uid},{allowDoubleAttack:false,isCounter:true});
+      if(result?.battleWon && !state.battleEnded){ winBattle(); return true; }
+      return false;
+    }
+    return false;
+  }
+
+  async function maybeNegateEnemyMagicByFlowerFox(enemy,skillId){
+    const sk=skills[skillId];
+    if(!sk) return false;
+    const magicalKinds=new Set(["magic","status","heal","buff","cleanse","revive","charge","barrier"]);
+    if(!magicalKinds.has(sk.kind)) return false;
+    const holder=livingActiveSlots().find(({c})=>{
+      const effect=traitOf(c)?.effect;
+      if(effect?.type!=="negateEnemyMagicOnceAndConcentrate") return false;
+      return !confirmedBattleStateFor(c).used.flowerFoxSorcery;
+    });
+    if(!holder) return false;
+    const {c, i}=holder;
+    const battle=confirmedBattleStateFor(c);
+    battle.used.flowerFoxSorcery=true;
+    enemy.mp=Math.max(0,(Number(enemy.mp)||0)-Number(sk.cost||0));
+    enemy.lastSkillId=skillId;
+    const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${i}"]`);
+    if(card) spawnFx("buff","🌸",card);
+    if(!automaticTraitSkillBlocked(c)){
+      const focus=skills.magicConcentration;
+      c.magicConcentrationMultiplier=Number(focus?.multiplier)||2;
+      c.magicConcentrationRounds=Number(focus?.duration)||2;
+    }
+    renderBattleParty();
+    setMessage(`🌸 ${c.name} の「${traitOf(c).name}」！ ${enemy.displayName} の ${sk.name} を無効化した！${automaticTraitSkillBlocked(c)?"":" 魔力集中が発動！"}`);
+    await wait(BASE_TIME.enemyAfter);
+    return true;
   }
 
   const SAGE_WISDOM_STATS=[
@@ -6321,8 +6533,10 @@
       target._foxTrickeryUsedThisBattle=true;
       return {blocked:true,reason:"foxTrickery",damageMultiplier:0};
     }
-    if(traitEffect?.type==="magicEvasionRate" && Math.random()*100<Math.max(0,Number(traitEffect.bonus)||0)){
-      return {blocked:true,reason:"magicEvasion",damageMultiplier:0};
+    const magicEvasionBonus=traitEffect?.type==="magicEvasionRate" ? Number(traitEffect.bonus)||0
+      : traitEffect?.type==="magicEvasionAndAutoHeal" ? Number(traitEffect.evasionBonus)||0 : 0;
+    if(magicEvasionBonus>0 && Math.random()*100<Math.max(0,magicEvasionBonus)){
+      return {blocked:true,reason:"magicEvasion",damageMultiplier:0,traitName:traitOf(target)?.name||"魔法回避"};
     }
     if(cond.aura){
       cond.aura=false;
@@ -6457,8 +6671,10 @@
     }
     if(await maybeNullifyPhysicalByGhost(actor,slot,enemy,"反撃")) return true;
     let raw=physicalDamage(effectiveEnemyStat(enemy,"atk"),effectiveDef(actor),Number(enemy.basicAttackPower)||1,1);
-    const dmg=Math.max(1,actor.defending?Math.ceil(raw/2):raw);
+    const incoming=adjustIncomingAllyDamage(actor,actor.defending?Math.ceil(raw/2):raw,{physical:true,element:null});
+    const dmg=incoming.damage;
     S(actor).hp=Math.max(0,S(actor).hp-dmg);
+    recordAllyDamageTaken(actor,dmg);
     const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
     if(card) spawnFx(enemy.basicAttackFx||"impact",enemy.basicAttackSymbol||"💥",card);
     renderBattleParty();
@@ -6669,6 +6885,7 @@
       if(S(c).hp<=0) continue;
       const dmg=Math.max(1,Math.ceil(S(c).hpMax*.20));
       S(c).hp=Math.max(0,S(c).hp-dmg);
+      recordAllyDamageTaken(c,dmg);
       renderBattleParty();
       flashPartyValue(i,dmg,"damage");
       setMessage(`☠ ${c.name} は毒で ${dmg} ダメージ！`);
@@ -6984,7 +7201,7 @@
     if(traitEffect?.type==="poisonImmuneShockCertain" && status==="poison") return {success:false,reason:"immune",rate:0};
     if(status==="death" && target.statusDeathImmune) return {success:false,reason:"immune",rate:0};
     if(status!=="death" && cond[status]) return {success:false,reason:"already",rate:statusChancePercent(target,status,baseRate)};
-    const forcedShock=traitEffect?.type==="poisonImmuneShockCertain" && status==="shock";
+    const forcedShock=(traitEffect?.type==="poisonImmuneShockCertain" || traitEffect?.type==="physicalDamageReductionAndCertainShock") && status==="shock";
     const rate=forcedShock?100:statusChancePercent(target,status,baseRate);
     if(!forcedShock && Math.random()*100>=rate) return {success:false,reason:"resist",rate};
     // Mount is a separate one-use status barrier and still blocks Lloyd's guaranteed shock.
@@ -9014,6 +9231,7 @@
 
       const recoil=Math.max(1,Math.round(S(actor).hpMax*sk.recoilRate));
       S(actor).hp=Math.max(0,S(actor).hp-recoil);
+      recordAllyDamageTaken(actor,recoil);
       renderBattleParty();
       flashPartyValue(slot,recoil,"recoil");
       setMessage(`${actor.name} は反動で ${recoil} ダメージを受けた。`);
@@ -9850,8 +10068,6 @@
     await wait(BASE_TIME.actionLead);
 
     let total=0,blocked=0,hitCount=0,shocked=0,foxDodged=0,magicDodged=0,legacyNullified=0,absorbed=0,elementImmune=0,traitImmune=0,dragonSoulTriggered=0;
-    const traitContext=makeTraitActionContext();
-    const magicCounterCandidates=[];
     const results=[];
     for(const entry of targets){
       const target=entry.c,slot=entry.i;
@@ -9869,12 +10085,14 @@
       const baseDamage=enemySpellDamage(enemy,target,sk);
       const reducedDamage=Math.max(1,Math.round(baseDamage*defense.damageMultiplier));
       const elementTrait=incomingElementDamageTrait(target,sk.element,reducedDamage);
-      const dmg=elementTrait.damage;
+      const incoming=adjustIncomingAllyDamage(target,elementTrait.damage,{physical:false,element:sk.element||null});
+      const dmg=incoming.damage;
       if(elementTrait.reason==="legacy") legacyNullified++;
       if(elementTrait.reason==="absorb") absorbed++;
       if(elementTrait.reason==="immune") elementImmune++;
       if(elementTrait.reason==="traitImmune") traitImmune++;
       if(dmg>0) S(target).hp=Math.max(0,S(target).hp-dmg);
+      recordAllyDamageTaken(target,dmg);
       const dragonSoul=dmg>0?triggerElementDamageBuffTrait(target,sk.element,dmg):null;
       if(dragonSoul) dragonSoulTriggered++;
       let shock=null;
@@ -9883,8 +10101,7 @@
         if(shock?.success) shocked++;
       }
       total+=dmg; hitCount++;
-      if(dmg>0 && S(target).hp>0) magicCounterCandidates.push({target,slot});
-      results.push({target,slot,blocked:false,barrierWasActive,defendWasActive,dmg,shock,elementTrait,dragonSoul});
+      results.push({target,slot,blocked:false,barrierWasActive,defendWasActive,dmg,shock,elementTrait,dragonSoul,endured:incoming.endured});
     }
 
     // Update the party HUD once, then apply hit reactions. Re-rendering after adding
@@ -9913,14 +10130,14 @@
     }
 
     if(sk.target==="enemyAll"){
-      setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ バトルメンバーに合計 ${total} ダメージ。${shocked?` ⚡ ${shocked}人が感電した！`:""}${absorbed?` 🔥 「炎の妖精」が炎を吸収した。`:""}${elementImmune?` 🌋 「燃え盛るナメクジ」が炎を無効化した。`:""}${traitImmune?` ⚙️ ${traitImmune}人は固有特性で属性ダメージを無効化した。`:""}${legacyNullified?` 🏺 ${legacyNullified}人は「古代の遺産」でダメージを無効化した。`:""}${dragonSoulTriggered?` 🐉 「ドラゴンソウル」で攻撃力が上がった。`:""}${foxDodged?` 🦊 ${foxDodged}人は「化かし妖術」で魔法をかわした。`:""}${magicDodged?` 💎 ${magicDodged}人は「遮断のルビー」で魔法をかわした。`:""}${blocked-foxDodged-magicDodged>0?` ${blocked-foxDodged-magicDodged}人は魔法を無効化した。`:""}`);
+      setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ バトルメンバーに合計 ${total} ダメージ。${shocked?` ⚡ ${shocked}人が感電した！`:""}${absorbed?` 🔥 「炎の妖精」が炎を吸収した。`:""}${elementImmune?` 🌋 「燃え盛るナメクジ」が炎を無効化した。`:""}${traitImmune?` ⚙️ ${traitImmune}人は固有特性で属性ダメージを無効化した。`:""}${legacyNullified?` 🏺 ${legacyNullified}人は「古代の遺産」でダメージを無効化した。`:""}${dragonSoulTriggered?` 🐉 「ドラゴンソウル」で攻撃力が上がった。`:""}${foxDodged?` 🦊 ${foxDodged}人は「化かし妖術」で魔法をかわした。`:""}${magicDodged?` 💎 ${magicDodged}人は固有特性で魔法をかわした。`:""}${blocked-foxDodged-magicDodged>0?` ${blocked-foxDodged-magicDodged}人は魔法を無効化した。`:""}`);
     }else{
       const result=results[0];
       if(result && !result.blocked){
         const reduced=[];
         if(result.barrierWasActive) reduced.push("魔力障壁");
         if(result.defendWasActive) reduced.push("防御");
-        const suffix=`${result.shock?.success?" ⚡ 感電した！":""}${result.dragonSoul?" 🐉 ドラゴンソウルで攻撃力が上がった！":""}`;
+        const suffix=`${result.shock?.success?" ⚡ 感電した！":""}${result.dragonSoul?" 🐉 ドラゴンソウルで攻撃力が上がった！":""}${result.endured?" 🌊 「海の華」でHP1で耐えた！":""}`;
         if(result.elementTrait?.reason==="absorb"){
           setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ 🔥 ${result.target.name} は「炎の妖精」で炎を吸収した！${result.elementTrait.heal>0?` HPが ${result.elementTrait.heal} 回復した。`:""}${suffix}`);
         }else if(result.elementTrait?.reason==="traitImmune"){
@@ -9936,14 +10153,21 @@
         setMessage(result.blockReason==="foxTrickery"
           ? `${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ 🦊 ${result.target.name} は「化かし妖術」で魔法をかわした！`
           : result.blockReason==="magicEvasion"
-            ? `${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ 💎 ${result.target.name} は「遮断のルビー」で魔法をかわした！`
+            ? `${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ 💎 ${result.target.name} は「${traitOf(result.target)?.name||"魔法回避"}」で魔法をかわした！`
             : `${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ ${result.target.name} は魔法を無効化した！`);
       }
     }
     await wait(BASE_TIME.enemyAfter);
-    for(const {target,slot} of magicCounterCandidates){
-      const battleWon=await maybeTriggerPureHunterCounter(target,slot,enemy,sk,traitContext);
-      if(battleWon || state.battleEnded) return true;
+    for(const result of results){
+      if(result.blocked && result.blockReason==="magicEvasion"){
+        await maybeTriggerMagicEvasionAutoHeal(result.target,result.slot);
+        if(state.battleEnded) return true;
+        continue;
+      }
+      if(!result.blocked && result.dmg>0){
+        const battleWon=await maybeTriggerB3MagicDamageReaction(result.target,result.slot,enemy,sk,result.dmg);
+        if(battleWon || state.battleEnded) return true;
+      }
     }
     for(const entry of targets){
       if(S(entry.c).hp<=0){
@@ -9985,7 +10209,7 @@
       }else{
         result=tryInflictStatus(target,sk.status,sk.baseRate);
       }
-      results.push({target,slot,result});
+      results.push({target,slot,result,blockReason:defense.blocked?defense.reason:null});
       const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
       if(card) spawnFx("magicshot",result.reason==="foxTrickery"?"🦊":result.reason==="magicEvasion"?"💎":statusIcon(sk.status),card);
       if(sk.status==="death" && result.success) await handleAllyKoFromEnemy(target,slot);
@@ -9995,9 +10219,9 @@
     if(sk.target==="enemyAll"){
       if(success===0){
         const noneMsg=sk.status==="death" ? "しかし、誰も倒れなかった。" : `しかし、誰も${statusName(sk.status)}状態にはならなかった。`;
-        setMessage(`${sk.icon||"✨"} ${sk.name}！ ${noneMsg}${foxDodged?` 🦊 ${foxDodged}人は「化かし妖術」で魔法をかわした。`:""}${magicDodged?` 💎 ${magicDodged}人は「遮断のルビー」で魔法をかわした。`:""}`);
+        setMessage(`${sk.icon||"✨"} ${sk.name}！ ${noneMsg}${foxDodged?` 🦊 ${foxDodged}人は「化かし妖術」で魔法をかわした。`:""}${magicDodged?` 💎 ${magicDodged}人は固有特性で魔法をかわした。`:""}`);
       }else{
-        setMessage(`${sk.icon||"✨"} ${sk.name}！ ${success}人が${statusName(sk.status)}状態になった。${foxDodged?` 🦊 ${foxDodged}人は「化かし妖術」で魔法をかわした。`:""}${magicDodged?` 💎 ${magicDodged}人は「遮断のルビー」で魔法をかわした。`:""}`);
+        setMessage(`${sk.icon||"✨"} ${sk.name}！ ${success}人が${statusName(sk.status)}状態になった。${foxDodged?` 🦊 ${foxDodged}人は「化かし妖術」で魔法をかわした。`:""}${magicDodged?` 💎 ${magicDodged}人は固有特性で魔法をかわした。`:""}`);
       }
     }else if(results[0]){
       const {target,result}=results[0];
@@ -10007,11 +10231,15 @@
         : result.reason==="mount"?`${target.name} はマウントで${statusName(sk.status)}を防いだ！`
         : result.reason==="aura"?`${target.name} はオーラで魔法を無効化した！`
         : result.reason==="foxTrickery"?`🦊 ${target.name} は「化かし妖術」で魔法をかわした！`
-        : result.reason==="magicEvasion"?`💎 ${target.name} は「遮断のルビー」で魔法をかわした！`
+        : result.reason==="magicEvasion"?`💎 ${target.name} は「${traitOf(target)?.name||"魔法回避"}」で魔法をかわした！`
         : `${target.name} は${statusName(sk.status)}を免れた。`;
       setMessage(`${sk.icon||"✨"} ${sk.name}！ ${msg}`);
     }
     await wait(BASE_TIME.enemyAfter);
+    for(const r of results){
+      if(r.blockReason==="magicEvasion") await maybeTriggerMagicEvasionAutoHeal(r.target,r.slot);
+      if(state.battleEnded) return true;
+    }
     return true;
   }
 
@@ -10031,8 +10259,10 @@
       // Damage is completely nullified, but the attacker still suffers tackle recoil below.
     }else{
       let raw=physicalDamage(effectiveEnemyStat(enemy,"atk"),effectiveDef(target),Number(sk.power)||1,1);
-      const dmg=Math.max(1,target.defending?Math.ceil(raw/2):raw);
+      const incoming=adjustIncomingAllyDamage(target,target.defending?Math.ceil(raw/2):raw,{physical:true,element:sk.element||null});
+      const dmg=incoming.damage;
       S(target).hp=Math.max(0,S(target).hp-dmg);
+      recordAllyDamageTaken(target,dmg);
       if(enemyEl) spawnFx(sk.animation||"impact",sk.fxSymbol||sk.icon||"💥",enemyEl);
       renderBattleParty(); flashPartyValue(slot,dmg,"damage");
       setMessage(`${enemy.displayName} の体当たり！ ${target.name} に ${dmg} ダメージ。${target.defending?"（防御で軽減）":""}`);
@@ -10068,8 +10298,10 @@
     let raw=physicalDamage(effectiveEnemyStat(enemy,"atk"),effectiveDef(target),Number(sk.power)||1,1,Number(sk.defenseInfluence)||1);
     const critical=sk.canCrit!==false && (sk.forceCrit===true || rollCritical(enemy.critRate||0));
     if(critical) raw=Math.max(1,Math.round(raw*(Number(enemy.critMultiplier)||BASE_CRITICAL_MULTIPLIER)*Math.max(1,Number(sk.critDamageMultiplier)||1)));
-    const dmg=Math.max(1,target.defending?Math.ceil(raw/2):raw);
+    const incoming=adjustIncomingAllyDamage(target,target.defending?Math.ceil(raw/2):raw,{physical:true,element:sk.element||null});
+    const dmg=incoming.damage;
     S(target).hp=Math.max(0,S(target).hp-dmg);
+    recordAllyDamageTaken(target,dmg);
     const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
     if(card) spawnFx(sk.animation||"heavy",critical?"‼":(sk.fxSymbol||sk.icon||"💥"),card);
     renderBattleParty();
@@ -10114,8 +10346,10 @@
       let raw=physicalDamage(effectiveEnemyStat(enemy,"atk"),effectiveDef(c),Number(sk.hitPower)||1,1,Number(sk.defenseInfluence)||1);
       const critical=sk.canCrit!==false && rollCritical(enemy.critRate||0);
       if(critical){ criticals++; raw=Math.max(1,Math.round(raw*(Number(enemy.critMultiplier)||BASE_CRITICAL_MULTIPLIER))); }
-      const dmg=Math.max(1,c.defending?Math.ceil(raw/2):raw);
+      const incoming=adjustIncomingAllyDamage(c,c.defending?Math.ceil(raw/2):raw,{physical:true,element:sk.element||null});
+      const dmg=incoming.damage;
       S(c).hp=Math.max(0,S(c).hp-dmg);
+      recordAllyDamageTaken(c,dmg);
       total+=dmg; landed++;
       const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
       if(card) spawnFx(sk.animation||"punch",sk.fxSymbol||sk.icon||"🥊",card);
@@ -10168,8 +10402,10 @@
           criticals++;
           raw=Math.max(1,Math.round(raw*(Number(enemy.critMultiplier)||BASE_CRITICAL_MULTIPLIER)));
         }
-        const dmg=Math.max(1,c.defending?Math.ceil(raw/2):raw);
+        const incoming=adjustIncomingAllyDamage(c,c.defending?Math.ceil(raw/2):raw,{physical:true,element:null});
+        const dmg=incoming.damage;
         S(c).hp=Math.max(0,S(c).hp-dmg);
+        recordAllyDamageTaken(c,dmg);
         total+=dmg;
         if(enemyEl) spawnFx(enemy.basicAttackFx||"whip",critical?"‼":(enemy.basicAttackSymbol||"〰"),enemyEl);
         renderBattleParty();
@@ -10220,8 +10456,10 @@
     let raw=physicalDamage(effectiveEnemyStat(enemy,"atk"),effectiveDef(c),attackPower,1);
     const critical=rollCritical(enemy.critRate||0);
     if(critical) raw=Math.max(1,Math.round(raw*(Number(enemy.critMultiplier)||BASE_CRITICAL_MULTIPLIER)));
-    const dmg=Math.max(1,c.defending?Math.ceil(raw/2):raw);
+    const incoming=adjustIncomingAllyDamage(c,c.defending?Math.ceil(raw/2):raw,{physical:true,element:null});
+    const dmg=incoming.damage;
     S(c).hp=Math.max(0,S(c).hp-dmg);
+    recordAllyDamageTaken(c,dmg);
 
     if(enemyEl) spawnFx(enemy.basicAttackFx||"impact",critical?"‼":(enemy.basicAttackSymbol||"💥"),enemyEl);
     renderBattleParty();
@@ -10279,6 +10517,7 @@
 
     const action=chooseEnemyAiAction(enemy,options);
     enemy.actionCount=(Number(enemy.actionCount)||0)+1;
+    if(action.type==="skill" && await maybeNegateEnemyMagicByFlowerFox(enemy,action.skillId)){ clearEnemyActing(); return; }
     if(action.type==="summon"){ await executeEnemySummon(enemy,action); return; }
     if(action.type==="escape"){ await executeEnemyEscape(enemy,enemyEl); return; }
     if(action.type==="skill"){
