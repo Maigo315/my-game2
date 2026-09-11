@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47l";
+  const DEV_VERSION = "v0.47m";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2651,6 +2651,12 @@
     if(name==="上級妖狐") return {...base,id:"kaeshiSorcery",implemented:true,effect:{type:"roundEndTransferAllStatusesOnce",statuses:["poison","blind","silence","shock"]}};
     if(name==="ヴァルキリー") return {...base,id:"battlefieldSaint",implemented:true,effect:{type:"roundEndAutoSkillAtLowHpOnce",threshold:.25,skillId:"warGodAura"}};
     if(name==="エメラルド") return {...base,id:"emeraldGem",implemented:true,effect:{type:"thirdRoundLastHealMostMissing",skillId:"lastHeal"}};
+    if(name==="メイドスキュラ") return {...base,id:"serviceDance",implemented:true,effect:{type:"koRandomHpMpHealEightOnce",repeats:8,hpRate:.10,mpAmount:8}};
+    if(name==="ドラゴンメイド") return {...base,id:"maidGuardianFlame",implemented:true,effect:{type:"koAuraOtherFrontOnce"}};
+    if(name==="クリスタルスライム") return {...base,id:"crystalBody",implemented:true,effect:{type:"statusImmunityAndRandomLearnedSkillOnKo",excludeSkillIds:["miracleFestival"]}};
+    if(name==="アルカナデビル") return {...base,id:"arcanaMystery",implemented:true,effect:{type:"koReviveRandomFrontFullOnce",requireOtherLivingParty:true}};
+    if(name==="泡沫姫") return {...base,id:"fleetingWish",implemented:true,effect:{type:"roundEndReviveAllKoWhenTwoOthersOnce",includeReserve:true,revivePercent:.20,selfHpAfter:1}};
+    if(name==="ケツァルコアトル") return {...base,id:"mercifulSerpentGod",implemented:true,effect:{type:"roundEndGigaRaiseRandomFrontOnce"}};
     return {...base,id:`confirmedPending_${confirmedRuntimeId(record)||record.character_id}`,implemented:false};
   }
 
@@ -6489,6 +6495,169 @@
   }
 
 
+  async function triggerCrystalBodyRandomSkill(actor,skillId){
+    const base=skills[skillId];
+    if(!actor || !base) return false;
+    const sk=effectiveSkillForActor(actor,base);
+    setMessage(`💎 ${actor.name} の「${traitOf(actor)?.name||"クリスタルボディ"}」！ ${sk.name} が発動！`);
+    await wait(BASE_TIME.short);
+
+    if(sk.kind==="heal"){
+      const targets=sk.target==="allyAll" ? livingActiveSlots() : (()=>{const x=choose(livingActiveSlots());return x?[x]:[];})();
+      if(!targets.length) return false;
+      const power=healAmountForSkill(actor,sk);
+      let total=0;
+      targets.forEach(({i,c})=>{
+        const amount=Math.min(S(c).hpMax-S(c).hp,power===Infinity?S(c).hpMax:power);
+        if(amount>0){ S(c).hp+=amount; total+=amount; if(i>=0) flashPartyValue(i,amount,"heal"); }
+      });
+      renderBattleParty();
+      setMessage(`💎 ${sk.name}！ ${total?`味方のHPを合計 ${total} 回復した！`:"HPは回復しなかった。"}`);
+      await wait(BASE_TIME.heal);
+      return true;
+    }
+
+    if(sk.kind==="buff"){
+      const targets=sk.target==="allyAll" ? livingActiveSlots() : (()=>{const x=choose(livingActiveSlots());return x?[x]:[];})();
+      if(!targets.length) return false;
+      let applied=0;
+      targets.forEach(({c})=>{ const result=applyStatBuff(c,sk); if(result.applied) applied++; });
+      renderBattleParty();
+      setMessage(`💎 ${sk.name}！ ${applied?`${applied}人に強化効果！`:"より強い強化効果がかかっている。"}`);
+      await wait(BASE_TIME.buff);
+      return true;
+    }
+
+    if(sk.kind==="mpTransfer"){
+      const target=choose(livingActiveSlots());
+      if(!target) return false;
+      const amount=Math.min(S(target.c).mpMax-S(target.c).mp,Number(sk.restoreMp)||0);
+      S(target.c).mp+=amount;
+      if(target.i>=0 && amount>0) flashPartyValue(target.i,amount,"heal");
+      renderBattleParty();
+      setMessage(`💎 ${sk.name}！ ${target.c.name} のMPが ${amount} 回復した！`);
+      await wait(BASE_TIME.heal);
+      return true;
+    }
+
+    if(sk.kind==="physicalAll"){
+      const targets=[...livingEnemies()];
+      if(!targets.length) return false;
+      let total=0,defeated=0,shocked=0,missed=0;
+      for(const target of targets){
+        if(blindedPhysicalMiss(actor) || physicalAttackMisses(target)){ missed++; continue; }
+        let dmg=physicalDamage(effectiveAtk(actor),enemyDefenseForAttacker(actor,target),Number(sk.power)||1,1,Number(sk.defenseInfluence)||1);
+        dmg=Math.max(1,Math.round(dmg*physicalElementDamageMultiplierForActor(actor,target,sk.element||null)));
+        dmg=silverBodyAdjustedDamage(target,dmg,{critical:false});
+        const legacy=enemyElementNullify(target,sk.element||null,dmg); dmg=legacy.damage;
+        target.hp=Math.max(0,target.hp-dmg);
+        const killed=target.hp<=0;
+        if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
+        if(!killed && Number(sk.shockRate)>0){ const shock=tryInflictStatus(target,"shock",sk.shockRate,{source:actor}); if(shock.success) shocked++; }
+        total+=dmg; if(killed) defeated++;
+        await animateEnemyDamage(target,killed,sk.animation||"impact",sk.fxSymbol||sk.icon||"✦",false,dmg);
+        await afterOffensiveHitTraits(actor,target,{damage:dmg,critical:false,element:physicalAttackElementForActor(actor,sk.element||null)});
+        if(!killed){
+          const proc=applyEquipmentPhysicalStatus(actor,target);
+          if(proc?.result?.success){
+            setMessage(`${statusIcon(proc.status)} ${actor.name} の装備効果！ ${target.displayName} は${statusName(proc.status)}状態になった！`);
+            await wait(BASE_TIME.short);
+          }
+        }
+      }
+      renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+      setMessage(`💎 ${sk.name}！ 敵全体に合計 ${total} ダメージ！${shocked?` ${shocked}体が感電！`:""}${defeated?` ${defeated}体を倒した！`:""}${missed?` ${missed}体は回避。`:""}`);
+      await wait(BASE_TIME.short);
+      return true;
+    }
+
+    if(sk.kind==="magic"){
+      const targets=sk.target==="enemyAll" ? [...livingEnemies()] : (()=>{const e=choose(livingEnemies());return e?[e]:[];})();
+      if(!targets.length) return false;
+      let total=0,defeated=0;
+      for(const target of targets){
+        let dmg=spellDamage(actor,target,sk);
+        dmg=silverBodyAdjustedDamage(target,dmg);
+        const legacy=enemyElementNullify(target,sk.element,dmg); dmg=legacy.damage;
+        target.hp=Math.max(0,target.hp-dmg);
+        const killed=target.hp<=0;
+        if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
+        total+=dmg; if(killed) defeated++;
+        await animateEnemyDamage(target,killed,sk.animation||"magicshot",sk.fxSymbol||sk.icon||"✦",false,dmg);
+      }
+      renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+      setMessage(`💎 ${sk.name}！ ${sk.target==="enemyAll"?`敵全体に合計 ${total} ダメージ！`:`${targets[0].displayName} に ${total} ダメージ！`}${defeated?` ${defeated}体を倒した！`:""}`);
+      await wait(BASE_TIME.short);
+      return true;
+    }
+    return false;
+  }
+
+  async function maybeTriggerConfirmedKoTraits(target,slot){
+    if(!target || S(target).hp>0) return false;
+    let triggered=await maybeTriggerMaidGiftOnKo(target);
+    const trait=traitOf(target),effect=trait?.effect,battle=confirmedBattleStateFor(target);
+    if(!trait || !effect) return triggered;
+
+    if(effect.type==="koRandomHpMpHealEightOnce" && !battle.used.serviceDance){
+      battle.used.serviceDance=true;
+      const repeats=Math.max(1,Math.floor(Number(effect.repeats)||8));
+      let hpTotal=0,mpTotal=0;
+      for(let n=0;n<repeats;n++){
+        const pick=choose(livingActiveSlots().filter(({c})=>c.id!==target.id));
+        if(!pick) break;
+        const hpAmount=Math.min(S(pick.c).hpMax-S(pick.c).hp,Math.max(1,Math.round(S(pick.c).hpMax*(Number(effect.hpRate)||.10))));
+        const mpAmount=Math.min(S(pick.c).mpMax-S(pick.c).mp,Math.max(0,Number(effect.mpAmount)||8));
+        if(hpAmount>0) S(pick.c).hp+=hpAmount;
+        if(mpAmount>0) S(pick.c).mp+=mpAmount;
+        hpTotal+=hpAmount; mpTotal+=mpAmount;
+      }
+      renderBattleParty();
+      setMessage(`🫖 ${target.name} の「${trait.name}」！ 8回の御奉仕で味方を回復！（HP合計+${hpTotal} / MP合計+${mpTotal}）`);
+      await wait(BASE_TIME.heal); triggered=true;
+    }
+
+    if(effect.type==="koAuraOtherFrontOnce" && !battle.used.maidGuardianFlame){
+      battle.used.maidGuardianFlame=true;
+      const allies=livingActiveSlots().filter(({c})=>c.id!==target.id);
+      allies.forEach(({c})=>{ conditionsOf(c).aura=true; });
+      renderBattleParty();
+      setMessage(`🔥 ${target.name} の「${trait.name}」！ ${allies.length?"他の味方全員にオーラを付与した！":"しかし、対象になる味方はいなかった。"}`);
+      await wait(BASE_TIME.buff); triggered=true;
+    }
+
+    if(effect.type==="statusImmunityAndRandomLearnedSkillOnKo" && !battle.used.crystalBodyLastSkill){
+      battle.used.crystalBodyLastSkill=true;
+      const excluded=new Set(effect.excludeSkillIds||["miracleFestival"]);
+      const candidates=learnedSkillIds(target).filter(id=>skills[id] && !excluded.has(id));
+      const skillId=choose(candidates);
+      if(skillId){
+        await triggerCrystalBodyRandomSkill(target,skillId);
+        triggered=true;
+        if(livingEnemies().length===0 && !state.battleEnded){ winBattle(); return true; }
+      }
+    }
+
+    if(effect.type==="koReviveRandomFrontFullOnce" && !battle.used.arcanaMystery){
+      const otherLiving=travelPartyIds().map(id=>roster[id]).some(c=>c && c.id!==target.id && S(c).hp>0);
+      const koFront=state.battleActive.map((id,i)=>({i,c:roster[id]})).filter(x=>x.c && S(x.c).hp<=0);
+      if(otherLiving && koFront.length){
+        battle.used.arcanaMystery=true;
+        const revived=choose(koFront);
+        clearStatesOnKo(revived.c);
+        S(revived.c).hp=S(revived.c).hpMax;
+        renderBattleParty();
+        if(revived.i>=0) flashPartyValue(revived.i,S(revived.c).hp,"heal");
+        setMessage(`🃏 ${target.name} の「${trait.name}」！ ${revived.c.name} がHP全回復で復活した！`);
+        await wait(BASE_TIME.heal);
+        await maybeTriggerSageWisdom([revived.c]);
+        triggered=true;
+      }
+    }
+    return triggered;
+  }
+
+
   function healAmountForSkill(actor,sk){
     if(sk.fullHeal) return Infinity;
     const mag=Math.max(0,effectiveMagic(actor)||0);
@@ -6908,8 +7077,9 @@
       if(S(c).hp<=0){
         const outName=c.name;
         clearStatesOnKo(c);
-        await maybeTriggerMaidGiftOnKo(c);
+        await maybeTriggerConfirmedKoTraits(c,i);
         renderBattleParty();
+        if(state.battleEnded) return true;
         if(livingActiveSlots().length===0){
           loseBattle();
           return state.battleEnded;
@@ -7395,6 +7565,48 @@
       }
     }
 
+    // v0.47m: B4 confirmed companions — revive / KO-related round-end traits.
+    for(const {c,i} of [...livingActiveSlots()]){
+      const trait=traitOf(c),effect=trait?.effect;
+      if(!trait || !effect) continue;
+      const battle=confirmedBattleStateFor(c);
+
+      if(effect.type==="roundEndReviveAllKoWhenTwoOthersOnce" && !battle.used.fleetingWish){
+        const partyIds=effect.includeReserve ? travelPartyIds() : state.battleActive;
+        const deadOthers=partyIds.map(id=>roster[id]).filter(x=>x && x.id!==c.id && S(x).hp<=0);
+        if(deadOthers.length>=2){
+          battle.used.fleetingWish=true;
+          const revived=[];
+          const rate=Math.max(0,Number(effect.revivePercent)||.20);
+          partyIds.map(id=>roster[id]).filter(x=>x && S(x).hp<=0).forEach(target=>{
+            clearStatesOnKo(target);
+            S(target).hp=Math.max(1,Math.min(S(target).hpMax,Math.round(S(target).hpMax*rate)));
+            revived.push(target);
+          });
+          S(c).hp=Math.max(1,Math.min(S(c).hpMax,Number(effect.selfHpAfter)||1));
+          renderBattleParty();
+          setMessage(`🫧 ${c.name} の「${trait.name}」！ ${revived.length}人を瀕死で復活させ、自身のHPは1になった！`);
+          await wait(BASE_TIME.heal);
+          await maybeTriggerSageWisdom(revived);
+        }
+      }
+
+      if(effect.type==="roundEndGigaRaiseRandomFrontOnce" && !battle.used.mercifulSerpentGod){
+        const koFront=state.battleActive.map((id,slot)=>({i:slot,c:roster[id]})).filter(x=>x.c && S(x.c).hp<=0);
+        if(koFront.length && !automaticTraitSkillBlocked(c)){
+          battle.used.mercifulSerpentGod=true;
+          const revived=choose(koFront);
+          clearStatesOnKo(revived.c);
+          S(revived.c).hp=S(revived.c).hpMax;
+          renderBattleParty();
+          if(revived.i>=0) flashPartyValue(revived.i,S(revived.c).hp,"heal");
+          setMessage(`🐍 ${c.name} の「${trait.name}」！ ギガレイズで ${revived.c.name} がHP全回復で復活した！`);
+          await wait(BASE_TIME.heal);
+          await maybeTriggerSageWisdom([revived.c]);
+        }
+      }
+    }
+
     state.battleActive.concat(state.battleReserve).forEach(id=>{ if(roster[id]) roster[id]._usedHealingMagicThisRound=false; });
     return skipRoundDecrement;
   }
@@ -7535,7 +7747,7 @@
     baseRate=source?statusBaseRateForActor(source,status,baseRate):baseRate;
     const cond=conditionsOf(target);
     const traitEffect=traitOf(target)?.effect;
-    if(target.statusImmuneAll || traitEffect?.type==="statusAndDeathImmunity" || (traitEffect?.type==="statusImmunityAndGoldBoost" && status!=="death")) return {success:false,reason:"immune",rate:0};
+    if(target.statusImmuneAll || traitEffect?.type==="statusAndDeathImmunity" || ((traitEffect?.type==="statusImmunityAndGoldBoost" || traitEffect?.type==="statusImmunityAndRandomLearnedSkillOnKo") && status!=="death")) return {success:false,reason:"immune",rate:0};
     if(status==="death" && traitEffect?.type==="deathImmuneBasicDeathBonus") return {success:false,reason:"immune",rate:0};
     if(Array.isArray(target.statusImmune) && target.statusImmune.includes(status)) return {success:false,reason:"immune",rate:0};
     if(traitEffect?.type==="poisonImmuneShockCertain" && status==="poison") return {success:false,reason:"immune",rate:0};
@@ -9581,8 +9793,9 @@
       if(S(actor).hp<=0){
         const outName=actor.name;
         clearStatesOnKo(actor);
-        await maybeTriggerMaidGiftOnKo(actor);
+        await maybeTriggerConfirmedKoTraits(actor,slot);
         renderBattleParty();
+        if(state.battleEnded) return;
         if(livingActiveSlots().length===0){ loseBattle(); return; }
       }
       return;
@@ -10319,9 +10532,10 @@
   async function handleAllyKoFromEnemy(target,slot){
     if(S(target).hp>0) return false;
     clearStatesOnKo(target);
-    await maybeTriggerMaidGiftOnKo(target);
+    await maybeTriggerConfirmedKoTraits(target,slot);
     renderBattleParty();
     updateActorPortrait();
+    if(state.battleEnded) return true;
     if(livingActiveSlots().length===0){ loseBattle(); return true; }
     // v0.38e: KO is already clear from the party HUD; do not add an extra swap guidance message.
     await wait(BASE_TIME.message);
