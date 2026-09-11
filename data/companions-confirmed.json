@@ -534,7 +534,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:c613ad3d43aa",
@@ -1221,7 +1221,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:b4d66b4e88ab",
@@ -4372,7 +4372,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:6b3154180b66",
@@ -4828,7 +4828,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:7a460c2e1f45",
@@ -6767,7 +6767,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:e93488a0ee10",
@@ -7661,7 +7661,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:cd64ef56afae",
@@ -8028,7 +8028,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:7d3f0b369d84",
@@ -8396,7 +8396,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:9b5c56326255",
@@ -11441,7 +11441,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:b06092bf0f78",
@@ -11611,7 +11611,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:5e039c78e9d6",
@@ -12901,7 +12901,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:b77243b1624a",
@@ -13269,7 +13269,7 @@
     "production_recruitment_enabled": false,
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
-    "trait_runtime_status": "pending_connection"
+    "trait_runtime_status": "implemented"
   },
   {
     "character_id": "draft:db52c1302cae",
