@@ -34,7 +34,7 @@
       if(h<=.25)return 20;
       return Math.round((.75-h)*400)/10;
     },
-    hellCost:(base,{otherMoth=false}={})=>base*3*(otherMoth?.8:1),
+    hellCost:base=>base*3,
     hellHits:(resolve,rng)=>[resolve(rng()),resolve(rng())],
     criticalMultiplier:(personal,skill)=>personal*skill,
     ironOwlCritical:base=>base+.30,

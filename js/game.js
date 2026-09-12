@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47o";
+  const DEV_VERSION = "v0.47p";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2665,6 +2665,12 @@
     if(name==="オーパーツ") return {...base,id:"ooparts",implemented:true,chance:.50,effect:{type:"roundEndSelfReviveChance",hp:1,priority:true}};
     if(name==="フェニックス") return {...base,id:"phoenixRebirth",implemented:true,effect:{type:"roundEndReserveSelfRevive",hp:1}};
     if(name==="ウルズ") return {...base,id:"fateGoddess",implemented:true,effect:{type:"wipeSelfReviveFullOnce"}};
+    if(name==="ノーブルローズ") return {...base,id:"nobleRose",implemented:true,effect:{type:"swordDanceMastery",skillId:"swordDance",hitsAdd:1}};
+    if(name==="エンシェント") return {...base,id:"ancientRoyalLegacy",implemented:true,effect:{type:"ancientLaserMagicInput",skillId:"nephilimLaser"}};
+    if(name==="コスモス") return {...base,id:"purgatoryScales",implemented:true,effect:{type:"partyMpSpendDamageStack",step:3,max:15}};
+    if(name==="ヘルディーラー") return {...base,id:"soulDeal",implemented:true,effect:{type:"hellDealerErode",skillIds:["erode","gigaErode","lastErode","ruinErosion"],costMultiplier:3,casts:2}};
+    if(name==="クリムゾン") return {...base,id:"crimsonSerpent",implemented:true,effect:{type:"atkBuffEnhancement",add:.50}};
+    if(name==="ジェネラル") return {...base,id:"demonGeneral",implemented:true,effect:{type:"koAllyStatBoost",step:.10,stats:["atk","def","magic","mdef","spd"]}};
     return {...base,id:`confirmedPending_${confirmedRuntimeId(record)||record.character_id}`,implemented:false};
   }
 
@@ -3312,8 +3318,9 @@
   function effectiveSkillForActor(actor,baseSkill){
     if(!actor || !baseSkill) return baseSkill;
     const boost=equippedAccessory(actor)?.skillBoost;
-    let result=confirmedRules.weaponSkill(baseSkill, {accessory:boost?.skillId===baseSkill.id});
     const effect=traitOf(actor)?.effect;
+    const traitSkillBoost=effect?.type==="swordDanceMastery" && baseSkill.id===(effect.skillId||"swordDance");
+    let result=confirmedRules.weaponSkill(baseSkill, {accessory:boost?.skillId===baseSkill.id,trait:traitSkillBoost});
     if(effect?.type==="darkMagicRankBoost" && result.kind==="magic" && result.element==="dark"){
       const order=["E","D","C","B","A","S"];
       const current=order.indexOf(result.rank);
@@ -6035,12 +6042,37 @@
   // v0.38e rule: unless a trait explicitly says otherwise, battle-start / in-battle / battle-end traits only work while the owner is in battleActive.
   function livingActiveSlots(){ return battleTraitSlots({livingOnly:true}); }
   function livingEnemies(){ return state.battleEnemies.filter(e=>e.hp>0 && !e.escaped); }
+  function livingActiveTraitOwner(type){
+    return livingActiveSlots().find(({c})=>traitOf(c)?.effect?.type===type) || null;
+  }
+  function hellDealerEffectForSkill(sk){
+    if(!sk) return null;
+    const owner=livingActiveTraitOwner("hellDealerErode");
+    const effect=owner?traitOf(owner.c)?.effect:null;
+    return effect && Array.isArray(effect.skillIds) && effect.skillIds.includes(sk.id) ? effect : null;
+  }
+  function generalKoAllyCount(c){
+    const effect=traitOf(c)?.effect;
+    if(effect?.type!=="koAllyStatBoost" || !c || S(c).hp<=0 || !state.battleActive.includes(c.id)) return 0;
+    return travelPartyIds().reduce((n,id)=>{
+      if(id===c.id) return n;
+      const ally=roster[id];
+      return ally && S(ally).hp<=0 ? n+1 : n;
+    },0);
+  }
+  function statWithGeneralTrait(c,key,buff=1){
+    const base=Math.max(0,Number(S(c)?.[key])||0);
+    const effect=traitOf(c)?.effect;
+    if(effect?.type!=="koAllyStatBoost" || !Array.isArray(effect.stats) || !effect.stats.includes(key) || S(c).hp<=0 || !state.battleActive.includes(c.id)) return base*buff;
+    const n=generalKoAllyCount(c);
+    return confirmedRules.generalStat(base,n,buff,key);
+  }
   function setMessage(text){ $("battleMessage").textContent=text; }
-  function effectiveAtk(c){ return Math.round(S(c).atk*(c.atkBuff||1)*(conditionsOf(c).berserk?1.60:1)*((c.powerChargeRounds||0)>0?(c.powerChargeMultiplier||2):1)); }
-  function effectiveDef(c){ return Math.round(S(c).def*(c.defBuff||1)); }
-  function effectiveMagic(c){ return Math.round(S(c).magic*(c.magicBuff||1)*((c.magicConcentrationRounds||0)>0?(c.magicConcentrationMultiplier||2):1)); }
-  function effectiveMdef(c){ return Math.round(S(c).mdef*(c.mdefBuff||1)); }
-  function effectiveSpd(c){ return Math.round(S(c).spd*(c.spdBuff||1)); }
+  function effectiveAtk(c){ return Math.round(statWithGeneralTrait(c,"atk",c.atkBuff||1)*(conditionsOf(c).berserk?1.60:1)*((c.powerChargeRounds||0)>0?(c.powerChargeMultiplier||2):1)); }
+  function effectiveDef(c){ return Math.round(statWithGeneralTrait(c,"def",c.defBuff||1)); }
+  function effectiveMagic(c){ return Math.round(statWithGeneralTrait(c,"magic",c.magicBuff||1)*((c.magicConcentrationRounds||0)>0?(c.magicConcentrationMultiplier||2):1)); }
+  function effectiveMdef(c){ return Math.round(statWithGeneralTrait(c,"mdef",c.mdefBuff||1)); }
+  function effectiveSpd(c){ return Math.round(statWithGeneralTrait(c,"spd",c.spdBuff||1)); }
   function traitOf(c){ return characterProfiles[c?.profileId]?.trait || null; }
   function makeTraitActionContext(){ return {triggeredTraits:new Set(),triggeredPassives:new Set()}; }
   function traitRoll(trait){ return !!trait && Number(trait.chance)>0 && Math.random()<Number(trait.chance); }
@@ -6055,6 +6087,8 @@
     if(actorEffect?.type==="guardianBlessingMastery" && sk?.id===actorEffect.skillId){
       base+=Math.max(0,Number(actorEffect.costAdd)||0);
     }
+    const hellDealer=hellDealerEffectForSkill(sk);
+    if(hellDealer) base*=Math.max(1,Number(hellDealer.costMultiplier)||3);
     if(base<=0) return 0;
     if(!confirmedRules.mpReductionEligible(sk.id)) return base;
     let reduction=0;
@@ -6113,6 +6147,7 @@
     if(effect?.type==="pristineDamageBoostAndIncomingPenalty" && !actor?._confirmedBattle?.tookDamage && S(actor).hp>0 && S(actor).hp>=S(actor).hpMax) bonus+=Math.max(0,Number(effect.damageBonus)||0);
     if(effect?.type==="damageTakenStack") bonus+=Math.max(0,Number(actor?._confirmedBattle?.damageTakenBonus)||0);
     if(effect?.type==="criticalDirectDamageStack") bonus+=Math.max(0,Number(actor?._confirmedBattle?.damageBonus)||0);
+    bonus+=Math.max(0,Number(actor?._confirmedBattle?.cosmosBonus)||0);
     return Math.max(0,1+bonus/100);
   }
 
@@ -6709,6 +6744,9 @@
     if(!info || !target) return {applied:false,reason:"invalid",info};
     let multiplier=Number(sk.multiplier)||1;
     const traitEffect=traitOf(target)?.effect;
+    if(sk.buff==="atk" && traitEffect?.type==="atkBuffEnhancement" && multiplier>1){
+      multiplier=confirmedRules.crimsonBuff(multiplier);
+    }
     if(sk.buff==="def" && traitEffect?.type==="buffMultiplierBonus" && traitEffect.stat==="def"){
       multiplier+=Number(traitEffect.add)||0;
     }
@@ -9603,7 +9641,9 @@
         await wait(BASE_TIME.short);
         continue;
       }
-      let dmg=physicalDamage(effectiveAtk(actor),enemyDefenseForAttacker(actor,target),Number(sk.power)||1,1,Number(sk.defenseInfluence)||1);
+      const ancientEffect=traitOf(actor)?.effect;
+      const attackInput=(ancientEffect?.type==="ancientLaserMagicInput" && sk.id===(ancientEffect.skillId||"nephilimLaser")) ? effectiveMagic(actor) : effectiveAtk(actor);
+      let dmg=physicalDamage(attackInput,enemyDefenseForAttacker(actor,target),Number(sk.power)||1,1,Number(sk.defenseInfluence)||1);
       dmg=Math.max(1,Math.round(dmg*physicalElementDamageMultiplierForActor(actor,target,sk.element||null)));
       const critical=sk.canCrit!==false && rollCritical(criticalRateForAttack(actor,target));
       if(critical) dmg=Math.max(1,Math.round(dmg*criticalMultiplierForActor(actor)));
@@ -9661,6 +9701,13 @@
     const minervaBreak=preUseEffect?.type==="firstMagicAttackResistanceBreak" && sk.kind==="magic" && !actor._confirmedBattle.used?.minervaWisdom;
     if(minervaBreak) actor._confirmedBattle.used.minervaWisdom=true;
     S(actor).mp-=actualCost;
+    if(actualCost>0){
+      const cosmosOwner=livingActiveTraitOwner("partyMpSpendDamageStack");
+      if(cosmosOwner){
+        const cosmosEffect=traitOf(cosmosOwner.c)?.effect;
+        actor._confirmedBattle.cosmosBonus=Math.min(Math.max(0,Number(cosmosEffect?.max)||15),(Number(actor._confirmedBattle.cosmosBonus)||0)+Math.max(0,Number(cosmosEffect?.step)||3));
+      }
+    }
     actor._lastSkillResolved=true;
     actor._confirmedBattle.skillUsedRound=state.battleRound;
     const useEffect=traitOf(actor)?.effect;
@@ -9671,51 +9718,58 @@
     renderBattleParty();
 
     if(sk.kind==="magic"){
-      let targets=[];
-      if(sk.target==="enemyAll") targets=[...livingEnemies()];
-      else{
-        let target=enemyByUid(action.targetUid);
-        if(!target || target.hp<=0) target=livingEnemies()[0]||null;
-        if(target) targets=[target];
-      }
-      if(!targets.length) return;
+      const hellDealer=hellDealerEffectForSkill(sk);
+      const castCount=hellDealer?Math.max(1,Number(hellDealer.casts)||2):1;
+      for(let castIndex=0;castIndex<castCount;castIndex++){
+        let targets=[];
+        if(sk.target==="enemyAll") targets=[...livingEnemies()];
+        else{
+          let target=enemyByUid(action.targetUid);
+          if(!target || target.hp<=0) target=livingEnemies()[0]||null;
+          if(target) targets=[target];
+        }
+        if(!targets.length) break;
 
-      animateActor("cast");
-      setMessage(`${sk.icon||"✨"} ${actor.name} は ${sk.name} を唱えた！${minervaBreak?` 「${traitOf(actor)?.name||"叡智の梟"}」で敵の耐性を1段階低下！`:""}`);
-      await wait(BASE_TIME.actionLead);
+        const breakThisCast=minervaBreak && castIndex===0;
+        animateActor("cast");
+        const dealText=hellDealer?` 「${livingActiveTraitOwner("hellDealerErode")?.c?.name||"ヘルディーラー"}」の魂のディール${castIndex?"・2発目":""}！`:"";
+        setMessage(`${sk.icon||"✨"} ${actor.name} は ${sk.name} を唱えた！${dealText}${breakThisCast?` 「${traitOf(actor)?.name||"叡智の梟"}」で敵の耐性を1段階低下！`:""}`);
+        await wait(BASE_TIME.actionLead);
 
-      const results=[];
-      for(const target of targets){
-        let dmg=spellDamage(actor,target,sk,{resistanceSteps:minervaBreak?(Number(preUseEffect?.resistanceSteps)||-1):0});
-        dmg=silverBodyAdjustedDamage(target,dmg);
-        const legacy=enemyElementNullify(target,sk.element,dmg);
-        dmg=legacy.damage;
-        target.hp=Math.max(0,target.hp-dmg);
-        const killed=target.hp<=0;
-        if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
-        let shock=null;
-        if(!killed && Number(sk.shockRate)>0) shock=tryInflictStatus(target,"shock",sk.shockRate,{source:actor});
-        await afterOffensiveHitTraits(actor,target,{damage:dmg,critical:false,element:sk.element||null});
-        results.push({target,dmg,killed,shock,legacyNullified:legacy.nullified,legacyName:legacy.name,legacyIcon:legacy.icon});
-      }
+        const results=[];
+        for(const target of targets){
+          let dmg=spellDamage(actor,target,sk,{resistanceSteps:breakThisCast?(Number(preUseEffect?.resistanceSteps)||-1):0});
+          dmg=silverBodyAdjustedDamage(target,dmg);
+          const legacy=enemyElementNullify(target,sk.element,dmg);
+          dmg=legacy.damage;
+          target.hp=Math.max(0,target.hp-dmg);
+          const killed=target.hp<=0;
+          if(killed && !target.defeatOrder) target.defeatOrder=++state.battleDefeatCounter;
+          let shock=null;
+          if(!killed && Number(sk.shockRate)>0) shock=tryInflictStatus(target,"shock",sk.shockRate,{source:actor});
+          await afterOffensiveHitTraits(actor,target,{damage:dmg,critical:false,element:sk.element||null});
+          results.push({target,dmg,killed,shock,legacyNullified:legacy.nullified,legacyName:legacy.name,legacyIcon:legacy.icon});
+        }
 
-      if(sk.target==="enemyAll"){
-        const total=results.reduce((sum,r)=>sum+r.dmg,0);
-        const defeated=results.filter(r=>r.killed).length;
-        const shocked=results.filter(r=>r.shock?.success).length;
-        const legacyNullified=results.filter(r=>r.legacyNullified).length;
-        const nullifyNames=[...new Set(results.filter(r=>r.legacyNullified).map(r=>r.legacyName).filter(Boolean))];
-        const nullifyText=legacyNullified?` ${results.find(r=>r.legacyNullified)?.legacyIcon||"🏺"} ${legacyNullified}体は${nullifyNames.length===1?`「${nullifyNames[0]}」で`:""}属性ダメージを無効化。`:"";
-        setMessage(`${sk.icon||"✨"} ${sk.name}！ 敵全体に合計 ${total} ダメージ！${nullifyText}${shocked?` ${shocked}体が感電！`:""}${defeated?` ${defeated}体を倒した！`:""}`);
-        await Promise.all(results.map(r=>animateEnemyDamage(r.target,r.killed,sk.animation||"magicshot",sk.fxSymbol||sk.icon||"✦")));
-      }else{
-        const r=results[0];
-        setMessage(r.legacyNullified
-          ? `${r.legacyIcon||"🏺"} ${r.target.displayName} は「${r.legacyName||"古代の遺産"}」で${sk.element==="fire"?"炎":sk.element==="ice"?"氷":"属性"}ダメージを無効化した！${r.shock?.success?" ⚡ 感電した！":""}`
-          : `${sk.icon||"✨"} ${sk.name}！ ${r.target.displayName} に ${r.dmg} ダメージ。${r.shock?.success?"⚡ 感電した！ ":""}${r.killed?`${r.target.displayName} を倒した！`:""}`);
-        await animateEnemyDamage(r.target,r.killed,sk.animation||"magicshot",sk.fxSymbol||sk.icon||"✦");
+        if(sk.target==="enemyAll"){
+          const total=results.reduce((sum,r)=>sum+r.dmg,0);
+          const defeated=results.filter(r=>r.killed).length;
+          const shocked=results.filter(r=>r.shock?.success).length;
+          const legacyNullified=results.filter(r=>r.legacyNullified).length;
+          const nullifyNames=[...new Set(results.filter(r=>r.legacyNullified).map(r=>r.legacyName).filter(Boolean))];
+          const nullifyText=legacyNullified?` ${results.find(r=>r.legacyNullified)?.legacyIcon||"🏺"} ${legacyNullified}体は${nullifyNames.length===1?`「${nullifyNames[0]}」で`:""}属性ダメージを無効化。`:"";
+          setMessage(`${sk.icon||"✨"} ${sk.name}${hellDealer?`（${castIndex+1}/${castCount}）`:""}！ 敵全体に合計 ${total} ダメージ！${nullifyText}${shocked?` ${shocked}体が感電！`:""}${defeated?` ${defeated}体を倒した！`:""}`);
+          await Promise.all(results.map(r=>animateEnemyDamage(r.target,r.killed,sk.animation||"magicshot",sk.fxSymbol||sk.icon||"✦")));
+        }else{
+          const r=results[0];
+          setMessage(r.legacyNullified
+            ? `${r.legacyIcon||"🏺"} ${r.target.displayName} は「${r.legacyName||"古代の遺産"}」で${sk.element==="fire"?"炎":sk.element==="ice"?"氷":"属性"}ダメージを無効化した！${r.shock?.success?" ⚡ 感電した！":""}`
+            : `${sk.icon||"✨"} ${sk.name}${hellDealer?`（${castIndex+1}/${castCount}）`:""}！ ${r.target.displayName} に ${r.dmg} ダメージ。${r.shock?.success?"⚡ 感電した！ ":""}${r.killed?`${r.target.displayName} を倒した！`:""}`);
+          await animateEnemyDamage(r.target,r.killed,sk.animation||"magicshot",sk.fxSymbol||sk.icon||"✦");
+        }
+        if(results.some(r=>r.shock?.success) && !results.some(r=>r.killed)) renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
+        if(!livingEnemies().length) break;
       }
-      if(results.some(r=>r.shock?.success) && !results.some(r=>r.killed)) renderFormation(state.battleFormationArea,state.battleFormationIndex,false);
       return;
     }
 
