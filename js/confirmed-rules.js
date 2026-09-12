@@ -54,16 +54,23 @@
     cosmosPaid(battle,paid){if(paid>0)battle.cosmosBonus=Math.min(15,battle.cosmosBonus+3);return battle.cosmosBonus;},
     eaterCrit(h){if(h>=.5)return 0;if(h>=.2)return Math.min(50,10*((.5-h)/.3)**2);if(h>=.05)return Math.min(50,10+40*((.2-h)/.15)**1.5);return 50;},
     sheepCrit:L=>Math.max(0,Math.min(15,(L-60)/4)),
-    resolveWipe({eligibleUrd,front,stats=c=>c.stats,clock}){
-      if(eligibleUrd&&!eligibleUrd.battle.used.urd){
-        eligibleUrd.battle.used.urd=true;
-        for(const c of front)stats(c).hp=stats(c).hpMax;
-        return {rescued:true,source:'urd',interruptEnemy:true};
+    resolveWipe({eligibleUrd,stats=c=>c.stats,clock}){
+      if(eligibleUrd){
+        const battle=eligibleUrd._confirmedBattle||(eligibleUrd._confirmedBattle=api.newBattleState());
+        if(!battle.used.urd){
+          battle.used.urd=true;
+          stats(eligibleUrd).hp=stats(eligibleUrd).hpMax;
+          return {rescued:true,source:'urd',interruptEnemy:true};
+        }
       }
       if(clock())return {rescued:true,source:'clock',interruptEnemy:true};
       return {rescued:false,defeat:true};
     },
-    endRevival:kind=>pending(kind==='phoenix'?['U31','U06']:['U34','U06']),
+    endRevival(kind,{dead=false,inReserve=false,roll=1,chance=.5}={}){
+      if(kind==='ooparts') return {revive:!!dead&&!inReserve&&Number(roll)<Math.max(0,Math.min(1,Number(chance)||.5)),hp:1};
+      if(kind==='phoenix') return {revive:!!dead&&!!inReserve,hp:1};
+      return {revive:false,hp:0};
+    },
     registration(draftId){
       const data=root.RPGConfirmedData,record=data?.records.find(c=>c.character_id===draftId);
       if(!record)throw Error('Unknown draft ID: '+draftId);

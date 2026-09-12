@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47n";
+  const DEV_VERSION = "v0.47o";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2662,6 +2662,9 @@
     if(name==="イーター") return {...base,id:"grumpyPredator",implemented:true,effect:{type:"hpBasedCritBonus",maxBonus:50}};
     if(name==="エビルアルラウネ") return {...base,id:"predatoryPlant",implemented:true,effect:{type:"criticalDirectDamageStack",critBonus:6,step:5,max:30}};
     if(name==="ミネルヴァ") return {...base,id:"owlOfWisdom",implemented:true,effect:{type:"firstMagicAttackResistanceBreak",costMultiplier:1.30,resistanceSteps:-1}};
+    if(name==="オーパーツ") return {...base,id:"ooparts",implemented:true,chance:.50,effect:{type:"roundEndSelfReviveChance",hp:1,priority:true}};
+    if(name==="フェニックス") return {...base,id:"phoenixRebirth",implemented:true,effect:{type:"roundEndReserveSelfRevive",hp:1}};
+    if(name==="ウルズ") return {...base,id:"fateGoddess",implemented:true,effect:{type:"wipeSelfReviveFullOnce"}};
     return {...base,id:`confirmedPending_${confirmedRuntimeId(record)||record.character_id}`,implemented:false};
   }
 
@@ -7350,6 +7353,24 @@
   }
 
   async function processTurnEndTraits(){
+    // v0.47o C2: Ooparts resolves before any other round-end revival.
+    // It is a battle-member trait only; a full front-line wipe never reaches round-end processing.
+    for(const [slot,id] of state.battleActive.entries()){
+      const c=roster[id];
+      if(!c || S(c).hp>0) continue;
+      const trait=traitOf(c),effect=trait?.effect;
+      if(effect?.type!=="roundEndSelfReviveChance") continue;
+      const result=confirmedRules.endRevival("ooparts",{dead:true,inReserve:false,roll:Math.random(),chance:Number(trait.chance)||.50});
+      if(!result.revive) continue;
+      clearStatesOnKo(c);
+      S(c).hp=Math.max(1,Math.min(S(c).hpMax,Number(effect.hp)||Number(result.hp)||1));
+      renderBattleParty();
+      flashPartyValue(slot,S(c).hp,"heal");
+      setMessage(`⚙️ ${c.name} の「${trait.name}」！ HP1で復活した！`);
+      await wait(BASE_TIME.heal);
+      await maybeTriggerSageWisdom([c]);
+    }
+
     const active=[...livingActiveSlots()];
     // Buffs newly granted by an end-of-round trait begin at their full duration next round.
     const skipRoundDecrement=new Set();
@@ -7631,6 +7652,22 @@
           await maybeTriggerSageWisdom([revived.c]);
         }
       }
+    }
+
+    // v0.47o C2: Phoenix is a reserve-only, unlimited round-end self revival.
+    // It checks after other round-end revival effects; if already revived, its condition is simply no longer met.
+    for(const id of state.battleReserve){
+      const c=roster[id];
+      if(!c || S(c).hp>0) continue;
+      const trait=traitOf(c),effect=trait?.effect;
+      if(effect?.type!=="roundEndReserveSelfRevive") continue;
+      const result=confirmedRules.endRevival("phoenix",{dead:true,inReserve:true});
+      if(!result.revive) continue;
+      clearStatesOnKo(c);
+      S(c).hp=Math.max(1,Math.min(S(c).hpMax,Number(effect.hp)||Number(result.hp)||1));
+      setMessage(`🔥 ${c.name} の「${trait.name}」！ 控えでHP1の状態に復活した！`);
+      await wait(BASE_TIME.heal);
+      await maybeTriggerSageWisdom([c]);
     }
 
     state.battleActive.concat(state.battleReserve).forEach(id=>{ if(roster[id]) roster[id]._usedHealingMagicThisRound=false; });
@@ -11828,9 +11865,23 @@
 
   function loseBattle(){
     if(state.battleEnded) return;
-    // U32: candidate selection remains disconnected; only an explicitly eligible candidate may enter the resolver.
-    const rescue=confirmedRules.resolveWipe({eligibleUrd:null,front:state.battleActive.map(id=>roster[id]).filter(Boolean),stats:S,clock:tryUseHolyBeastClock});
-    if(rescue.rescued){ state._rescueSerial=(state._rescueSerial||0)+1; return; }
+    // v0.47o C2: Urd is eligible only when she is one of the wiped battle members.
+    // She revives herself at full HP once per battle, before the Holy Beast Clock.
+    const eligibleUrd=state.battleActive.map(id=>roster[id]).find(c=>{
+      if(!c || S(c).hp>0) return false;
+      if(traitOf(c)?.effect?.type!=="wipeSelfReviveFullOnce") return false;
+      return !confirmedBattleStateFor(c).used.urd;
+    })||null;
+    const rescue=confirmedRules.resolveWipe({eligibleUrd,stats:S,clock:tryUseHolyBeastClock});
+    if(rescue.rescued){
+      if(rescue.source==="urd" && eligibleUrd){
+        renderBattleParty();
+        updateActorPortrait();
+        setMessage(`⏳ ${eligibleUrd.name} の「${traitOf(eligibleUrd)?.name||"運命の女神"}」！ HP最大で復活した！`);
+      }
+      state._rescueSerial=(state._rescueSerial||0)+1;
+      return;
+    }
     state.battleEnded=true;
     state.battleAutoMode=null;
     cancelScheduledTurnStart();
