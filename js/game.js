@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47r";
+  const DEV_VERSION = "v0.47s";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -5331,13 +5331,15 @@
   const BATTLE_BG_TOXIC_WETLAND = "assets/backgrounds/toxic_wetland.webp";
   const BATTLE_BG_RUINS = "assets/backgrounds/ruins.webp";
   const BATTLE_BG_DESERT = "assets/backgrounds/desert.webp";
+  const BATTLE_BG_LAVA_CAVE = "assets/backgrounds/lava_cave.webp";
 
   const BATTLE_BG_BY_AREA = {
     plains:BATTLE_BG_PLAINS,eventDogs:BATTLE_BG_PLAINS,
     cave1:BATTLE_BG_CAVE,cave2:BATTLE_BG_CAVE,caveSide:BATTLE_BG_CAVE,rare:BATTLE_BG_CAVE,caveSlugEvent:BATTLE_BG_CAVE,caveBoss:BATTLE_BG_CAVE,runelCavern:BATTLE_BG_CAVE,runelScyllaPot:BATTLE_BG_CAVE,runelRegion:BATTLE_BG_PLAINS,runelRuins:BATTLE_BG_RUINS,runelRuinsMimic:BATTLE_BG_RUINS,runelRuinsKitsuneTrick:BATTLE_BG_RUINS,yodyRegion:BATTLE_BG_PLAINS,
     footpath:BATTLE_BG_FOREST,yodyMountain:BATTLE_BG_MOUNTAIN,yodyMountainBoss:BATTLE_BG_MOUNTAIN,tilenoRegion:BATTLE_BG_FOREST,tilenoElfEvent:BATTLE_BG_FOREST,zelrenoForest:BATTLE_BG_FOREST,zelrenoForestDeep:BATTLE_BG_FOREST,zelrenoForestDeepBoss:BATTLE_BG_FOREST,zelrenoWitchApproach:BATTLE_BG_FOREST,zelrenoWitchWatch:BATTLE_BG_FOREST,granzelPlains:BATTLE_BG_PLAINS,granzelSlimeParade:BATTLE_BG_PLAINS,
     tilenoWetland:BATTLE_BG_WETLAND,tilenoToxicWetland:BATTLE_BG_TOXIC_WETLAND,tilenoToxicBoss:BATTLE_BG_TOXIC_WETLAND,tilenoToxicSlimeEvent:BATTLE_BG_TOXIC_WETLAND,
-    salidDesertEast:BATTLE_BG_DESERT,salidDesertDogs:BATTLE_BG_DESERT,salidEnemyTest:BATTLE_BG_DESERT
+    salidDesertEast:BATTLE_BG_DESERT,salidDesertDogs:BATTLE_BG_DESERT,salidEnemyTest:BATTLE_BG_DESERT,
+    salidLavaCave:BATTLE_BG_LAVA_CAVE
   };
 
   const battleFormations = {
@@ -5460,6 +5462,14 @@
     salidEnemyTest:{label:"🧪 サリード敵・単体テスト",formations:[
       ["desertDog"],["hotSandTentacle"],["prominence"],["magmaSlug"]
     ]},
+    salidLavaCave:{label:"🌋 溶岩洞窟",formations:[
+      ["prominence","prominence","prominence"],
+      ["magmaSlug","prominence","prominence"],
+      ["magmaSlug","magmaSlug","magmaSlug"],
+      ["magmaSlug","magmaSlug","magmaSlug","magmaSlug"],
+      ["prominence","prominence","magmaSlug","magmaSlug"],
+      ["silverSlime","silverSlime"]
+    ],rareFormationIndexes:[4,5],rareRate:.10},
     runelRuins:{label:"🏚️ ルネルパリオ城下町跡",formations:[
       ["dogu","dogu","kitsune","kitsune"],
       ["lloyd","dogu","dogu"],
