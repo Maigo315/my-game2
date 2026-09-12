@@ -15659,5 +15659,736 @@
     "activation_gate": "加入Lv/場所/条件・必要な特性未確定部が解消するまで自然加入へ接続しない。テスト用生成は製品セーブと分離。",
     "runtime_registered": true,
     "trait_runtime_status": "implemented"
+  },
+  {
+    "character_id": "draft:e90cbfe69958",
+    "character_name": "ヴィクトリア",
+    "base": {
+      "hpMax": 37,
+      "mpMax": 30,
+      "atk": 16,
+      "def": 11,
+      "magic": 21,
+      "mdef": 21,
+      "spd": 10
+    },
+    "final": {
+      "hpMax": 610,
+      "mpMax": 590,
+      "atk": 320,
+      "def": 220,
+      "magic": 350,
+      "mdef": 340,
+      "spd": 260
+    },
+    "fate": 22,
+    "fate_final": 22,
+    "growthType": "early",
+    "growthType_raw": "早熟",
+    "expType": "fast",
+    "expType_raw": "速い",
+    "recruitRank": null,
+    "recruitment_rank_raw": "-",
+    "special_recruitment": true,
+    "recruitment_stage": "特殊加入（未接続）",
+    "recruitment_condition": "特殊加入。具体条件は物語実装時に接続",
+    "recruitment_level": null,
+    "recruitment_level_basis": "特殊加入のため未設定",
+    "encounter_rarity": "特殊加入",
+    "encounter_rarity_source": "作者指定",
+    "encounter_frequency": null,
+    "favoriteWeapons": [
+      "staff",
+      "whip"
+    ],
+    "resist": {
+      "fire": "E",
+      "ice": "A",
+      "light": "S",
+      "dark": "C",
+      "thunder": "B",
+      "wind": "B",
+      "earth": "S",
+      "pleasure": "B",
+      "poison": "E",
+      "blind": "D",
+      "silence": "B",
+      "death": "B"
+    },
+    "trait": {
+      "name": "咲き誇る女王",
+      "desc": "このキャラが光または闇属性ダメージを受けたラウンド終了時、ラストオーラを発動(1戦闘に2度まで)"
+    },
+    "learned_skills": [
+      {
+        "skill_id": "allMount",
+        "learn_level": 1
+      },
+      {
+        "skill_id": "lastHeal",
+        "learn_level": 18
+      },
+      {
+        "skill_id": "fairyHeal",
+        "learn_level": 32
+      },
+      {
+        "skill_id": "pleasureOne",
+        "learn_level": 39
+      },
+      {
+        "skill_id": "fortune",
+        "learn_level": 46
+      },
+      {
+        "skill_id": "lastAura",
+        "learn_level": 53
+      },
+      {
+        "skill_id": "bigBang",
+        "learn_level": 61
+      },
+      {
+        "skill_id": "canceller",
+        "learn_level": 68
+      }
+    ],
+    "source": "作者追加データ（2026-09-12）",
+    "source_end_line": null,
+    "normalization": "author-confirmed direct entry",
+    "runtime_id": "companion_e90cbfe69958",
+    "id_note": "追加キャラ用の永続runtime ID。既存IDは変更しない。",
+    "source_raw": "ヴィクトリア\n①HP:37 / MP:30 / 攻撃力:16 / 防御力:11 / 魔力:21 / 魔防:21 / 素早さ:10 /運命値:22\n②HP:610 / MP:590 / 攻撃力:320 / 防御力:220 / 魔力:350 / 魔防:340 / 素早さ:260 /運命値:22\n③早熟\n④速い\n⑤-\n⑥炎:E / 氷:A / 光:S / 闇:C / 雷:B / 風:B / 地:S / 快:B / 毒:E / 暗:D / 封:B / 即:B\n⑦\n固有特性:咲き誇る女王\nこのキャラが光または闇属性ダメージを受けたラウンド終了時、ラストオーラを発動(1戦闘に2度まで)\n1.allMount\n18.lastHeal\n32.fairyHeal\n39.pleasureOne\n46.fortune\n53.lastAura\n61.bigBang\n68.canceller\n⑧杖、鞭",
+    "raw_fields": {
+      "③": "早熟",
+      "④": "速い",
+      "⑤": "-",
+      "⑧": "杖、鞭"
+    },
+    "raw_learning_lines": [
+      {
+        "level": 1,
+        "name": "allMount",
+        "line": null,
+        "raw": "1.allMount"
+      },
+      {
+        "level": 18,
+        "name": "lastHeal",
+        "line": null,
+        "raw": "18.lastHeal"
+      },
+      {
+        "level": 32,
+        "name": "fairyHeal",
+        "line": null,
+        "raw": "32.fairyHeal"
+      },
+      {
+        "level": 39,
+        "name": "pleasureOne",
+        "line": null,
+        "raw": "39.pleasureOne"
+      },
+      {
+        "level": 46,
+        "name": "fortune",
+        "line": null,
+        "raw": "46.fortune"
+      },
+      {
+        "level": 53,
+        "name": "lastAura",
+        "line": null,
+        "raw": "53.lastAura"
+      },
+      {
+        "level": 61,
+        "name": "bigBang",
+        "line": null,
+        "raw": "61.bigBang"
+      },
+      {
+        "level": 68,
+        "name": "canceller",
+        "line": null,
+        "raw": "68.canceller"
+      }
+    ],
+    "issue_ids": [],
+    "trait_spec": {
+      "refs": "作者追加データ（2026-09-12）",
+      "fields": {
+        "発動条件": "このキャラが光または闇属性ダメージを受けたラウンド終了時、ラストオーラを発動(1戦闘に2度まで)",
+        "発動タイミング": "作者確認済み仕様に従う。",
+        "対象": "作者確認済み仕様に従う。",
+        "数値": "原文どおり。",
+        "上限": "原文どおり。",
+        "効果時間": "原文どおり。",
+        "重複可否": "実装仕様に従う。",
+        "戦闘不能時": "通常の戦闘専用特性は停止。明記された効果は例外。",
+        "控え時": "通常の戦闘専用特性は停止。明記された効果は例外。",
+        "封印・感電": "自動スキル発動は既存共通ルールに従う。",
+        "MP消費": "自動スキルは既存共通ルールに従う。",
+        "未習得自動発動": "既存共通ルールに従う。",
+        "武器条件": "手動技は既存条件。固有による例外は原文どおり。",
+        "相互作用": "作者確認済み内容まで本編接続。",
+        "安全に実装できる範囲": "基本データ・習得・固有を本編接続済み。",
+        "保留する範囲": "加入場所・加入イベント。"
+      }
+    },
+    "safe_data_registration": true,
+    "production_recruitment_enabled": false,
+    "activation_gate": "特殊加入条件・イベントが実装されるまで自然加入へ接続しない。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
+  },
+  {
+    "character_id": "draft:6d87c7c07908",
+    "character_name": "モリガン",
+    "base": {
+      "hpMax": 44,
+      "mpMax": 29,
+      "atk": 19,
+      "def": 6,
+      "magic": 31,
+      "mdef": 20,
+      "spd": 28
+    },
+    "final": {
+      "hpMax": 640,
+      "mpMax": 610,
+      "atk": 330,
+      "def": 200,
+      "magic": 380,
+      "mdef": 300,
+      "spd": 370
+    },
+    "fate": 8,
+    "fate_final": 8,
+    "growthType": "normal",
+    "growthType_raw": "普通",
+    "expType": "fast",
+    "expType_raw": "速い",
+    "recruitRank": null,
+    "recruitment_rank_raw": "-",
+    "special_recruitment": true,
+    "recruitment_stage": "特殊加入（未接続）",
+    "recruitment_condition": "特殊加入。具体条件は物語実装時に接続",
+    "recruitment_level": null,
+    "recruitment_level_basis": "特殊加入のため未設定",
+    "encounter_rarity": "特殊加入",
+    "encounter_rarity_source": "作者指定",
+    "encounter_frequency": null,
+    "favoriteWeapons": [
+      "fist",
+      "bow"
+    ],
+    "resist": {
+      "fire": "C",
+      "ice": "C",
+      "light": "E",
+      "dark": "S",
+      "thunder": "E",
+      "wind": "S",
+      "earth": "S",
+      "pleasure": "C",
+      "poison": "A",
+      "blind": "A",
+      "silence": "A",
+      "death": "A"
+    },
+    "trait": {
+      "name": "漆黒の大鴉",
+      "desc": "回避率+10%。味方全員の闇属性与ダメージ+20%。"
+    },
+    "learned_skills": [
+      {
+        "skill_id": "neoBlind",
+        "learn_level": 1
+      },
+      {
+        "skill_id": "raise2",
+        "learn_level": 15
+      },
+      {
+        "skill_id": "hellDark",
+        "learn_level": 17
+      },
+      {
+        "skill_id": "stardust",
+        "learn_level": 32
+      },
+      {
+        "skill_id": "stealth",
+        "learn_level": 44
+      },
+      {
+        "skill_id": "gigaErode",
+        "learn_level": 47
+      },
+      {
+        "skill_id": "finalDarkHammer",
+        "learn_level": 51
+      },
+      {
+        "skill_id": "apocalypse",
+        "learn_level": 65
+      }
+    ],
+    "source": "作者追加データ（2026-09-12）",
+    "source_end_line": null,
+    "normalization": "author-confirmed direct entry",
+    "runtime_id": "companion_6d87c7c07908",
+    "id_note": "追加キャラ用の永続runtime ID。既存IDは変更しない。",
+    "source_raw": "モリガン\n①HP:44 / MP:29 / 攻撃力:19 / 防御力:6 / 魔力:31 / 魔防:20 / 素早さ:28 /運命値:8\n②HP:640 / MP:610 / 攻撃力:330 / 防御力:200 / 魔力:380 / 魔防:300 / 素早さ:370 /運命値:8\n③普通\n④速い\n⑤-\n⑥炎:C / 氷:C / 光:E / 闇:S / 雷:E / 風:S / 地:S / 快:C / 毒:A / 暗:A / 封:A / 即:A\n⑦\n固有特性:漆黒の大鴉\n回避率+10%。味方全員の闇属性与ダメージ+20%。\n1.neoBlind\n15.raise2\n17.hellDark\n32.stardust\n44.stealth\n47.gigaErode\n51.finalDarkHammer\n65.apocalypse\n⑧拳、弓",
+    "raw_fields": {
+      "③": "普通",
+      "④": "速い",
+      "⑤": "-",
+      "⑧": "拳、弓"
+    },
+    "raw_learning_lines": [
+      {
+        "level": 1,
+        "name": "neoBlind",
+        "line": null,
+        "raw": "1.neoBlind"
+      },
+      {
+        "level": 15,
+        "name": "raise2",
+        "line": null,
+        "raw": "15.raise2"
+      },
+      {
+        "level": 17,
+        "name": "hellDark",
+        "line": null,
+        "raw": "17.hellDark"
+      },
+      {
+        "level": 32,
+        "name": "stardust",
+        "line": null,
+        "raw": "32.stardust"
+      },
+      {
+        "level": 44,
+        "name": "stealth",
+        "line": null,
+        "raw": "44.stealth"
+      },
+      {
+        "level": 47,
+        "name": "gigaErode",
+        "line": null,
+        "raw": "47.gigaErode"
+      },
+      {
+        "level": 51,
+        "name": "finalDarkHammer",
+        "line": null,
+        "raw": "51.finalDarkHammer"
+      },
+      {
+        "level": 65,
+        "name": "apocalypse",
+        "line": null,
+        "raw": "65.apocalypse"
+      }
+    ],
+    "issue_ids": [],
+    "trait_spec": {
+      "refs": "作者追加データ（2026-09-12）",
+      "fields": {
+        "発動条件": "回避率+10%。味方全員の闇属性与ダメージ+20%。",
+        "発動タイミング": "作者確認済み仕様に従う。",
+        "対象": "作者確認済み仕様に従う。",
+        "数値": "原文どおり。",
+        "上限": "原文どおり。",
+        "効果時間": "原文どおり。",
+        "重複可否": "実装仕様に従う。",
+        "戦闘不能時": "通常の戦闘専用特性は停止。明記された効果は例外。",
+        "控え時": "通常の戦闘専用特性は停止。明記された効果は例外。",
+        "封印・感電": "自動スキル発動は既存共通ルールに従う。",
+        "MP消費": "自動スキルは既存共通ルールに従う。",
+        "未習得自動発動": "既存共通ルールに従う。",
+        "武器条件": "手動技は既存条件。固有による例外は原文どおり。",
+        "相互作用": "作者確認済み内容まで本編接続。",
+        "安全に実装できる範囲": "基本データ・習得・固有を本編接続済み。",
+        "保留する範囲": "加入場所・加入イベント。"
+      }
+    },
+    "safe_data_registration": true,
+    "production_recruitment_enabled": false,
+    "activation_gate": "特殊加入条件・イベントが実装されるまで自然加入へ接続しない。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
+  },
+  {
+    "character_id": "draft:cf4508109a1b",
+    "character_name": "サニーハニィ",
+    "base": {
+      "hpMax": 37,
+      "mpMax": 42,
+      "atk": 7,
+      "def": 17,
+      "magic": 26,
+      "mdef": 27,
+      "spd": 19
+    },
+    "final": {
+      "hpMax": 620,
+      "mpMax": 830,
+      "atk": 220,
+      "def": 360,
+      "magic": 260,
+      "mdef": 380,
+      "spd": 340
+    },
+    "fate": 30,
+    "fate_final": 30,
+    "growthType": "late",
+    "growthType_raw": "晩成",
+    "expType": "slow",
+    "expType_raw": "遅い",
+    "recruitRank": null,
+    "recruitment_rank_raw": "-",
+    "special_recruitment": true,
+    "recruitment_stage": "特殊加入（未接続）",
+    "recruitment_condition": "特殊加入。具体条件は物語実装時に接続",
+    "recruitment_level": null,
+    "recruitment_level_basis": "特殊加入のため未設定",
+    "encounter_rarity": "特殊加入",
+    "encounter_rarity_source": "作者指定",
+    "encounter_frequency": null,
+    "favoriteWeapons": [
+      "staff"
+    ],
+    "resist": {
+      "fire": "A",
+      "ice": "C",
+      "light": "S",
+      "dark": "E",
+      "thunder": "C",
+      "wind": "A",
+      "earth": "A",
+      "pleasure": "C",
+      "poison": "B",
+      "blind": "B",
+      "silence": "B",
+      "death": "B"
+    },
+    "trait": {
+      "name": "優しい陽だまり",
+      "desc": "他の味方全員は状態異常・即死・射抜即死を受けない。"
+    },
+    "learned_skills": [
+      {
+        "skill_id": "gigaRaise",
+        "learn_level": 1
+      },
+      {
+        "skill_id": "lastHeal",
+        "learn_level": 1
+      },
+      {
+        "skill_id": "heroicTailwind",
+        "learn_level": 22
+      },
+      {
+        "skill_id": "demonSpiritFlow",
+        "learn_level": 31
+      },
+      {
+        "skill_id": "magicBarrier",
+        "learn_level": 41
+      },
+      {
+        "skill_id": "supply",
+        "learn_level": 50
+      },
+      {
+        "skill_id": "lastAura",
+        "learn_level": 55
+      },
+      {
+        "skill_id": "miracleFestival",
+        "learn_level": 95
+      }
+    ],
+    "source": "作者追加データ（2026-09-12）",
+    "source_end_line": null,
+    "normalization": "author-confirmed direct entry",
+    "runtime_id": "companion_cf4508109a1b",
+    "id_note": "追加キャラ用の永続runtime ID。既存IDは変更しない。",
+    "source_raw": "サニーハニィ\n①HP:37 / MP:42 / 攻撃力:7 / 防御力:17 / 魔力:26 / 魔防:27 / 素早さ:19 /運命値:30\n②HP:620 / MP:830 / 攻撃力:220 / 防御力:360 / 魔力:260 / 魔防:380 / 素早さ:340 /運命値:30\n③晩成\n④遅い\n⑤-\n⑥炎:A / 氷:C / 光:S / 闇:E / 雷:C / 風:A / 地:A / 快:C / 毒:B / 暗:B / 封:B / 即:B\n⑦\n固有特性:優しい陽だまり\n他の味方全員は状態異常・即死・射抜即死を受けない。\n1.gigaRaise\n1.lastHeal\n22.heroicTailwind\n31.demonSpiritFlow\n41.magicBarrier\n50.supply\n55.lastAura\n95.miracleFestival\n⑧杖",
+    "raw_fields": {
+      "③": "晩成",
+      "④": "遅い",
+      "⑤": "-",
+      "⑧": "杖"
+    },
+    "raw_learning_lines": [
+      {
+        "level": 1,
+        "name": "gigaRaise",
+        "line": null,
+        "raw": "1.gigaRaise"
+      },
+      {
+        "level": 1,
+        "name": "lastHeal",
+        "line": null,
+        "raw": "1.lastHeal"
+      },
+      {
+        "level": 22,
+        "name": "heroicTailwind",
+        "line": null,
+        "raw": "22.heroicTailwind"
+      },
+      {
+        "level": 31,
+        "name": "demonSpiritFlow",
+        "line": null,
+        "raw": "31.demonSpiritFlow"
+      },
+      {
+        "level": 41,
+        "name": "magicBarrier",
+        "line": null,
+        "raw": "41.magicBarrier"
+      },
+      {
+        "level": 50,
+        "name": "supply",
+        "line": null,
+        "raw": "50.supply"
+      },
+      {
+        "level": 55,
+        "name": "lastAura",
+        "line": null,
+        "raw": "55.lastAura"
+      },
+      {
+        "level": 95,
+        "name": "miracleFestival",
+        "line": null,
+        "raw": "95.miracleFestival"
+      }
+    ],
+    "issue_ids": [],
+    "trait_spec": {
+      "refs": "作者追加データ（2026-09-12）",
+      "fields": {
+        "発動条件": "他の味方全員は状態異常・即死・射抜即死を受けない。",
+        "発動タイミング": "作者確認済み仕様に従う。",
+        "対象": "作者確認済み仕様に従う。",
+        "数値": "原文どおり。",
+        "上限": "原文どおり。",
+        "効果時間": "原文どおり。",
+        "重複可否": "実装仕様に従う。",
+        "戦闘不能時": "通常の戦闘専用特性は停止。明記された効果は例外。",
+        "控え時": "通常の戦闘専用特性は停止。明記された効果は例外。",
+        "封印・感電": "自動スキル発動は既存共通ルールに従う。",
+        "MP消費": "自動スキルは既存共通ルールに従う。",
+        "未習得自動発動": "既存共通ルールに従う。",
+        "武器条件": "手動技は既存条件。固有による例外は原文どおり。",
+        "相互作用": "作者確認済み内容まで本編接続。",
+        "安全に実装できる範囲": "基本データ・習得・固有を本編接続済み。",
+        "保留する範囲": "加入場所・加入イベント。"
+      }
+    },
+    "safe_data_registration": true,
+    "production_recruitment_enabled": false,
+    "activation_gate": "特殊加入条件・イベントが実装されるまで自然加入へ接続しない。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
+  },
+  {
+    "character_id": "draft:78bf8c4c0b13",
+    "character_name": "アストラ",
+    "base": {
+      "hpMax": 57,
+      "mpMax": 24,
+      "atk": 32,
+      "def": 19,
+      "magic": 21,
+      "mdef": 16,
+      "spd": 15
+    },
+    "final": {
+      "hpMax": 880,
+      "mpMax": 520,
+      "atk": 450,
+      "def": 400,
+      "magic": 330,
+      "mdef": 300,
+      "spd": 280
+    },
+    "fate": 24,
+    "fate_final": 24,
+    "growthType": "late",
+    "growthType_raw": "晩成",
+    "expType": "slow",
+    "expType_raw": "遅い",
+    "recruitRank": null,
+    "recruitment_rank_raw": "-",
+    "special_recruitment": true,
+    "recruitment_stage": "特殊加入（未接続）",
+    "recruitment_condition": "特殊加入。具体条件は物語実装時に接続",
+    "recruitment_level": null,
+    "recruitment_level_basis": "特殊加入のため未設定",
+    "encounter_rarity": "特殊加入",
+    "encounter_rarity_source": "作者指定",
+    "encounter_frequency": null,
+    "favoriteWeapons": [
+      "axe",
+      "staff"
+    ],
+    "resist": {
+      "fire": "C",
+      "ice": "C",
+      "light": "C",
+      "dark": "C",
+      "thunder": "S",
+      "wind": "C",
+      "earth": "C",
+      "pleasure": "C",
+      "poison": "S",
+      "blind": "S",
+      "silence": "S",
+      "death": "S"
+    },
+    "trait": {
+      "name": "彼方への意志",
+      "desc": "斧装備時でも魔力障壁使用可能。味方全員は1戦闘に1度だけ、現在HP以上のダメージを受ける時、HP1で耐える。"
+    },
+    "learned_skills": [
+      {
+        "skill_id": "counterStance",
+        "learn_level": 1
+      },
+      {
+        "skill_id": "eraser",
+        "learn_level": 12
+      },
+      {
+        "skill_id": "powerCharge",
+        "learn_level": 17
+      },
+      {
+        "skill_id": "warGodAura",
+        "learn_level": 25
+      },
+      {
+        "skill_id": "terraCrash",
+        "learn_level": 40
+      },
+      {
+        "skill_id": "magicBarrier",
+        "learn_level": 41
+      },
+      {
+        "skill_id": "earthWrath",
+        "learn_level": 62
+      },
+      {
+        "skill_id": "doubleAttack",
+        "learn_level": 67
+      }
+    ],
+    "source": "作者追加データ（2026-09-12）",
+    "source_end_line": null,
+    "normalization": "author-confirmed direct entry",
+    "runtime_id": "companion_78bf8c4c0b13",
+    "id_note": "追加キャラ用の永続runtime ID。既存IDは変更しない。",
+    "source_raw": "アストラ\n①HP:57 / MP:24 / 攻撃力:32 / 防御力:19 / 魔力:21 / 魔防:16 / 素早さ:15 /運命値:24\n②HP:880 / MP:520 / 攻撃力:450 / 防御力:400 / 魔力:330 / 魔防:300 / 素早さ:280 /運命値:24\n③晩成\n④遅い\n⑤-\n⑥炎:C / 氷:C / 光:C / 闇:C / 雷:S / 風:C / 地:C / 快:C / 毒:S / 暗:S / 封:S / 即:S\n⑦\n固有特性:彼方への意志\n斧装備時でも魔力障壁使用可能。味方全員は1戦闘に1度だけ、現在HP以上のダメージを受ける時、HP1で耐える。\n1.counterStance\n12.eraser\n17.powerCharge\n25.warGodAura\n40.terraCrash\n41.magicBarrier\n62.earthWrath\n67.doubleAttack\n⑧斧、杖",
+    "raw_fields": {
+      "③": "晩成",
+      "④": "遅い",
+      "⑤": "-",
+      "⑧": "斧、杖"
+    },
+    "raw_learning_lines": [
+      {
+        "level": 1,
+        "name": "counterStance",
+        "line": null,
+        "raw": "1.counterStance"
+      },
+      {
+        "level": 12,
+        "name": "eraser",
+        "line": null,
+        "raw": "12.eraser"
+      },
+      {
+        "level": 17,
+        "name": "powerCharge",
+        "line": null,
+        "raw": "17.powerCharge"
+      },
+      {
+        "level": 25,
+        "name": "warGodAura",
+        "line": null,
+        "raw": "25.warGodAura"
+      },
+      {
+        "level": 40,
+        "name": "terraCrash",
+        "line": null,
+        "raw": "40.terraCrash"
+      },
+      {
+        "level": 41,
+        "name": "magicBarrier",
+        "line": null,
+        "raw": "41.magicBarrier"
+      },
+      {
+        "level": 62,
+        "name": "earthWrath",
+        "line": null,
+        "raw": "62.earthWrath"
+      },
+      {
+        "level": 67,
+        "name": "doubleAttack",
+        "line": null,
+        "raw": "67.doubleAttack"
+      }
+    ],
+    "issue_ids": [],
+    "trait_spec": {
+      "refs": "作者追加データ（2026-09-12）",
+      "fields": {
+        "発動条件": "斧装備時でも魔力障壁使用可能。味方全員は1戦闘に1度だけ、現在HP以上のダメージを受ける時、HP1で耐える。",
+        "発動タイミング": "作者確認済み仕様に従う。",
+        "対象": "作者確認済み仕様に従う。",
+        "数値": "原文どおり。",
+        "上限": "原文どおり。",
+        "効果時間": "原文どおり。",
+        "重複可否": "実装仕様に従う。",
+        "戦闘不能時": "通常の戦闘専用特性は停止。明記された効果は例外。",
+        "控え時": "通常の戦闘専用特性は停止。明記された効果は例外。",
+        "封印・感電": "自動スキル発動は既存共通ルールに従う。",
+        "MP消費": "自動スキルは既存共通ルールに従う。",
+        "未習得自動発動": "既存共通ルールに従う。",
+        "武器条件": "手動技は既存条件。固有による例外は原文どおり。",
+        "相互作用": "作者確認済み内容まで本編接続。",
+        "安全に実装できる範囲": "基本データ・習得・固有を本編接続済み。",
+        "保留する範囲": "加入場所・加入イベント。"
+      }
+    },
+    "safe_data_registration": true,
+    "production_recruitment_enabled": false,
+    "activation_gate": "特殊加入条件・イベントが実装されるまで自然加入へ接続しない。",
+    "runtime_registered": true,
+    "trait_runtime_status": "implemented"
   }
 ]
