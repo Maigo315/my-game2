@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47p";
+  const DEV_VERSION = "v0.47q";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2671,6 +2671,11 @@
     if(name==="ヘルディーラー") return {...base,id:"soulDeal",implemented:true,effect:{type:"hellDealerErode",skillIds:["erode","gigaErode","lastErode","ruinErosion"],costMultiplier:3,casts:2}};
     if(name==="クリムゾン") return {...base,id:"crimsonSerpent",implemented:true,effect:{type:"atkBuffEnhancement",add:.50}};
     if(name==="ジェネラル") return {...base,id:"demonGeneral",implemented:true,effect:{type:"koAllyStatBoost",step:.10,stats:["atk","def","magic","mdef","spd"]}};
+    if(name==="シープ") return {...base,id:"sheepDivinity",implemented:true,effect:{type:"partyFateCritBonus",maxBonus:15}};
+    if(name==="カーリー") return {...base,id:"destructionGod",implemented:true,effect:{type:"counterMasteryAndCritStack",counterRateAdd:.20,critStep:5,critMax:30}};
+    if(name==="インドラ") return {...base,id:"peerlessWarGod",implemented:true,effect:{type:"weaponSkillSupremacy",skillIds:["explosiveFist","swordDance","terraCrash","stardust","magicBarrier","dragonSpiral","nephilimLaser"],borrowOtherFrontWeapons:true}};
+    if(name==="アトラク=ナクア") return {...base,id:"timeGreatSpider",implemented:true,chance:.10,effect:{type:"partySpeedAndPostActionBasic",speedMultiplier:1.50,excludeSelf:true}};
+    if(name==="ジェノサイダー") return {...base,id:"finalAnnihilationWeapon",implemented:true,effect:{type:"genocideLaserMastery",skillId:"nephilimLaser",alwaysFirst:true}};
     return {...base,id:`confirmedPending_${confirmedRuntimeId(record)||record.character_id}`,implemented:false};
   }
 
@@ -3319,7 +3324,9 @@
     if(!actor || !baseSkill) return baseSkill;
     const boost=equippedAccessory(actor)?.skillBoost;
     const effect=traitOf(actor)?.effect;
-    const traitSkillBoost=effect?.type==="swordDanceMastery" && baseSkill.id===(effect.skillId||"swordDance");
+    const traitSkillBoost=(effect?.type==="swordDanceMastery" && baseSkill.id===(effect.skillId||"swordDance"))
+      || (effect?.type==="weaponSkillSupremacy" && Array.isArray(effect.skillIds) && effect.skillIds.includes(baseSkill.id))
+      || (effect?.type==="genocideLaserMastery" && baseSkill.id===(effect.skillId||"nephilimLaser"));
     let result=confirmedRules.weaponSkill(baseSkill, {accessory:boost?.skillId===baseSkill.id,trait:traitSkillBoost});
     if(effect?.type==="darkMagicRankBoost" && result.kind==="magic" && result.element==="dark"){
       const order=["E","D","C","B","A","S"];
@@ -6072,7 +6079,15 @@
   function effectiveDef(c){ return Math.round(statWithGeneralTrait(c,"def",c.defBuff||1)); }
   function effectiveMagic(c){ return Math.round(statWithGeneralTrait(c,"magic",c.magicBuff||1)*((c.magicConcentrationRounds||0)>0?(c.magicConcentrationMultiplier||2):1)); }
   function effectiveMdef(c){ return Math.round(statWithGeneralTrait(c,"mdef",c.mdefBuff||1)); }
-  function effectiveSpd(c){ return Math.round(statWithGeneralTrait(c,"spd",c.spdBuff||1)); }
+  function effectiveSpd(c){
+    const base=statWithGeneralTrait(c,"spd",c.spdBuff||1);
+    const owner=livingActiveTraitOwner("partySpeedAndPostActionBasic");
+    if(owner && owner.c?.id!==c?.id){
+      const effect=traitOf(owner.c)?.effect;
+      return Math.round(base*(Number(effect?.speedMultiplier)||1.50));
+    }
+    return Math.round(base);
+  }
   function traitOf(c){ return characterProfiles[c?.profileId]?.trait || null; }
   function makeTraitActionContext(){ return {triggeredTraits:new Set(),triggeredPassives:new Set()}; }
   function traitRoll(trait){ return !!trait && Number(trait.chance)>0 && Math.random()<Number(trait.chance); }
@@ -6165,6 +6180,14 @@
       rate+=confirmedRules?.eaterCrit ? confirmedRules.eaterCrit(hpRatio) : 0;
     }
     if(effect?.type==="criticalDirectDamageStack") rate+=Math.max(0,Number(effect.critBonus)||6);
+    if(effect?.type==="partyFateCritBonus"){
+      const fateTotal=state.battleActive.reduce((sum,id)=>{
+        const ally=roster[id];
+        return sum+(ally?Math.max(0,Number(equipmentExtras(ally).fate)||0):0);
+      },0);
+      rate+=confirmedRules.sheepCrit(fateTotal);
+    }
+    if(effect?.type==="counterMasteryAndCritStack") rate+=Math.max(0,Number(actor?._confirmedBattle?.counterCritBonus)||0);
     if(effect?.type==="crusherCritical" && effect.forceAgainstDefBuff && target && Number(target.defBuff)>1) rate=100;
     return clampRate(rate);
   }
@@ -6942,7 +6965,10 @@
     if(!context) context=makeTraitActionContext();
     const key=`counterStance:${defender.id}`;
     if(context.triggeredPassives?.has(key)) return false;
-    if(Math.random()>=(Number(passive?.chance)||.20)) return false;
+    let counterRate=Number(passive?.chance)||.20;
+    const counterEffect=traitOf(defender)?.effect;
+    if(counterEffect?.type==="counterMasteryAndCritStack") counterRate+=Math.max(0,Number(counterEffect.counterRateAdd)||.20);
+    if(Math.random()>=Math.min(1,counterRate)) return false;
     context.triggeredPassives?.add(key);
     setMessage(`↩️ ${defender.name} の「カウンタースタンス」！ ${attacker.displayName} に反撃！`);
     await wait(BASE_TIME.short);
@@ -7980,7 +8006,16 @@
   function weaponRequirementMet(actor,sk){
     if(!sk?.requiredWeaponTypes?.length) return true;
     const type=equippedWeapon(actor)?.weaponType;
-    return sk.requiredWeaponTypes.includes(type);
+    if(sk.requiredWeaponTypes.includes(type)) return true;
+    const effect=traitOf(actor)?.effect;
+    if(effect?.type==="weaponSkillSupremacy" && effect.borrowOtherFrontWeapons && state.battleActive.includes(actor?.id)){
+      const borrowedTypes=state.battleActive
+        .filter(id=>id && id!==actor.id && roster[id])
+        .map(id=>equippedWeapon(roster[id])?.weaponType)
+        .filter(Boolean);
+      if(sk.requiredWeaponTypes.some(required=>borrowedTypes.includes(required))) return true;
+    }
+    return false;
   }
   function weaponRequirementText(sk){
     if(!sk?.requiredWeaponTypes?.length) return "";
@@ -9411,6 +9446,23 @@
     return true;
   }
 
+  async function maybeAtrachPostActionBasic(actor,actionType,{success=true,targetUid=null}={}){
+    if(!actor || S(actor).hp<=0 || state.battleEnded || livingEnemies().length===0) return false;
+    const owner=livingActiveTraitOwner("partySpeedAndPostActionBasic");
+    if(!owner || owner.c?.id===actor.id) return false;
+    const roll=confirmedRules.followup({action:actionType,success,additionalAttack:false,roll:Math.random()});
+    if(roll!==true) return false;
+    let target=enemyByUid(targetUid);
+    if(!target || target.hp<=0) target=choose(livingEnemies());
+    if(!target) return false;
+    setMessage(`🕷️ ${owner.c.name} の「${traitOf(owner.c)?.name||"時の大蜘蛛"}」！ ${actor.name} が追加で通常攻撃！`);
+    await wait(BASE_TIME.short);
+    const result=await resolveBasicAttack(actor,{type:"attack",targetUid:target.uid},{allowDoubleAttack:false,isFollowup:true});
+    await afterBasicAttackTraits(actor,result);
+    if(result?.battleWon && !state.battleEnded) winBattle();
+    return true;
+  }
+
   async function resolveAttack(actor,target,skillName=null,mult=1,fxKind="slash",fxSymbol="✦",options={}){
     const isBasic=!!options.basic;
     const profile=isBasic?weaponAttackProfile(actor):null;
@@ -9563,6 +9615,12 @@
     }
 
     const normalTrait=traitOf(actor),normalTraitEffect=normalTrait?.effect;
+    if(options.isCounter && normalTraitEffect?.type==="counterMasteryAndCritStack" && result?.result && result.result.missed===false){
+      actor._confirmedBattle=actor._confirmedBattle||confirmedRules.newBattleState();
+      confirmedRules.kaliCounterHit(actor._confirmedBattle,{hit:true});
+      setMessage(`🔥 ${actor.name} の「${normalTrait.name}」！ 反撃命中で会心率がさらに上がった！`);
+      await wait(BASE_TIME.short);
+    }
     if(S(actor).hp>0 && !options.isCounter && !options.isFollowup && !result.battleWon && equippedWeapon(actor)?.weaponType==="whip" && normalTraitEffect?.type==="whipNormalFollowup" && Math.random()<(Number(normalTraitEffect.chance)||Number(normalTrait?.chance)||.05)){
       setMessage(`🐙 ${actor.name} の「うねうね触手」！ 触手が再び襲いかかる！`);
       await wait(BASE_TIME.short);
@@ -11364,11 +11422,15 @@
     setCommandsEnabled(false);
     updateExecuteButton();
 
-    // Durga's Guardian Blessing is author-confirmed to resolve before every other action in the round.
+    // Durga's Guardian Blessing and Genocider's Nephilim Laser share the round-opening priority group.
+    // When both are selected, the faster actor resolves first.
     const absolutePriorityTurns=livingActiveSlots().map(({i,c})=>({i,c,action:state.battleActions[i]}))
       .filter(x=>{
         const effect=traitOf(x.c)?.effect;
-        return effect?.type==="guardianBlessingMastery" && effect.alwaysFirst && x.action?.type==="skill" && x.action.skill===effect.skillId;
+        if(x.action?.type!=="skill" || !effect?.alwaysFirst) return false;
+        if(effect.type==="guardianBlessingMastery") return x.action.skill===effect.skillId;
+        if(effect.type==="genocideLaserMastery") return x.action.skill===(effect.skillId||"nephilimLaser");
+        return false;
       })
       .sort((a,b)=>effectiveSpd(b.c)-effectiveSpd(a.c));
     const absolutePriorityKeys=new Set(absolutePriorityTurns.map(x=>`${x.c.id}:${x.i}`));
@@ -11384,6 +11446,8 @@
       await resolveSkill(actor,action,i);
       if(state.battleEnded) return;
       await maybeDullahanRondo(actor,"skill",{success:!!actor._lastSkillResolved,targetUid:action.targetUid});
+      if(state.battleEnded) return;
+      await maybeAtrachPostActionBasic(actor,"skill",{success:!!actor._lastSkillResolved,targetUid:action.targetUid});
       if(state.battleEnded) return;
     }
 
@@ -11413,6 +11477,8 @@
         await resolveSkill(actor,action,i);
         if(state.battleEnded) return;
         await maybeDullahanRondo(actor,"skill",{success:!!actor._lastSkillResolved,targetUid:action.targetUid});
+        if(state.battleEnded) return;
+        await maybeAtrachPostActionBasic(actor,"skill",{success:!!actor._lastSkillResolved,targetUid:action.targetUid});
         if(state.battleEnded) return;
       }
     }
@@ -11452,6 +11518,7 @@
         const result=await resolveBasicAttack(actor,action);
         await afterBasicAttackTraits(actor,result);
         if(!result?.battleWon && livingEnemies().length>0) await maybeDullahanRondo(actor,"attack",{success:true,targetUid:action.targetUid});
+        if(!state.battleEnded && !result?.battleWon && livingEnemies().length>0) await maybeAtrachPostActionBasic(actor,"attack",{success:true,targetUid:action.targetUid});
         await wait(BASE_TIME.short);
         if(state.battleEnded) return;
         if(result?.battleWon || livingEnemies().length===0){ winBattle(); return; }
@@ -11461,6 +11528,7 @@
       if(action.type==="item"){
         await resolveBattleItem(actor,action,slot);
         if(!state.battleEnded) await maybeDullahanRondo(actor,"item",{success:!!actor._lastItemResolved,targetUid:action.targetUid});
+        if(!state.battleEnded) await maybeAtrachPostActionBasic(actor,"item",{success:!!actor._lastItemResolved,targetUid:action.targetUid});
         await wait(BASE_TIME.short);
         if(state.battleEnded) return;
         continue;
@@ -11469,6 +11537,7 @@
       if(action.type==="skill"){
         await resolveSkill(actor,action,slot);
         if(!state.battleEnded && livingEnemies().length>0) await maybeDullahanRondo(actor,"skill",{success:!!actor._lastSkillResolved,targetUid:action.targetUid});
+        if(!state.battleEnded && livingEnemies().length>0) await maybeAtrachPostActionBasic(actor,"skill",{success:!!actor._lastSkillResolved,targetUid:action.targetUid});
         await wait(BASE_TIME.short);
         if(state.battleEnded) return;
         if(livingEnemies().length===0){ winBattle(); return; }
