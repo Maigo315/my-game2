@@ -1,6 +1,6 @@
 
 (() => {
-  const DEV_VERSION = "v0.47q";
+  const DEV_VERSION = "v0.47r";
   const SAVE_SCHEMA_VERSION = 9;
   const SAVE_SLOT_COUNT = 3;
   const SAVE_KEY_PREFIX = "milesta_save_v1_slot_";
@@ -2676,6 +2676,10 @@
     if(name==="インドラ") return {...base,id:"peerlessWarGod",implemented:true,effect:{type:"weaponSkillSupremacy",skillIds:["explosiveFist","swordDance","terraCrash","stardust","magicBarrier","dragonSpiral","nephilimLaser"],borrowOtherFrontWeapons:true}};
     if(name==="アトラク=ナクア") return {...base,id:"timeGreatSpider",implemented:true,chance:.10,effect:{type:"partySpeedAndPostActionBasic",speedMultiplier:1.50,excludeSelf:true}};
     if(name==="ジェノサイダー") return {...base,id:"finalAnnihilationWeapon",implemented:true,effect:{type:"genocideLaserMastery",skillId:"nephilimLaser",alwaysFirst:true}};
+    if(name==="ヴィクトリア") return {...base,id:"bloomingQueen",implemented:true,effect:{type:"roundEndLastAuraAfterElementDamage",elements:["light","dark"],skillId:"lastAura",maxCasts:2}};
+    if(name==="モリガン") return {...base,id:"jetBlackRaven",implemented:true,effect:{type:"selfEvasionAndPartyElementDamage",evasionBonus:10,element:"dark",percent:20}};
+    if(name==="サニーハニィ") return {...base,id:"gentleSunshine",implemented:true,effect:{type:"protectOtherAlliesFromStatusesDeathPierce"}};
+    if(name==="アストラ") return {...base,id:"willBeyond",implemented:true,effect:{type:"axeMagicBarrierAndPartyEndureOnce",skillId:"magicBarrier",extraWeaponType:"axe"}};
     return {...base,id:`confirmedPending_${confirmedRuntimeId(record)||record.character_id}`,implemented:false};
   }
 
@@ -6052,6 +6056,28 @@
   function livingActiveTraitOwner(type){
     return livingActiveSlots().find(({c})=>traitOf(c)?.effect?.type===type) || null;
   }
+  function sunnyProtectionOwnerFor(target){
+    if(!target?.stats || !state.battleActive.includes(target.id)) return null;
+    return livingActiveSlots().find(({c})=>c.id!==target.id && traitOf(c)?.effect?.type==="protectOtherAlliesFromStatusesDeathPierce") || null;
+  }
+  function isSunnyProtected(target){ return !!sunnyProtectionOwnerFor(target); }
+  function astraEndureOwnerFor(target){
+    if(!target?.stats || !state.battleActive.includes(target.id)) return null;
+    return livingActiveSlots().find(({c})=>traitOf(c)?.effect?.type==="axeMagicBarrierAndPartyEndureOnce") || null;
+  }
+  function applyAstraPartyEndure(target,damage){
+    const raw=Math.max(0,Math.round(Number(damage)||0));
+    if(!target || raw<=0 || S(target).hp<=0) return {damage:raw,endured:false,trait:null};
+    const owner=astraEndureOwnerFor(target);
+    if(!owner) return {damage:raw,endured:false,trait:null};
+    const battle=confirmedBattleStateFor(target);
+    const hp=Math.max(0,Number(S(target).hp)||0);
+    if(hp>0 && !battle.used.astraEndure && raw>=hp){
+      battle.used.astraEndure=true;
+      return {damage:Math.max(0,hp-1),endured:true,trait:traitOf(owner.c)};
+    }
+    return {damage:raw,endured:false,trait:null};
+  }
   function hellDealerEffectForSkill(sk){
     if(!sk) return null;
     const owner=livingActiveTraitOwner("hellDealerErode");
@@ -6163,6 +6189,13 @@
     if(effect?.type==="damageTakenStack") bonus+=Math.max(0,Number(actor?._confirmedBattle?.damageTakenBonus)||0);
     if(effect?.type==="criticalDirectDamageStack") bonus+=Math.max(0,Number(actor?._confirmedBattle?.damageBonus)||0);
     bonus+=Math.max(0,Number(actor?._confirmedBattle?.cosmosBonus)||0);
+    if(element && actor && S(actor).hp>0 && state.battleActive.includes(actor.id)){
+      const owner=livingActiveSlots().find(({c})=>{
+        const e=traitOf(c)?.effect;
+        return e?.type==="selfEvasionAndPartyElementDamage" && e.element===element;
+      });
+      if(owner) bonus+=Math.max(0,Number(traitOf(owner.c)?.effect?.percent)||0);
+    }
     return Math.max(0,1+bonus/100);
   }
 
@@ -6340,6 +6373,7 @@
     }
     let adjusted=Math.max(1,Math.round(raw*multiplier));
     let endured=false;
+    let endureTrait=null;
     if(effect?.type==="elementIncomingMultiplierAndEndureOnce" && Array.isArray(effect.elements) && effect.elements.includes(element)){
       const battle=confirmedBattleStateFor(target);
       const hp=Math.max(0,Number(S(target).hp)||0);
@@ -6347,9 +6381,15 @@
         battle.used.seaFlowerEndure=true;
         adjusted=Math.max(0,hp-1);
         endured=true;
+        endureTrait=trait;
       }
     }
-    return {damage:adjusted,endured,trait: endured?trait:null};
+    if(!endured){
+      const partyEndure=applyAstraPartyEndure(target,adjusted);
+      adjusted=partyEndure.damage;
+      if(partyEndure.endured){ endured=true; endureTrait=partyEndure.trait; }
+    }
+    return {damage:adjusted,endured,trait:endureTrait};
   }
 
   function recordAllyDamageTaken(target,damage,{element=null}={}){
@@ -6370,6 +6410,9 @@
     if(effect?.type==="pristineDamageBoostAndIncomingPenalty") battle.tookDamage=true;
     if(effect?.type==="damageTakenStack"){
       battle.damageTakenBonus=Math.min(Math.max(0,Number(effect.max)||20),(Number(battle.damageTakenBonus)||0)+Math.max(0,Number(effect.step)||2));
+    }
+    if(effect?.type==="roundEndLastAuraAfterElementDamage" && Array.isArray(effect.elements) && effect.elements.includes(element)){
+      battle.bloomingQueenElementRound=state.battleRound;
     }
     return elementBuff;
   }
@@ -6951,7 +6994,7 @@
     if(card) spawnFx(enemy.basicAttackFx||"impact",enemy.basicAttackSymbol||"💥",card);
     renderBattleParty();
     flashPartyValue(slot,dmg,"damage");
-    setMessage(`↩️ ${enemy.displayName} の反撃！ ${actor.name} に ${dmg} ダメージ。`);
+    setMessage(`↩️ ${enemy.displayName} の反撃！ ${actor.name} に ${dmg} ダメージ。${incoming.endured?` 🌠 「${incoming.trait?.name||"彼方への意志"}」でHP1で耐えた！`:""}`);
     await wait(BASE_TIME.enemyAfter);
     await maybeTriggerPoisonGelOnPhysicalHit(actor,slot,enemy);
     await maybeTriggerSlimeBody(actor,slot,makeTraitActionContext());
@@ -7070,8 +7113,12 @@
       const candidates=livingActiveSlots().filter(x=>x.c.id!==c.id && S(x.c).hp>0);
       if(!candidates.length) continue;
       const target=choose(candidates);
-      conditionsOf(target.c).poison=true;
-      notices.push(`☠ 禁忌の毒：${target.c.name} が毒状態になった`);
+      if(!isSunnyProtected(target.c)){
+        conditionsOf(target.c).poison=true;
+        notices.push(`☠ 禁忌の毒：${target.c.name} が毒状態になった`);
+      }else{
+        notices.push(`☀️ ${target.c.name} は「優しい陽だまり」で禁忌の毒を防いだ`);
+      }
     }
 
     for(const {c} of [...livingActiveSlots()]){
@@ -7160,12 +7207,14 @@
     const allyPoisoned=[...livingActiveSlots()].filter(({c})=>conditionsOf(c).poison);
     for(const {i,c} of allyPoisoned){
       if(S(c).hp<=0) continue;
-      const dmg=Math.max(1,Math.ceil(S(c).hpMax*.20));
+      const rawDmg=Math.max(1,Math.ceil(S(c).hpMax*.20));
+      const endure=applyAstraPartyEndure(c,rawDmg);
+      const dmg=endure.damage;
       S(c).hp=Math.max(0,S(c).hp-dmg);
       recordAllyDamageTaken(c,dmg);
       renderBattleParty();
       flashPartyValue(i,dmg,"damage");
-      setMessage(`☠ ${c.name} は毒で ${dmg} ダメージ！`);
+      setMessage(`☠ ${c.name} は毒で ${dmg} ダメージ！${endure.endured?` 🌠 「${endure.trait?.name||"彼方への意志"}」でHP1で耐えた！`:""}`);
       await wait(BASE_TIME.message);
       if(S(c).hp<=0){
         const outName=c.name;
@@ -7376,6 +7425,16 @@
       return true;
     }
 
+    if(sk.kind==="barrier"){
+      const targets=sk.target==="allyAll"?livingActiveSlots():(targetEntry?[targetEntry]:[]);
+      if(!targets.length) return false;
+      targets.forEach(({c})=>{ conditionsOf(c)[sk.barrier]=true; });
+      renderBattleParty();
+      setMessage(`${sk.icon||"✨"} ${actor.name} の「${traitLabel}」！ MP消費0で ${sk.name} が発動！ 味方全員に${sk.barrier==="aura"?"オーラ":"マウント"}を付与した！`);
+      await wait(BASE_TIME.buff);
+      return true;
+    }
+
     if(sk.kind==="multiStatus"){
       const targets=[...livingEnemies()];
       if(!targets.length) return false;
@@ -7538,6 +7597,17 @@
       const trait=traitOf(c),effect=trait?.effect;
       if(!trait || !effect) continue;
       const battle=confirmedBattleStateFor(c);
+
+      if(effect.type==="roundEndLastAuraAfterElementDamage" && Number(battle.bloomingQueenElementRound)===Number(state.battleRound)){
+        const used=Math.max(0,Number(battle.bloomingQueenCasts)||0);
+        const max=Math.max(1,Number(effect.maxCasts)||2);
+        if(used<max && !automaticTraitSkillBlocked(c)){
+          if(await triggerFreeRoundEndTraitSkill(c,effect.skillId||"lastAura",trait.name,skipRoundDecrement)){
+            battle.bloomingQueenCasts=used+1;
+            if(state.battleEnded) return skipRoundDecrement;
+          }
+        }
+      }
 
       if(effect.type==="roundEndClearEnemyBuffsOnce" && !battle.used.meanBunny){
         const buffed=livingEnemies().filter(enemy=>roundEndEnemyBuffEntries(enemy).length>0);
@@ -7874,6 +7944,7 @@
     baseRate=source?statusBaseRateForActor(source,status,baseRate):baseRate;
     const cond=conditionsOf(target);
     const traitEffect=traitOf(target)?.effect;
+    if(isSunnyProtected(target)) return {success:false,reason:"immune",rate:0};
     if(target.statusImmuneAll || traitEffect?.type==="statusAndDeathImmunity" || ((traitEffect?.type==="statusImmunityAndGoldBoost" || traitEffect?.type==="statusImmunityAndRandomLearnedSkillOnKo") && status!=="death")) return {success:false,reason:"immune",rate:0};
     if(status==="death" && traitEffect?.type==="deathImmuneBasicDeathBonus") return {success:false,reason:"immune",rate:0};
     if(Array.isArray(target.statusImmune) && target.statusImmune.includes(status)) return {success:false,reason:"immune",rate:0};
@@ -7922,6 +7993,7 @@
           : hpRatio>=.75?0:hpRatio<=.25?20:(.75-hpRatio)*40;
         rate+=bonus;
       }
+      if(effect?.type==="selfEvasionAndPartyElementDamage") rate+=Math.max(0,Number(effect.evasionBonus)||10);
       return clampRate(rate);
     }
     return clampRate(target?.evasionRate||0);
@@ -8008,6 +8080,7 @@
     const type=equippedWeapon(actor)?.weaponType;
     if(sk.requiredWeaponTypes.includes(type)) return true;
     const effect=traitOf(actor)?.effect;
+    if(effect?.type==="axeMagicBarrierAndPartyEndureOnce" && sk.id===(effect.skillId||"magicBarrier") && type===(effect.extraWeaponType||"axe")) return true;
     if(effect?.type==="weaponSkillSupremacy" && effect.borrowOtherFrontWeapons && state.battleActive.includes(actor?.id)){
       const borrowedTypes=state.battleActive
         .filter(id=>id && id!==actor.id && roster[id])
@@ -9967,12 +10040,14 @@
       await wait(BASE_TIME.actionLead);
       await resolveAttack(actor,target,"体当たり",sk.power,"impact","💥",{element:sk.element||null});
 
-      const recoil=Math.max(1,Math.round(S(actor).hpMax*sk.recoilRate));
+      const rawRecoil=Math.max(1,Math.round(S(actor).hpMax*sk.recoilRate));
+      const endure=applyAstraPartyEndure(actor,rawRecoil);
+      const recoil=endure.damage;
       S(actor).hp=Math.max(0,S(actor).hp-recoil);
       recordAllyDamageTaken(actor,recoil);
       renderBattleParty();
       flashPartyValue(slot,recoil,"recoil");
-      setMessage(`${actor.name} は反動で ${recoil} ダメージを受けた。`);
+      setMessage(`${actor.name} は反動で ${recoil} ダメージを受けた。${endure.endured?` 🌠 「${endure.trait?.name||"彼方への意志"}」でHP1で耐えた！`:""}`);
       await wait(BASE_TIME.message);
 
       if(S(actor).hp<=0){
@@ -10841,7 +10916,7 @@
         if(shock?.success) shocked++;
       }
       total+=dmg; hitCount++;
-      results.push({target,slot,blocked:false,barrierWasActive,defendWasActive,dmg,shock,elementTrait,dragonSoul,endured:incoming.endured});
+      results.push({target,slot,blocked:false,barrierWasActive,defendWasActive,dmg,shock,elementTrait,dragonSoul,endured:incoming.endured,endureTraitName:incoming.trait?.name||null});
     }
 
     // Update the party HUD once, then apply hit reactions. Re-rendering after adding
@@ -10877,7 +10952,7 @@
         const reduced=[];
         if(result.barrierWasActive) reduced.push("魔力障壁");
         if(result.defendWasActive) reduced.push("防御");
-        const suffix=`${result.shock?.success?" ⚡ 感電した！":""}${result.dragonSoul?" 🐉 ドラゴンソウルで攻撃力が上がった！":""}${result.endured?" 🌊 「海の華」でHP1で耐えた！":""}`;
+        const suffix=`${result.shock?.success?" ⚡ 感電した！":""}${result.dragonSoul?" 🐉 ドラゴンソウルで攻撃力が上がった！":""}${result.endured?` 🌠 「${result.endureTraitName||"耐える力"}」でHP1で耐えた！`:""}`;
         if(result.elementTrait?.reason==="absorb"){
           setMessage(`${sk.icon||"✨"} ${enemy.displayName} の ${sk.name}！ 🔥 ${result.target.name} は「炎の妖精」で炎を吸収した！${result.elementTrait.heal>0?` HPが ${result.elementTrait.heal} 回復した。`:""}${suffix}`);
         }else if(result.elementTrait?.reason==="traitImmune"){
@@ -11005,7 +11080,7 @@
       recordAllyDamageTaken(target,dmg,{element:sk.element||null});
       if(enemyEl) spawnFx(sk.animation||"impact",sk.fxSymbol||sk.icon||"💥",enemyEl);
       renderBattleParty(); flashPartyValue(slot,dmg,"damage");
-      setMessage(`${enemy.displayName} の体当たり！ ${target.name} に ${dmg} ダメージ。${target.defending?"（防御で軽減）":""}`);
+      setMessage(`${enemy.displayName} の体当たり！ ${target.name} に ${dmg} ダメージ。${target.defending?"（防御で軽減）":""}${incoming.endured?` 🌠 「${incoming.trait?.name||"彼方への意志"}」でHP1で耐えた！`:""}`);
       await wait(BASE_TIME.enemyAfter);
       await maybeTriggerPoisonGelOnPhysicalHit(target,slot,enemy);
     }
@@ -11046,7 +11121,7 @@
     if(card) spawnFx(sk.animation||"heavy",critical?"‼":(sk.fxSymbol||sk.icon||"💥"),card);
     renderBattleParty();
     flashPartyValue(slot,dmg,"damage");
-    setMessage(`${sk.icon||"💥"} ${enemy.displayName} の ${sk.name}！${critical?" 会心！":""} ${target.name} に ${dmg} ダメージ。${target.defending?"（防御で軽減）":""}`);
+    setMessage(`${sk.icon||"💥"} ${enemy.displayName} の ${sk.name}！${critical?" 会心！":""} ${target.name} に ${dmg} ダメージ。${target.defending?"（防御で軽減）":""}${incoming.endured?` 🌠 「${incoming.trait?.name||"彼方への意志"}」でHP1で耐えた！`:""}`);
     await wait(BASE_TIME.enemyAfter);
     await maybeTriggerPoisonGelOnPhysicalHit(target,slot,enemy);
     await maybeTriggerSlimeBody(target,slot,makeTraitActionContext());
@@ -11094,7 +11169,7 @@
       const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${slot}"]`);
       if(card) spawnFx(sk.animation||"punch",sk.fxSymbol||sk.icon||"🥊",card);
       renderBattleParty(); flashPartyValue(slot,dmg,"damage");
-      setMessage(`${sk.icon||"⚔️"} ${sk.name} ${hit}撃目！${critical?" 会心！":""} ${c.name} に ${dmg} ダメージ。${c.defending?"（防御で軽減）":""}`);
+      setMessage(`${sk.icon||"⚔️"} ${sk.name} ${hit}撃目！${critical?" 会心！":""} ${c.name} に ${dmg} ダメージ。${c.defending?"（防御で軽減）":""}${incoming.endured?` 🌠 「${incoming.trait?.name||"彼方への意志"}」でHP1で耐えた！`:""}`);
       await wait(BASE_TIME.enemyAfter);
       await maybeTriggerPoisonGelOnPhysicalHit(c,slot,enemy);
       await maybeTriggerSlimeBody(c,slot,traitContext);
@@ -11150,7 +11225,7 @@
         if(enemyEl) spawnFx(enemy.basicAttackFx||"whip",critical?"‼":(enemy.basicAttackSymbol||"〰"),enemyEl);
         renderBattleParty();
         flashPartyValue(target.i,dmg,"damage");
-        setMessage(`${enemy.displayName} の攻撃！${critical?" 会心！":""} ${c.name} に ${dmg} ダメージ。${c.defending?"（防御で軽減）":""}`);
+        setMessage(`${enemy.displayName} の攻撃！${critical?" 会心！":""} ${c.name} に ${dmg} ダメージ。${c.defending?"（防御で軽減）":""}${incoming.endured?` 🌠 「${incoming.trait?.name||"彼方への意志"}」でHP1で耐えた！`:""}`);
         await wait(BASE_TIME.enemyAfter);
         await maybeTriggerPoisonGelOnPhysicalHit(c,target.i,enemy);
         await maybeTriggerSlimeBody(c,target.i,traitContext);
@@ -11180,7 +11255,7 @@
     }
 
     const enemyBowRate=Math.max(0,Number(enemy.basicBowInstantKillRate)||0);
-    const enemyBowBlocked=equipmentHasFlag(c,"bowInstantKillImmune");
+    const enemyBowBlocked=equipmentHasFlag(c,"bowInstantKillImmune") || isSunnyProtected(c);
     if(enemyBowRate>0 && !enemyBowBlocked && Math.random()*100<enemyBowRate){
       S(c).hp=0;
       const card=$("battlePartyRow").querySelector(`.battle-status-card[data-slot="${target.i}"]`);
@@ -11204,7 +11279,7 @@
     if(enemyEl) spawnFx(enemy.basicAttackFx||"impact",critical?"‼":(enemy.basicAttackSymbol||"💥"),enemyEl);
     renderBattleParty();
     flashPartyValue(target.i,dmg,"damage");
-    setMessage(`${enemy.displayName} の攻撃！${critical?" 会心！":""} ${c.name} に ${dmg} ダメージ。${c.defending?"（防御で軽減）":""}`);
+    setMessage(`${enemy.displayName} の攻撃！${critical?" 会心！":""} ${c.name} に ${dmg} ダメージ。${c.defending?"（防御で軽減）":""}${incoming.endured?` 🌠 「${incoming.trait?.name||"彼方への意志"}」でHP1で耐えた！`:""}`);
     await wait(BASE_TIME.enemyAfter);
     if(S(c).hp>0 && Number(enemy.basicPoisonRate)>0){
       const poison=tryInflictStatus(c,"poison",Number(enemy.basicPoisonRate));
@@ -12130,13 +12205,13 @@
     let forestSilenceApplied=false;
     let ruinsCurseApplied=false;
     if(fromRun && state.run?.pendingForestSilence){
-      state.battleActive.forEach(id=>{const c=roster[id];if(c&&S(c).hp>0)conditionsOf(c).silence=true;});
+      state.battleActive.forEach(id=>{const c=roster[id];if(c&&S(c).hp>0&&!isSunnyProtected(c))conditionsOf(c).silence=true;});
       state.run.pendingForestSilence=false;
       forestSilenceApplied=true;
     }
     if(fromRun && state.run?.area==="runelRuins" && state.run?.ruinsCursePending){
       const hero=roster.hero;
-      if(hero && S(hero).hp>0){const cond=conditionsOf(hero);cond.silence=true;cond.blind=true;ruinsCurseApplied=true;}
+      if(hero && S(hero).hp>0 && !isSunnyProtected(hero)){const cond=conditionsOf(hero);cond.silence=true;cond.blind=true;ruinsCurseApplied=true;}
       state.run.ruinsCursePending=false;
     }
     startCommandInput();
